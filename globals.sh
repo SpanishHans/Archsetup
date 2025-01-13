@@ -175,7 +175,7 @@ input_text() {
         eval "$choice=\"$console_output\""
     fi
     eval "$status=\"$exit_code\""
-    handle_exit_code "$exit_code" "break"
+    handle_exit_code "$exit_code" "exit"
 }
 
 root_pass() {
