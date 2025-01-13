@@ -104,19 +104,17 @@ live_command_output() {
     local commands=("$@")
     local temp_file
     local exit_code=0
-    temp_file=$(mktemp)
+    local temp_file=$(mktemp)
     
     output_error() {
         local cmd="$1"
-        local error_msg="$2"
-        echo -e "\
-        ============================================================\n\
+        local err="$2"
+        echo -e "\n ============================================================\n\
         >>> CRITICAL ERROR: COMMAND EXECUTION FAILED! <<<\n\
         ------------------------------------------------------------\n\
         Failed Command: $cmd\n\
-        Error Message: $error_msg\n\
-        ===========================================================\n\
-        "
+        Error Message: $err\n\
+        ===========================================================\n"
     }
     
     execute_command() {
@@ -131,15 +129,17 @@ live_command_output() {
         fi
     
         if [ $error_msg -ne 0 ]; then
-            output_error "$cmd" "$error_msg"
+            echo "Command failed: $cmd" >>"$temp_file"
+            echo "Error code: $error_msg" >>"$temp_file"
         fi
     }
 
+
     if [ "$USE_DIALOG" = true ]; then
         for cmd in "${commands[@]}"; do
-            execute_command "$cmd" &
+            execute_command "$cmd" "$user" &
         done
-        dialog --exit-label "Ok" --backtitle "Live Command Output" --tailbox "$temp_file" "$full_height" "$full_width" 2>&1 >/dev/tty
+        dialog --exit-label "Ok" --backtitle "Live Command Output" --tailbox "$Logs_cmd" "$full_height" "$full_width" 2>&1 >/dev/tty
         exit_code=$?
     else
         clear
@@ -147,7 +147,7 @@ live_command_output() {
         output "Press Ctrl+C to stop."
         output
         for cmd in "${commands[@]}"; do
-            execute_command "$cmd"
+            execute_command "$cmd" "$user"
         done
         exit_code=$?
         pause_script "Live command" "Command has finished execution"
