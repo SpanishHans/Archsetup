@@ -25,7 +25,6 @@ configure_git() {
         ============================================================
     EOF")
 
-
     input_text git_user git_user_status "User account" "Please enter the user whose git shall be configured" "What user to configure git for?: "
     input_text gitusername gitusername_status "Github user of $git_user" "Please enter the username in github for $git_user" "Enter Git username: "
     input_text gitemail gitemail_status "Github email of $git_user" "Please enter the email in github for $git_user" "Enter Git email: "
@@ -71,8 +70,8 @@ configure_git() {
         ============================================================
     EOF")
 
-
     live_command_output "" "${commands_to_run[@]}"
+    pause_script "" "Git Setup complete!"
 }
 
 configure_paru()
@@ -89,8 +88,8 @@ configure_paru()
         ============================================================
     EOF")
 
-
     live_command_output "" "${commands_to_run[@]}"
+    pause_script "" "Paru Setup complete!"
 }
 
 configure_snp()
@@ -105,6 +104,7 @@ configure_snp()
     EOF")
 
     live_command_output "" "${commands_to_run[@]}"
+    pause_script "" "Snp Setup complete!"
 }
 
 configure_snapper_rollback()
@@ -126,6 +126,7 @@ configure_snapper_rollback()
     EOF")
 
     live_command_output "" "${commands_to_run[@]}"
+    pause_script "" "Snapper-rollback Setup complete!"
 }
 
 configure_terminal() {
@@ -180,6 +181,7 @@ configure_terminal() {
 
 
     live_command_output "" "${commands_to_run[@]}"
+    pause_script "" "Terminal Setup complete!"
 }
 
 configure_flatpak()
@@ -195,6 +197,7 @@ configure_flatpak()
 
 
     live_command_output "" "${commands_to_run[@]}"
+    pause_script "" "Flatpak Setup complete!"
 }
 
 configure_docker()
@@ -217,6 +220,7 @@ configure_docker()
 
 
     live_command_output "" "${commands_to_run[@]}"
+    pause_script "" "Docker Setup complete!"
 }
 
 configure_distrobox()
@@ -232,6 +236,7 @@ configure_distrobox()
 
 
     live_command_output "" "${commands_to_run[@]}"
+    pause_script "" "Distrobox Setup complete!"
 }
 
 titulo="Basic tools installer"
