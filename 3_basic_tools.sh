@@ -19,11 +19,10 @@ source ./globals.sh
 configure_git() {
     commands_to_run=()
     commands_to_run+=("pacman --noconfirm -S git")
-    commands_to_run+=("cat <<EOF
-        ============================================================
-        >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<
-        ============================================================
-    EOF")
+    commands_to_run+=("echo -e '\
+    ============================================================\n\
+    >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
+    ============================================================'")
 
     input_text git_user git_user_status "User account" "Please enter the user whose git shall be configured" "What user to configure git for?: "
     input_text gitusername gitusername_status "Github user of $git_user" "Please enter the username in github for $git_user" "Enter Git username: "
@@ -64,11 +63,10 @@ configure_git() {
 
     fi
     commands_to_run+=("cat $ssh_key_path")
-    commands_to_run+=("cat <<EOF
-        ============================================================
-        >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<
-        ============================================================
-    EOF")
+    commands_to_run+=("echo -e '\
+    ============================================================\n\
+    >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
+    ============================================================'")
 
     live_command_output "" "${commands_to_run[@]}"
     pause_script "" "Git Setup complete!"
@@ -82,11 +80,10 @@ configure_paru()
     commands_to_run+=("chown -R sysadmin:sysadmin /home/sysadmin/.paru")
     commands_to_run+=("sudo -u sysadmin bash -c 'rustup default stable'")
     commands_to_run+=("sudo -u sysadmin bash -i -c 'cd /home/sysadmin/.paru &&  makepkg -si'")
-    commands_to_run+=("cat <<EOF
-        ============================================================
-        >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<
-        ============================================================
-    EOF")
+    commands_to_run+=("echo -e '\
+    ============================================================\n\
+    >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
+    ============================================================'")
 
     live_command_output "" "${commands_to_run[@]}"
     pause_script "" "Paru Setup complete!"
@@ -97,11 +94,10 @@ configure_snp()
     commands_to_run=()
     commands_to_run+=("sudo -u sysadmin bash -c 'paru -S snp [edit: --noconfirm ]'")
     # commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S snp'")
-    commands_to_run+=("cat <<EOF
-        ============================================================
-        >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<
-        ============================================================
-    EOF")
+    commands_to_run+=("echo -e '\
+    ============================================================\n\
+    >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
+    ============================================================'")
 
     live_command_output "" "${commands_to_run[@]}"
     pause_script "" "Snp Setup complete!"
@@ -119,11 +115,10 @@ configure_snapper_rollback()
         else
             echo \"mountpoint entry not found in /etc/snapper-rollback.conf\"
         fi")
-    commands_to_run+=("cat <<EOF
-        ============================================================
-        >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<
-        ============================================================
-    EOF")
+    commands_to_run+=("echo -e '\
+    ============================================================\n\
+    >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
+    ============================================================'")
 
     live_command_output "" "${commands_to_run[@]}"
     pause_script "" "Snapper-rollback Setup complete!"
@@ -173,11 +168,10 @@ configure_terminal() {
         esac
     done
     
-    commands_to_run+=("cat <<EOF
-        ============================================================
-        >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<
-        ============================================================
-    EOF")
+    commands_to_run+=("echo -e '\
+    ============================================================\n\
+    >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
+    ============================================================'")
 
 
     live_command_output "" "${commands_to_run[@]}"
@@ -189,11 +183,10 @@ configure_flatpak()
     # Initialize arrays for commands
     commands_to_run=()
     commands_to_run+=("pacman --noconfirm -S flatpak")
-    commands_to_run+=("cat <<EOF
-        ============================================================
-        >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<
-        ============================================================
-    EOF")
+    commands_to_run+=("echo -e '\
+    ============================================================\n\
+    >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
+    ============================================================'")
 
 
     live_command_output "" "${commands_to_run[@]}"
@@ -212,11 +205,10 @@ configure_docker()
     commands_to_run=()
     commands_to_run+=("pacman --noconfirm -S docker docker-compose && usermod -aG docker $docker_user")
     commands_to_run+=("systemctl enable docker && systemctl start --now docker")
-    commands_to_run+=("cat <<EOF
-        ============================================================
-        >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<
-        ============================================================
-    EOF")
+    commands_to_run+=("echo -e '\
+    ============================================================\n\
+    >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
+    ============================================================'")
 
 
     live_command_output "" "${commands_to_run[@]}"
@@ -228,11 +220,10 @@ configure_distrobox()
     # Initialize arrays for commands
     commands_to_run=()
     commands_to_run+=("pacman --noconfirm -S distrobox")
-    commands_to_run+=("cat <<EOF
-        ============================================================
-        >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<
-        ============================================================
-    EOF")
+    commands_to_run+=("echo -e '\
+    ============================================================\n\
+    >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
+    ============================================================'")
 
 
     live_command_output "" "${commands_to_run[@]}"

@@ -84,11 +84,11 @@ DM_console()
             *)  pause_script "" 'You did not enter a valid selection.'
         esac
     done
-    commands_to_run+=("cat <<EOF
-        ============================================================
-        >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<
-        ============================================================
-    EOF")
+    commands_to_run+=("echo -e '\
+    ============================================================\n\
+    >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
+    ============================================================\n'")
+
 
 
     live_command_output "" "${commands_to_run[@]}"
@@ -139,11 +139,11 @@ DM_graphical()
             *)  pause_script "" 'You did not enter a valid selection.'
         esac
     done
-    commands_to_run+=("cat <<EOF
-        ============================================================
-        >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<
-        ============================================================
-    EOF")
+    commands_to_run+=("echo -e '\
+    ============================================================\n\
+    >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
+    ============================================================\n'")
+
 
 
     live_command_output "" "${commands_to_run[@]}"
@@ -242,11 +242,11 @@ DE_selector()
             *)  pause_script "" 'You did not enter a valid selection.'
         esac
     done
-    commands_to_run+=("cat <<EOF
-        ============================================================
-        >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<
-        ============================================================
-    EOF")
+    commands_to_run+=("echo -e '\
+    ============================================================\n\
+    >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
+    ============================================================\n'")
+
 
 
     live_command_output "" "${commands_to_run[@]}"
@@ -289,11 +289,11 @@ WM_selector()
             *)  output 'You did not enter a valid selection.'
         esac
     done
-    commands_to_run+=("cat <<EOF
-        ============================================================
-        >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<
-        ============================================================
-    EOF")
+    commands_to_run+=("echo -e '\
+    ============================================================\n\
+    >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
+    ============================================================\n'")
+
 
 
     live_command_output "" "${commands_to_run[@]}"
