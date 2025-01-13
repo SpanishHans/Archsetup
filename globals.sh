@@ -14,7 +14,7 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-check_dialog(){}
+check_dialog(){
     if command -v dialog &> /dev/null; then
         USE_DIALOG=true
     else
