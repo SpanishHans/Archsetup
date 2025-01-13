@@ -107,8 +107,9 @@ pause_script 'Hostname' "Hostname:    ${hostname}"
 disk_prompt
 pause_script 'Hostname' "Hostname:    ${hostname}"
 
-confirmation="You picked disk $disk for Arch installation.
-Disk will be wiped fully and repartitioned, THIS IS YOUR LAST CHANCE TO CANCEL"
+confirmation="You picked disk $disk for Arch installation, ergo it will be fully wiped and repartitioned.
+
+THIS IS YOUR LAST CHANCE TO CANCEL BEFORE FULL DISK DATA LOSS."
 pause_script "Selected Disk $disk" "$confirmation"
 
 continue_script 'Disabling dialog' "To ensure legibility, now everything shall be done in terminal mode"
