@@ -51,13 +51,14 @@ output() {
 
 output_error() {
     local cmd="$1"
+    local error_msg="$2"
     echo -e "\
     ============================================================\n\
     >>> CRITICAL ERROR: COMMAND EXECUTION FAILED! <<<\n\
     ------------------------------------------------------------\n\
     Failed Command: $cmd\n\
+    Error Message: $error_msg\n\
     ============================================================\n"
-    exit
 }
 
 terminal_title() {
@@ -120,9 +121,9 @@ live_command_output() {
     execute_command() {
         local cmd="$1"
         if [ "$user" = "root" ]; then
-            $cmd >>"$temp_file" 2>&1 || output_error "$cmd" >>"$temp_file" 2>&1
+            $cmd >>"$temp_file" 2>>"$temp_file" || output_error "$cmd" "$(tail -n 1 "$temp_file")"
         else
-            sudo -u "$user" bash -c "$cmd" >>"$temp_file" 2>&1 || output_error "$cmd" >>"$temp_file" 2>&1
+            sudo -u "$user" bash -c "$cmd" >>"$temp_file" 2>>"$temp_file" || output_error "$cmd" "$(tail -n 1 "$temp_file")"
         fi
     }
 
