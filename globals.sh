@@ -258,6 +258,7 @@ set_password() {
         else
             eval "$choice=\"$password1\""
             eval "$status=\"$exit_code\""
+            break
         fi
         handle_exit_code "$exit_code" "exit"
     done
