@@ -197,7 +197,8 @@ configure_docker()
 
     commands_to_run=()
     commands_to_run+=("pacman --noconfirm -S docker docker-compose && usermod -aG docker $docker_user")
-    commands_to_run+=("systemctl enable docker && systemctl start --now docker")
+    commands_to_run+=("systemctl enable docker")
+    commands_to_run+=("systemctl start --now docker")
     commands_to_run+=("echo -e '============================================================\n\
     >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
     ============================================================'")
