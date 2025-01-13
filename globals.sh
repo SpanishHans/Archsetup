@@ -175,7 +175,7 @@ input_text() {
         eval "$choice=\"$console_output\""
     fi
     eval "$status=\"$exit_code\""
-    handle_exit_code "$exit_code" "exit"
+    handle_exit_code "$exit_code" "return"
 }
 
 root_pass() {
@@ -203,6 +203,7 @@ root_pass() {
         if echo "$ROOT_PASS" | sudo -S whoami 2>/dev/null | grep -q "^root$"; then
             ROOT_PASS_SET=true
             export ROOT_PASS
+            break
         else
             pause_script "Title" "Invalid password. Please try again."
         fi
