@@ -272,7 +272,7 @@ echo "KEYMAP=$kblayout" > /mnt/etc/vconsole.conf
 echo "FONT=ter-u20n" > /mnt/etc/vconsole.conf
 
 pause_script 'Copy repo' 'Copying repo to machine'
-cp -R --no-preserve=ownership /root/ArchSetup /mnt/home
+cp -R --no-preserve=ownership /root/ArchSetup /mnt/root
 
 pause_script '' 'About to chroot into the machine'
 pause_script '' 'this automatically:'
