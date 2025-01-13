@@ -62,7 +62,7 @@ configure_git() {
     commands_to_run+=("cat $ssh_key_path")
     
 
-    live_command_output "" "${commands_to_run[@]}"
+    live_command_output "" "Git" "${commands_to_run[@]}"
     pause_script "" "Git Setup complete!"
 }
 
@@ -76,7 +76,7 @@ configure_paru()
     commands_to_run+=("sudo -u sysadmin bash -i -c 'cd /home/sysadmin/.paru &&  makepkg -si'")
     
 
-    live_command_output "" "${commands_to_run[@]}"
+    live_command_output "" "Paru" "${commands_to_run[@]}"
     pause_script "" "Paru Setup complete!"
 }
 
@@ -87,7 +87,7 @@ configure_snp()
     # commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S snp'")
     
 
-    live_command_output "" "${commands_to_run[@]}"
+    live_command_output "" "Snp" "${commands_to_run[@]}"
     pause_script "" "Snp Setup complete!"
 }
 
@@ -105,7 +105,7 @@ configure_snapper_rollback()
         fi")
     
 
-    live_command_output "" "${commands_to_run[@]}"
+    live_command_output "" "Snapper-rollback" "${commands_to_run[@]}"
     pause_script "" "Snapper-rollback Setup complete!"
 }
 
@@ -156,7 +156,7 @@ configure_terminal() {
     
 
 
-    live_command_output "" "${commands_to_run[@]}"
+    live_command_output "" "Terminal" "${commands_to_run[@]}"
     pause_script "" "Terminal Setup complete!"
 }
 
@@ -168,7 +168,7 @@ configure_flatpak()
     
 
 
-    live_command_output "" "${commands_to_run[@]}"
+    live_command_output "" "Flatpak" "${commands_to_run[@]}"
     pause_script "" "Flatpak Setup complete!"
 }
 
@@ -188,7 +188,7 @@ configure_docker()
     
 
 
-    live_command_output "" "${commands_to_run[@]}"
+    live_command_output "" "Docker" "${commands_to_run[@]}"
     pause_script "" "Docker Setup complete!"
 }
 
@@ -200,7 +200,7 @@ configure_distrobox()
     
 
 
-    live_command_output "" "${commands_to_run[@]}"
+    live_command_output "" "Distrobox" "${commands_to_run[@]}"
     pause_script "" "Distrobox Setup complete!"
 }
 

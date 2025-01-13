@@ -100,7 +100,8 @@ handle_exit_code() {
 
 live_command_output() {
     local user="${1:-root}"
-    shift 1
+    local context="${2:-Default}"
+    shift 2
     local commands=("$@")
     local exit_code=0
     local combined_log=$(mktemp)
@@ -141,7 +142,7 @@ Error Message: $err\n\
         for cmd in "${commands[@]}"; do
             execute_command "$cmd" &
         done
-        dialog --exit-label "Ok" --backtitle "Live Command Output" --tailbox "$combined_log" "$full_height" "$full_width" 2>&1 >/dev/tty
+        dialog --exit-label "Ok" --backtitle "Live command output for $context" --tailbox "$combined_log" "$full_height" "$full_width" 2>&1 >/dev/tty
         exit_code=$?
     else
         clear

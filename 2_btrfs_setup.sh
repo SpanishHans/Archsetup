@@ -30,8 +30,8 @@ configure_snapper()
     
 
 
-    live_command_output "" "${commands_to_run[@]}"
-    pause_script "" "BTRFS Setup complete!"
+    live_command_output "" "Btrfs" "${commands_to_run[@]}"
+    pause_script "" "Btrfs Setup complete!"
 }
 
 configure_snapper

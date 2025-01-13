@@ -24,7 +24,6 @@ disk_prompt() {
     description="This script only allows for FULLDISK install, cancel now with option 0 or ctrl+c if this is not what you want.
 Select a disk from the disk below with its number."
     
-
     menu_prompt disk_menu disk_menu_status "$title" "$description" "${devices[@]}"
 
     case $disk_menu in
