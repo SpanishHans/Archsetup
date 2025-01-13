@@ -16,12 +16,9 @@
 
 source ./globals.sh
 
-if command -v dialog &> /dev/null; then
-    USE_DIALOG=true
-else
-    USE_DIALOG=false
+if [ "$USE_DIALOG" = false ]; then
     clear
-    terminal_title "Command dialog not available on your live Arch ISO"
+    terminal_title "Command dialog not available."
     output
     output "The 'dialog' command is not installed."
     output "Would you like to install it to improve the user experience?"
@@ -34,13 +31,22 @@ else
     else
         USE_DIALOG=false
     fi
+    export USE_DIALOG
 fi
 
 sudo mv $HOME/ArchSetup/.dialogrc $HOME/.dialogrc
 
-ROOT_PASS="13081996"
-ROOT_PASS_SET=false
-# root_pass
+if [ "$LIVE_ENV" = false ]; then
+    # Check if the active user is root
+    if [ "$(id -u)" -ne 0 ]; then
+        pause_script "" "You must be logged in as root to use these scripts."
+        exit 1
+    fi
+    
+    export ROOT_PASS=""
+    export ROOT_PASS_SET=false
+    root_pass
+fi
 
 title="Welcome to the Script Installer"
 description="This script provides a menu to run various installation scripts.

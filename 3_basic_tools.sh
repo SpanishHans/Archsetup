@@ -17,10 +17,10 @@
 source ./globals.sh
 
 configure_git() {
-    commands_to_run=("")
+    commands_to_run=()
     commands_to_run+=("pacman --noconfirm -S git")
 
-    input_text "User account" "Please enter the user whose git shall be configured" "What user to add to docker group?: " username
+    input_text "User account" "Please enter the user whose git shall be configured" "What user to configure git for?: " username
     input_text "Github user of $username" "Please enter the username in github for $username" "Enter Git username: " gitusername
     input_text "Github email of $username" "Please enter the email in github for $username" "Enter Git email: " gitemail
 
@@ -35,7 +35,7 @@ configure_git() {
             name = $gitusername
             email = $gitemail
         [core]
-            editor = vim
+            editor = nano
         [alias]
             st = status
             co = checkout
@@ -46,10 +46,6 @@ configure_git() {
         EOF"
     )
 
-    commands_to_run+=(
-        "chown $username:$username $gitconfig_path"
-    )
-
     ssh_key_path="$home_path/.ssh/id_ed25519"
     if [ -f "$ssh_key_path" ]; then
         commands_to_run+=("echo 'SSH key already exists at $ssh_key_path.'")
@@ -58,12 +54,13 @@ configure_git() {
         commands_to_run+=("mkdir -p $home_path/.ssh")
         commands_to_run+=("ssh-keygen -t ed25519 -C '$gitemail' -f '$ssh_key_path'")
         commands_to_run+=("chown -R $username:$username $home_path/.ssh")
+        commands_to_run+=("chown $username:$username $gitconfig_path")
         commands_to_run+=("sudo -u <username> bash -c \"eval \$(ssh-agent -s) && ssh-add '$ssh_key_path'\"")
 
     fi
     commands_to_run+=("cat $ssh_key_path")
 
-    live_command_output "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
 }
 
 configure_paru()
@@ -72,16 +69,17 @@ configure_paru()
     commands_to_run+=("pacman --noconfirm -S --needed base-devel rustup")
     commands_to_run+=("git clone https://aur.archlinux.org/paru.git /home/sysadmin/.paru")
     commands_to_run+=("chown -R sysadmin:sysadmin /home/sysadmin/.paru")
-    # commands_to_run+=("sudo -u sysadmin bash -c 'rustup default stable'")
-    # commands_to_run+=("sudo -u sysadmin bash -i -c 'cd /home/sysadmin/.paru &&  makepkg -si'")
+    commands_to_run+=("sudo -u sysadmin bash -c 'rustup default stable'")
+    commands_to_run+=("sudo -u sysadmin bash -i -c 'cd /home/sysadmin/.paru &&  makepkg -si'")
 
-    live_command_output "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
 }
 
 configure_snp()
 {
     commands_to_run=()
-    commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S snp'")
+    commands_to_run+=("sudo -u sysadmin bash -c 'paru -S snp [edit: --noconfirm ]'")
+    # commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S snp'")
 
     live_command_output "${commands_to_run[@]}"
 }
@@ -89,7 +87,8 @@ configure_snp()
 configure_snapper_rollback()
 {
     commands_to_run=()
-    commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S snapper-rollback'")
+    commands_to_run+=("sudo -u sysadmin bash -c 'paru -S snapper-rollback [edit: --noconfirm ]'")
+    # commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S snapper-rollback'")
     commands_to_run+=("
         if grep -qE '^[#]*mountpoint[[:space:]]*=[[:space:]]*/btrfsroot' /etc/snapper-rollback.conf; then
             sed -i 's|^[#]*mountpoint[[:space:]]*=[[:space:]]*/btrfsroot|mountpoint = /.btrfsroot|' /etc/snapper-rollback.conf
@@ -103,31 +102,29 @@ configure_snapper_rollback()
 }
 
 configure_terminal() {
-    output "This allows you to set up different modes of zsh for a given user"
-    output "Mode 1: Zsh + Oh My Zsh"
-    output "Mode 2: Zsh + Oh My Zsh + Starship"
-    output "For now, please give me the user to change terminal for"
-    output "This might break dotfiles for that user"
 
-    input_text username username_status "Docker user" "Please enter the user who shall be added to docker group" "What user to add to docker group?: "
+    title="Terminal configurator: pick user"
+    description="This allows you to set up different modes of zsh for a given user.
+    Please give me the user whose terminal shall be configured.
+    This might break dotfiles for that user!"
+    input_text username username_status "Terminal configuration" "$description" "What user to configure terminal for?: "
 
-    commands_to_run=()
-
+    title="Terminal configurator: pick mode"
+    description="Please select configuration mode from the menu below."
     while true; do
-        clear
-        output "Configuration Menu"
-        output "-------------------"
-        output "1) Configure Zsh + Oh My Zsh"
-        output "2) Configure Zsh + Oh My Zsh + Starship"
-        output "0) Exit"
-        read -p "Please select an option: " -r term_option
-        case $term_option in
+        options=(\
+            "Mode 1: Zsh + Oh My Zsh" \
+            "Mode 2: Zsh + Oh My Zsh + Starship" \
+        )
+        
+        menu_prompt terminal_choice terminal_choice_status "$title" "$description" "${options[@]}"
+    
+        case $terminal_choice in
             1)  commands_to_run+=("pacman --noconfirm -S zsh curl ttf-dejavu-nerd ttf-0xproto-nerd ttf-font-awesome starship")
                 commands_to_run+=("chsh -s /bin/zsh $username")
                 commands_to_run+=("curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -o /tmp/ohmyzsh_install.sh")
                 commands_to_run+=("sudo -u $username bash /tmp/ohmyzsh_install.sh")
-                break
-                ;;
+                break;;
             2)  commands_to_run+=("pacman --noconfirm -S zsh curl ttf-dejavu-nerd ttf-0xproto-nerd ttf-font-awesome starship")
                 commands_to_run+=("chsh -s /bin/zsh $username")
                 commands_to_run+=("curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -o /tmp/ohmyzsh_install.sh")
@@ -142,10 +139,9 @@ configure_terminal() {
                 )
                 commands_to_run+=("mkdir -p /home/$username/.config && touch /home/$username/.config/starship.toml")
                 commands_to_run+=("starship preset gruvbox-rainbow -o /home/$username/.config/starship.toml")
-                break
-                ;;
-            0) output 'I dont want shit, get out of here'; break;;
-            *) output "Invalid choice, please try again.";;
+                break;;
+            0)  exit;;
+            *)  output "Invalid choice, please try again.";;
         esac
     done
 
@@ -163,7 +159,7 @@ configure_flatpak()
 
 configure_docker()
 {
-    input_text "Docker user" "Please enter the user who shall be added to docker group" "What user to add to docker group?: " username
+    input_text "Docker user" "Please enter the user who shall be added to docker group" "What user to add to docker group?: " docker_user
 
     local title="${1:-}"
     local desc="${2:-}"
@@ -171,7 +167,7 @@ configure_docker()
     local variable="${4:-}"
 
     commands_to_run=()
-    commands_to_run+=("pacman --noconfirm -S docker docker-compose && usermod -aG docker $username")
+    commands_to_run+=("pacman --noconfirm -S docker docker-compose && usermod -aG docker $docker_user")
     commands_to_run+=("systemctl enable docker && systemctl start --now docker")
 
     live_command_output "${commands_to_run[@]}"

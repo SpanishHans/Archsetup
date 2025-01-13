@@ -14,11 +14,29 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-if command -v dialog &> /dev/null; then
-    USE_DIALOG=true
-else
-    USE_DIALOG=false
-fi
+check_dialog(){}
+    if command -v dialog &> /dev/null; then
+        USE_DIALOG=true
+    else
+        USE_DIALOG=false
+    fi
+    export USE_DIALOG
+}
+
+check_live_env(){
+    if [ -d /run/archiso ]; then
+        LIVE_ENV=true
+    elif [ -f /etc/arch-release ]; then
+        LIVE_ENV=false
+    else
+        echo "Cannot determine if it's a live or installed environment"
+        LIVE_ENV=false
+    fi
+    export LIVE_ENV
+}
+
+check_live_env
+check_dialog
 
 screen_height=$(tput lines)
 screen_width=$(tput cols)
@@ -31,28 +49,32 @@ output() {
     printf '\e[1;31m%s\e[m\n' "$*"
 }
 
+output_error() {
+    local cmd="$1"
+    echo -e "\
+    ============================================================\n\
+    >>> CRITICAL ERROR: COMMAND EXECUTION FAILED! <<<\n\
+    ------------------------------------------------------------\n\
+    Failed Command: $cmd\n\
+    ============================================================"
+}
+
 terminal_title() {
     local msg_title="${1:-Default}"
     local length=${#msg_title}
     local border=$(printf '%*s' $((length + 4)) '' | tr ' ' '-')
-    title=$(echo -e "$msg_title")
+    local title=$(echo -e "$msg_title")
     
     printf '\e[1;34m%-6s\e[m\n' "$border"
     printf '\e[1;34m%-6s\e[m\n' "| $title |"
     printf '\e[1;34m%-6s\e[m\n' "$border"
 }
 
-get_out()
-{
-    clear
-    return 0
-}
-
 pause_script() {
     local msg_title="${1:-Default}"
     local msg_text="${2:-Default}"
-    title=$(echo -e "$msg_title")
-    message=$(echo -e "$msg_text")
+    local title=$(echo -e "$msg_title")
+    local message=$(echo -e "$msg_text")
 
     if [ "$USE_DIALOG" = true ]; then
         dialog --ok-label "Ok" --backtitle "$title" --msgbox "$message" $half_height $half_width 2>&1 >/dev/tty
@@ -60,7 +82,6 @@ pause_script() {
         case $exit_code in
             0)  return;;
             1)  exit;;
-            *)  pause_script 'Error' "Unknown exit code: $exit_code";;
         esac
     else
         output
@@ -73,55 +94,56 @@ pause_script() {
         case $exit_code in
             0)  return;;
             1)  exit;;
-            *)  pause_script 'Error' "Unknown exit code: $exit_code";;
         esac
     fi
 }
 
+handle_exit_code() {
+    local code="$1"
+    local mode="${2:-return}"
+    case $code in
+        0) $mode ;;
+        1) exit ;;
+        *) pause_script 'Error' "Unknown exit code: $code" ;;
+    esac
+}
+
 live_command_output() {
+    local user="${1:-root}"
+    shift 1
     local commands=("$@")
+    local temp_file
+    local exit_code=0
+    temp_file=$(mktemp)
+    
+    execute_command() {
+        local cmd="$1"
+        if [ "$user" = "root" ]; then
+            $cmd >>"$temp_file" 2>&1 || output_error "$cmd" >>"$temp_file" 2>&1
+        else
+            sudo -u "$user" bash -c "$cmd" >>"$temp_file" 2>&1 || output_error "$cmd" >>"$temp_file" 2>&1
+        fi
+    }
 
     if [ "$USE_DIALOG" = true ]; then
-        temp_file=$(mktemp)
         for cmd in "${commands[@]}"; do
-            echo $ROOT_PASS | sudo -S bash -c "$cmd" > $temp_file 2>&1 || echo -e "\
-============================================================\n\
->>> CRITICAL ERROR: COMMAND EXECUTION FAILED! <<<\n\
-------------------------------------------------------------\n\
-Failed Command: $cmd\n\
-============================================================" >> $temp_file &
+            execute_command "$cmd" &
         done
-        dialog --exit-label "Ok" --backtitle "Live Command Output" --tailbox $temp_file $full_height $full_width 2>&1 >/dev/tty
+        dialog --exit-label "Ok" --backtitle "Live Command Output" --tailbox "$temp_file" "$full_height" "$full_width" 2>&1 >/dev/tty
         exit_code=$?
-
-        case $exit_code in
-            0)  return;;
-            1)  exit;;
-            *)  pause_script 'Error' "Unknown exit code: $exit_code";;
-        esac
     else
         clear
         terminal_title "Live Command Output"
         output "Press Ctrl+C to stop."
         output
-
         for cmd in "${commands[@]}"; do
-            echo $ROOT_PASS | sudo -S bash -c "$cmd" || echo -e "\
-============================================================\n\
->>> CRITICAL ERROR: COMMAND EXECUTION FAILED! <<<\n\
-------------------------------------------------------------\n\
-Failed Command: $cmd\
-============================================================"
+            execute_command "$cmd"
         done
-        exit_code="0"
+        exit_code=$?
         pause_script "Live command" "Command has finished execution"
-
-        case $exit_code in
-            0)  return;;
-            1)  exit;;
-            *)  pause_script 'Error' "Unknown exit code: $exit_code";;
-        esac
     fi
+    
+    handle_exit_code "$exit_code" "return"
 }
 
 input_text() {
@@ -130,41 +152,30 @@ input_text() {
     local msg_title="${3:-Default}"
     local msg_text="${4:-Default}"
     local msg_prompt="${5:-Default}"
-    title=$(echo -e "$msg_title")
-    message=$(echo -e "$msg_text")
-    prompt=$(echo -e "$msg_prompt")
+    local title=$(echo -e "$msg_title")
+    local message=$(echo -e "$msg_text")
+    local prompt=$(echo -e "$msg_prompt")
+    local dialog_output
+    local console_output
+    local exit_code=0
 
     if [ "$USE_DIALOG" = true ]; then
-        dialog_output=$(dialog --backtitle "$title" --ok-label "Continue" --inputbox "$message" $half_height $half_width 2>&1 >/dev/tty)
+        dialog_output=$(dialog --backtitle "$title" --ok-label "Continue" \
+            --inputbox "$message" $half_height $half_width 2>&1 >/dev/tty)
         exit_code=$?
-        
         eval "$choice=\"$dialog_output\""
-        eval "$status=\"$exit_code\""
-
-        case $exit_code in
-            0)  return;;
-            1)  exit;;
-            *)  pause_script 'Error' "Unknown exit code: $exit_code";;
-        esac
 
     else
         clear
         terminal_title "$text"
         output "$message"
         output
-
         read -p "$prompt" console_output
         exit_code=$?
-        
         eval "$choice=\"$console_output\""
-        eval "$status=\"$exit_code\""
-
-        case $exit_code in
-            0)  return;;
-            1)  exit;;
-            *)  pause_script 'Error' "Unknown exit code: $exit_code";;
-        esac
     fi
+    eval "$status=\"$exit_code\""
+    handle_exit_code "$exit_code" "return"
 }
 
 root_pass() {
@@ -174,13 +185,9 @@ root_pass() {
 
     while true; do
         if [ "$USE_DIALOG" = true ]; then
-            ROOT_PASS=$(dialog --backtitle "Sudo Password" --ok-label "Continue" --insecure --passwordbox "Enter your sudo password: " $half_height $half_width 2>&1 >/dev/tty)
+            ROOT_PASS=$(dialog --backtitle "Sudo Password" --ok-label "Continue" \
+                --insecure --passwordbox "Enter your sudo password: " $half_height $half_width 2>&1 >/dev/tty)
             exit_code=$?
-            case $exit_code in
-                0)  return;;
-                1)  exit;;
-                *)  pause_script 'Error' "Unknown exit code: $exit_code";;
-            esac
         else
             clear
             terminal_title "Sudo Password"
@@ -189,12 +196,9 @@ root_pass() {
             read -s -p "This script requires root permissions. Enter your root password: " -r ROOT_PASS
             exit_code=$?
             output
-            case $exit_code in
-                0)  return;;
-                1)  exit;;
-                *)  pause_script 'Error' "Unknown exit code: $exit_code";;
-            esac
         fi
+        
+        handle_exit_code "$exit_code" "return"
 
         if echo "$ROOT_PASS" | sudo -S whoami 2>/dev/null | grep -q "^root$"; then
             ROOT_PASS_SET=true
@@ -210,6 +214,7 @@ set_password() {
     local status="$2"
     local username="${3:-Default}"
     user=$(echo -e "$username")
+    local password1 password2 exit_code
 
     while true; do
         if [ "$USE_DIALOG" = true ]; then
@@ -219,18 +224,6 @@ set_password() {
 
             password2=$(dialog --backtitle "Password Prompt for '$user'" --ok-label "Continue" --insecure --passwordbox "Re-enter password for '$user'" $half_height $half_width 2>&1 >/dev/tty)
             exit_code=$?
-
-            if [ "$password1" != "$password2" ]; then
-                pause_script "Password Error" "Passwords for '$username' do not match. Please try again."
-            else
-                eval "$choice=\"$password1\""
-                eval "$status=\"$exit_code\""
-                case $exit_code in
-                    0)  break;;
-                    1)  exit;;
-                    *)  pause_script 'Error' "Unknown exit code: $exit_code";;
-                esac
-            fi
 
         else
             clear
@@ -244,18 +237,15 @@ set_password() {
             read -s -p "Re-enter password for '$user': " password2
             exit_code=$?
 
-            if [ "$password1" != "$password2" ]; then
-                pause_script "Password Error" "Passwords for '$user' do not match. Please try again."
-            else
-                eval "$choice=\"$password1\""
-                eval "$status=\"$exit_code\""
-                case $exit_code in
-                    0)  break;;
-                    1)  exit;;
-                    *)  pause_script 'Error' "Unknown exit code: $exit_code";;
-                esac
-            fi
         fi
+        
+        if [ "$password1" != "$password2" ]; then
+            pause_script "Password Error" "Passwords for '$user' do not match. Please try again."
+        else
+            eval "$choice=\"$password1\""
+            eval "$status=\"$exit_code\""
+        fi
+        handle_exit_code "$exit_code" "break"
     done
 }
 
@@ -266,10 +256,10 @@ menu_prompt() {
     local text="${4:-Default}"
     shift 4
     local options=("$@")
-    title=$(echo -e "$msg_title")
-    description=$(echo -e "$text")
-
-    menu_items=()
+    local title=$(echo -e "$msg_title")
+    local description=$(echo -e "$text")
+    local menu_items=()
+    
     for i in "${!options[@]}"; do
         menu_items+=($((i + 1)) "${options[i]}")
     done
@@ -280,17 +270,13 @@ menu_prompt() {
             --backtitle "$title" \
             --ok-label "Select" \
             --menu "$description" \
-            $half_height $half_width 4 \
+            $half_height $half_width 15 \
             "${menu_items[@]}" 2>&1 >/dev/tty)
         exit_code=$?
         eval "$choice=\"$dialog_output\""
         eval "$status=\"$exit_code\""
 
-        case $exit_code in
-            0)  return;;
-            1)  exit;;
-            *)  pause_script 'Error' "Unknown exit code: $exit_code";;
-        esac
+        handle_exit_code "$exit_code" "return"
 
     else
         clear
@@ -308,11 +294,7 @@ menu_prompt() {
         eval "$choice=\"$console_output\""
         eval "$status=\"$exit_code\""
 
-        case $exit_code in
-            0)  return;;
-            1)  exit;;
-            *)  pause_script 'Error' "Unknown exit code: $exit_code";;
-        esac
+        handle_exit_code "$exit_code" "return"
         
     fi
 }

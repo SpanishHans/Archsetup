@@ -8,15 +8,13 @@ The script is a fork of [Arch-Setup-Script](https://github.com/TommyTran732/Arch
 1. Download an Arch Linux ISO from [here](https://archlinux.org/download/)
 2. Flash the ISO onto an [USB Flash Drive](https://wiki.archlinux.org/index.php/USB_flash_installation_medium).
 3. Boot the live environment.
-4. Connect to the internet. iwcli for wifi. auto for ethernet.
-5. `git clone https://github.com/SpanishHans/ArchSetup/`
-6. `cd ArchSetup`
-7. `chmod u+x ./install.sh`
-8. `./install.sh`
+4. Connect to the internet. iwcli for wifi. auto for ethernet. (Get the custom iso with extra tools from: [Repo Release](https://github.com/SpanishHans/Archsetup/releases) and then run `chmod +x /root/NetworkInstaller.sh && /root/NetworkInstaller.sh`)
+5. `git clone https://github.com/SpanishHans/ArchSetup/ && cd ArchSetup && chmod u+x ./install.sh && ./install.sh`
+6. After install, reboot to system and log as root.
 
-### All commands
-
-`git clone https://github.com/SpanishHans/ArchSetup/ && cd ArchSetup && chmod u+x ./install.sh && ./install.sh`
+#### Note
+1. All scripts must be run from the root user to avoid permission issues. 
+2. Paru commands shall be ran as the syadmin user because mkpgk cant be ran as root.
 
 ### Snapper behavior
 The partition layout I use allows us to replicate the behavior found in openSUSE 🦎
