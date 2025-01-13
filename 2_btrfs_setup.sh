@@ -27,6 +27,11 @@ configure_snapper()
     commands_to_run+=("umount /.snapshots && rm -rf /.snapshots && snapper -c root create-config /")
     commands_to_run+=("mount -a")
     commands_to_run+=("systemctl daemon-reload")
+    commands_to_run+=("cat <<EOF
+        ============================================================
+        >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<
+        ============================================================
+    EOF")
 
     live_command_output "" "${commands_to_run[@]}"
 }
