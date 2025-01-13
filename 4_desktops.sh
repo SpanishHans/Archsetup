@@ -86,7 +86,7 @@ DM_console()
             *)  pause_script "" 'You did not enter a valid selection.'
         esac
     done
-    commands_to_run+=("echo -e \================================================\n\
+    commands_to_run+=("echo -e \n================================================\n\
     >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
     ================================================\n")
 
@@ -142,7 +142,7 @@ DM_graphical()
             *)  pause_script "" 'You did not enter a valid selection.'
         esac
     done
-    commands_to_run+=("echo -e \================================================\n\
+    commands_to_run+=("echo -e \n================================================\n\
     >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
     ================================================\n")
 
@@ -253,7 +253,7 @@ DE_selector()
             *)  pause_script "" 'You did not enter a valid selection.'
         esac
     done
-    commands_to_run+=("echo -e \================================================\n\
+    commands_to_run+=("echo -e \n================================================\n\
     >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
     ================================================\n")
 
@@ -299,7 +299,7 @@ WM_selector()
             *)  output 'You did not enter a valid selection.'
         esac
     done
-    commands_to_run+=("echo -e \================================================\n\
+    commands_to_run+=("echo -e \n================================================\n\
     >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
     ================================================\n")
 
