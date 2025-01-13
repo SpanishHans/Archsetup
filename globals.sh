@@ -104,7 +104,6 @@ continue_script() {
     else
         output
         terminal_title "$title"
-
         output "$message"
         output
         exit_code=$?

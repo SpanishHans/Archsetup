@@ -105,10 +105,10 @@ User Password:    $masked_user_password
 Root Password:    $masked_root_password
 Sysadmin Password:    $masked_sysadmin_password"
 
-continue_script 'User confirmation' "$userdata"
-
+pause_script 'User confirmation' "$userdata"
 hostname_prompt
-continue_script 'Hostname' "Hostname:    ${hostname}"
+
+pause_script 'Hostname' "Hostname:    ${hostname}"
 
 continue_script 'Disabling dialog' "To ensure legibility, now everything shall be done in terminal mode"
 USE_DIALOG=false
@@ -257,7 +257,7 @@ echo "$hostname" > /mnt/etc/hostname
 cat <<EOF > /mnt/etc/hosts
 127.0.0.1    localhost
 ::1          localhost
-127.0.1.1    $hostname.localdomain    $hostname
+127.0.1.1    "$hostname".localdomain    "$hostname"
 EOF
 
 cat <<EOF > /mnt/etc/locale.gen
@@ -271,21 +271,19 @@ echo "KEYMAP=$kblayout" > /mnt/etc/vconsole.conf
 echo "FONT=ter-u20n" > /mnt/etc/vconsole.conf
 
 continue_script 'Copy repo' 'Copying repo to machine'
-cp -R --no-preserve=ownership /root/ArchSetup /mnt/root
+cp -R --no-preserve=ownership /root/ArchSetup /mnt/root/ArchSetup
 
-continue_script '' 'About to chroot into the machine'
-continue_script '' 'this automatically:'
-continue_script '' '1. Generates locales and configures time to UTC'
-continue_script '' '2. Enables NetworkManager'
-continue_script '' '3. Creates users and changes passwords'
-continue_script '' '4. Enable pacman color'
-continue_script '' '5. Sets up wheel group and adds the admin user to wheel'
-continue_script '' '6. Grub no timeout and splash quiet'
-continue_script '' '7. Creates initramfs with mkinitcpio -P'
-continue_script '' '8. Installs grub for the system with btrfs and snapper-rollback support'
-continue_script
-
-continue_script 'Chroot' 'Chrooting into machine...'
+description="About to chroot into the machine
+this automatically:
+    1. Generates locales and configures time to UTC
+    2. Enables NetworkManager
+    3. Creates users and changes passwords
+    4. Enable pacman color
+    5. Sets up wheel group and adds the admin user to wheel
+    6. Grub no timeout and splash quiet
+    7. Creates initramfs with mkinitcpio -P
+    8. Installs grub for the system with btrfs and snapper-rollback support"
+pause_script 'Chroot description' "$description"
 arch-chroot /mnt /bin/bash -e <<EOF
 
     echo '#### STARTING 1. #### ->> time and locales'
