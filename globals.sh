@@ -102,9 +102,8 @@ live_command_output() {
     local user="${1:-root}"
     shift 1
     local commands=("$@")
-    local temp_file
     local exit_code=0
-    local temp_file=$(mktemp)
+    local combined_log=$(mktemp)
     
     output_error() {
         local cmd="$1"
@@ -121,25 +120,17 @@ live_command_output() {
         local cmd="$1"
         local error_msg
         if [ "$user" = "root" ]; then
-            $cmd >>"$temp_file" 2>&1
-            error_msg=$?
+            $cmd >> "$combined_log" 2>&1  # Capture both stdout and stderr in the same log
         else
-            sudo -u "$user" bash -c "$cmd" >>"$temp_file" 2>&1
-            error_msg=$?
-        fi
-    
-        if [ $error_msg -ne 0 ]; then
-            echo "Command failed: $cmd" >>"$temp_file"
-            echo "Error code: $error_msg" >>"$temp_file"
+            sudo -u "$user" bash -c "$cmd" >> "$combined_log" 2>&1
         fi
     }
 
-
     if [ "$USE_DIALOG" = true ]; then
         for cmd in "${commands[@]}"; do
-            execute_command "$cmd" "$user" &
+            execute_command "$cmd" &
         done
-        dialog --exit-label "Ok" --backtitle "Live Command Output" --tailbox "$Logs_cmd" "$full_height" "$full_width" 2>&1 >/dev/tty
+        dialog --exit-label "Ok" --backtitle "Live Command Output" --tailbox "$combined_log" "$full_height" "$full_width" 2>&1 >/dev/tty
         exit_code=$?
     else
         clear
@@ -147,7 +138,7 @@ live_command_output() {
         output "Press Ctrl+C to stop."
         output
         for cmd in "${commands[@]}"; do
-            execute_command "$cmd" "$user"
+            execute_command "$cmd"
         done
         exit_code=$?
         pause_script "Live command" "Command has finished execution"
