@@ -88,6 +88,33 @@ pause_script() {
     fi
 }
 
+continue_script() {
+    local msg_title="${1:-Default}"
+    local msg_text="${2:-Default}"
+    local title=$(echo -e "$msg_title")
+    local message=$(echo -e "$msg_text")
+
+    if [ "$USE_DIALOG" = true ]; then
+        dialog --ok-label "Ok" --backtitle "$title" --infobox "$message" $half_height $half_width 2>&1 >/dev/tty
+        exit_code=$?
+        case $exit_code in
+            0)  return;;
+            1)  exit;;
+        esac
+    else
+        output
+        terminal_title "$title"
+
+        output "$message"
+        output
+        exit_code=$?
+        case $exit_code in
+            0)  return;;
+            1)  exit;;
+        esac
+    fi
+}
+
 handle_exit_code() {
     local code="$1"
     local mode="${2:-return}"
@@ -260,7 +287,7 @@ set_password() {
             eval "$status=\"$exit_code\""
             break
         fi
-        handle_exit_code "$exit_code" "exit"
+        handle_exit_code "$exit_code" "break"
     done
 }
 
