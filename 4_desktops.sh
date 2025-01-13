@@ -86,7 +86,6 @@ DM_console()
             *)  pause_script "" 'You did not enter a valid selection.'
         esac
     done
-    
 
     live_command_output "" "console display manager (DM)" "${commands_to_run[@]}"
     pause_script "" "Display Manager Console Setup complete!"
@@ -140,7 +139,6 @@ DM_graphical()
             *)  pause_script "" 'You did not enter a valid selection.'
         esac
     done
-    
 
     live_command_output "" "graphical display manager (DM)" "${commands_to_run[@]}"
     pause_script "" "Display Manager Graphical Setup complete!"
@@ -249,7 +247,6 @@ DE_selector()
             *)  pause_script "" 'You did not enter a valid selection.'
         esac
     done
-    
 
     live_command_output "" "desktop environment (DE)" "${commands_to_run[@]}"
     pause_script "" "Desktop Environment Setup complete!"
@@ -293,7 +290,6 @@ WM_selector()
             *)  output 'You did not enter a valid selection.'
         esac
     done
-    
 
     live_command_output "" "window manager (wm)" "${commands_to_run[@]}"
     pause_script "" "Window Manager Setup complete!"

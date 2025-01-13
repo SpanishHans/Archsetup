@@ -27,8 +27,6 @@ configure_snapper()
     commands_to_run+=("umount /.snapshots && rm -rf /.snapshots && snapper -c root create-config /")
     commands_to_run+=("mount -a")
     commands_to_run+=("systemctl daemon-reload")
-    
-
 
     live_command_output "" "Btrfs" "${commands_to_run[@]}"
     pause_script "" "Btrfs Setup complete!"
