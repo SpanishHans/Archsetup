@@ -87,7 +87,7 @@ DM_console()
         esac
     done
     commands_to_run+=("echo -e ================================================\n\
-    >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
+    >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\
     ================================================\n'")
 
     live_command_output "" "${commands_to_run[@]}"
@@ -143,7 +143,7 @@ DM_graphical()
         esac
     done
     commands_to_run+=("echo -e ================================================\n\
-    >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
+    >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\
     ================================================\n'")
 
     live_command_output "" "${commands_to_run[@]}"
@@ -254,7 +254,7 @@ DE_selector()
         esac
     done
     commands_to_run+=("echo -e ================================================\n\
-    >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
+    >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\
     ================================================\n'")
 
     live_command_output "" "${commands_to_run[@]}"
@@ -300,7 +300,7 @@ WM_selector()
         esac
     done
     commands_to_run+=("echo -e ================================================\n\
-    >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
+    >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\
     ================================================\n'")
 
     live_command_output "" "${commands_to_run[@]}"
