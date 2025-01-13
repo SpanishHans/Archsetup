@@ -109,16 +109,16 @@ live_command_output() {
         local cmd="$1"
         local err="$2"
         if [ "$exit_code" -eq 0 ]; then
-            echo -e "\n ================================================\n\
-            >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
-            ================================================\n" >> "$combined_log"
+            echo -e "\n================================================\n\
+>>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
+================================================\n" >> "$combined_log"
         else
             echo -e "\n ============================================================\n\
-            >>> CRITICAL ERROR: COMMAND EXECUTION FAILED! <<<\n\
-            ------------------------------------------------------------\n\
-            Failed Command: $cmd\n\
-            Error Message: $err\n\
-            ===========================================================\n" >> "$combined_log"
+>>> CRITICAL ERROR: COMMAND EXECUTION FAILED! <<<\n\
+------------------------------------------------------------\n\
+Failed Command: $cmd\n\
+Error Message: $err\n\
+===========================================================\n" >> "$combined_log"
         fi
     }
     
