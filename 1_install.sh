@@ -105,35 +105,35 @@ User Password:    $masked_user_password
 Root Password:    $masked_root_password
 Sysadmin Password:    $masked_sysadmin_password"
 
-pause_script 'User confirmation' "$userdata"
+continue_script 'User confirmation' "$userdata"
 
 hostname_prompt
-pause_script 'Hostname' "Hostname:    ${hostname}"
+continue_script 'Hostname' "Hostname:    ${hostname}"
 
-pause_script 'Disabling dialog' "To ensure legibility, now everything shall be done in terminal mode"
+continue_script 'Disabling dialog' "To ensure legibility, now everything shall be done in terminal mode"
 USE_DIALOG=false
 
-pause_script 'Formatting' "Proceeding to formatting of:    ${disk}."
+continue_script 'Formatting' "Proceeding to formatting of:    ${disk}."
 sgdisk --zap-all "${disk}"
-pause_script 'Partition scheme' "Creating new partition scheme on ${disk}."
-pause_script 'Partition table' "Creating new gpt table ${disk}."
+continue_script 'Partition scheme' "Creating new partition scheme on ${disk}."
+continue_script 'Partition table' "Creating new gpt table ${disk}."
 sgdisk -g "${disk}"
-pause_script 'Partition name: ESP' "Creating new partition with name ESP ${disk}."
+continue_script 'Partition name: ESP' "Creating new partition with name ESP ${disk}."
 sgdisk -I -n 1:0:+1G -t 1:ef00 -c 1:'ESP' "${disk}"
-pause_script 'Partition name: Arch' "Creating new partition with name Arch ${disk}."
+continue_script 'Partition name: Arch' "Creating new partition with name Arch ${disk}."
 sgdisk -I -n 2:0:0 -c 2:'Arch' "${disk}"
 
 ESP='/dev/disk/by-partlabel/ESP'
 BTRFS='/dev/disk/by-partlabel/Arch'
 
-pause_script 'Inform disk changes' 'Informing the Kernel about the disk changes.'
+continue_script 'Inform disk changes' 'Informing the Kernel about the disk changes.'
 partprobe "${disk}"
-pause_script 'Format partition ESP: FAT32' 'Formatting the EFI partition as FAT32.'
+continue_script 'Format partition ESP: FAT32' 'Formatting the EFI partition as FAT32.'
 mkfs.fat -F 32 "${ESP}"
-pause_script 'Format partition Arch: BTRFS' 'Formatting the Arch partition as BTRFS.'
+continue_script 'Format partition Arch: BTRFS' 'Formatting the Arch partition as BTRFS.'
 mkfs.btrfs -f "${BTRFS}"
 
-pause_script 'BTRFS subvolumes' 'Creating BTRFS subvolumes.'
+continue_script 'BTRFS subvolumes' 'Creating BTRFS subvolumes.'
 mount "${BTRFS}" /mnt
 
 btrfs su cr /mnt/@
@@ -169,7 +169,7 @@ chattr +C /mnt/@gdm
 chattr +C /mnt/@var_lib_AccountsService
 
 umount /mnt
-pause_script 'Mount subvolumes' 'Mounting the newly created subvolumes.'
+continue_script 'Mount subvolumes' 'Mounting the newly created subvolumes.'
 mount -o ssd,noatime,compress=zstd,subvol=@ "${BTRFS}" /mnt
 
 mkdir -p /mnt/efi
@@ -207,20 +207,20 @@ mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@var_lib
 
 mount -o nodev,nosuid,noexec "${ESP}" /mnt/efi
 
-pause_script 'Detect CPU vendor' 'Detecting ucode for processor brand'
+continue_script 'Detect CPU vendor' 'Detecting ucode for processor brand'
 CPU=$(grep -m 1 'vendor_id' /proc/cpuinfo)
 if [[ "${CPU}" == *"AuthenticAMD"* ]]; then
-    pause_script '' 'Installing ucode for AMD'
+    continue_script '' 'Installing ucode for AMD'
     microcode="amd-ucode"
 elif [[ "${CPU}" == *"GenuineIntel"* ]]; then
     microcode="intel-ucode"
-    pause_script '' 'Installing ucode for Intel'
+    continue_script '' 'Installing ucode for Intel'
 else
     echo "Unknown CPU vendor. Exiting."
     exit 1
 fi
 
-pause_script 'Installing base system' 'Installing the base system (it may take a while).'
+continue_script 'Installing base system' 'Installing the base system (it may take a while).'
 pacstrap /mnt \
   base \
   linux \
@@ -249,10 +249,10 @@ pacstrap /mnt \
     exit 1
   }
 
-pause_script 'New fstab' 'Generating a new fstab.'
+continue_script 'New fstab' 'Generating a new fstab.'
 genfstab -U /mnt >> /mnt/etc/fstab || { pause_script '' "genfstab failed"; exit 1; }
 
-pause_script 'Locales setup' 'Setting up hostname, locales, and keyboard layout'
+continue_script 'Locales setup' 'Setting up hostname, locales, and keyboard layout'
 echo "$hostname" > /mnt/etc/hostname
 cat <<EOF > /mnt/etc/hosts
 127.0.0.1    localhost
@@ -270,22 +270,22 @@ echo "LANG=$locale.UTF-8" > /mnt/etc/locale.conf
 echo "KEYMAP=$kblayout" > /mnt/etc/vconsole.conf
 echo "FONT=ter-u20n" > /mnt/etc/vconsole.conf
 
-pause_script 'Copy repo' 'Copying repo to machine'
+continue_script 'Copy repo' 'Copying repo to machine'
 cp -R --no-preserve=ownership /root/ArchSetup /mnt/root
 
-pause_script '' 'About to chroot into the machine'
-pause_script '' 'this automatically:'
-pause_script '' '1. Generates locales and configures time to UTC'
-pause_script '' '2. Enables NetworkManager'
-pause_script '' '3. Creates users and changes passwords'
-pause_script '' '4. Enable pacman color'
-pause_script '' '5. Sets up wheel group and adds the admin user to wheel'
-pause_script '' '6. Grub no timeout and splash quiet'
-pause_script '' '7. Creates initramfs with mkinitcpio -P'
-pause_script '' '8. Installs grub for the system with btrfs and snapper-rollback support'
-pause_script
+continue_script '' 'About to chroot into the machine'
+continue_script '' 'this automatically:'
+continue_script '' '1. Generates locales and configures time to UTC'
+continue_script '' '2. Enables NetworkManager'
+continue_script '' '3. Creates users and changes passwords'
+continue_script '' '4. Enable pacman color'
+continue_script '' '5. Sets up wheel group and adds the admin user to wheel'
+continue_script '' '6. Grub no timeout and splash quiet'
+continue_script '' '7. Creates initramfs with mkinitcpio -P'
+continue_script '' '8. Installs grub for the system with btrfs and snapper-rollback support'
+continue_script
 
-pause_script 'Chroot' 'Chrooting into machine...'
+continue_script 'Chroot' 'Chrooting into machine...'
 arch-chroot /mnt /bin/bash -e <<EOF
 
     echo '#### STARTING 1. #### ->> time and locales'
