@@ -49,18 +49,6 @@ output() {
     printf '\e[1;31m%s\e[m\n' "$*"
 }
 
-output_error() {
-    local cmd="$1"
-    local error_msg="$2"
-    echo -e "\
-    ============================================================\n\
-    >>> CRITICAL ERROR: COMMAND EXECUTION FAILED! <<<\n\
-    ------------------------------------------------------------\n\
-    Failed Command: $cmd\n\
-    Error Message: $error_msg\n\
-    ============================================================\n"
-}
-
 terminal_title() {
     local msg_title="${1:-Default}"
     local length=${#msg_title}
@@ -117,6 +105,18 @@ live_command_output() {
     local temp_file
     local exit_code=0
     temp_file=$(mktemp)
+    
+    output_error() {
+        local cmd="$1"
+        local error_msg="$2"
+        echo -e "\
+        ============================================================\n\
+        >>> CRITICAL ERROR: COMMAND EXECUTION FAILED! <<<\n\
+        ------------------------------------------------------------\n\
+        Failed Command: $cmd\n\
+        Error Message: $error_msg\n\
+        ============================================================\n"
+    }
     
     execute_command() {
         local cmd="$1"
