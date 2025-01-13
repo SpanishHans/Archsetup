@@ -108,12 +108,18 @@ live_command_output() {
     output_error() {
         local cmd="$1"
         local err="$2"
-        echo -e "\n ============================================================\n\
-        >>> CRITICAL ERROR: COMMAND EXECUTION FAILED! <<<\n\
-        ------------------------------------------------------------\n\
-        Failed Command: $cmd\n\
-        Error Message: $err\n\
-        ===========================================================\n"
+        if [ "$exit_code" -eq 0 ]; then
+            echo -e "\n ================================================\n\
+            >>> SUCCESS: COMMANDS EXECUTED SUCCESSFULLY! <<<\n\
+            ================================================\n" >> "$combined_log"
+        else
+            echo -e "\n ============================================================\n\
+            >>> CRITICAL ERROR: COMMAND EXECUTION FAILED! <<<\n\
+            ------------------------------------------------------------\n\
+            Failed Command: $cmd\n\
+            Error Message: $err\n\
+            ===========================================================\n" >> "$combined_log"
+        fi
     }
     
     execute_command() {
@@ -121,9 +127,12 @@ live_command_output() {
         local error_msg
         if [ "$user" = "root" ]; then
             $cmd >> "$combined_log" 2>&1  # Capture both stdout and stderr in the same log
+            exit_code=$?  # Capture the exit code of the command
         else
             sudo -u "$user" bash -c "$cmd" >> "$combined_log" 2>&1
+            exit_code=$?  # Capture the exit code of the command
         fi
+        output_error "$cmd" "$exit_code"
     }
 
     if [ "$USE_DIALOG" = true ]; then
