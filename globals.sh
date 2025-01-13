@@ -109,7 +109,7 @@ live_command_output() {
     output_error() {
         local cmd="$1"
         local error_msg="$2"
-        echo -e "\n\
+        echo -e "\
         ============================================================\n\
         >>> CRITICAL ERROR: COMMAND EXECUTION FAILED! <<<\n\
         ------------------------------------------------------------\n\
