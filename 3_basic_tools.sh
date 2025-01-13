@@ -1,0 +1,220 @@
+#!/bin/sh
+
+# Copyright (C) 2021-2024 Thien Tran
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not
+# use this file except in compliance with the License. You may obtain a copy of
+# the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations under
+# the License.
+
+source ./globals.sh
+
+configure_git() {
+    commands_to_run=("")
+    commands_to_run+=("pacman --noconfirm -S git")
+
+    input_text "User account" "Please enter the user whose git shall be configured" "What user to add to docker group?: " username
+    input_text "Github user of $username" "Please enter the username in github for $username" "Enter Git username: " gitusername
+    input_text "Github email of $username" "Please enter the email in github for $username" "Enter Git email: " gitemail
+
+    home_path="/home/$username"
+    gitconfig_path="$home_path/.gitconfig"
+
+    commands_to_run+=(
+        "cat > $gitconfig_path <<EOF
+        [init]
+            defaultBranch = main
+        [user]
+            name = $gitusername
+            email = $gitemail
+        [core]
+            editor = vim
+        [alias]
+            st = status
+            co = checkout
+            br = branch
+            cm = commit
+        [color]
+            ui = auto
+        EOF"
+    )
+
+    commands_to_run+=(
+        "chown $username:$username $gitconfig_path"
+    )
+
+    ssh_key_path="$home_path/.ssh/id_ed25519"
+    if [ -f "$ssh_key_path" ]; then
+        commands_to_run+=("echo 'SSH key already exists at $ssh_key_path.'")
+    else
+        commands_to_run+=("echo 'Generating SSH key at $ssh_key_path...'")
+        commands_to_run+=("mkdir -p $home_path/.ssh")
+        commands_to_run+=("ssh-keygen -t ed25519 -C '$gitemail' -f '$ssh_key_path'")
+        commands_to_run+=("chown -R $username:$username $home_path/.ssh")
+        commands_to_run+=("sudo -u <username> bash -c \"eval \$(ssh-agent -s) && ssh-add '$ssh_key_path'\"")
+
+    fi
+    commands_to_run+=("cat $ssh_key_path")
+
+    live_command_output "${commands_to_run[@]}"
+}
+
+configure_paru()
+{
+    commands_to_run=()
+    commands_to_run+=("pacman --noconfirm -S --needed base-devel rustup")
+    commands_to_run+=("git clone https://aur.archlinux.org/paru.git /home/sysadmin/.paru")
+    commands_to_run+=("chown -R sysadmin:sysadmin /home/sysadmin/.paru")
+    # commands_to_run+=("sudo -u sysadmin bash -c 'rustup default stable'")
+    # commands_to_run+=("sudo -u sysadmin bash -i -c 'cd /home/sysadmin/.paru &&  makepkg -si'")
+
+    live_command_output "${commands_to_run[@]}"
+}
+
+configure_snp()
+{
+    commands_to_run=()
+    commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S snp'")
+
+    live_command_output "${commands_to_run[@]}"
+}
+
+configure_snapper_rollback()
+{
+    commands_to_run=()
+    commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S snapper-rollback'")
+    commands_to_run+=("
+        if grep -qE '^[#]*mountpoint[[:space:]]*=[[:space:]]*/btrfsroot' /etc/snapper-rollback.conf; then
+            sed -i 's|^[#]*mountpoint[[:space:]]*=[[:space:]]*/btrfsroot|mountpoint = /.btrfsroot|' /etc/snapper-rollback.conf
+            echo \"mountpoint updated to /.btrfsroot in /etc/snapper-rollback.conf\"
+        else
+            echo \"mountpoint entry not found in /etc/snapper-rollback.conf\"
+        fi")
+
+
+    live_command_output "${commands_to_run[@]}"
+}
+
+configure_terminal() {
+    output "This allows you to set up different modes of zsh for a given user"
+    output "Mode 1: Zsh + Oh My Zsh"
+    output "Mode 2: Zsh + Oh My Zsh + Starship"
+    output "For now, please give me the user to change terminal for"
+    output "This might break dotfiles for that user"
+
+    input_text username username_status "Docker user" "Please enter the user who shall be added to docker group" "What user to add to docker group?: "
+
+    commands_to_run=()
+
+    while true; do
+        clear
+        output "Configuration Menu"
+        output "-------------------"
+        output "1) Configure Zsh + Oh My Zsh"
+        output "2) Configure Zsh + Oh My Zsh + Starship"
+        output "0) Exit"
+        read -p "Please select an option: " -r term_option
+        case $term_option in
+            1)  commands_to_run+=("pacman --noconfirm -S zsh curl ttf-dejavu-nerd ttf-0xproto-nerd ttf-font-awesome starship")
+                commands_to_run+=("chsh -s /bin/zsh $username")
+                commands_to_run+=("curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -o /tmp/ohmyzsh_install.sh")
+                commands_to_run+=("sudo -u $username bash /tmp/ohmyzsh_install.sh")
+                break
+                ;;
+            2)  commands_to_run+=("pacman --noconfirm -S zsh curl ttf-dejavu-nerd ttf-0xproto-nerd ttf-font-awesome starship")
+                commands_to_run+=("chsh -s /bin/zsh $username")
+                commands_to_run+=("curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -o /tmp/ohmyzsh_install.sh")
+                commands_to_run+=("sudo -u $username bash /tmp/ohmyzsh_install.sh")
+                commands_to_run+=(
+                    "if ! grep -Fxq 'eval \"\$(starship init zsh)\"' /home/$username/.zshrc; then
+                        echo 'eval \"\$(starship init zsh)\"' >> /home/$username/.zshrc
+                        echo \"Starship initialization added to .zshrc\"
+                    else
+                        echo \"Starship initialization already present in .zshrc\"
+                    fi"
+                )
+                commands_to_run+=("mkdir -p /home/$username/.config && touch /home/$username/.config/starship.toml")
+                commands_to_run+=("starship preset gruvbox-rainbow -o /home/$username/.config/starship.toml")
+                break
+                ;;
+            0) output 'I dont want shit, get out of here'; break;;
+            *) output "Invalid choice, please try again.";;
+        esac
+    done
+
+    live_command_output "${commands_to_run[@]}"
+}
+
+configure_flatpak()
+{
+    # Initialize arrays for commands
+    commands_to_run=()
+    commands_to_run+=("pacman --noconfirm -S flatpak")
+
+    live_command_output "${commands_to_run[@]}"
+}
+
+configure_docker()
+{
+    input_text "Docker user" "Please enter the user who shall be added to docker group" "What user to add to docker group?: " username
+
+    local title="${1:-}"
+    local desc="${2:-}"
+    local prom="${3:-}"
+    local variable="${4:-}"
+
+    commands_to_run=()
+    commands_to_run+=("pacman --noconfirm -S docker docker-compose && usermod -aG docker $username")
+    commands_to_run+=("systemctl enable docker && systemctl start --now docker")
+
+    live_command_output "${commands_to_run[@]}"
+}
+
+configure_distrobox()
+{
+    # Initialize arrays for commands
+    commands_to_run=()
+    commands_to_run+=("pacman --noconfirm -S distrobox")
+
+    live_command_output "${commands_to_run[@]}"
+}
+
+titulo="Basic tools installer"
+
+descripcion="This script provides a menu to install some basic arch tools.
+Select an option from the menu to proceed."
+
+while true; do
+    options=(\
+        "Configure git" \
+        "Configure paru" \
+        "Configure snp" \
+        "Configure snapper-rollback" \
+        "Configure terminal" \
+        "Configure flatpak" \
+        "Configure docker" \
+        "Configure distrobox" \
+    )
+    
+    menu_prompt menu_choice_3 menu_choice_status_3 "$titulo" "$descripcion" "${options[@]}"
+
+    case $menu_choice_3 in
+        1)  configure_git;;
+        2)  configure_paru;;
+        3)  configure_snp;;
+        4)  configure_snapper_rollback;;
+        5)  configure_terminal;;
+        6)  configure_flatpak;;
+        7)  configure_docker;;
+        8)  configure_distrobox;;
+        0)  exit;;
+        *)  output "Invalid choice, please try again." ;;
+    esac
+done
