@@ -20,11 +20,11 @@ configure_git() {
     commands_to_run=()
     commands_to_run+=("pacman --noconfirm -S git")
 
-    input_text "User account" "Please enter the user whose git shall be configured" "What user to configure git for?: " username
-    input_text "Github user of $username" "Please enter the username in github for $username" "Enter Git username: " gitusername
-    input_text "Github email of $username" "Please enter the email in github for $username" "Enter Git email: " gitemail
+    input_text git_user git_user_status "User account" "Please enter the user whose git shall be configured" "What user to configure git for?: "
+    input_text gitusername gitusername_status "Github user of $git_user" "Please enter the username in github for $git_user" "Enter Git username: "
+    input_text gitemail gitemail_status "Github email of $git_user" "Please enter the email in github for $git_user" "Enter Git email: "
 
-    home_path="/home/$username"
+    home_path="/home/$git_user"
     gitconfig_path="$home_path/.gitconfig"
 
     commands_to_run+=(
@@ -53,9 +53,9 @@ configure_git() {
         commands_to_run+=("echo 'Generating SSH key at $ssh_key_path...'")
         commands_to_run+=("mkdir -p $home_path/.ssh")
         commands_to_run+=("ssh-keygen -t ed25519 -C '$gitemail' -f '$ssh_key_path'")
-        commands_to_run+=("chown -R $username:$username $home_path/.ssh")
-        commands_to_run+=("chown $username:$username $gitconfig_path")
-        commands_to_run+=("sudo -u <username> bash -c \"eval \$(ssh-agent -s) && ssh-add '$ssh_key_path'\"")
+        commands_to_run+=("chown -R $git_user:$git_user $home_path/.ssh")
+        commands_to_run+=("chown $git_user:$git_user $gitconfig_path")
+        commands_to_run+=("sudo -u $git_user bash -c \"eval \$(ssh-agent -s) && ssh-add '$ssh_key_path'\"")
 
     fi
     commands_to_run+=("cat $ssh_key_path")
@@ -81,7 +81,7 @@ configure_snp()
     commands_to_run+=("sudo -u sysadmin bash -c 'paru -S snp [edit: --noconfirm ]'")
     # commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S snp'")
 
-    live_command_output "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
 }
 
 configure_snapper_rollback()
@@ -98,16 +98,16 @@ configure_snapper_rollback()
         fi")
 
 
-    live_command_output "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
 }
 
 configure_terminal() {
 
-    title="Terminal configurator: pick user"
-    description="This allows you to set up different modes of zsh for a given user.
+    local title="Terminal configurator: pick user"
+    local description="This allows you to set up different modes of zsh for a given user.
     Please give me the user whose terminal shall be configured.
     This might break dotfiles for that user!"
-    input_text username username_status "Terminal configuration" "$description" "What user to configure terminal for?: "
+    input_text term_username term_username_status "Terminal configuration" "$description" "What user to configure terminal for?: "
 
     title="Terminal configurator: pick mode"
     description="Please select configuration mode from the menu below."
@@ -121,31 +121,31 @@ configure_terminal() {
     
         case $terminal_choice in
             1)  commands_to_run+=("pacman --noconfirm -S zsh curl ttf-dejavu-nerd ttf-0xproto-nerd ttf-font-awesome starship")
-                commands_to_run+=("chsh -s /bin/zsh $username")
+                commands_to_run+=("chsh -s /bin/zsh $term_username")
                 commands_to_run+=("curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -o /tmp/ohmyzsh_install.sh")
-                commands_to_run+=("sudo -u $username bash /tmp/ohmyzsh_install.sh")
+                commands_to_run+=("sudo -u $term_username bash /tmp/ohmyzsh_install.sh")
                 break;;
             2)  commands_to_run+=("pacman --noconfirm -S zsh curl ttf-dejavu-nerd ttf-0xproto-nerd ttf-font-awesome starship")
-                commands_to_run+=("chsh -s /bin/zsh $username")
+                commands_to_run+=("chsh -s /bin/zsh $term_username")
                 commands_to_run+=("curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -o /tmp/ohmyzsh_install.sh")
-                commands_to_run+=("sudo -u $username bash /tmp/ohmyzsh_install.sh")
+                commands_to_run+=("sudo -u $term_username bash /tmp/ohmyzsh_install.sh")
                 commands_to_run+=(
-                    "if ! grep -Fxq 'eval \"\$(starship init zsh)\"' /home/$username/.zshrc; then
-                        echo 'eval \"\$(starship init zsh)\"' >> /home/$username/.zshrc
+                    "if ! grep -Fxq 'eval \"\$(starship init zsh)\"' /home/$term_username/.zshrc; then
+                        echo 'eval \"\$(starship init zsh)\"' >> /home/$term_username/.zshrc
                         echo \"Starship initialization added to .zshrc\"
                     else
                         echo \"Starship initialization already present in .zshrc\"
                     fi"
                 )
-                commands_to_run+=("mkdir -p /home/$username/.config && touch /home/$username/.config/starship.toml")
-                commands_to_run+=("starship preset gruvbox-rainbow -o /home/$username/.config/starship.toml")
+                commands_to_run+=("mkdir -p /home/$term_username/.config && touch /home/$term_username/.config/starship.toml")
+                commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
                 break;;
             0)  exit;;
             *)  output "Invalid choice, please try again.";;
         esac
     done
 
-    live_command_output "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
 }
 
 configure_flatpak()
@@ -154,12 +154,12 @@ configure_flatpak()
     commands_to_run=()
     commands_to_run+=("pacman --noconfirm -S flatpak")
 
-    live_command_output "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
 }
 
 configure_docker()
 {
-    input_text "Docker user" "Please enter the user who shall be added to docker group" "What user to add to docker group?: " docker_user
+    input_text docker_user docker_user_status "Docker user" "Please enter the user who shall be added to docker group" "What user to add to docker group?: "
 
     local title="${1:-}"
     local desc="${2:-}"
@@ -170,7 +170,7 @@ configure_docker()
     commands_to_run+=("pacman --noconfirm -S docker docker-compose && usermod -aG docker $docker_user")
     commands_to_run+=("systemctl enable docker && systemctl start --now docker")
 
-    live_command_output "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
 }
 
 configure_distrobox()
@@ -179,7 +179,7 @@ configure_distrobox()
     commands_to_run=()
     commands_to_run+=("pacman --noconfirm -S distrobox")
 
-    live_command_output "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
 }
 
 titulo="Basic tools installer"
@@ -211,6 +211,6 @@ while true; do
         7)  configure_docker;;
         8)  configure_distrobox;;
         0)  exit;;
-        *)  output "Invalid choice, please try again." ;;
+        *)  pause_script "" "Invalid choice, please try again." ;;
     esac
 done

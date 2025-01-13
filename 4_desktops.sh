@@ -19,12 +19,13 @@ source ./globals.sh
 DM_selector()
 {
     while true; do
-        clear
-        pause_script "" 'Select a Window Manager category:'
-        output "" '1) Console-based'
-        output "" '2) Graphical-based'
-        output '0) Nothing'
-        read -p 'Insert the number of your selection: ' -r category_choice
+        options=(\
+            "1) Console-based" \
+            "2) Graphical-based" \
+        )
+        
+        menu_prompt category_choice category_choice_status "$titulo" "$descripcion" "${options[@]}"
+
         case $category_choice in
             1)  DM_console
                 break
@@ -32,15 +33,13 @@ DM_selector()
             2)  DM_graphical
                 break
                 ;;
-            0)  output 'I dont want shit, get out of here'
-                break
+            0)  exit
                 ;;
-            *)  output 'You did not enter a valid selection.'
+            *)  pause_script "" 'You did not enter a valid selection.'
         esac
     done
 
-    output "Display Manager Setup complete!"
-    pause_script
+    pause_script "" "Display Manager Setup complete!"
 }
 
 DM_console()
@@ -51,21 +50,20 @@ DM_console()
     for dm in "${all_dms[@]}"; do
         commands_to_run+=("systemctl disable $dm")
     done
-
-    clear
-    pause_script "root password" 'Provide system root password for installation'
-    su -c "$(printf "%s\n" "${commands_to_run[@]}")" || { echo "Service(s) doesnt exist or already disabled"; }
-
+    live_command_output "" "${commands_to_run[@]}"
+    
     commands_to_run=()
 
     while true; do
-        output 'Select a Console Window Manager:'
-        output '1) Ly'
-        output '2) Tbsm'
-        output '3) Emptty'
-        output '4) Lemurs'
-        output '0) Nothing'
-        read -p 'Insert the number of your selection: ' -r console_choice
+        options=(\
+            "1) Ly" \
+            "2) Tbsm" \
+            "3) Emptty" \
+            "4) Lemurs" \
+        )
+        
+        menu_prompt console_choice console_choice_status "$titulo" "$descripcion" "${options[@]}"
+
         case $console_choice in
             1)  commands_to_run+=("pacman --noconfirm -S ly")
                 commands_to_run+=("systemctl enable ly.service && systemctl start --now ly.service")
@@ -81,17 +79,14 @@ DM_console()
                 commands_to_run+=("systemctl enable lemurs.service && systemctl start --now lemurs.service")
                 break
                 ;;
-            0)  output 'I dont want shit, get out of here'
-                break
+            0)  exit
                 ;;
-            *)  output 'You did not enter a valid selection.'
+            *)  pause_script "" 'You did not enter a valid selection.'
         esac
     done
 
-    live_command_output "${commands_to_run[@]}"
-
-    output "Display Manager Console Setup complete!"
-    pause_script
+    live_command_output "" "${commands_to_run[@]}"
+    pause_script "" "Display Manager Console Setup complete!"
 }
 
 DM_graphical()
@@ -102,22 +97,20 @@ DM_graphical()
     for dm in "${all_dms[@]}"; do
         commands_to_run+=("systemctl disable $dm")
     done
-
-    clear
-    pause_script "root password" 'Provide system root password for installation'
-    su -c "$(printf "%s\n" "${commands_to_run[@]}")" || { echo "Service(s) doesnt exist or already disabled"; }
-
+    live_command_output "" "${commands_to_run[@]}"
+    
     commands_to_run=()
 
     while true; do
-        clear
-        output 'Select a Graphical Window Manager:'
-        output '1) Gdm (Gnome)'
-        output '2) Lightdm (generalist)'
-        output '3) Sddm (KDE)'
-        output '4) Greetd (generalist)'
-        output '0) Nothing'
-        read -p 'Insert the number of your selection: ' -r graphical_choice
+        options=(\
+            "1) Gdm (Gnome)" \
+            "2) Lightdm (generalist)" \
+            "3) Sddm (KDE)" \
+            "4) Greetd (generalist)" \
+        )
+        
+        menu_prompt graphical_choice graphical_choice_status "$titulo" "$descripcion" "${options[@]}"
+
         case $graphical_choice in
             1)  commands_to_run+=("pacman --noconfirm -S gdm")
                 commands_to_run+=("systemctl enable gdm.service && systemctl start --now gdm.service")
@@ -135,17 +128,14 @@ DM_graphical()
                 commands_to_run+=("systemctl enable greetd.service && systemctl start --now greetd.service")
                 break
                 ;;
-            0)  output 'I dont want shit, get out of here'
-                break
+            0)  exit
                 ;;
-            *)  output 'You did not enter a valid selection.'
+            *)  pause_script "" 'You did not enter a valid selection.'
         esac
     done
 
-    live_command_output "${commands_to_run[@]}"
-
-    output "Display Manager Graphical Setup complete!"
-    pause_script
+    live_command_output "" "${commands_to_run[@]}"
+    pause_script "" "Display Manager Graphical Setup complete!"
 }
 
 
@@ -157,32 +147,30 @@ DE_selector()
     for dm in "${all_dms[@]}"; do
         commands_to_run+=("systemctl disable $dm")
     done
-
-    clear
-    pause_script "root password" 'Provide system root password for installation'
-    su -c "$(printf "%s\n" "${commands_to_run[@]}")" || { echo "Service(s) doesnt exist or already disabled"; }
+    live_command_output "" "${commands_to_run[@]}"
 
     commands_to_run=()
 
     while true; do
-        clear
-        output 'What Desktop Environment to install?'
-        output '1) Budgie'
-        output '2) Cinnamon '
-        output '3) Cosmic'
-        output '4) Cutefish'
-        output '5) Deepin'
-        output '6) Enlightenment'
-        output '7) Gnome'
-        output '8) Gnome Flashback'
-        output '9) KDE Plasma'
-        output '10) LXDE (Not implemented)'
-        output '11) LXQt (Not implemented)'
-        output '12) Mate'
-        output '13) Pantheon'
-        output '14) XFCE (Not implemented)'
-        output '0) Nothing'
-        read -p 'Insert the number of your selection: ' -r DE_choice
+        options=(\
+            "1) Budgie" \
+            "2) Cinnamon " \
+            "3) Cosmic" \
+            "4) Cutefish" \
+            "5) Deepin" \
+            "6) Enlightenment" \
+            "7) Gnome" \
+            "8) Gnome Flashback" \
+            "9) KDE Plasma" \
+            "10) LXDE (Not implemented)" \
+            "11) LXQt (Not implemented)" \
+            "12) Mate" \
+            "13) Pantheon" \
+            "14) XFCE (Not implemented)" \
+        )
+        
+        menu_prompt DE_choice DE_choice_status "$titulo" "$descripcion" "${options[@]}"
+        
         case $DE_choice in
             1)  commands_to_run+=("pacman --noconfirm -S budgie lightdm-gtk-greeter budgie-desktop-view budgie-backgrounds network-manager-applet arc-gtk-theme papirus-icon-theme lightdm")
                 commands_to_run+=("systemctl enable lightdm.service && systemctl start --now lightdm.service")
@@ -237,17 +225,14 @@ DE_selector()
             14) commands_to_run+=("echo'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S xfce"'")
                 break
                 ;;
-            0)  output 'I dont want shit, get out of here'
-                break
+            0)  exit
                 ;;
-            *)  output 'You did not enter a valid selection.'
+            *)  pause_script "" 'You did not enter a valid selection.'
         esac
     done
 
-    live_command_output "${commands_to_run[@]}"
-
-    output "Desktop Environment Setup complete!"
-    pause_script
+    live_command_output "" "${commands_to_run[@]}"
+    pause_script "" "Desktop Environment Setup complete!"
 }
 
 WM_selector()
@@ -258,19 +243,19 @@ WM_selector()
     for dm in "${all_dms[@]}"; do
         commands_to_run+=("systemctl disable $dm")
     done
-
-    live_command_output "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
 
     commands_to_run=()
     commands_to_run+=("pacman --noconfirm -S brightnessctl")
 
     while true; do
-        clear
-        output 'What Window Manager to install?'
-        output '1) Sway'
-        output '2) Hyprland'
-        output '0) Nothing'
-        read -p 'Insert the number of your selection: ' -r WM_choice
+        options=(\
+            "1) Sway" \
+            "2) Hyprland" \
+        )
+
+        menu_prompt WM_choice WM_choice_status "$titulo" "$descripcion" "${options[@]}"
+
         case $WM_choice in
             
             1)  commands_to_run+=("pacman --noconfirm -S sway kitty wayland")
@@ -281,33 +266,30 @@ WM_selector()
                 commands_to_run+=("systemctl enable lightdm.service && systemctl start --now lightdm.service")
                 break
                 ;;
-            0)  output 'I dont want shit, get out of here'
-                break
+            0)  exit
                 ;;
             *)  output 'You did not enter a valid selection.'
         esac
     done
 
-    live_command_output "${commands_to_run[@]}"
-
-    output "Window Manager Setup complete!"
-    pause_script
+    live_command_output "" "${commands_to_run[@]}"
+    pause_script "" "Window Manager Setup complete!"
 }
 
 while true; do
-    clear
-    output "Configuration Menu"
-    output "-------------------"
-    output "1) Configure Display Manager"
-    output "2) Configure Desktop Environment"
-    output "3) Configure Window Manager"
-    output "0) Exit"
-    read -p "Please select an option: " -r choice
+    options=(\
+        "1) Configure Display Manager" \
+        "2) Configure Desktop Environment" \
+        "3) Configure Window Manager" \
+    )
+    
+    menu_prompt choice choice_status "$titulo" "$descripcion" "${options[@]}"
+
     case $choice in
         1) DM_selector;;
         2) DE_selector;;
         3) WM_selector;;
-        0) output 'I dont want shit, get out of here'; break ;;
+        0) exit;;
         *) output "Invalid choice, please try again." ;;
     esac
 done
