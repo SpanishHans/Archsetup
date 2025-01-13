@@ -121,10 +121,17 @@ live_command_output() {
     
     execute_command() {
         local cmd="$1"
+        local error_msg
         if [ "$user" = "root" ]; then
-            $cmd >>"$temp_file" 2>>"$temp_file" || output_error "$cmd" "$(tail -n 1 "$temp_file")"
+            $cmd >>"$temp_file" 2>&1
+            error_msg=$?
         else
-            sudo -u "$user" bash -c "$cmd" >>"$temp_file" 2>>"$temp_file" || output_error "$cmd" "$(tail -n 1 "$temp_file")"
+            sudo -u "$user" bash -c "$cmd" >>"$temp_file" 2>&1
+            error_msg=$?
+        fi
+    
+        if [ $error_msg -ne 0 ]; then
+            output_error "$cmd" "$error_msg"
         fi
     }
 
