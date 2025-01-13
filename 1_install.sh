@@ -28,11 +28,7 @@ Select a disk from the disk below with its number."
 
     case $disk_menu in
         0)  exit;;
-        *)  disk="${devices[$((disk_menu - 1))]}"
-            confirmation="You picked disk $disk for Arch installation.
-Disk will be wiped fully and repartitioned, THIS IS YOUR LAST CHANCE TO CANCEL"
-            pause_script "Selected Disk $disk" "$confirmation"
-            ;;
+        *)  disk="${devices[$((disk_menu - 1))]}";;
     esac
 }
 
@@ -89,26 +85,31 @@ hostname_prompt ()
 locale=en_US
 kblayout=us
 
-disk_prompt
 username_prompt
 user_password_prompt
 root_password_prompt
 sysadmin_password_prompt
 
+masked_user_password="${user_password:0:1}*******${user_password: -1}"
 masked_root_password="${root_password:0:1}*******${root_password: -1}"
 masked_sysadmin_password="${sysadmin_password:0:1}*******${sysadmin_password: -1}"
-masked_user_password="${user_password:0:1}*******${user_password: -1}"
 
 userdata="Username:    $username
 Full Name:    $fullname
 User Password:    $masked_user_password
 Root Password:    $masked_root_password
 Sysadmin Password:    $masked_sysadmin_password"
-
 pause_script 'User confirmation' "$userdata"
-hostname_prompt
 
+hostname_prompt
 pause_script 'Hostname' "Hostname:    ${hostname}"
+
+disk_prompt
+pause_script 'Hostname' "Hostname:    ${hostname}"
+
+confirmation="You picked disk $disk for Arch installation.
+Disk will be wiped fully and repartitioned, THIS IS YOUR LAST CHANCE TO CANCEL"
+pause_script "Selected Disk $disk" "$confirmation"
 
 continue_script 'Disabling dialog' "To ensure legibility, now everything shall be done in terminal mode"
 USE_DIALOG=false
