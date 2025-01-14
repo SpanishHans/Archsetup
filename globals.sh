@@ -360,7 +360,7 @@ subvol_prompt() {
     dialog_output=$(dialog \
         --backtitle "$title" \
         --checklist "$description" \
-        $half_height $half_width 15 \
+        $half_height $half_width \
         "${menu_items[@]}" 2>&1 >/dev/tty)
     exit_code=$?
     eval "$choice=\"$dialog_output\""

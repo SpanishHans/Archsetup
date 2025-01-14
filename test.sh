@@ -39,16 +39,13 @@ The following volumes are required for the system to work and will be create aut
     
 You can create other volumes in the next step."
 
-title="Multiselect test"
-description="Select subvols"
-
 while true; do
-    options=(\
-        "Opt 1" \
+    title="Multiselect test"
+    description="Select subvols"
+    options=("Opt 1" \
         "Opt 2" \
-        "Opt 3" \
-    )
-    
+        "Opt 3")
+
     subvol_prompt subvol_menu_choice main_menu_choice_status "$title" "$description" "${options[@]}"
     case $subvol_menu_choice in
         1)  pause_script "Subvolume creation" "1";;
