@@ -64,3 +64,5 @@ dialog_output=$(dialog \
     --radiolist "$description" \
     $half_height $half_width 15 \
     "${options[@]}" 2>&1 >/dev/tty)
+    
+pause_script "Subvolume creation" "after"
