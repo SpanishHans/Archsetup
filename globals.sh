@@ -359,7 +359,8 @@ subvol_prompt() {
 
     dialog_output=$(dialog \
         --backtitle "$title" \
-        --radiolist "$description" \
+        --ok-label "Select" \
+        --checklist "$description" \
         $half_height $half_width 15 \
         "${menu_items[@]}" 2>&1 >/dev/tty)
     exit_code=$?
