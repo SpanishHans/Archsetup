@@ -314,7 +314,8 @@ menu_prompt() {
             --ok-label "Select" \
             --menu "$description" \
             $half_height $half_width 15 \
-            "${menu_items[@]}" 2>&1 >/dev/tty)
+            "${menu_items[@]}" \
+            2>&1 >/dev/tty)
         exit_code=$?
         eval "$choice=\"$dialog_output\""
         eval "$status=\"$exit_code\""
@@ -349,20 +350,22 @@ subvol_prompt() {
     shift 4
     local options=("$@")
     local title=$(echo -e "$msg_title")
-    local description=$(echo -e "$text")
+    local description=$(echo -e "$text \n\nUse SPACE to select/deselct options and OK when finished.")
     local menu_items=()
     
-    # for i in "${!options[@]}"; do
-    #     menu_items+=($((i + 1)) "${options[i]}")
-    # done
-    # menu_items+=(0 "Exit")
-
+    for i in "${!options[@]}"; do
+        menu_items+=(${options[i]} "${options[i]}" off)
+    done
+        
     dialog_output=$(dialog \
+        --no-tags \
         --backtitle "$title" \
         --checklist "$description" \
-        $half_height $half_width \
-        "${options[@]}" 2>&1 >/dev/tty)
+        $half_height $half_width 30 \
+        "${menu_items[@]}" \
+        2>&1 > /dev/tty)
     exit_code=$?
+    
     eval "$choice=\"$dialog_output\""
     eval "$status=\"$exit_code\""
 

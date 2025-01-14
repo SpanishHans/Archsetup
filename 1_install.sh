@@ -33,25 +33,35 @@ Select a disk from the disk below with its number."
 }
 
 subvol_prompt() {
+    pause_script "Subvolume creation" "You are in btrfs installation mode.
+The following volumes are required for the system to work and will be create automatically.
+
+    1. @
+    2. @home
+    3. @snapshots
+    
+You can create other volumes in the next step."
+
     local options=(\
-        "Install Arch" \
-        "Configure Btrfs subvolumes and Snapper" \
-        "Configure basic utils" \
-        "Configure DEs" \
-        "Configure Nvidia" \
-        "Configure Plymouth" \
-        "Configure Virt-Manager" \
-        "Configure extra utils" \
+        "@var_cache" \
+        "@var_spool" \
+        "@var_tmp" \
+        "@var_log" \
+        "@var_crash" \
+        "@var_lib_libvirt_images" \
+        "@var_lib_machines" \
+        "@var_lib_flatpak" \
+        "@var_lib_docker" \
+        "@var_lib_distrobox" \
+        "@var_lib_gdm" \
+        "@var_lib_AccountsService" \
     )
+    
     local title="Starting subvol picker"
     local description="Please choose what subvolumes you require."
     
-    menu_prompt subvol_menu subvol_menu_status "$title" "$description" "${options[@]}"
-
-    case $subvol_menu in
-        0)  exit;;
-        *)  exit;;
-    esac
+    subvol_prompt subvol_menu_choice subvol_menu_choice_status "$title" "$description" "${options[@]}"
+    pause_script "" "$subvol_menu_choice"
 }
 
 username_prompt()

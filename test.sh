@@ -16,49 +16,29 @@
 
 source ./globals.sh
 
-disk_prompt() {
-    local devices=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
-    local title="Starting disk picker"
-    local description="This script only allows for FULLDISK install, cancel now with option 0 or ctrl+c if this is not what you want.
-Select a disk from the disk below with its number."
-    
-    menu_prompt disk_menu disk_menu_status "$title" "$description" "${devices[@]}"
+options=(\
+    "@var_cache" \
+    "@var_spool" \
+    "@var_tmp" \
+    "@var_log" \
+    "@var_crash" \
+    "@var_lib_libvirt_images" \
+    "@var_lib_machines" \
+    "@var_lib_flatpak" \
+    "@var_lib_docker" \
+    "@var_lib_distrobox" \
+    "@var_lib_gdm" \
+    "@var_lib_AccountsService" \
+)
 
-    case $disk_menu in
-        0)  exit;;
-        *)  disk="${devices[$((disk_menu - 1))]}";;
-    esac
-}
+title="Starting subvol picker"
+description="The following volumes are required for the system to work and will be create automatically.
 
-# pause_script "Subvolume creation" "You are in btrfs installation mode.
-# The following volumes are required for the system to work and will be create automatically.
+1. @
+2. @home
+3. @snapshots
 
-#     1. @
-#     2. @home
-#     3. @snapshots
-    
-# You can create other volumes in the next step."
+Please choose what extra subvolumes you require."
 
-
-dialog --visit-items --buildlist "Select a directory" 20 50 5 \
-  f1 "Directory One" off \
-  f2 "Directory Two" on \
-  f3 "Directory Three" on
-# while true; do
-#     title="Multiselect test"
-#     description="Select subvols"
-#     options=("Opt 1" \
-#         "Opt 2" \
-#         "Opt 3")
-
-#     subvol_prompt subvol_menu_choice subvol_menu_choice_status "$title" "$description" "${options[@]}"
-#     case $subvol_menu_choice in
-#         1)  pause_script "Subvolume creation" "1";;
-#         2)  pause_script "Subvolume creation" "2";;
-#         3)  pause_script "Subvolume creation" "3";;
-#         0)  exit;;
-#         *)  output "Invalid choice, please try again.";;
-#     esac
-# done
-    
-pause_script "Subvolume creation" "after"
+subvol_prompt subvol_menu_choice subvol_menu_choice_status "$title" "$description" "${options[@]}"
+pause_script "" "$subvol_menu_choice"
