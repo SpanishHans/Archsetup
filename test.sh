@@ -42,27 +42,21 @@ You can create other volumes in the next step."
 title="Multiselect test"
 description="Select subvols"
 options=(\
-    "Install Arch" \
-    "Configure Btrfs subvolumes and Snapper" \
-    "Configure basic utils" \
-    "Configure DEs" \
-    "Configure Nvidia" \
-    "Configure Plymouth" \
-    "Configure Virt-Manager" \
-    "Configure extra utils" \
+    "Opt 1" \
+    "Opt 2" \
+    "Opt 3" \
 )
 
-menu_items=()
-
-for i in "${!options[@]}"; do
-    menu_items+=($((i + 1)) "${options[i]}")
+while true; do
+    
+    subvol_prompt subvol_menu_choice main_menu_choice_status "$title" "$description" "${options[@]}"
+    case $subvol_menu_choice in
+        1)  pause_script "Subvolume creation" "1";;
+        2)  pause_script "Subvolume creation" "2";;
+        3)  pause_script "Subvolume creation" "3";;
+        0)  exit;;
+        *)  output "Invalid choice, please try again.";;
+    esac
 done
-menu_items+=(0 "Exit")
-
-dialog_output=$(dialog \
-    --backtitle "$title" \
-    --radiolist "$description" \
-    $half_height $half_width 15 \
-    "${options[@]}" 2>&1 >/dev/tty)
     
 pause_script "Subvolume creation" "after"

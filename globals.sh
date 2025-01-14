@@ -340,3 +340,32 @@ menu_prompt() {
         handle_exit_code "$exit_code" "return"
     fi
 }
+
+subvol_prompt() {
+    local choice="$1"
+    local status="$2"
+    local msg_title="${3:-Default}"
+    local text="${4:-Default}"
+    shift 4
+    local options=("$@")
+    local title=$(echo -e "$msg_title")
+    local description=$(echo -e "$text")
+    local menu_items=()
+    
+    for i in "${!options[@]}"; do
+        menu_items+=($((i + 1)) "${options[i]}")
+    done
+    menu_items+=(0 "Exit")
+
+    dialog_output=$(dialog \
+        --backtitle "$title" \
+        --ok-label "Select" \
+        --radiolist "$description" \
+        $half_height $half_width 15 \
+        "${menu_items[@]}" 2>&1 >/dev/tty)
+    exit_code=$?
+    eval "$choice=\"$dialog_output\""
+    eval "$status=\"$exit_code\""
+
+    handle_exit_code "$exit_code" "return"
+}
