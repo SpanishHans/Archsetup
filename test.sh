@@ -41,13 +41,13 @@ You can create other volumes in the next step."
 
 title="Multiselect test"
 description="Select subvols"
-options=(\
-    "Opt 1" \
-    "Opt 2" \
-    "Opt 3" \
-)
 
 while true; do
+    options=(\
+        "Opt 1" \
+        "Opt 2" \
+        "Opt 3" \
+    )
     
     subvol_prompt subvol_menu_choice main_menu_choice_status "$title" "$description" "${options[@]}"
     case $subvol_menu_choice in
