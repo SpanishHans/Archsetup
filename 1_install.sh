@@ -19,9 +19,9 @@ source ./globals.sh
 installation_date=$(date "+%Y-%m-%d %H:%M:%S")
 
 disk_prompt() {
-    devices=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
-    title="Starting disk picker"
-    description="This script only allows for FULLDISK install, cancel now with option 0 or ctrl+c if this is not what you want.
+    local devices=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
+    local title="Starting disk picker"
+    local description="This script only allows for FULLDISK install, cancel now with option 0 or ctrl+c if this is not what you want.
 Select a disk from the disk below with its number."
     
     menu_prompt disk_menu disk_menu_status "$title" "$description" "${devices[@]}"
@@ -32,14 +32,36 @@ Select a disk from the disk below with its number."
     esac
 }
 
+subvol_prompt() {
+    local options=(\
+        "Install Arch" \
+        "Configure Btrfs subvolumes and Snapper" \
+        "Configure basic utils" \
+        "Configure DEs" \
+        "Configure Nvidia" \
+        "Configure Plymouth" \
+        "Configure Virt-Manager" \
+        "Configure extra utils" \
+    )
+    local title="Starting subvol picker"
+    local description="Please choose what subvolumes you require."
+    
+    menu_prompt subvol_menu subvol_menu_status "$title" "$description" "${options[@]}"
+
+    case $subvol_menu in
+        0)  exit;;
+        *)  exit;;
+    esac
+}
+
 username_prompt()
 {
     input_text username username_status "Rootless username prompt" "Username for the user with no root access" "Enter the username for the new user: "
 
-    prohibited_usernames=("root" "admin" "test" "user" "guest")
-    username_pattern='^[a-zA-Z0-9._-]+$'
-    min_length=3
-    max_length=32
+    local prohibited_usernames=("root" "admin" "test" "user" "guest")
+    local username_pattern='^[a-zA-Z0-9._-]+$'
+    local min_length=3
+    local max_length=32
 
     while true; do
         if [ -z "${username}" ]; then
@@ -112,9 +134,6 @@ confirmation="You picked disk $disk for Arch installation, ergo it will be fully
 THIS IS YOUR LAST CHANCE TO CANCEL BEFORE FULL DISK DATA LOSS."
 pause_script "Selected Disk $disk" "$confirmation"
 
-continue_script 'Disabling dialog' "To ensure legibility, now everything shall be done in terminal mode"
-USE_DIALOG=false
-
 continue_script 'Formatting' "Proceeding to formatting of:    ${disk}."
 sgdisk --zap-all "${disk}"
 continue_script 'Partition scheme' "Creating new partition scheme on ${disk}."
@@ -154,7 +173,7 @@ btrfs su cr /mnt/@distrobox
 btrfs su cr /mnt/@gdm
 btrfs su cr /mnt/@var_lib_AccountsService
 
-## Disable CoW on subvols we are not taking snapshots of
+continue_script 'Disable CoW' 'Disabling CoW on subvols we are not taking snapshots of.'
 chattr +C /mnt/@home
 chattr +C /mnt/@snapshots
 chattr +C /mnt/@var_cache
@@ -170,10 +189,13 @@ chattr +C /mnt/@distrobox
 chattr +C /mnt/@gdm
 chattr +C /mnt/@var_lib_AccountsService
 
+continue_script 'Dismounting Btrfs root' 'Dismount btrfs root from /mnt'
 umount /mnt
-continue_script 'Mount subvolumes' 'Mounting the newly created subvolumes.'
+
+continue_script 'Mounting @' 'Mounting btrfs subvol @ in /mnt'
 mount -o ssd,noatime,compress=zstd,subvol=@ "${BTRFS}" /mnt
 
+continue_script 'Creating directories' 'Creating directories for other subvolumes'
 mkdir -p /mnt/efi
 mkdir -p /mnt/.btrfsroot
 mkdir -p /mnt/home
@@ -191,6 +213,7 @@ mkdir -p /mnt/var/lib/distrobox
 mkdir -p /mnt/var/lib/gdm
 mkdir -p /mnt/var/lib/AccountsService
 
+continue_script 'Mount subvolumes' 'Mounting the newly created subvolumes.'
 mount -o ssd,noatime,compress=zstd,subvolid=5 "${BTRFS}" /mnt/.btrfsroot
 mount -o ssd,noatime,compress=zstd,subvol=@home "${BTRFS}" /mnt/home
 mount -o ssd,noatime,compress=zstd,subvol=@snapshots "${BTRFS}" /mnt/.snapshots
