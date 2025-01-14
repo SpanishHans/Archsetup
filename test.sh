@@ -30,8 +30,6 @@ Select a disk from the disk below with its number."
     esac
 }
 
-
-
 subvol_prompt() {
     local options=(\
         "@var_cache" \
@@ -51,9 +49,14 @@ subvol_prompt() {
     local description="Please choose what subvolumes you require."
     
     miltiselect_prompt subvol_menu subvol_menu_status "$title" "$description" "${options[@]}"
+    case $subvol_menu in
+        0)  pause_script "" "0";;
+        *)  pause_script "" "*";;
+    esac
+
 }
 
-confirmation="You are in btrfs installation mode.
+pause_script "Subvolume creation" "You are in btrfs installation mode.
 The following volumes are required for the system to work and will be create automatically.
 
     1. @
@@ -61,7 +64,5 @@ The following volumes are required for the system to work and will be create aut
     3. @snapshots
     
 You can create other volumes in the next step."
-
-pause_script "Subvolume creation" "$confirmation"
 
 subvol_prompt
