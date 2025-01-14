@@ -30,17 +30,17 @@ Select a disk from the disk below with its number."
     esac
 }
 
-pause_script "Subvolume creation" "You are in btrfs installation mode.
-The following volumes are required for the system to work and will be create automatically.
+# pause_script "Subvolume creation" "You are in btrfs installation mode.
+# The following volumes are required for the system to work and will be create automatically.
 
-    1. @
-    2. @home
-    3. @snapshots
+#     1. @
+#     2. @home
+#     3. @snapshots
     
-You can create other volumes in the next step."
+# You can create other volumes in the next step."
 
 
-dialog --buildlist "Select a directory" 20 50 5 \
+dialog --visit-items --buildlist "Select a directory" 20 50 5 \
   f1 "Directory One" off \
   f2 "Directory Two" on \
   f3 "Directory Three" on
