@@ -352,16 +352,16 @@ subvol_prompt() {
     local description=$(echo -e "$text")
     local menu_items=()
     
-    for i in "${!options[@]}"; do
-        menu_items+=($((i + 1)) "${options[i]}")
-    done
-    menu_items+=(0 "Exit")
+    # for i in "${!options[@]}"; do
+    #     menu_items+=($((i + 1)) "${options[i]}")
+    # done
+    # menu_items+=(0 "Exit")
 
     dialog_output=$(dialog \
         --backtitle "$title" \
         --checklist "$description" \
         $half_height $half_width \
-        "${menu_items[@]}" 2>&1 >/dev/tty)
+        "${options[@]}" 2>&1 >/dev/tty)
     exit_code=$?
     eval "$choice=\"$dialog_output\""
     eval "$status=\"$exit_code\""

@@ -39,21 +39,26 @@ The following volumes are required for the system to work and will be create aut
     
 You can create other volumes in the next step."
 
-while true; do
-    title="Multiselect test"
-    description="Select subvols"
-    options=("Opt 1" \
-        "Opt 2" \
-        "Opt 3")
 
-    subvol_prompt subvol_menu_choice main_menu_choice_status "$title" "$description" "${options[@]}"
-    case $subvol_menu_choice in
-        1)  pause_script "Subvolume creation" "1";;
-        2)  pause_script "Subvolume creation" "2";;
-        3)  pause_script "Subvolume creation" "3";;
-        0)  exit;;
-        *)  output "Invalid choice, please try again.";;
-    esac
-done
+dialog --buildlist "Select a directory" 20 50 5 \
+  f1 "Directory One" off \
+  f2 "Directory Two" on \
+  f3 "Directory Three" on
+# while true; do
+#     title="Multiselect test"
+#     description="Select subvols"
+#     options=("Opt 1" \
+#         "Opt 2" \
+#         "Opt 3")
+
+#     subvol_prompt subvol_menu_choice subvol_menu_choice_status "$title" "$description" "${options[@]}"
+#     case $subvol_menu_choice in
+#         1)  pause_script "Subvolume creation" "1";;
+#         2)  pause_script "Subvolume creation" "2";;
+#         3)  pause_script "Subvolume creation" "3";;
+#         0)  exit;;
+#         *)  output "Invalid choice, please try again.";;
+#     esac
+# done
     
 pause_script "Subvolume creation" "after"
