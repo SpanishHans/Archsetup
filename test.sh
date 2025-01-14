@@ -30,32 +30,6 @@ Select a disk from the disk below with its number."
     esac
 }
 
-subvol_prompt() {
-    local options=(\
-        "@var_cache" \
-        "@var_spool" \
-        "@var_tmp" \
-        "@var_log" \
-        "@var_crash" \
-        "@var_lib_libvirt_images" \
-        "@var_lib_machines" \
-        "@var_lib_flatpak" \
-        "@var_lib_docker" \
-        "@var_lib_distrobox" \
-        "@var_lib_gdm" \
-        "@var_lib_AccountsService" \
-    )
-    local title="Starting subvol picker"
-    local description="Please choose what subvolumes you require."
-    
-    miltiselect_prompt subvol_menu subvol_menu_status "$title" "$description" "${options[@]}"
-    case $subvol_menu in
-        0)  pause_script "" "0";;
-        *)  pause_script "" "*";;
-    esac
-
-}
-
 pause_script "Subvolume creation" "You are in btrfs installation mode.
 The following volumes are required for the system to work and will be create automatically.
 
@@ -65,4 +39,29 @@ The following volumes are required for the system to work and will be create aut
     
 You can create other volumes in the next step."
 
-subvol_prompt
+title="Multiselect test"
+description="Select subvols"
+options=(\
+    "Install Arch" \
+    "Configure Btrfs subvolumes and Snapper" \
+    "Configure basic utils" \
+    "Configure DEs" \
+    "Configure Nvidia" \
+    "Configure Plymouth" \
+    "Configure Virt-Manager" \
+    "Configure extra utils" \
+)
+
+menu_items=()
+
+for i in "${!options[@]}"; do
+    menu_items+=($((i + 1)) "${options[i]}")
+done
+menu_items+=(0 "Exit")
+
+dialog_output=$(dialog \
+    --backtitle "$title" \
+    --ok-label "Select" \
+    --radiolist "$description" \
+    $half_height $half_width 15 \
+    "${options[@]}" 2>&1 >/dev/tty)
