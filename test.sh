@@ -61,7 +61,6 @@ menu_items+=(0 "Exit")
 
 dialog_output=$(dialog \
     --backtitle "$title" \
-    --ok-label "Select" \
     --radiolist "$description" \
     $half_height $half_width 15 \
     "${options[@]}" 2>&1 >/dev/tty)
