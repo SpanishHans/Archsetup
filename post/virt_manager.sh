@@ -14,7 +14,7 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-source ./globals.sh
+source ./commons.sh
 
 initial_setup()
 {

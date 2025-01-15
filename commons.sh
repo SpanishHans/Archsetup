@@ -62,7 +62,7 @@ terminal_title() {
 
 pause_script() {
     local msg_title="${1:-Default}"
-    local msg_text="${2:-Default}"
+    local msg_text="${2:-Nothing}"
     local title=$(echo -e "$msg_title")
     local message=$(echo -e "$msg_text")
 
@@ -97,7 +97,7 @@ continue_script() {
     if [ "$USE_DIALOG" = true ]; then
         dialog --ok-label "Ok" --backtitle "$title" --infobox "$message" $half_height $half_width 2>&1 >/dev/tty
         exit_code=$?
-        sleep 1
+        sleep 0.5
         case $exit_code in
             0)  return;;
             1)  exit;;
@@ -296,11 +296,11 @@ menu_prompt() {
     local choice="$1"
     local status="$2"
     local msg_title="${3:-Default}"
-    local text="${4:-Default}"
+    local msg_text="${4:-Default}"
     shift 4
     local options=("$@")
     local title=$(echo -e "$msg_title")
-    local description=$(echo -e "$text")
+    local description=$(echo -e "$msg_text")
     local menu_items=()
     
     for i in "${!options[@]}"; do
@@ -342,31 +342,33 @@ menu_prompt() {
     fi
 }
 
-subvol_prompt() {
-    local choice="$1"
+multiselect_prompt() {
+    local choices="$1"
     local status="$2"
-    local msg_title="${3:-Default}"
-    local text="${4:-Default}"
-    shift 4
-    local options=("$@")
+    local -n given_array=$3
+    local msg_title="${4:-Default}"
+    local msg_text="${5:-Default}"
     local title=$(echo -e "$msg_title")
-    local description=$(echo -e "$text \n\nUse SPACE to select/deselct options and OK when finished.")
-    local menu_items=()
+    local description=$(echo -e "$msg_text \n\nUse SPACE to select/deselect options and OK when finished.")
     
-    for i in "${!options[@]}"; do
-        menu_items+=(${options[i]} "${options[i]}" off)
+    local options=()
+    for key in "${!given_array[@]}"; do
+        IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
+        options+=("$key" "$desc" "on")
     done
-        
+    
     dialog_output=$(dialog \
-        --no-tags \
         --backtitle "$title" \
         --checklist "$description" \
-        $half_height $half_width 30 \
-        "${menu_items[@]}" \
-        2>&1 > /dev/tty)
+        $full_height $full_width 15 \
+        "${options[@]}" \
+        2>&1 >/dev/tty)
+    
     exit_code=$?
     
-    eval "$choice=\"$dialog_output\""
+    IFS=$' ' read -r -a choices_array <<< "$dialog_output"
+        
+    eval "$choices=(${choices_array[@]})"
     eval "$status=\"$exit_code\""
 
     handle_exit_code "$exit_code" "return"

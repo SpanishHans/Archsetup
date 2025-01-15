@@ -14,105 +14,16 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-source ./globals.sh
+source ./commons.sh
+
+if [ "$LIVE_ENV" = false ]; then
+    if [ "$(id -u)" -ne 0 ]; then
+        pause_script "" "The install script must be run from arch.iso as root user."
+        exit 1
+    fi
+fi
 
 installation_date=$(date "+%Y-%m-%d %H:%M:%S")
-
-disk_prompt() {
-    local devices=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
-    local title="Starting disk picker"
-    local description="This script only allows for FULLDISK install, cancel now with option 0 or ctrl+c if this is not what you want.
-Select a disk from the disk below with its number."
-    
-    menu_prompt disk_menu disk_menu_status "$title" "$description" "${devices[@]}"
-
-    case $disk_menu in
-        0)  exit;;
-        *)  disk="${devices[$((disk_menu - 1))]}";;
-    esac
-}
-
-subvol_prompt() {
-    pause_script "Subvolume creation" "You are in btrfs installation mode.
-The following volumes are required for the system to work and will be create automatically.
-
-    1. @
-    2. @home
-    3. @snapshots
-    
-You can create other volumes in the next step."
-
-    local options=(\
-        "@var_cache" \
-        "@var_spool" \
-        "@var_tmp" \
-        "@var_log" \
-        "@var_crash" \
-        "@var_lib_libvirt_images" \
-        "@var_lib_machines" \
-        "@var_lib_flatpak" \
-        "@var_lib_docker" \
-        "@var_lib_distrobox" \
-        "@var_lib_gdm" \
-        "@var_lib_AccountsService" \
-    )
-    
-    local title="Starting subvol picker"
-    local description="Please choose what subvolumes you require."
-    
-    subvol_prompt subvol_menu_choice subvol_menu_choice_status "$title" "$description" "${options[@]}"
-    pause_script "" "$subvol_menu_choice"
-}
-
-username_prompt()
-{
-    input_text username username_status "Rootless username prompt" "Username for the user with no root access" "Enter the username for the new user: "
-
-    local prohibited_usernames=("root" "admin" "test" "user" "guest")
-    local username_pattern='^[a-zA-Z0-9._-]+$'
-    local min_length=3
-    local max_length=32
-
-    while true; do
-        if [ -z "${username}" ]; then
-            pause_script "Empty username" 'Sorry, you need to enter a username.'
-        elif [[ " ${prohibited_usernames[*]} " =~ " ${username} " ]]; then
-            pause_script "Prohibited username" 'Sorry, this username is prohibited. Please choose a different username.'
-        elif [[ ! "${username}" =~ ${username_pattern} ]]; then
-            pause_script "Invalid characters" 'Sorry, the username can only contain letters, numbers, dots, underscores, or dashes.'
-        elif (( ${#username} < min_length )); then
-            pause_script "Username too short" "Sorry, the username must be at least ${min_length} characters long."
-        elif (( ${#username} > max_length )); then
-            pause_script "Username too long" "Sorry, the username must be no more than ${max_length} characters long."
-        else
-            break
-        fi
-
-        input_text username username_status "Rootless username prompt" "Username for the user with no root access" "Enter the username for the new user: "
-    done
-
-    fullname="$(tr '[:lower:]' '[:upper:]' <<< "${username:0:1}")${username:1}"
-}
-
-user_password_prompt ()
-{
-    set_password user_password user_password_status "$fullname"
-}
-
-root_password_prompt ()
-{
-    set_password root_password root_password_status "root"
-}
-
-sysadmin_password_prompt ()
-{
-    set_password sysadmin_password sysadmin_password_status "sysadmin"
-}
-
-hostname_prompt ()
-{
-    input_text hostname hostname_status "Hostname username prompt" "This refers to the name on the network and pc name. AKA /etc/hostname" "Enter the hostname: "
-}
 
 locale=en_US
 kblayout=us
@@ -136,9 +47,7 @@ pause_script 'User confirmation' "$userdata"
 hostname_prompt
 pause_script 'Hostname' "Hostname:    ${hostname}"
 
-disk_prompt
-pause_script 'Hostname' "Hostname:    ${hostname}"
-
+select_disk_prompt
 confirmation="You picked disk $disk for Arch installation, ergo it will be fully wiped and repartitioned.
 
 THIS IS YOUR LAST CHANCE TO CANCEL BEFORE FULL DISK DATA LOSS."
@@ -154,8 +63,8 @@ sgdisk -I -n 1:0:+1G -t 1:ef00 -c 1:'ESP' "${disk}"
 continue_script 'Partition name: Arch' "Creating new partition with name Arch ${disk}."
 sgdisk -I -n 2:0:0 -c 2:'Arch' "${disk}"
 
-ESP='/dev/disk/by-partlabel/ESP'
-BTRFS='/dev/disk/by-partlabel/Arch'
+export ESP='/dev/disk/by-partlabel/ESP'
+export BTRFS='/dev/disk/by-partlabel/Arch'
 
 continue_script 'Inform disk changes' 'Informing the Kernel about the disk changes.'
 partprobe "${disk}"
@@ -207,9 +116,7 @@ mount -o ssd,noatime,compress=zstd,subvol=@ "${BTRFS}" /mnt
 
 continue_script 'Creating directories' 'Creating directories for other subvolumes'
 mkdir -p /mnt/efi
-mkdir -p /mnt/.btrfsroot
-mkdir -p /mnt/home
-mkdir -p /mnt/.snapshots
+
 mkdir -p /mnt/var/cache
 mkdir -p /mnt/var/spool
 mkdir -p /mnt/var/tmp

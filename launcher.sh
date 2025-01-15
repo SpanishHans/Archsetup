@@ -14,7 +14,7 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-source ./globals.sh
+source ./commons.sh
 
 if [ "$USE_DIALOG" = false ]; then
     clear
@@ -34,19 +34,7 @@ if [ "$USE_DIALOG" = false ]; then
     export USE_DIALOG
 fi
 
-sudo mv $HOME/ArchSetup/.dialogrc $HOME/.dialogrc
-
-if [ "$LIVE_ENV" = false ]; then
-    # Check if the active user is root
-    if [ "$(id -u)" -ne 0 ]; then
-        pause_script "" "You must be logged in as root to use these scripts."
-        exit 1
-    fi
-    
-    export ROOT_PASS=""
-    export ROOT_PASS_SET=false
-    root_pass
-fi
+sudo mv ./.dialogrc $HOME/.dialogrc
 
 title="Welcome to the Script Installer"
 description="This script provides a menu to run various installation scripts.
@@ -55,26 +43,14 @@ Select an option from the menu to proceed."
 while true; do
     options=(\
         "Install Arch" \
-        "Configure Btrfs subvolumes and Snapper" \
-        "Configure basic utils" \
-        "Configure DEs" \
-        "Configure Nvidia" \
-        "Configure Plymouth" \
-        "Configure Virt-Manager" \
-        "Configure extra utils" \
+        "Configure Arch after install"
     )
     
     menu_prompt main_menu_choice main_menu_choice_status "$title" "$description" "${options[@]}"
 
     case $main_menu_choice in
-        1)  ./1_install.sh;;
-        2)  ./2_btrfs_setup.sh;;
-        3)  ./3_basic_tools.sh;;
-        4)  ./4_desktops.sh;;
-        5)  ./5_nvidia.sh;;
-        6)  ./6_plymouth.sh;;
-        7)  ./7_virt_manager.sh;;
-        8)  ./8_utils.sh;;
+        1)  ./pre/install.sh;;
+        2)  ./post/configure.sh;;
         0)  exit;;
         *)  output "Invalid choice, please try again.";;
     esac
