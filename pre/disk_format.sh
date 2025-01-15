@@ -133,8 +133,8 @@ determine_format() {
         menu_prompt format_menu_choice format_menu_choice_status "$title" "$description" "${options[@]}"
     
         case $format_menu_choice in
-            1)  export ROOT_FSTYPE='ext4';exit;;
-            2)  export ROOT_FSTYPE='btrfs';exit;;
+            1)  export ROOT_FSTYPE='ext4';break;;
+            2)  export ROOT_FSTYPE='btrfs';break;;
             0)  exit;;
             *)  output "Invalid choice, please try again.";;
         esac
