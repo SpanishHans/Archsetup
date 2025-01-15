@@ -118,11 +118,29 @@ select_root_partition() {
         menu_items+=("$(printf "%-${max_partition_len}s" "$partition") $(printf "%-${max_fstype_len}s" "$fstype") $(printf "%-${max_size_len}s" "$size") $(printf "%-${max_label_len}s" "$label")")
     done
 
-    menu_prompt esp_menu esp_menu_status "$title" "$description" "${menu_items[@]}"
-    ROOT_PART="${partitions[$((esp_menu - 1))]}"
-    ROOT_FSTYPE="$(lsblk -no FSTYPE "$ROOT_PART")"
-    export ROOT_PART
+    menu_prompt root_menu root_menu_status "$title" "$description" "${menu_items[@]}"
+    ROOT_PART="${partitions[$((root_menu - 1))]}"
     export ROOT_FSTYPE
+}
+
+determine_format() {
+    while true; do
+    options=(\
+                "Format as EXT4 (Reliable, fast, and widely supported. Ideal for most users, but lacks some advanced features of newer file systems like BTRFS.)" \
+                "Format as BTRFS (Offers advanced features like snapshots and compression, but may have higher overhead and less compatibility compared to EXT4.)"
+            )
+        
+        menu_prompt format_menu_choice format_menu_choice_status "$title" "$description" "${options[@]}"
+    
+        case $format_menu_choice in
+            1)  ROOT_PART='ext4';;
+            2)  ROOT_PART='btrfs';;
+            0)  exit;;
+            *)  output "Invalid choice, please try again.";;
+        esac
+    done
+\
+    export ROOT_PART
 }
 
 start_format() {
