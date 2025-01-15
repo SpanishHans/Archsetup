@@ -47,6 +47,8 @@ continue_script 'Partitioning' 'Starting section for disk formatting and partiti
 select_disk_prompt
 select_efi_partition
 select_root_partition
+determine_format
+
 pause_script 'EFI' "EFI part: $EFI_PART $(lsblk -no FSTYPE "$EFI_PART")
 ROOT part: $ROOT_PART $(lsblk -no FSTYPE "$ROOT_PART")"
 
