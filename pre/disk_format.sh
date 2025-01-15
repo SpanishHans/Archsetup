@@ -34,7 +34,7 @@ Please select a disk and format it to your liking. The script shall ask you for 
     fi
     
     menu_prompt disk_menu disk_menu_status "$title" "$description" "${disks[@]}"
-    disk="${disks[$((disk_menu - 1))]}"
+    export disk="${disks[$((disk_menu - 1))]}"
 
     case $disk_menu in
         0)  exit;;
@@ -120,18 +120,29 @@ select_root_partition() {
 
     menu_prompt esp_menu esp_menu_status "$title" "$description" "${menu_items[@]}"
     ROOT_PART="${partitions[$((esp_menu - 1))]}"
+    ROOT_FSTYPE="$(lsblk -no FSTYPE "$ROOT_PART")"
     export ROOT_PART
+    export ROOT_FSTYPE
 }
 
 start_format() {
     continue_script 'Inform disk changes' 'Informing the Kernel about the disk changes.'
     partprobe "${disk}"
-    continue_script 'Format partition ESP: FAT32' 'Formatting the EFI partition as FAT32.'
-    mkfs.fat -F 32 "${EFI}"
-    continue_script 'Format partition Arch: BTRFS' 'Formatting the Arch partition as BTRFS.'
-    mkfs.btrfs -f "${BTRFS}"
-}
+    
+    continue_script 'Format partition ESP: FAT32' 'Formatting the /boot/efi partition as FAT32.'
+    mkfs.fat -F 32 "${EFI_PART}"
 
+    if [[ "$ROOT_FSTYPE" == "ext4" ]]; then
+        continue_script 'Format partition: EXT4' 'Formatting the / partition as EXT4.'
+        mkfs.ext4 -F "${ROOT_PART}"
+    elif [[ "$ROOT_FSTYPE" == "btrfs" ]]; then
+        continue_script 'Format partition: BTRFS' 'Formatting the / partition as BTRFS.'
+        mkfs.btrfs -f "${ROOT_PART}"
+    else
+        echo "Unsupported ROOT_FSTYPE: $ROOT_FSTYPE"
+        return 1
+    fi
+}
 
 # The rest of your script would call this function to let the user pick the ESP partition
 

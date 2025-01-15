@@ -19,6 +19,9 @@ source ./commons.sh
 mount_btrfs() {
     local -n given_array=$1
     
+    continue_script "Mounting $ROOT_PART on /mnt" "Mounting $ROOT_PART on /mnt in order to create subvolumes."
+    mount "${ROOT_PART}" /mnt
+    
     btrfs su cr /mnt/@
     btrfs su cr /mnt/@home
     btrfs su cr /mnt/@snapshots
@@ -31,15 +34,18 @@ mount_btrfs() {
     mkdir -p /mnt/home
     mkdir -p /mnt/.snapshots
     
-    mount -o "${BTRFS}" | ssd,noatime,compress=zstd,subvolid=5 "${BTRFS}" /mnt/.btrfsroot
-    mount -o "${BTRFS}" | ssd,noatime,compress=zstd,subvol=@home "${BTRFS}" /mnt/home
-    mount -o "${BTRFS}" | ssd,noatime,compress=zstd,subvol=@snapshots "${BTRFS}" /mnt/.snapshots
-    mount -o nodev,nosuid,noexec "${ESP}" /mnt/efi
+    continue_script "Dismounting $ROOT_PART from /mnt" "Dismounting $ROOT_PART from /mnt in order to mount subvolumes created before."
+    umount /mnt
+    
+    mount -o ssd,noatime,compress=zstd,subvol=@ "${ROOT_PART}" /mnt
+    mount -o ssd,noatime,compress=zstd,subvolid=5 "${ROOT_PART}" /mnt/.btrfsroot
+    mount -o ssd,noatime,compress=zstd,subvol=@home "${ROOT_PART}" /mnt/home
+    mount -o ssd,noatime,compress=zstd,subvol=@snapshots "${ROOT_PART}" /mnt/.snapshots
+    mount -o nodev,nosuid,noexec "${EFI_PART}" /mnt/efi
     
     local options=()
     for key in "${!given_array[@]}"; do
         IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
-
         btrfs su cr /mnt/"$key"
         chattr +C /mnt/"$key"
         mkdir -p /mnt/"$path"
@@ -48,43 +54,131 @@ mount_btrfs() {
     done
     pause_script "Created" "$(printf "%s\n" "${options[@]}")"
 
-    pause_script "" "Finished mount_btrfs"
+    pause_script "BTRFS Mounting" "Finished mouting BTRFS"
 }
 
 declare -A subvols
 subvols=(
-    ["@var_cache"]="${BTRFS} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/cache | Cached data for apps and package managers, can be recreated if cleared."
-    ["@var_spool"]="${BTRFS} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/spool | Holds queues for tasks like mail, printing, or other pending jobs."
-    ["@var_tmp"]="${BTRFS} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/tmp | Temporary files for apps and services, persisting after reboots if needed."
-    ["@var_log"]="${BTRFS} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/log | System and application log files for tracking events and troubleshooting."
-    ["@var_crash"]="${BTRFS} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/crash | Crash reports and core dumps for analyzing system and application failures."
-    ["@var_lib_libvirt_images"]="${BTRFS} | ssd,noatime,nodatacow,nodev,nosuid,noexec | /var/lib/libvirt/images | Disk images and metadata for virtual machines managed by libvirt."
-    ["@var_lib_machines"]="${BTRFS} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/machines | Container images and metadata for systemd-nspawn containers."
-    ["@var_lib_flatpak"]="${BTRFS} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/flatpak | Installed Flatpak apps and their sandboxed data and dependencies."
-    ["@var_lib_docker"]="${BTRFS} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/docker | Container images, volumes, and metadata for Docker environments."
-    ["@var_lib_distrobox"]="${BTRFS} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/distrobox | Data and images for running and managing Distrobox containers."
-    ["@var_lib_gdm"]="${BTRFS} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/gdm | Configuration and session data for GNOME Display Manager (GDM)."
-    ["@var_lib_AccountsService"]="${BTRFS} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/AccountsService | User account settings and data managed by AccountsService."
+    ["@var_cache"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/cache | Cached data for apps and package managers, can be recreated if cleared."
+    ["@var_spool"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/spool | Holds queues for tasks like mail, printing, or other pending jobs."
+    ["@var_tmp"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/tmp | Temporary files for apps and services, persisting after reboots if needed."
+    ["@var_log"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/log | System and application log files for tracking events and troubleshooting."
+    ["@var_crash"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/crash | Crash reports and core dumps for analyzing system and application failures."
+    ["@var_lib_libvirt_images"]="${ROOT_PART} | ssd,noatime,nodatacow,nodev,nosuid,noexec | /var/lib/libvirt/images | Disk images and metadata for virtual machines managed by libvirt."
+    ["@var_lib_machines"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/machines | Container images and metadata for systemd-nspawn containers."
+    ["@var_lib_flatpak"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/flatpak | Installed Flatpak apps and their sandboxed data and dependencies."
+    ["@var_lib_docker"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/docker | Container images, volumes, and metadata for Docker environments."
+    ["@var_lib_distrobox"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/distrobox | Data and images for running and managing Distrobox containers."
+    ["@var_lib_gdm"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/gdm | Configuration and session data for GNOME Display Manager (GDM)."
+    ["@var_lib_AccountsService"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/AccountsService | User account settings and data managed by AccountsService."
 )
 
-# multiselect_prompt \
-#     subvol_menu_choice \
-#     subvol_menu_choice_status \
-#     subvols \
-#     "Starting subvol picker" \
-#     "The following volumes are required for the system to work and will be create automatically.
+if [[ "$ROOT_FSTYPE" == "btrfs" ]]; then
     
-# 1. @
-# 2. @home
-# 3. @snapshots
+    multiselect_prompt \
+        subvol_menu_choice \
+        subvol_menu_choice_status \
+        subvols \
+        "Starting subvol picker" \
+        "The following volumes are required for the system to work and will be create automatically.
+        
+    1. @
+    2. @home
+    3. @snapshots
+        
+    Please choose what extra subvolumes you require."
     
-# Please choose what extra subvolumes you require."
+    declare -A filtered_subvols
+    for choice in "${subvol_menu_choice[@]}"; do
+        if [[ -n "${subvols[$choice]}" ]]; then
+            filtered_subvols["$choice"]="${subvols[$choice]}"
+        fi
+    done
+    
+    mount_btrfs filtered_subvols
+    
+fi
 
-# declare -A filtered_subvols
-# for choice in "${subvol_menu_choice[@]}"; do
-#     if [[ -n "${subvols[$choice]}" ]]; then
-#         filtered_subvols["$choice"]="${subvols[$choice]}"
-#     fi
-# done
 
-# mount_btrfs filtered_subvols
+
+
+
+
+
+
+
+
+# mount "${BTRFS}" /mnt
+
+# btrfs su cr /mnt/@
+# btrfs su cr /mnt/@home
+# btrfs su cr /mnt/@snapshots
+# btrfs su cr /mnt/@var_cache
+# btrfs su cr /mnt/@var_spool
+# btrfs su cr /mnt/@var_tmp
+# btrfs su cr /mnt/@var_log
+# btrfs su cr /mnt/@var_crash
+# btrfs su cr /mnt/@var_lib_libvirt_images
+# btrfs su cr /mnt/@var_lib_machines
+# btrfs su cr /mnt/@flatpak
+# btrfs su cr /mnt/@docker
+# btrfs su cr /mnt/@distrobox
+# btrfs su cr /mnt/@gdm
+# btrfs su cr /mnt/@var_lib_AccountsService
+
+# continue_script 'Disable CoW' 'Disabling CoW on subvols we are not taking snapshots of.'
+# chattr +C /mnt/@home
+# chattr +C /mnt/@snapshots
+# chattr +C /mnt/@var_cache
+# chattr +C /mnt/@var_spool
+# chattr +C /mnt/@var_tmp
+# chattr +C /mnt/@var_log
+# chattr +C /mnt/@var_crash
+# chattr +C /mnt/@var_lib_libvirt_images
+# chattr +C /mnt/@var_lib_machines
+# chattr +C /mnt/@flatpak
+# chattr +C /mnt/@docker
+# chattr +C /mnt/@distrobox
+# chattr +C /mnt/@gdm
+# chattr +C /mnt/@var_lib_AccountsService
+
+# continue_script 'Dismounting Btrfs root' 'Dismount btrfs root from /mnt'
+# umount /mnt
+
+# continue_script 'Mounting @' 'Mounting btrfs subvol @ in /mnt'
+# mount -o ssd,noatime,compress=zstd,subvol=@ "${BTRFS}" /mnt
+
+# continue_script 'Creating directories' 'Creating directories for other subvolumes'
+# mkdir -p /mnt/efi
+
+# mkdir -p /mnt/var/cache
+# mkdir -p /mnt/var/spool
+# mkdir -p /mnt/var/tmp
+# mkdir -p /mnt/var/log
+# mkdir -p /mnt/var/crash
+# mkdir -p /mnt/var/lib/libvirt/images
+# mkdir -p /mnt/var/lib/machines
+# mkdir -p /mnt/var/lib/flatpak
+# mkdir -p /mnt/var/lib/docker
+# mkdir -p /mnt/var/lib/distrobox
+# mkdir -p /mnt/var/lib/gdm
+# mkdir -p /mnt/var/lib/AccountsService
+
+# continue_script 'Mount subvolumes' 'Mounting the newly created subvolumes.'
+# mount -o ssd,noatime,compress=zstd,subvolid=5 "${BTRFS}" /mnt/.btrfsroot
+# mount -o ssd,noatime,compress=zstd,subvol=@home "${BTRFS}" /mnt/home
+# mount -o ssd,noatime,compress=zstd,subvol=@snapshots "${BTRFS}" /mnt/.snapshots
+# mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@var_log "${BTRFS}" /mnt/var/log
+# mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@var_crash "${BTRFS}" /mnt/var/crash
+# mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@var_cache "${BTRFS}" /mnt/var/cache
+# mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@var_tmp "${BTRFS}" /mnt/var/tmp
+# mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@var_spool "${BTRFS}" /mnt/var/spool
+# mount -o ssd,noatime,nodatacow,nodev,nosuid,noexec,subvol=@var_lib_libvirt_images "${BTRFS}" /mnt/var/lib/libvirt/images
+# mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@var_lib_machines "${BTRFS}" /mnt/var/lib/machines
+# mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@flatpak $BTRFS /mnt/var/lib/flatpak
+# mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@docker $BTRFS /mnt/var/lib/docker
+# mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@distrobox $BTRFS /mnt/var/lib/distrobox
+# mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@gdm $BTRFS /mnt/var/lib/gdm
+# mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@var_lib_AccountsService $BTRFS /mnt/var/lib/AccountsService
+
+# mount -o nodev,nosuid,noexec "${EFI}" /mnt/efi

@@ -16,139 +16,64 @@
 
 source ./commons.sh
 source ./pre/disk_format.sh
-source ./pre/btrfs_config.sh
-source ./pre/ext4_config.sh
 source ./pre/networking.sh
 source ./pre/user_setup.sh
 
 # if [ "$LIVE_ENV" = false ]; then
-if [ "$LIVE_ENV" = true ]; then # Development only, change to false.
-    pause_script "" "The install script must be run from the archlinux-YEAR.MONTH.DAY-x86_64.iso image.
+#     pause_script "" "The install script must be run from the archlinux-YEAR.MONTH.DAY-x86_64.iso image.
 
-Exiting!!!
-    "
-    exit
-    if [ "$(id -u)" -ne 0 ]; then
-        pause_script "" "The install script must be run as root user.
+# Exiting!!!
+#     "
+#     exit
+#     if [ "$(id -u)" -ne 0 ]; then
+#         pause_script "" "The install script must be run as root user.
 
-Exiting!!!"
-        exit
-    fi
-fi
+# Exiting!!!"
+#         exit
+#     fi
+# fi
 
-installation_date=$(date "+%Y-%m-%d %H:%M:%S")
+title="Welcome to the installer script"
+description="This script will help you format your disks to your needs and then install ArchLinux.
+
+Enjoy!"
+
+pause_script "$title" "$description"
 
 locale=en_US
 kblayout=us
 
+continue_script 'User setup' 'Starting section for user setup, please wait.'
 # username_prompt
 # user_password_prompt
 # root_password_prompt
 # sysadmin_password_prompt
 
-# masked_user_password="${user_password:0:1}*******${user_password: -1}"
-# masked_root_password="${root_password:0:1}*******${root_password: -1}"
-# masked_sysadmin_password="${sysadmin_password:0:1}*******${sysadmin_password: -1}"
+masked_user_password="${user_password:0:1}*******${user_password: -1}"
+masked_root_password="${root_password:0:1}*******${root_password: -1}"
+masked_sysadmin_password="${sysadmin_password:0:1}*******${sysadmin_password: -1}"
 
-# userdata="Username:    $username
-# Full Name:    $fullname
-# User Password:    $masked_user_password
-# Root Password:    $masked_root_password
-# Sysadmin Password:    $masked_sysadmin_password"
-# pause_script 'User confirmation' "$userdata"
+userdata="Username:    $username
+Full Name:    $fullname
+User Password:    $masked_user_password
+Root Password:    $masked_root_password
+Sysadmin Password:    $masked_sysadmin_password"
+pause_script 'User confirmation' "$userdata"
 
+continue_script 'Networking' 'Starting section for networking, please wait.'
 # hostname_prompt
-# pause_script 'Hostname' "Hostname:    ${hostname}"
+pause_script 'Hostname' "Hostname:    ${hostname}"
 
+continue_script 'Partitioning' 'Starting section for disk formatting and partitioning, please wait.'
 select_disk_prompt
 select_efi_partition
 select_root_partition
-
 pause_script 'EFI' "EFI part: $EFI_PART"
 pause_script 'ROOT' "ROOT part: $ROOT_PART"
-
-
+pause_script 'ROOT' "ROOT type: $ROOT_FSTYPE"
 pause_script 'PAUSA' "PRUEBAS"
-
 exit
-
-start_format
-
-continue_script 'BTRFS subvolumes' 'Creating BTRFS subvolumes.'
-mount "${BTRFS}" /mnt
-
-btrfs su cr /mnt/@
-btrfs su cr /mnt/@home
-btrfs su cr /mnt/@snapshots
-btrfs su cr /mnt/@var_cache
-btrfs su cr /mnt/@var_spool
-btrfs su cr /mnt/@var_tmp
-btrfs su cr /mnt/@var_log
-btrfs su cr /mnt/@var_crash
-btrfs su cr /mnt/@var_lib_libvirt_images
-btrfs su cr /mnt/@var_lib_machines
-btrfs su cr /mnt/@flatpak
-btrfs su cr /mnt/@docker
-btrfs su cr /mnt/@distrobox
-btrfs su cr /mnt/@gdm
-btrfs su cr /mnt/@var_lib_AccountsService
-
-continue_script 'Disable CoW' 'Disabling CoW on subvols we are not taking snapshots of.'
-chattr +C /mnt/@home
-chattr +C /mnt/@snapshots
-chattr +C /mnt/@var_cache
-chattr +C /mnt/@var_spool
-chattr +C /mnt/@var_tmp
-chattr +C /mnt/@var_log
-chattr +C /mnt/@var_crash
-chattr +C /mnt/@var_lib_libvirt_images
-chattr +C /mnt/@var_lib_machines
-chattr +C /mnt/@flatpak
-chattr +C /mnt/@docker
-chattr +C /mnt/@distrobox
-chattr +C /mnt/@gdm
-chattr +C /mnt/@var_lib_AccountsService
-
-continue_script 'Dismounting Btrfs root' 'Dismount btrfs root from /mnt'
-umount /mnt
-
-continue_script 'Mounting @' 'Mounting btrfs subvol @ in /mnt'
-mount -o ssd,noatime,compress=zstd,subvol=@ "${BTRFS}" /mnt
-
-continue_script 'Creating directories' 'Creating directories for other subvolumes'
-mkdir -p /mnt/efi
-
-mkdir -p /mnt/var/cache
-mkdir -p /mnt/var/spool
-mkdir -p /mnt/var/tmp
-mkdir -p /mnt/var/log
-mkdir -p /mnt/var/crash
-mkdir -p /mnt/var/lib/libvirt/images
-mkdir -p /mnt/var/lib/machines
-mkdir -p /mnt/var/lib/flatpak
-mkdir -p /mnt/var/lib/docker
-mkdir -p /mnt/var/lib/distrobox
-mkdir -p /mnt/var/lib/gdm
-mkdir -p /mnt/var/lib/AccountsService
-
-continue_script 'Mount subvolumes' 'Mounting the newly created subvolumes.'
-mount -o ssd,noatime,compress=zstd,subvolid=5 "${BTRFS}" /mnt/.btrfsroot
-mount -o ssd,noatime,compress=zstd,subvol=@home "${BTRFS}" /mnt/home
-mount -o ssd,noatime,compress=zstd,subvol=@snapshots "${BTRFS}" /mnt/.snapshots
-mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@var_log "${BTRFS}" /mnt/var/log
-mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@var_crash "${BTRFS}" /mnt/var/crash
-mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@var_cache "${BTRFS}" /mnt/var/cache
-mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@var_tmp "${BTRFS}" /mnt/var/tmp
-mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@var_spool "${BTRFS}" /mnt/var/spool
-mount -o ssd,noatime,nodatacow,nodev,nosuid,noexec,subvol=@var_lib_libvirt_images "${BTRFS}" /mnt/var/lib/libvirt/images
-mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@var_lib_machines "${BTRFS}" /mnt/var/lib/machines
-mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@flatpak $BTRFS /mnt/var/lib/flatpak
-mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@docker $BTRFS /mnt/var/lib/docker
-mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@distrobox $BTRFS /mnt/var/lib/distrobox
-mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@gdm $BTRFS /mnt/var/lib/gdm
-mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@var_lib_AccountsService $BTRFS /mnt/var/lib/AccountsService
-
-mount -o nodev,nosuid,noexec "${EFI}" /mnt/efi
+# start_format
 
 continue_script 'Detect CPU vendor' 'Detecting ucode for processor brand'
 CPU=$(grep -m 1 'vendor_id' /proc/cpuinfo)
@@ -214,7 +139,7 @@ echo "KEYMAP=$kblayout" > /mnt/etc/vconsole.conf
 echo "FONT=ter-u20n" > /mnt/etc/vconsole.conf
 
 continue_script 'Copy repo' 'Copying repo to machine'
-cp -R --no-preserve=ownership /root/ArchSetup /mnt/root/ArchSetup
+cp -R --no-preserve=ownership /root/Archsetup /mnt/root/Archsetup
 
 description="About to chroot into the machine
 this automatically:
