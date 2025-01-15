@@ -56,7 +56,7 @@ ROOT partition will be on: $ROOT_PART
 EFI partition currently has the following filesystem: $(lsblk -no FSTYPE "$EFI_PART")
 ROOT partition currently has the following filesystem: $(lsblk -no FSTYPE "$ROOT_PART")
 
-EFI partition will have the following filesystem: vfat)
+EFI partition will have the following filesystem: vfat
 ROOT partition will have the following filesystem: $ROOT_FSTYPE
 
 press ok to format or CANCEL NOW with ctrl+c or by selecting 0. Exit on the menu."

@@ -130,7 +130,7 @@ determine_format() {
             "Format as BTRFS (Offers advanced features like snapshots and compression, but may have higher overhead and less compatibility compared to EXT4.)"
         )
         local title="ROOT filesystem prompt"
-        local description="Please Determine filesystem to use on the ROOT System Partition (/)."
+        local description="Please determine the filesystem to use on the ROOT System Partition (/)."
 
         menu_prompt format_menu_choice format_menu_choice_status "$title" "$description" "${options[@]}"
     
@@ -145,7 +145,12 @@ determine_format() {
 
 start_format() {
     continue_script 'Inform disk changes' 'Informing the Kernel about the disk changes.'
-    partprobe "${disk}"
+
+    local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
+    for di in "${disks[@]}"; do
+        continue_script "partprobe on $di" "Running partprobe on $di"
+        partprobe "$di"
+    done
     
     continue_script 'Format partition ESP: FAT32' 'Formatting the /boot/efi partition as FAT32.'
     mkfs.fat -F 32 "${EFI_PART}"
