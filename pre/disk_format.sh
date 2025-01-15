@@ -152,7 +152,7 @@ start_format() {
 
     if [[ "$ROOT_FSTYPE" == "ext4" ]]; then
         continue_script 'Format partition: EXT4' 'Formatting the / partition as EXT4.'
-        mkfs.ext4 -F "${ROOT_PART}"
+        mkfs.ext4 -f "${ROOT_PART}"
     elif [[ "$ROOT_FSTYPE" == "btrfs" ]]; then
         continue_script 'Format partition: BTRFS' 'Formatting the / partition as BTRFS.'
         mkfs.btrfs -f "${ROOT_PART}"

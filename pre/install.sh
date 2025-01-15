@@ -47,9 +47,8 @@ continue_script 'Partitioning' 'Starting section for disk formatting and partiti
 select_disk_prompt
 select_efi_partition
 select_root_partition
-pause_script 'EFI' "EFI part: $EFI_PART
-ROOT part: $ROOT_PART
-ROOT type: $ROOT_FSTYPE"
+pause_script 'EFI' "EFI part: $EFI_PART $(lsblk -no FSTYPE "$EFI_PART")
+ROOT part: $ROOT_PART $(lsblk -no FSTYPE "$ROOT_PART")"
 
 continue_script 'User setup' 'Starting section for user setup, please wait.'
 username_prompt
