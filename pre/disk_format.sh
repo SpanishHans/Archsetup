@@ -125,11 +125,13 @@ select_root_partition() {
 
 determine_format() {
     while true; do
-        options=(\
+        local options=(\
             "Format as EXT4 (Reliable, fast, and widely supported. Ideal for most users, but lacks some advanced features of newer file systems like BTRFS.)" \
             "Format as BTRFS (Offers advanced features like snapshots and compression, but may have higher overhead and less compatibility compared to EXT4.)"
         )
-        
+        local title="ROOT filesystem prompt"
+        local description="Please Determine filesystem to use on the ROOT System Partition (/)."
+
         menu_prompt format_menu_choice format_menu_choice_status "$title" "$description" "${options[@]}"
     
         case $format_menu_choice in
