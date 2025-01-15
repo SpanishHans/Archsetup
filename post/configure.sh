@@ -16,19 +16,19 @@
 
 source ./commons.sh
 
-# if [ "$LIVE_ENV" = true ]; then
-#     pause_script "" "The install script must be run from a machine with ArchLinux already installed.
+if [ "$LIVE_ENV" = true ]; then
+    pause_script "" "The install script must be run from a machine with ArchLinux already installed.
 
-# Exiting!!!
-#     "
-#     exit
-#     if [ "$(id -u)" -ne 0 ]; then
-#         pause_script "" "The install script must be run as root user.
+Exiting!!!
+    "
+    exit
+    if [ "$(id -u)" -ne 0 ]; then
+        pause_script "" "The install script must be run as root user.
 
-# Exiting!!!"
-#         exit
-#     fi
-# fi
+Exiting!!!"
+        exit
+    fi
+fi
 
 title="Welcome to the configuring scripts"
 description="This script provides a menu to run various installation scripts.

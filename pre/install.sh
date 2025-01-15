@@ -19,19 +19,19 @@ source ./pre/disk_format.sh
 source ./pre/networking.sh
 source ./pre/user_setup.sh
 
-# if [ "$LIVE_ENV" = false ]; then
-#     pause_script "" "The install script must be run from the archlinux-YEAR.MONTH.DAY-x86_64.iso image.
+if [ "$LIVE_ENV" = false ]; then
+    pause_script "" "The install script must be run from the archlinux-YEAR.MONTH.DAY-x86_64.iso image.
 
-# Exiting!!!
-#     "
-#     exit
-#     if [ "$(id -u)" -ne 0 ]; then
-#         pause_script "" "The install script must be run as root user.
+Exiting!!!
+    "
+    exit
+    if [ "$(id -u)" -ne 0 ]; then
+        pause_script "" "The install script must be run as root user.
 
-# Exiting!!!"
-#         exit
-#     fi
-# fi
+Exiting!!!"
+        exit
+    fi
+fi
 
 title="Welcome to the installer script"
 description="This script will help you format your disks to your needs and then install ArchLinux.
@@ -44,10 +44,10 @@ locale=en_US
 kblayout=us
 
 continue_script 'User setup' 'Starting section for user setup, please wait.'
-# username_prompt
-# user_password_prompt
-# root_password_prompt
-# sysadmin_password_prompt
+username_prompt
+user_password_prompt
+root_password_prompt
+sysadmin_password_prompt
 
 masked_user_password="${user_password:0:1}*******${user_password: -1}"
 masked_root_password="${root_password:0:1}*******${root_password: -1}"
@@ -61,19 +61,17 @@ Sysadmin Password:    $masked_sysadmin_password"
 pause_script 'User confirmation' "$userdata"
 
 continue_script 'Networking' 'Starting section for networking, please wait.'
-# hostname_prompt
+hostname_prompt
 pause_script 'Hostname' "Hostname:    ${hostname}"
 
 continue_script 'Partitioning' 'Starting section for disk formatting and partitioning, please wait.'
 select_disk_prompt
 select_efi_partition
 select_root_partition
-pause_script 'EFI' "EFI part: $EFI_PART"
-pause_script 'ROOT' "ROOT part: $ROOT_PART"
-pause_script 'ROOT' "ROOT type: $ROOT_FSTYPE"
-pause_script 'PAUSA' "PRUEBAS"
-exit
-# start_format
+pause_script 'EFI' "EFI part: $EFI_PART
+ROOT part: $ROOT_PART
+ROOT type: $ROOT_FSTYPE"
+start_format
 
 continue_script 'Detect CPU vendor' 'Detecting ucode for processor brand'
 CPU=$(grep -m 1 'vendor_id' /proc/cpuinfo)
