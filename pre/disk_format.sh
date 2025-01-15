@@ -149,24 +149,37 @@ start_format() {
     local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
     for di in "${disks[@]}"; do
         continue_script "partprobe on $di" "Running partprobe on $di"
-        partprobe "$di"
+        if ! partprobe "$di"; then
+            pause_script '' "Failed to inform the kernel about changes for $di. Please check and retry."
+            return 1
+        fi
     done
-    
+
     continue_script 'Format partition ESP: FAT32' 'Formatting the /boot/efi partition as FAT32.'
-    mkfs.fat -F 32 "${EFI_PART}"
+    if ! mkfs.fat -F 32 "${EFI_PART}"; then
+        pause_script '' "Failed to format ${EFI_PART} as FAT32. Aborting."
+        return 1
+    fi
 
     if [[ "$ROOT_FSTYPE" == "ext4" ]]; then
         continue_script 'Format partition: EXT4' 'Formatting the / partition as EXT4.'
-        mkfs.ext4 -f "${ROOT_PART}"
+        if ! mkfs.ext4 -F "${ROOT_PART}"; then
+            pause_script '' "Failed to format ${ROOT_PART} as EXT4. Aborting."
+            return 1
+        fi
     elif [[ "$ROOT_FSTYPE" == "btrfs" ]]; then
         continue_script 'Format partition: BTRFS' 'Formatting the / partition as BTRFS.'
-        mkfs.btrfs -f "${ROOT_PART}"
+        if ! mkfs.btrfs -f "${ROOT_PART}"; then
+            pause_script '' "Failed to format ${ROOT_PART} as BTRFS. Aborting."
+            return 1
+        fi
     else
         echo "Unsupported ROOT_FSTYPE: $ROOT_FSTYPE"
         return 1
     fi
     pause_script 'Formatting finished' "Disks have been formatted.
-    
+
 EFI partition currently has the following filesystem: $(lsblk -no FSTYPE "$EFI_PART")
 ROOT partition currently has the following filesystem: $(lsblk -no FSTYPE "$ROOT_PART")"
 }
+
