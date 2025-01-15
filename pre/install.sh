@@ -43,6 +43,14 @@ pause_script "$title" "$description"
 locale=en_US
 kblayout=us
 
+continue_script 'Partitioning' 'Starting section for disk formatting and partitioning, please wait.'
+select_disk_prompt
+select_efi_partition
+select_root_partition
+pause_script 'EFI' "EFI part: $EFI_PART
+ROOT part: $ROOT_PART
+ROOT type: $ROOT_FSTYPE"
+
 continue_script 'User setup' 'Starting section for user setup, please wait.'
 username_prompt
 user_password_prompt
@@ -64,13 +72,6 @@ continue_script 'Networking' 'Starting section for networking, please wait.'
 hostname_prompt
 pause_script 'Hostname' "Hostname:    ${hostname}"
 
-continue_script 'Partitioning' 'Starting section for disk formatting and partitioning, please wait.'
-select_disk_prompt
-select_efi_partition
-select_root_partition
-pause_script 'EFI' "EFI part: $EFI_PART
-ROOT part: $ROOT_PART
-ROOT type: $ROOT_FSTYPE"
 start_format
 
 continue_script 'Detect CPU vendor' 'Detecting ucode for processor brand'
