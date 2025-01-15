@@ -15,6 +15,11 @@
 # the License.
 
 source ./commons.sh
+source ./pre/disk_format.sh
+source ./pre/btrfs_config.sh
+source ./pre/ext4_config.sh
+source ./pre/networking.sh
+source ./pre/user_setup.sh
 
 if [ "$LIVE_ENV" = false ]; then
     if [ "$(id -u)" -ne 0 ]; then
@@ -28,10 +33,12 @@ installation_date=$(date "+%Y-%m-%d %H:%M:%S")
 locale=en_US
 kblayout=us
 
-username_prompt
-user_password_prompt
-root_password_prompt
-sysadmin_password_prompt
+usernam
+
+# username_prompt
+# user_password_prompt
+# root_password_prompt
+# sysadmin_password_prompt
 
 masked_user_password="${user_password:0:1}*******${user_password: -1}"
 masked_root_password="${root_password:0:1}*******${root_password: -1}"
@@ -48,10 +55,8 @@ hostname_prompt
 pause_script 'Hostname' "Hostname:    ${hostname}"
 
 select_disk_prompt
-confirmation="You picked disk $disk for Arch installation, ergo it will be fully wiped and repartitioned.
-
-THIS IS YOUR LAST CHANCE TO CANCEL BEFORE FULL DISK DATA LOSS."
-pause_script "Selected Disk $disk" "$confirmation"
+select_esp_partition
+select_root_partition
 
 continue_script 'Formatting' "Proceeding to formatting of:    ${disk}."
 sgdisk --zap-all "${disk}"

@@ -41,7 +41,6 @@ username_prompt() {
 
         input_text username username_status "Rootless username prompt" "Username for the user with no root access" "Enter the username for the new user: "
     done
-
     fullname="$(tr '[:lower:]' '[:upper:]' <<< "${username:0:1}")${username:1}"
 }
 

@@ -17,66 +17,137 @@
 source ./commons.sh
 
 select_disk_prompt() {
-    local devices=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
+    local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
     local title="Starting disk picker"
-    local description="The following menu shall help you edit and format disks for installing arch. the script requires 2 partitions:\
-1. Paritition where /boot/efi shall reside. 
-2. Paritition where /shall reside
+    local description="The following menu shall help you edit and format disks for installing arch. the script requires 2 partitions:
+    
+1. Paritition where /boot/efi shall reside.
+2. Paritition where /shall reside.
 
 No swap is required as this script sets up zram automatically.
 
 Please select a disk and format it to your liking. The script shall ask you for what partitions to use for what later."
 
-    if [ ${#devices[@]} -eq 0 ]; then
+    if [ ${#disks[@]} -eq 0 ]; then
             dialog --msgbox "No valid storage devices found. Exiting." 10 50
             exit 1
     fi
     
-    menu_prompt disk_menu disk_menu_status "$title" "$description" "${devices[@]}"
+    menu_prompt disk_menu disk_menu_status "$title" "$description" "${disks[@]}"
+    disk="${disks[$((disk_menu - 1))]}"
 
     case $disk_menu in
         0)  exit;;
-        *)  export disk="${devices[$((disk_menu - 1))]}";;
+        *)  cgdisk $disk
+            return;;
     esac
 }
 
-partition_disk_prompt() {
-    local partitions=(
-        "1" "Partition disk using ext4 (recommended for Linux-based systems, stable and widely supported)"
-        "2" "Partition disk using ext3 (older filesystem format, less efficient)"
-        "3" "Partition disk using Btrfs (advanced filesystem with support for snapshots and compression)"
-    )
-    local title="Starting disk picker"
-    local description="This script only allows for FULLDISK install, cancel now with option 0 or ctrl+c if this is not what you want.
-Select a disk from the disk below with its number."
+select_esp_partition() {
+    local partitions=($(lsblk -ppnoNAME,SIZE,TYPE | grep -P "/dev/nvme|sd|mmcblk|vd" | grep -w "part" | sed 's/└─//g' | sed 's/├─//g' | awk '{print $1}'))
+    local title="Select ESP Partition"
+    local description="Please select a partition to use as the EFI System Partition (/boot/efi). ALL DATA SHALL BE WIPED"
+
+    local menu_items=()
+    local formatted_menu=()
+
+    local max_no_len=2
+    local max_partition_len=0
+    local max_label_len=0
+    local max_size_len=0
+    local max_fstype_len=0
     
-    menu_prompt disk_menu disk_menu_status "$title" "$description" "${devices[@]}"
+    for i in "${!partitions[@]}"; do
+        local partition="${partitions[$i]}"
+        local label=$(lsblk -no LABEL "$partition")
+        local size=$(lsblk -no SIZE "$partition")
+        local fstype=$(lsblk -no FSTYPE "$partition")
 
-    case $disk_menu in
-        1)  exit;;
-        2)  exit;;
-        3)  exit;;
-        0)  exit;;
-        *)  export disk="${devices[$((disk_menu - 1))]}";;
-    esac
+        max_partition_len=$((${#partition} > max_partition_len ? ${#partition} : max_partition_len))
+        max_label_len=$((${#label} > max_label_len ? ${#label} : max_label_len))
+        max_size_len=$((${#size} > max_size_len ? ${#size} : max_size_len))
+        max_fstype_len=$((${#fstype} > max_fstype_len ? ${#fstype} : max_fstype_len))
+    done
+
+    for i in "${!partitions[@]}"; do
+        local partition="${partitions[$i]}"
+        local label=$(lsblk -no LABEL "$partition")
+        local size=$(lsblk -no SIZE "$partition")
+        local fstype=$(lsblk -no FSTYPE "$partition")
+
+        menu_items+=("$(printf "%-${max_partition_len}s" "$partition") $(printf "%-${max_fstype_len}s" "$fstype") $(printf "%-${max_size_len}s" "$size") $(printf "%-${max_label_len}s" "$label")")
+    done
+
+    menu_prompt esp_menu esp_menu_status "$title" "$description" "${menu_items[@]}"
+    ESP_PART="${partitions[$((esp_menu - 1))]}"
+    export ESP_PART
 }
 
-continue_script 'Formatting' "Proceeding to formatting of:    ${disk}."
-sgdisk --zap-all "${disk}"
-continue_script 'Partition scheme' "Creating new partition scheme on ${disk}."
-continue_script 'Partition table' "Creating new gpt table ${disk}."
-sgdisk -g "${disk}"
-continue_script 'Partition name: ESP' "Creating new partition with name ESP ${disk}."
-sgdisk -I -n 1:0:+1G -t 1:ef00 -c 1:'ESP' "${disk}"
-continue_script 'Partition name: Arch' "Creating new partition with name Arch ${disk}."
-sgdisk -I -n 2:0:0 -c 2:'Arch' "${disk}"
+select_root_partition() {
+    local partitions=($(lsblk -ppnoNAME,SIZE,TYPE | grep -P "/dev/nvme|sd|mmcblk|vd" | grep -w "part" | sed 's/└─//g' | sed 's/├─//g' | awk '{print $1}'))
+    local title="Select ESP Partition"
+    local description="Please select a partition to use as the ROOT System Partition (/). ALL DATA SHALL BE WIPED"
 
-export ESP='/dev/disk/by-partlabel/ESP'
-export BTRFS='/dev/disk/by-partlabel/Arch'
+    local menu_items=()
+    local formatted_menu=()
 
-continue_script 'Inform disk changes' 'Informing the Kernel about the disk changes.'
-partprobe "${disk}"
-continue_script 'Format partition ESP: FAT32' 'Formatting the EFI partition as FAT32.'
-mkfs.fat -F 32 "${ESP}"
-continue_script 'Format partition Arch: BTRFS' 'Formatting the Arch partition as BTRFS.'
-mkfs.btrfs -f "${BTRFS}"
+    local max_no_len=2
+    local max_partition_len=0
+    local max_label_len=0
+    local max_size_len=0
+    local max_fstype_len=0
+    
+    for i in "${!partitions[@]}"; do
+        local partition="${partitions[$i]}"
+        local label=$(lsblk -no LABEL "$partition")
+        local size=$(lsblk -no SIZE "$partition")
+        local fstype=$(lsblk -no FSTYPE "$partition")
+
+        max_partition_len=$((${#partition} > max_partition_len ? ${#partition} : max_partition_len))
+        max_label_len=$((${#label} > max_label_len ? ${#label} : max_label_len))
+        max_size_len=$((${#size} > max_size_len ? ${#size} : max_size_len))
+        max_fstype_len=$((${#fstype} > max_fstype_len ? ${#fstype} : max_fstype_len))
+    done
+
+    for i in "${!partitions[@]}"; do
+        local partition="${partitions[$i]}"
+        local label=$(lsblk -no LABEL "$partition")
+        local size=$(lsblk -no SIZE "$partition")
+        local fstype=$(lsblk -no FSTYPE "$partition")
+
+        menu_items+=("$(printf "%-${max_partition_len}s" "$partition") $(printf "%-${max_fstype_len}s" "$fstype") $(printf "%-${max_size_len}s" "$size") $(printf "%-${max_label_len}s" "$label")")
+    done
+
+    menu_prompt esp_menu esp_menu_status "$title" "$description" "${menu_items[@]}"
+    ROOT_PART="${partitions[$((esp_menu - 1))]}"
+    export ROOT_PART
+}
+
+
+# The rest of your script would call this function to let the user pick the ESP partition
+
+
+# continue_script 'Formatting' "Proceeding to formatting of:    ${disk}."
+# sgdisk --zap-all "${disk}"
+# continue_script 'Partition scheme' "Creating new partition scheme on ${disk}."
+# continue_script 'Partition table' "Creating new gpt table ${disk}."
+# sgdisk -g "${disk}"
+# continue_script 'Partition name: ESP' "Creating new partition with name ESP ${disk}."
+# sgdisk -I -n 1:0:+1G -t 1:ef00 -c 1:'ESP' "${disk}"
+# continue_script 'Partition name: Arch' "Creating new partition with name Arch ${disk}."
+# sgdisk -I -n 2:0:0 -c 2:'Arch' "${disk}"
+
+# export ESP='/dev/disk/by-partlabel/ESP'
+# export BTRFS='/dev/disk/by-partlabel/Arch'
+
+# continue_script 'Inform disk changes' 'Informing the Kernel about the disk changes.'
+# partprobe "${disk}"
+# continue_script 'Format partition ESP: FAT32' 'Formatting the EFI partition as FAT32.'
+# mkfs.fat -F 32 "${ESP}"
+# continue_script 'Format partition Arch: BTRFS' 'Formatting the Arch partition as BTRFS.'
+# mkfs.btrfs -f "${BTRFS}"
+# 
+
+
+pause_script "" "ESP partition selected was:$ESP_PART 
+ROOT partition selected was:$ROOT_PART"
