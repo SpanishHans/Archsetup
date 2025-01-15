@@ -150,7 +150,7 @@ start_format() {
     for di in "${disks[@]}"; do
         continue_script "partprobe on $di" "Running partprobe on $di"
         if ! partprobe "$di"; then
-            pause_script '' "Failed to inform the kernel about changes for $di. Please check and retry."
+            continue_script '' "Failed to inform the kernel about changes for $di."
         fi
     done
 
