@@ -143,31 +143,3 @@ start_format() {
         return 1
     fi
 }
-
-# The rest of your script would call this function to let the user pick the ESP partition
-
-
-# continue_script 'Formatting' "Proceeding to formatting of:    ${disk}."
-# sgdisk --zap-all "${disk}"
-# continue_script 'Partition scheme' "Creating new partition scheme on ${disk}."
-# continue_script 'Partition table' "Creating new gpt table ${disk}."
-# sgdisk -g "${disk}"
-# continue_script 'Partition name: ESP' "Creating new partition with name ESP ${disk}."
-# sgdisk -I -n 1:0:+1G -t 1:ef00 -c 1:'ESP' "${disk}"
-# continue_script 'Partition name: Arch' "Creating new partition with name Arch ${disk}."
-# sgdisk -I -n 2:0:0 -c 2:'Arch' "${disk}"
-
-# export ESP='/dev/disk/by-partlabel/ESP'
-# export BTRFS='/dev/disk/by-partlabel/Arch'
-
-# continue_script 'Inform disk changes' 'Informing the Kernel about the disk changes.'
-# partprobe "${disk}"
-# continue_script 'Format partition ESP: FAT32' 'Formatting the EFI partition as FAT32.'
-# mkfs.fat -F 32 "${ESP}"
-# continue_script 'Format partition Arch: BTRFS' 'Formatting the Arch partition as BTRFS.'
-# mkfs.btrfs -f "${BTRFS}"
-# 
-
-
-# pause_script "" "ESP partition selected was:$ESP_PART 
-# ROOT partition selected was:$ROOT_PART"

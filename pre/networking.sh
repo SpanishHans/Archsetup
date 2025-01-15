@@ -16,7 +16,6 @@
 
 source ./commons.sh
 
-hostname_prompt ()
-{
+hostname_prompt () {
     input_text hostname hostname_status "Hostname username prompt" "This refers to the name on the network and pc name. AKA /etc/hostname" "Enter the hostname: "
 }

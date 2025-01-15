@@ -30,4 +30,3 @@ mount_ext4() {
 if [[ "$ROOT_FSTYPE" == "ext4" ]]; then
     mount_ext4
 fi
-
