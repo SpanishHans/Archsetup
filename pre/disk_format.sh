@@ -151,7 +151,6 @@ start_format() {
         continue_script "partprobe on $di" "Running partprobe on $di"
         if ! partprobe "$di"; then
             pause_script '' "Failed to inform the kernel about changes for $di. Please check and retry."
-            return 1
         fi
     done
 
