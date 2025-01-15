@@ -165,4 +165,8 @@ start_format() {
         echo "Unsupported ROOT_FSTYPE: $ROOT_FSTYPE"
         return 1
     fi
+    pause_script 'Formatting finished' "Disks have been formatted.
+    
+EFI partition currently has the following filesystem: $(lsblk -no FSTYPE "$EFI_PART")
+ROOT partition currently has the following filesystem: $(lsblk -no FSTYPE "$ROOT_PART")"
 }

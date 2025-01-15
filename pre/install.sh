@@ -62,9 +62,6 @@ ROOT partition will have the following filesystem: $ROOT_FSTYPE
 press ok to format or CANCEL NOW with ctrl+c or by selecting 0. Exit on the menu."
 start_format
 
-pause_script 'EFI' "EFI part: $EFI_PART $(lsblk -no FSTYPE "$EFI_PART")
-ROOT part: $ROOT_PART $(lsblk -no FSTYPE "$ROOT_PART")"
-
 continue_script 'User setup' 'Starting section for user setup, please wait.'
 username_prompt
 user_password_prompt
