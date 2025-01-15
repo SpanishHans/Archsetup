@@ -17,7 +17,7 @@
 source ./commons.sh
 
 username_prompt() {
-    input_text username username_status "Rootless username prompt" "Username for the user with no root access" "Enter the username for the new user: "
+    input_text username username_status "Non-admin user" "Menu for creating a username with no admin privileges." "Enter the username for the new user: "
 
     local prohibited_usernames=("root" "admin" "test" "user" "guest")
     local username_pattern='^[a-zA-Z0-9._-]+$'

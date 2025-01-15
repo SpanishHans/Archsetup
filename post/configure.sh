@@ -17,14 +17,17 @@
 source ./commons.sh
 
 if [ "$LIVE_ENV" = true ]; then
+    pause_script "" "The install script must be run from a machine with ArchLinux already installed.
+
+Exiting!!!
+    "
+    exit
     if [ "$(id -u)" -ne 0 ]; then
-        pause_script "" "You must be logged in as root on a machine with arch installed to use these scripts."
-        exit 1
+        pause_script "" "The install script must be run as root user.
+
+Exiting!!!"
+        exit
     fi
-else    
-    export ROOT_PASS=""
-    export ROOT_PASS_SET=false
-    root_pass
 fi
 
 title="Welcome to the Script Installer"

@@ -67,24 +67,24 @@ subvols=(
     ["@var_lib_AccountsService"]="${BTRFS} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/AccountsService | User account settings and data managed by AccountsService."
 )
 
-multiselect_prompt \
-    subvol_menu_choice \
-    subvol_menu_choice_status \
-    subvols \
-    "Starting subvol picker" \
-    "The following volumes are required for the system to work and will be create automatically.
+# multiselect_prompt \
+#     subvol_menu_choice \
+#     subvol_menu_choice_status \
+#     subvols \
+#     "Starting subvol picker" \
+#     "The following volumes are required for the system to work and will be create automatically.
     
-1. @
-2. @home
-3. @snapshots
+# 1. @
+# 2. @home
+# 3. @snapshots
     
-Please choose what extra subvolumes you require."
+# Please choose what extra subvolumes you require."
 
-declare -A filtered_subvols
-for choice in "${subvol_menu_choice[@]}"; do
-    if [[ -n "${subvols[$choice]}" ]]; then
-        filtered_subvols["$choice"]="${subvols[$choice]}"
-    fi
-done
+# declare -A filtered_subvols
+# for choice in "${subvol_menu_choice[@]}"; do
+#     if [[ -n "${subvols[$choice]}" ]]; then
+#         filtered_subvols["$choice"]="${subvols[$choice]}"
+#     fi
+# done
 
-mount_btrfs filtered_subvols
+# mount_btrfs filtered_subvols

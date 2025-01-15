@@ -21,10 +21,18 @@ source ./pre/ext4_config.sh
 source ./pre/networking.sh
 source ./pre/user_setup.sh
 
-if [ "$LIVE_ENV" = false ]; then
+# if [ "$LIVE_ENV" = false ]; then
+if [ "$LIVE_ENV" = true ]; then # Development only, change to false.
+    pause_script "" "The install script must be run from the archlinux-YEAR.MONTH.DAY-x86_64.iso image.
+
+Exiting!!!
+    "
+    exit
     if [ "$(id -u)" -ne 0 ]; then
-        pause_script "" "The install script must be run from arch.iso as root user."
-        exit 1
+        pause_script "" "The install script must be run as root user.
+
+Exiting!!!"
+        exit
     fi
 fi
 
@@ -33,50 +41,38 @@ installation_date=$(date "+%Y-%m-%d %H:%M:%S")
 locale=en_US
 kblayout=us
 
-usernam
-
 # username_prompt
 # user_password_prompt
 # root_password_prompt
 # sysadmin_password_prompt
 
-masked_user_password="${user_password:0:1}*******${user_password: -1}"
-masked_root_password="${root_password:0:1}*******${root_password: -1}"
-masked_sysadmin_password="${sysadmin_password:0:1}*******${sysadmin_password: -1}"
+# masked_user_password="${user_password:0:1}*******${user_password: -1}"
+# masked_root_password="${root_password:0:1}*******${root_password: -1}"
+# masked_sysadmin_password="${sysadmin_password:0:1}*******${sysadmin_password: -1}"
 
-userdata="Username:    $username
-Full Name:    $fullname
-User Password:    $masked_user_password
-Root Password:    $masked_root_password
-Sysadmin Password:    $masked_sysadmin_password"
-pause_script 'User confirmation' "$userdata"
+# userdata="Username:    $username
+# Full Name:    $fullname
+# User Password:    $masked_user_password
+# Root Password:    $masked_root_password
+# Sysadmin Password:    $masked_sysadmin_password"
+# pause_script 'User confirmation' "$userdata"
 
-hostname_prompt
-pause_script 'Hostname' "Hostname:    ${hostname}"
+# hostname_prompt
+# pause_script 'Hostname' "Hostname:    ${hostname}"
 
 select_disk_prompt
-select_esp_partition
+select_efi_partition
 select_root_partition
 
-continue_script 'Formatting' "Proceeding to formatting of:    ${disk}."
-sgdisk --zap-all "${disk}"
-continue_script 'Partition scheme' "Creating new partition scheme on ${disk}."
-continue_script 'Partition table' "Creating new gpt table ${disk}."
-sgdisk -g "${disk}"
-continue_script 'Partition name: ESP' "Creating new partition with name ESP ${disk}."
-sgdisk -I -n 1:0:+1G -t 1:ef00 -c 1:'ESP' "${disk}"
-continue_script 'Partition name: Arch' "Creating new partition with name Arch ${disk}."
-sgdisk -I -n 2:0:0 -c 2:'Arch' "${disk}"
+pause_script 'EFI' "EFI part: $EFI_PART"
+pause_script 'ROOT' "ROOT part: $ROOT_PART"
 
-export ESP='/dev/disk/by-partlabel/ESP'
-export BTRFS='/dev/disk/by-partlabel/Arch'
 
-continue_script 'Inform disk changes' 'Informing the Kernel about the disk changes.'
-partprobe "${disk}"
-continue_script 'Format partition ESP: FAT32' 'Formatting the EFI partition as FAT32.'
-mkfs.fat -F 32 "${ESP}"
-continue_script 'Format partition Arch: BTRFS' 'Formatting the Arch partition as BTRFS.'
-mkfs.btrfs -f "${BTRFS}"
+pause_script 'PAUSA' "PRUEBAS"
+
+exit
+
+start_format
 
 continue_script 'BTRFS subvolumes' 'Creating BTRFS subvolumes.'
 mount "${BTRFS}" /mnt
@@ -152,7 +148,7 @@ mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@distrob
 mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@gdm $BTRFS /mnt/var/lib/gdm
 mount -o ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec,subvol=@var_lib_AccountsService $BTRFS /mnt/var/lib/AccountsService
 
-mount -o nodev,nosuid,noexec "${ESP}" /mnt/efi
+mount -o nodev,nosuid,noexec "${EFI}" /mnt/efi
 
 continue_script 'Detect CPU vendor' 'Detecting ucode for processor brand'
 CPU=$(grep -m 1 'vendor_id' /proc/cpuinfo)

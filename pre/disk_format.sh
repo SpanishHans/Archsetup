@@ -43,9 +43,9 @@ Please select a disk and format it to your liking. The script shall ask you for 
     esac
 }
 
-select_esp_partition() {
+select_efi_partition() {
     local partitions=($(lsblk -ppnoNAME,SIZE,TYPE | grep -P "/dev/nvme|sd|mmcblk|vd" | grep -w "part" | sed 's/└─//g' | sed 's/├─//g' | awk '{print $1}'))
-    local title="Select ESP Partition"
+    local title="Select EFI Partition"
     local description="Please select a partition to use as the EFI System Partition (/boot/efi). ALL DATA SHALL BE WIPED"
 
     local menu_items=()
@@ -79,13 +79,13 @@ select_esp_partition() {
     done
 
     menu_prompt esp_menu esp_menu_status "$title" "$description" "${menu_items[@]}"
-    ESP_PART="${partitions[$((esp_menu - 1))]}"
-    export ESP_PART
+    EFI_PART="${partitions[$((esp_menu - 1))]}"
+    export EFI_PART
 }
 
 select_root_partition() {
     local partitions=($(lsblk -ppnoNAME,SIZE,TYPE | grep -P "/dev/nvme|sd|mmcblk|vd" | grep -w "part" | sed 's/└─//g' | sed 's/├─//g' | awk '{print $1}'))
-    local title="Select ESP Partition"
+    local title="Select ROOT Partition"
     local description="Please select a partition to use as the ROOT System Partition (/). ALL DATA SHALL BE WIPED"
 
     local menu_items=()
@@ -123,6 +123,15 @@ select_root_partition() {
     export ROOT_PART
 }
 
+start_format() {
+    continue_script 'Inform disk changes' 'Informing the Kernel about the disk changes.'
+    partprobe "${disk}"
+    continue_script 'Format partition ESP: FAT32' 'Formatting the EFI partition as FAT32.'
+    mkfs.fat -F 32 "${EFI}"
+    continue_script 'Format partition Arch: BTRFS' 'Formatting the Arch partition as BTRFS.'
+    mkfs.btrfs -f "${BTRFS}"
+}
+
 
 # The rest of your script would call this function to let the user pick the ESP partition
 
@@ -149,5 +158,5 @@ select_root_partition() {
 # 
 
 
-pause_script "" "ESP partition selected was:$ESP_PART 
-ROOT partition selected was:$ROOT_PART"
+# pause_script "" "ESP partition selected was:$ESP_PART 
+# ROOT partition selected was:$ROOT_PART"
