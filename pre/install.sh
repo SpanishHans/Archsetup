@@ -48,10 +48,22 @@ select_disk_prompt
 select_efi_partition
 select_root_partition
 determine_format
+pause_script 'Preview format' "You are about to format the partitions in the following way:
+
+EFI partition will be on: $EFI_PART
+ROOT partition will be on: $ROOT_PART
+
+EFI partition currently has the following filesystem: $(lsblk -no FSTYPE "$EFI_PART")
+ROOT partition currently has the following filesystem: $(lsblk -no FSTYPE "$ROOT_PART")
+
+EFI partition will have the following filesystem: vfat)
+ROOT partition will have the following filesystem: $ROOT_FSTYPE
+
+press ok to format or CANCEL NOW with ctrl+c or by selecting 0. Exit on the menu."
+start_format
 
 pause_script 'EFI' "EFI part: $EFI_PART $(lsblk -no FSTYPE "$EFI_PART")
-ROOT part: $ROOT_PART $(lsblk -no FSTYPE "$ROOT_PART")
-ROOT fstype: $ROOT_FSTYPE"
+ROOT part: $ROOT_PART $(lsblk -no FSTYPE "$ROOT_PART")"
 
 continue_script 'User setup' 'Starting section for user setup, please wait.'
 username_prompt
@@ -73,8 +85,6 @@ pause_script 'User confirmation' "$userdata"
 continue_script 'Networking' 'Starting section for networking, please wait.'
 hostname_prompt
 pause_script 'Hostname' "Hostname:    ${hostname}"
-
-start_format
 
 continue_script 'Detect CPU vendor' 'Detecting ucode for processor brand'
 CPU=$(grep -m 1 'vendor_id' /proc/cpuinfo)
