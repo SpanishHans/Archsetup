@@ -71,29 +71,28 @@ sysadmin_password_prompt () {
 }
 
 user_setup () {
-    username_prompt username fullname
-    user_password_prompt user_password
-    root_password_prompt root_password
-    sysadmin_password_prompt sysadmin_password
-    # username="tester"
-    # fullname="Tester"
-    # user_password="12345678"
-    # root_password="12345678"
-    # sysadmin_password="12345678"
+    # username_prompt username fullname
+    # user_password_prompt user_password
+    # root_password_prompt root_password
+    # sysadmin_password_prompt sysadmin_password
+    username="tester"
+    fullname="Tester"
+    user_password="12345678"
+    root_password="12345678"
+    sysadmin_password="12345678"
 
     masked_user_password="${user_password:0:1}*******${user_password: -1}"
     masked_root_password="${root_password:0:1}*******${root_password: -1}"
     masked_sysadmin_password="${sysadmin_password:0:1}*******${sysadmin_password: -1}"
-
-    userdata="Username:    $username
-Full Name:    $fullname
-User Password:    $masked_user_password
-Root Password:    $masked_root_password
-Sysadmin Password:    $masked_sysadmin_password"
 
     export username
     export fullname
     export user_password
     export root_password
     export sysadmin_password
+    pause_script 'User confirmation' "Username:    $username
+Full Name:    $fullname
+User Password:    $masked_user_password
+Root Password:    $masked_root_password
+Sysadmin Password:    $masked_sysadmin_password"
 }

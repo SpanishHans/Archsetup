@@ -46,6 +46,7 @@ Please select a disk and format it to your liking. The script shall ask you for 
         *)  cgdisk $DISK
             return;;
     esac
+    pause_script "dgasfasd" "$choice"
 }
 
 select_efi_partition() {
@@ -90,6 +91,7 @@ select_efi_partition() {
     local EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
     eval "$part='$EFI_PART'"
     eval "$form='$EFI_FORM'"
+    pause_script "dgasfasd" "$part $form"
 }
 
 select_root_partition() {
@@ -134,6 +136,7 @@ select_root_partition() {
     local ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
     eval "$part='$ROOT_PART'"
     eval "$form='$ROOT_FORM'"
+    pause_script "dgasfasd" "$part $form"
 }
 
 determine_format() {
@@ -155,6 +158,7 @@ determine_format() {
             *)  output "Invalid choice, please try again.";;
         esac
         eval "$form='$ROOT_FSTYPE'"
+        pause_script "dgasfasd" "$form"
         break
     done
 }
@@ -230,10 +234,17 @@ disk_setup() {
     export ROOT_PART
     export ROOT_FORM
     export ROOT_FSTYPE
-    pause_script "" "DISK:$DISK
-EFI_PART:$EFI_PART
-EFI_FORM:$EFI_FORM
-ROOT_PART:$ROOT_PART
-ROOT_FORM:$ROOT_FORM
-ROOT_FSTYPE:$ROOT_FSTYPE"
+    pause_script 'Preview format' "You are about to format the partitions in the following way:
+
+EFI partition will be on: $EFI_PART
+ROOT partition will be on: $ROOT_PART
+
+EFI partition currently has the following filesystem: $EFI_FORM
+ROOT partition currently has the following filesystem: $ROOT_FORM
+
+EFI partition will have the following filesystem: $EFI_FORM
+ROOT partition will have the following filesystem: $ROOT_FSTYPE
+
+press ok to format or CANCEL NOW with ctrl+c or by selecting 0. Exit on the menu."
+    start_format
 }
