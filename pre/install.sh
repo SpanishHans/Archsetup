@@ -41,50 +41,18 @@ Enjoy!"
 
 pause_script "$title" "$description"
 
-locale=en_US
-kblayout=us
+
 
 continue_script 'User setup' 'Starting section for user setup, please wait.'
-# username_prompt
-# user_password_prompt
-# root_password_prompt
-# sysadmin_password_prompt
-
-masked_user_password="${user_password:0:1}*******${user_password: -1}"
-masked_root_password="${root_password:0:1}*******${root_password: -1}"
-masked_sysadmin_password="${sysadmin_password:0:1}*******${sysadmin_password: -1}"
-
-username="tester"
-fullname="Tester"
-user_password="12345678"
-root_password="12345678"
-sysadmin_password="12345678"
-hostname="test_machine"
-
-userdata="Username:    $username
-Full Name:    $fullname
-User Password:    $masked_user_password
-Root Password:    $masked_root_password
-Sysadmin Password:    $masked_sysadmin_password"
+user_setup
 pause_script 'User confirmation' "$userdata"
 
 continue_script 'Networking' 'Starting section for networking, please wait.'
-# hostname_prompt
+networking_setup
 pause_script 'Hostname' "Hostname:    ${hostname}"
 
 continue_script 'Partitioning' 'Starting section for disk formatting and partitioning, please wait.'
-select_disk_prompt DISK
-select_efi_partition EFI_PART EFI_FORM
-select_root_partition ROOT_PART ROOT_FORM
-determine_format ROOT_FSTYPE
-
-export $DISK
-export $EFI_PART
-export $EFI_FORM
-export $ROOT_PART
-export $ROOT_FORM
-export $ROOT_FSTYPE
-
+disk_setup
 pause_script 'Preview format' "You are about to format the partitions in the following way:
 
 EFI partition will be on: $EFI_PART
@@ -145,22 +113,9 @@ continue_script 'New fstab' 'Generating a new fstab.'
 genfstab -U /mnt >> /mnt/etc/fstab || { pause_script '' "genfstab failed"; exit 1; }
 
 continue_script 'Locales setup' 'Setting up hostname, locales, and keyboard layout'
-echo "$hostname" > /mnt/etc/hostname
-cat <<EOF > /mnt/etc/hosts
-127.0.0.1    localhost
-::1          localhost
-127.0.1.1    "$hostname".localdomain    "$hostname"
-EOF
+locales_setup
+pause_script 'Locales' "Your /mnt/etc/locale.gen looks like this:    $cat '/mnt/etc/locale.gen'"
 
-cat <<EOF > /mnt/etc/locale.gen
-$locale.UTF-8 UTF-8
-en_GB.UTF-8 UTF-8
-es_CO.UTF-8 UTF-8
-EOF
-
-echo "LANG=$locale.UTF-8" > /mnt/etc/locale.conf
-echo "KEYMAP=$kblayout" > /mnt/etc/vconsole.conf
-echo "FONT=ter-u20n" > /mnt/etc/vconsole.conf
 
 continue_script 'Copy repo' 'Copying repo to machine'
 cp -R --no-preserve=ownership /root/Archsetup /mnt/root/Archsetup

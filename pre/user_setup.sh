@@ -17,6 +17,8 @@
 source ./commons.sh
 
 username_prompt() {
+    local usr="$1"
+    local full="$1"
     
     input_text username username_status "Non-admin user" "Menu for creating a username with no admin privileges.
 
@@ -46,22 +48,52 @@ Enter the username for the new user: " "Enter the username for the new user: "
     done
     fullname="$(tr '[:lower:]' '[:upper:]' <<< "${username:0:1}")${username:1}"
 
-    export username
-    export fullname
+    eval "$usr='$username'"
+    eval "$full='$fullname'"
 }
 
 user_password_prompt () {
+    local pass="$1"
     set_password user_password user_password_status "$fullname"
-    export user_password
+    eval "$pass='$user_password'"
 }
 
 root_password_prompt () {
+    local pass="$1"
     set_password root_password root_password_status "root"
-    export root_password
+    eval "$pass='$root_password'"
 }
 
 sysadmin_password_prompt () {
+    local pass="$1"
     set_password sysadmin_password sysadmin_password_status "sysadmin"
-    export sysadmin_password
+    eval "$pass='$sysadmin_password'"
 }
 
+user_setup () {
+    # username_prompt username fullname
+    # user_password_prompt user_password
+    # root_password_prompt root_password
+    # sysadmin_password_prompt sysadmin_password
+    username="tester"
+    fullname="Tester"
+    user_password="12345678"
+    root_password="12345678"
+    sysadmin_password="12345678"
+
+    masked_user_password="${user_password:0:1}*******${user_password: -1}"
+    masked_root_password="${root_password:0:1}*******${root_password: -1}"
+    masked_sysadmin_password="${sysadmin_password:0:1}*******${sysadmin_password: -1}"
+
+    userdata="Username:    $username
+    Full Name:    $fullname
+    User Password:    $masked_user_password
+    Root Password:    $masked_root_password
+    Sysadmin Password:    $masked_sysadmin_password"
+
+    export $username
+    export $fullname
+    export $user_password
+    export $root_password
+    export $sysadmin_password
+}

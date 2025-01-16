@@ -22,17 +22,19 @@ hostname_prompt () {
     eval "$pass='$hostname'"
 }
 
-networking_setup() {
-    # hostname_prompt hostname
-    hostname="test_machine"
-
-    echo "$hostname" > /mnt/etc/hostname
-    cat <<EOF > /mnt/etc/hosts
-127.0.0.1    localhost
-::1          localhost
-127.0.1.1    ${hostname}.localdomain    ${hostname}
+locales_setup() {
+    locale=en_US
+    kblayout=us
+    cat <<EOF > /mnt/etc/locale.gen
+$locale.UTF-8 UTF-8
+en_GB.UTF-8 UTF-8
+es_CO.UTF-8 UTF-8
 EOF
 
-    export $hostname
+    echo "LANG=$locale.UTF-8" > /mnt/etc/locale.conf
+    echo "KEYMAP=$kblayout" > /mnt/etc/vconsole.conf
+    echo "FONT=ter-u20n" > /mnt/etc/vconsole.conf
+
+    export $locale
 }
 
