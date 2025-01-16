@@ -124,6 +124,7 @@ format_a_partition() {
     
 Please select a filesystem for it from the following:"
     local options=(\
+        "Continue to the next step" \
         "Format as EXT4" \
         "Format as BTRFS"
     )
