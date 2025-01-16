@@ -86,11 +86,12 @@ select_efi_partition() {
         menu_items+=("$(printf "%-${max_partition_len}s" "$partition") $(printf "%-${max_fstype_len}s" "$fstype") $(printf "%-${max_size_len}s" "$size") $(printf "%-${max_label_len}s" "$label")")
     done
 
-    menu_prompt esp_menu esp_menu_status "$title" "$description" "${menu_items[@]}"
-    local EFI_PART="${partitions[$((esp_menu - 1))]}"
-    local EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
+    menu_prompt root_menu root_menu_status "$title" "$description" "${menu_items[@]}"
+    local EFI_PART="${partitions[$((root_menu - 1))]}"
+    local EFI_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
     eval "$part='$EFI_PART'"
     eval "$form='$EFI_FORM'"
+    pause_script "efi test" "$EFI_PART $EFI_FORM"
     pause_script "efi test" "$part $form"
 }
 
