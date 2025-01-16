@@ -46,7 +46,7 @@ Please select a disk and format it to your liking. The script shall ask you for 
         *)  cgdisk $DISK
             return;;
     esac
-    pause_script "dgasfasd" "$choice"
+    pause_script "disk test" "$choice"
 }
 
 select_efi_partition() {
@@ -91,7 +91,7 @@ select_efi_partition() {
     local EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
     eval "$part='$EFI_PART'"
     eval "$form='$EFI_FORM'"
-    pause_script "dgasfasd" "$part $form"
+    pause_script "efi test" "$part $form"
 }
 
 select_root_partition() {
@@ -136,7 +136,7 @@ select_root_partition() {
     local ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
     eval "$part='$ROOT_PART'"
     eval "$form='$ROOT_FORM'"
-    pause_script "dgasfasd" "$part $form"
+    pause_script "root test" "$part $form"
 }
 
 determine_format() {
@@ -158,7 +158,7 @@ determine_format() {
             *)  output "Invalid choice, please try again.";;
         esac
         eval "$form='$ROOT_FSTYPE'"
-        pause_script "dgasfasd" "$form"
+        pause_script "root fstype" "$form"
         break
     done
 }
