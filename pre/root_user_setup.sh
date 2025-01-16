@@ -33,5 +33,5 @@ With this in mind, DONT LOOSE YOUR ROOT PASSWORD, or you wont be able to login a
     export root_password
 
     pause_script 'Root user confirmation' "Username:    root
-Root Password:    $masked_root_password
+Root Password:    $masked_root_password"
 }
