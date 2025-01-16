@@ -15,6 +15,7 @@
 # the License.
 
 source ./commons.sh
+source ./vars.sh
 
 if [ "$USE_DIALOG" = false ]; then
     clear

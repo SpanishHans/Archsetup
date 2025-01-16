@@ -15,6 +15,7 @@
 # the License.
 
 source ./commons.sh
+source ./vars.sh
 source ./pre/disk_format.sh
 source ./pre/networking.sh
 source ./pre/user_setup.sh
@@ -79,17 +80,31 @@ continue_script 'Networking' 'Starting section for networking, please wait.'
 pause_script 'Hostname' "Hostname:    ${hostname}"
 
 continue_script 'Partitioning' 'Starting section for disk formatting and partitioning, please wait.'
-select_disk_prompt
-select_efi_partition
-select_root_partition
-determine_format
+select_disk_prompt disk
+select_efi_partition EFI_PART EFI_FORM
+select_root_partition ROOT_PART ROOT_FORM
+determine_format ROOT_FSTYPE
+
+echo "username=$username" >> "./vars.sh"
+echo "fullname=$fullname" >> "./vars.sh"
+echo "user_password=$user_password" >> "./vars.sh"
+echo "root_password=$root_password" >> "./vars.sh"
+echo "sysadmin_password=$sysadmin_password" >> "./vars.sh"
+echo "hostname=$hostname" >> "./vars.sh"
+echo "disk=$disk" >> "./vars.sh"
+echo "EFI_PART=$EFI_PART" >> "./vars.sh"
+echo "EFI_FORM=$EFI_FORM" >> "./vars.sh"
+echo "ROOT_PART=$ROOT_PART" >> "./vars.sh"
+echo "ROOT_FORM=$ROOT_FORM" >> "./vars.sh"
+echo "ROOT_FSTYPE=$ROOT_FSTYPE" >> "./vars.sh"
+
 pause_script 'Preview format' "You are about to format the partitions in the following way:
 
 EFI partition will be on: $EFI_PART
 ROOT partition will be on: $ROOT_PART
 
-EFI partition currently has the following filesystem: $(lsblk -no FSTYPE "$EFI_PART")
-ROOT partition currently has the following filesystem: $(lsblk -no FSTYPE "$ROOT_PART")
+EFI partition currently has the following filesystem: $EFI_FORM
+ROOT partition currently has the following filesystem: $ROOT_FORM
 
 EFI partition will have the following filesystem: vfat
 ROOT partition will have the following filesystem: $ROOT_FSTYPE

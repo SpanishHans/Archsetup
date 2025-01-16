@@ -15,13 +15,14 @@
 # the License.
 
 source ./commons.sh
+source ./vars.sh
 
 mount_ext4() {
 
     continue_script "Mounting $ROOT_PART on /mnt" "Mounting $ROOT_PART on /mnt in order to create subvolumes."
 
     mount -o ssd,noatime,compress=zstd "${ROOT_PART}" /mnt
-    mount -o nodev,nosuid,noexec "${ESP}" /mnt/efi
+    mount -o nodev,nosuid,noexec "${ESP_PART}" /mnt/efi
 
     pause_script "EXT4 Mounting" "Finished mouting EXT4"
 }

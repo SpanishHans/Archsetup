@@ -15,10 +15,12 @@
 # the License.
 
 source ./commons.sh
+source ./vars.sh
 source ./pre/ext4_config.sh
 source ./pre/btrfs_config.sh
 
 select_disk_prompt() {
+    local choice="$1"
     local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
     local title="Starting disk picker"
     local description="The following menu shall help you edit and format disks for installing arch. the script requires 2 partitions:
@@ -36,17 +38,19 @@ Please select a disk and format it to your liking. The script shall ask you for 
     fi
     
     menu_prompt disk_menu disk_menu_status "$title" "$description" "${disks[@]}"
-    export disk="${disks[$((disk_menu - 1))]}"
-    echo "export disk=\"$disk\"" > ./vars.sh
+    local DISK="${disks[$((disk_menu - 1))]}"
+    eval "$choice=\"$DISK\""
 
     case $disk_menu in
         0)  exit;;
-        *)  cgdisk $disk
+        *)  cgdisk $DISK
             return;;
     esac
 }
 
 select_efi_partition() {
+    local part="$1"
+    local form="$2"
     local partitions=($(lsblk -ppnoNAME,SIZE,TYPE | grep -P "/dev/nvme|sd|mmcblk|vd" | grep -w "part" | sed 's/└─//g' | sed 's/├─//g' | awk '{print $1}'))
     local title="Select EFI Partition"
     local description="Please select a partition to use as the EFI System Partition (/boot/efi). ALL DATA SHALL BE WIPED"
@@ -82,12 +86,16 @@ select_efi_partition() {
     done
 
     menu_prompt esp_menu esp_menu_status "$title" "$description" "${menu_items[@]}"
-    EFI_PART="${partitions[$((esp_menu - 1))]}"
-    export EFI_PART
-    echo "export EFI_PART=\"$EFI_PART\"" > ./vars.sh
+    local EFI_PART="${partitions[$((esp_menu - 1))]}"
+    local EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
+    eval "$part=\"$EFI_PART\""
+    eval "$form=\"$EFI_FORM\""
+
 }
 
 select_root_partition() {
+    local part="$1"
+    local form="$2"
     local partitions=($(lsblk -ppnoNAME,SIZE,TYPE | grep -P "/dev/nvme|sd|mmcblk|vd" | grep -w "part" | sed 's/└─//g' | sed 's/├─//g' | awk '{print $1}'))
     local title="Select ROOT Partition"
     local description="Please select a partition to use as the ROOT System Partition (/). ALL DATA SHALL BE WIPED"
@@ -123,12 +131,14 @@ select_root_partition() {
     done
 
     menu_prompt root_menu root_menu_status "$title" "$description" "${menu_items[@]}"
-    ROOT_PART="${partitions[$((root_menu - 1))]}"
-    export ROOT_PART
-    echo "export ROOT_PART=\"$ROOT_PART\"" > ./vars.sh
+    local ROOT_PART="${partitions[$((root_menu - 1))]}"
+    local ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
+    eval "$part=\"$ROOT_PART\""
+    eval "$form=\"$ROOT_FORM\""
 }
 
 determine_format() {
+    local form="$2"
     while true; do
         local options=(\
             "Format as EXT4 (Reliable, fast, and widely supported. Ideal for most users, but lacks some advanced features of newer file systems like BTRFS.)" \
@@ -140,11 +150,11 @@ determine_format() {
         menu_prompt format_menu_choice format_menu_choice_status "$title" "$description" "${options[@]}"
     
         case $format_menu_choice in
-            1)  export ROOT_FSTYPE='ext4'
-                echo "export ROOT_FSTYPE=\"$ROOT_FSTYPE\"" > ./vars.sh
+            1)  local ROOT_FSTYPE='ext4'
+                eval "$form=\"$ROOT_FSTYPE\""
                 break;;
-            2)  export ROOT_FSTYPE='btrfs'
-                echo "export ROOT_FSTYPE=\"$ROOT_FSTYPE\"" > ./vars.sh
+            2)  local ROOT_FSTYPE='btrfs'
+                eval "$form=\"$ROOT_FSTYPE\""
                 break;;
             0)  exit;;
             *)  output "Invalid choice, please try again.";;

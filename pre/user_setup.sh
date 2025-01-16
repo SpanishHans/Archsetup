@@ -15,6 +15,7 @@
 # the License.
 
 source ./commons.sh
+source ./vars.sh
 
 username_prompt() {
     input_text username username_status "Non-admin user" "Menu for creating a username with no admin privileges.

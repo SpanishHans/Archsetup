@@ -15,6 +15,7 @@
 # the License.
 
 source ./commons.sh
+source ./vars.sh
 
 mount_btrfs() {
     local -n given_array=$1
@@ -41,7 +42,7 @@ mount_btrfs() {
     mount -o ssd,noatime,compress=zstd,subvolid=5 "${ROOT_PART}" /mnt/.btrfsroot
     mount -o ssd,noatime,compress=zstd,subvol=@home "${ROOT_PART}" /mnt/home
     mount -o ssd,noatime,compress=zstd,subvol=@snapshots "${ROOT_PART}" /mnt/.snapshots
-    mount -o nodev,nosuid,noexec "${EFI_PART}" /mnt/efi
+    mount -o nodev,nosuid,noexec "${_PART}" /mnt/efi
     
     local options=()
     for key in "${!given_array[@]}"; do
