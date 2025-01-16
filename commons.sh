@@ -307,7 +307,6 @@ menu_prompt() {
     for i in "${!options[@]}"; do
         menu_items+=($((i + 1)) "${options[i]}")
     done
-    menu_items+=(0 "Exit")
 
     if [ "$USE_DIALOG" = true ]; then
         dialog_output=$(dialog \
