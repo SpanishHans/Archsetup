@@ -154,7 +154,6 @@ determine_format() {
             0)  exit;;
             *)  output "Invalid choice, please try again.";;
         esac
-        pause_script "" "$ROOT_FSTYPE"
         eval "$form='$ROOT_FSTYPE'"
         break
     done
