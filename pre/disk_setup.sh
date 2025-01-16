@@ -54,8 +54,8 @@ With this in mind, lets pick between sane defaults or full custom mode.'
 
 default_route() {
     pause_script "Default route" "You picked the default route"
-    # format_and_partition_disks
-    # set_filesystem_for_partitions
+    format_and_partition_disks
+    set_filesystem_for_partitions
 }
 
 full_custom_route() {
