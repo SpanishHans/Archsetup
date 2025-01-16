@@ -105,11 +105,11 @@ Simply select a partition, format it on the menu that opens up and then come bac
 
     while true; do
         menu_prompt format_partition_menu format_partition_menu_status "$title" "$description" "${partitions[@]}"
-        local PARTITION="${partitions[$((format_partition_menu - 1))]}"
+        local partition="${partitions[$((format_partition_menu - 1))]}"
         case $format_partition_menu in
             1)  break;;
             0)  exit;;
-            *)  format_a_partition "$PARTITION"
+            *)  format_a_partition "$partition"
                 ;;
         esac
     done
