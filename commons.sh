@@ -21,6 +21,7 @@ check_dialog(){
         USE_DIALOG=false
     fi
     export USE_DIALOG
+    echo "export USE_DIALOG=\"$USE_DIALOG\"" > ./vars.sh
 }
 
 check_live_env(){
@@ -33,6 +34,7 @@ check_live_env(){
         LIVE_ENV=false
     fi
     export LIVE_ENV
+    echo "export LIVE_ENV=\"$LIVE_ENV\"" > ./vars.sh
 }
 
 check_live_env
@@ -244,6 +246,7 @@ root_pass() {
         if echo "$ROOT_PASS" | sudo -S whoami 2>/dev/null | grep -q "^root$"; then
             ROOT_PASS_SET=true
             export ROOT_PASS
+            echo "export ROOT_PASS=\"$ROOT_PASS\"" > ./vars.sh
             break
         else
             pause_script "Title" "Invalid password. Please try again."

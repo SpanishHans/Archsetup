@@ -15,6 +15,8 @@
 # the License.
 
 source ./commons.sh
+source ./pre/ext4_config.sh
+source ./pre/btrfs_config.sh
 
 select_disk_prompt() {
     local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
@@ -81,6 +83,7 @@ select_efi_partition() {
     menu_prompt esp_menu esp_menu_status "$title" "$description" "${menu_items[@]}"
     EFI_PART="${partitions[$((esp_menu - 1))]}"
     export EFI_PART
+    echo "export EFI_PART=\"$EFI_PART\"" > ./vars.sh
 }
 
 select_root_partition() {
@@ -121,6 +124,7 @@ select_root_partition() {
     menu_prompt root_menu root_menu_status "$title" "$description" "${menu_items[@]}"
     ROOT_PART="${partitions[$((root_menu - 1))]}"
     export ROOT_PART
+    echo "export ROOT_PART=\"$ROOT_PART\"" > ./vars.sh
 }
 
 determine_format() {
@@ -135,8 +139,12 @@ determine_format() {
         menu_prompt format_menu_choice format_menu_choice_status "$title" "$description" "${options[@]}"
     
         case $format_menu_choice in
-            1)  export ROOT_FSTYPE='ext4';break;;
-            2)  export ROOT_FSTYPE='btrfs';break;;
+            1)  export ROOT_FSTYPE='ext4'
+                echo "export ROOT_FSTYPE=\"$ROOT_FSTYPE\"" > ./vars.sh
+                break;;
+            2)  export ROOT_FSTYPE='btrfs'
+                echo "export ROOT_FSTYPE=\"$ROOT_FSTYPE\"" > ./vars.sh
+                break;;
             0)  exit;;
             *)  output "Invalid choice, please try again.";;
         esac
