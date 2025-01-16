@@ -100,7 +100,7 @@ ROOT partition will be on: $ROOT_PART
 EFI partition currently has the following filesystem: $EFI_FORM
 ROOT partition currently has the following filesystem: $ROOT_FORM
 
-EFI partition will have the following filesystem: vfat
+EFI partition will have the following filesystem: $EFI_FORM
 ROOT partition will have the following filesystem: $ROOT_FSTYPE
 
 press ok to format or CANCEL NOW with ctrl+c or by selecting 0. Exit on the menu."
