@@ -36,7 +36,7 @@ Exiting!!!"
 fi
 
 continue_script 'Change root user password' 'Starting section for changing root password, please wait.'
-root_user_setup
+root_setup
 
 continue_script 'Partitioning' 'Starting section for disk formatting and partitioning, please wait.'
 disk_setup
