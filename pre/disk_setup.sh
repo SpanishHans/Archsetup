@@ -64,7 +64,7 @@ full_custom_route() {
 
 format_and_partition_disks() {
     local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
-    local title="Starting disk picker"
+    local title="Starting disk partitioner"
     local description="The following menu shall help you format and partition disks in order to make space for installing arch. 
     
 Simply select a disk, format and come back here. When done, select the 0. Exit option to continue script execution."
