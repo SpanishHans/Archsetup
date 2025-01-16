@@ -254,6 +254,9 @@ Please select a disk and format it to your liking. The script shall ask you for 
 
     select_disk_prompt $DISK
 
+    pause_script "disk test in main funcction" "DISK: $DISK
+choice: $choice"
+
 
 #     determine_format ROOT_FSTYPE
 #     select_efi_partition EFI_PART EFI_FORM
