@@ -20,7 +20,6 @@ source ./pre/ext4_config.sh
 source ./pre/btrfs_config.sh
 
 select_disk_prompt() {
-    local choice="$1"
     local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
     local title="Starting disk picker"
     local description="The following menu shall help you format and partition disks in order to make space for installing arch. 
@@ -35,16 +34,11 @@ Simply select a disk, format and come back here. When done, select the 0. Exit o
     while true; do
         menu_prompt disk_menu disk_menu_status "$title" "$description" "${disks[@]}"
         local DISK="${disks[$((disk_menu - 1))]}"
-        choice="$DISK"
-        pause_script "disk test" "DISK: $DISK
-choice: $choice"
-
         case $disk_menu in
             0)  exit;;
             *)  cgdisk $DISK
                 return;;
         esac
-        
     done
 }
 
