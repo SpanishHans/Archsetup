@@ -17,7 +17,7 @@
 source ./commons.sh
 
 source ./pre/disk_format.sh
-source ./pre/user_setup.sh
+source ./pre/root_user_setup.sh
 source ./pre/networking.sh
 source ./pre/locales.sh
 
@@ -35,19 +35,8 @@ Exiting!!!"
     fi
 fi
 
-clear
-title="Arch installer"
-description="you chose to install arch from the main menu. 
-
-Starting the toolchain, Enjoy!"
-
-pause_script "$title" "$description"
-
-
-
 continue_script 'User setup' 'Starting section for user setup, please wait.'
 user_setup
-
 
 continue_script 'Partitioning' 'Starting section for disk formatting and partitioning, please wait.'
 disk_setup
@@ -119,7 +108,7 @@ description="About to chroot into the machine
 this automatically:
     1. Generates locales and configures time to UTC
     2. Enables NetworkManager
-    3. Creates users and changes passwords
+    3. Changes root password.
     4. Enable pacman color
     5. Sets up wheel group and adds the admin user to wheel
     6. Grub no timeout and splash quiet
@@ -137,12 +126,8 @@ arch-chroot /mnt /bin/bash -e <<EOF
     echo '#### STARTING 2. #### ->> Enabling NetworkManager'
     systemctl enable NetworkManager
 
-    echo '#### STARTING 3. #### ->> user_setup'
-    useradd -c "sysadmin" -m "sysadmin"
-    useradd -c "$fullname" -m "$username"
+    echo '#### STARTING 3. #### ->> root_password_setup'
     echo "root:$root_password" | chpasswd
-    echo "sysadmin:$sysadmin_password" | chpasswd
-    echo "$username:$user_password" | chpasswd
 
     echo '#### STARTING 4. #### ->> configure pacman color'
     sed -i 's/^#Color/Color/' /etc/pacman.conf

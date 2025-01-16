@@ -30,14 +30,6 @@ Exiting!!!"
     fi
 fi
 
-clear
-title="Arch configurator"
-description="you chose to confgure arch post install from the main menu. 
-
-Starting the toolchain, Enjoy!"
-
-pause_script "$title" "$description"
-
 while true; do
     options=(\
         "Configure Btrfs subvolumes and Snapper" \

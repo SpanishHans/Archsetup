@@ -71,10 +71,12 @@ sysadmin_password_prompt () {
 }
 
 user_setup () {
-    clear
+    pause_script "Entered user setup!" "The following section will help you configure extra users for the machine as it was set to only have root by default by the install script. It is recommended to have one admin user with wheel/sudo permissions and one without them. The following menu shall help you create more users.
+
+Lets configure extra users.
+"
     # username_prompt username fullname
     # user_password_prompt user_password
-    # root_password_prompt root_password
     # sysadmin_password_prompt sysadmin_password
     username="tester"
     fullname="Tester"
@@ -97,3 +99,10 @@ User Password:    $masked_user_password
 Root Password:    $masked_root_password
 Sysadmin Password:    $masked_sysadmin_password"
 }
+
+
+    # useradd -c "sysadmin" -m "sysadmin"
+    # useradd -c "$fullname" -m "$username"
+    # echo "root:$root_password" | chpasswd
+    # echo "sysadmin:$sysadmin_password" | chpasswd
+    # echo "$username:$user_password" | chpasswd
