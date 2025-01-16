@@ -126,7 +126,7 @@ Please select a filesystem for it from the following:"
         "Format as BTRFS"
     )
     menu_prompt partition_menu partition_menu_status "$title" "$description" "${options[@]}"
-    local PARTITION="${partitions[$((partition_menu - 1))]}"
+    local PARTITION="${partitions[$((partition_menu))]}"
     case $partition_menu in
         1)  format_as_ext4 "$PARTITION";;
         2)  format_as_btrfs "$PARTITION";;
