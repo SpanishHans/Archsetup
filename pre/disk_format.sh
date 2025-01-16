@@ -41,7 +41,6 @@ Please select a disk and format it to your liking. The script shall ask you for 
     menu_prompt disk_menu disk_menu_status "$title" "$description" "${disks[@]}"
     local DISK="${disks[$((disk_menu - 1))]}"
     eval "$choice='$DISK'"
-    pause_script "DEBUGGING-DELETE" "$DISK"
 
     case $disk_menu in
         0)  exit;;
