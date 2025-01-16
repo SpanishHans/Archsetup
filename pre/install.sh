@@ -74,7 +74,7 @@ Root Password:    $masked_root_password
 Sysadmin Password:    $masked_sysadmin_password"
 pause_script 'User confirmation' "$userdata"
 
-# continue_script 'Networking' 'Starting section for networking, please wait.'
+continue_script 'Networking' 'Starting section for networking, please wait.'
 # hostname_prompt
 pause_script 'Hostname' "Hostname:    ${hostname}"
 
