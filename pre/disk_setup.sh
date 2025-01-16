@@ -139,14 +139,14 @@ format_as_ext4() {
     local partition="$1"
     continue_script "Formatting $partition as EXT4" "You have decided to partition $partition as EXT4. FORMATTING..."
     mkfs.ext4 -F "${ROOT_PART}"
-    continue_script "$partition formatted" "the partition $partition has been formatted to EXT4,"
+    pause_script "$partition formatted" "the partition $partition has been formatted to EXT4,"
 }
 
 format_as_btrfs() {
     local partition="$1"
     continue_script "Formatting $partition as BTRFS" "You have decided to partition $partition as BTRFS. FORMATTING..."
     mkfs.btrfs -f "${ROOT_PART}"
-    continue_script "$partition formatted" "the partition $partition has been formatted to BTRFS,"
+    pause_script "$partition formatted" "the partition $partition has been formatted to BTRFS,"
 }
 
 
