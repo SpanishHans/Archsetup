@@ -36,7 +36,8 @@ Simply select a disk, format and come back here. When done, select the 0. Exit o
         menu_prompt disk_menu disk_menu_status "$title" "$description" "${disks[@]}"
         local DISK="${disks[$((disk_menu - 1))]}"
         eval "$choice='$DISK'"
-        pause_script "disk test" "$choice"
+        pause_script "disk test" "DISK: $DISK
+choice: $choice"
 
         case $disk_menu in
             0)  exit;;
