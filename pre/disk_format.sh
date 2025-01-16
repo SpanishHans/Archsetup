@@ -136,6 +136,7 @@ select_root_partition() {
     local ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
     eval "$part='$ROOT_PART'"
     eval "$form='$ROOT_FORM'"
+    pause_script "root test" "$ROOT_PART $ROOT_FORM"
     pause_script "root test" "$part $form"
 }
 
