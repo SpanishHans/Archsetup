@@ -97,7 +97,7 @@ continue_script() {
     if [ "$USE_DIALOG" = true ]; then
         dialog --ok-label "Ok" --backtitle "$title" --infobox "$message" $half_height $half_width 2>&1 >/dev/tty
         exit_code=$?
-        sleep 0.5
+        sleep 2
         case $exit_code in
             0)  return;;
             1)  exit;;
@@ -108,7 +108,7 @@ continue_script() {
         output "$message"
         output
         exit_code=$?
-        sleep 0.5
+        sleep 2
         case $exit_code in
             0)  return;;
             1)  exit;;
