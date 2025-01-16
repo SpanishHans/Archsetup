@@ -56,6 +56,7 @@ default_route() {
     # continue_script "Default route" "You chose to use the default route"
     format_and_partition_disks
     set_filesystem_for_partitions
+    exit
 }
 
 full_custom_route() {
