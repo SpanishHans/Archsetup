@@ -40,6 +40,7 @@ Please select a disk and format it to your liking. The script shall ask you for 
     menu_prompt disk_menu disk_menu_status "$title" "$description" "${disks[@]}"
     local DISK="${disks[$((disk_menu - 1))]}"
     eval "$choice=\"$DISK\""
+    pause_script "DEBUGGING-DELETE" "$DISK"
 
     case $disk_menu in
         0)  exit;;
@@ -90,7 +91,7 @@ select_efi_partition() {
     local EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
     eval "$part=\"$EFI_PART\""
     eval "$form=\"$EFI_FORM\""
-
+    pause_script "DEBUGGING-DELETE" "$ROOT_PART $ROOT_FORM"
 }
 
 select_root_partition() {
@@ -135,6 +136,7 @@ select_root_partition() {
     local ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
     eval "$part=\"$ROOT_PART\""
     eval "$form=\"$ROOT_FORM\""
+    pause_script "DEBUGGING-DELETE" "$ROOT_PART $ROOT_FORM"
 }
 
 determine_format() {
@@ -152,9 +154,11 @@ determine_format() {
         case $format_menu_choice in
             1)  local ROOT_FSTYPE='ext4'
                 eval "$form=\"$ROOT_FSTYPE\""
+                pause_script "DEBUGGING-DELETE" "$ROOT_FSTYPE"
                 break;;
             2)  local ROOT_FSTYPE='btrfs'
                 eval "$form=\"$ROOT_FSTYPE\""
+                pause_script "DEBUGGING-DELETE" "$ROOT_FSTYPE"
                 break;;
             0)  exit;;
             *)  output "Invalid choice, please try again.";;
@@ -173,20 +177,20 @@ start_format() {
         fi
     done
 
-    continue_script 'Format partition ESP: FAT32' 'Formatting the /boot/efi partition as FAT32.'
+    continue_script 'Format partition ESP: FAT32' "Formatting the /boot/efi partition on $EFI_PART as FAT32."
     if ! mkfs.fat -F 32 "${EFI_PART}"; then
         pause_script '' "Failed to format ${EFI_PART} as FAT32. Aborting."
         return 1
     fi
 
     if [[ "$ROOT_FSTYPE" == "ext4" ]]; then
-        continue_script 'Format partition: EXT4' 'Formatting the / partition as EXT4.'
+        continue_script 'Format partition: EXT4' "Formatting the / partition on $ROOT_FSTYPE as EXT4."
         if ! mkfs.ext4 -F "${ROOT_PART}"; then
             pause_script '' "Failed to format ${ROOT_PART} as EXT4. Aborting."
             return 1
         fi
     elif [[ "$ROOT_FSTYPE" == "btrfs" ]]; then
-        continue_script 'Format partition: BTRFS' 'Formatting the / partition as BTRFS.'
+        continue_script 'Format partition: BTRFS' "Formatting the / partition on $ROOT_FSTYPE as BTRFS."
         if ! mkfs.btrfs -f "${ROOT_PART}"; then
             pause_script '' "Failed to format ${ROOT_PART} as BTRFS. Aborting."
             return 1
@@ -200,10 +204,18 @@ start_format() {
 EFI partition currently has the following filesystem: $(lsblk -no FSTYPE "$EFI_PART")
 ROOT partition currently has the following filesystem: $(lsblk -no FSTYPE "$ROOT_PART")"
 
-    if [[ "$ROOT_FSTYPE" == "ext4" ]]; then
+    local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
+    for di in "${disks[@]}"; do
+        continue_script "partprobe on $di" "Running partprobe on $di"
+        if ! partprobe "$di"; then
+            continue_script '' "Failed to inform the kernel about changes for $di."
+        fi
+    done
+
+    if [[ "$(lsblk -no FSTYPE "$ROOT_PART")" == "ext4" ]]; then
         continue_script 'Configuring on mode: EXT4' 'Executing commands for EXT4 Setup. WAIT.'
         run_ext4_setup
-    elif [[ "$ROOT_FSTYPE" == "btrfs" ]]; then
+    elif [[ "$(lsblk -no FSTYPE "$ROOT_PART")" == "btrfs" ]]; then
         continue_script 'Configuring on mode: BTRFS' 'Executing commands for BTRFS Setup. WAIT.'
         run_btrfs_setup
     else
