@@ -302,11 +302,10 @@ ROOT partition currently has the following filesystem: $(lsblk -no FSTYPE "$ROOT
 disk_setup() {
     clear
     choose_custom_or_default_layout
-
 }
 
-    format_and_partition_disks
-    set_filesystem_for_partitions
+    # format_and_partition_disks
+    # set_filesystem_for_partitions
 
 
 #     determine_format ROOT_FSTYPE
