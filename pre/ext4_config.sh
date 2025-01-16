@@ -15,9 +15,9 @@
 # the License.
 
 source ./commons.sh
-source ./vars.sh
 
 mount_ext4() {
+    source ./vars.sh
 
     continue_script "Mounting $ROOT_PART on /mnt" "Mounting $ROOT_PART on /mnt in order to create subvolumes."
 
@@ -28,6 +28,7 @@ mount_ext4() {
 }
 
 run_ext4_setup() {
+    source ./vars.sh
     if [[ "$ROOT_FSTYPE" == "ext4" ]]; then
         mount_ext4
     fi

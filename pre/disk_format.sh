@@ -15,11 +15,12 @@
 # the License.
 
 source ./commons.sh
-source ./vars.sh
+
 source ./pre/ext4_config.sh
 source ./pre/btrfs_config.sh
 
 select_disk_prompt() {
+    source ./vars.sh
     local choice="$1"
     local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
     local title="Starting disk picker"
@@ -50,6 +51,7 @@ Please select a disk and format it to your liking. The script shall ask you for 
 }
 
 select_efi_partition() {
+    source ./vars.sh
     local part="$1"
     local form="$2"
     local partitions=($(lsblk -ppnoNAME,SIZE,TYPE | grep -P "/dev/nvme|sd|mmcblk|vd" | grep -w "part" | sed 's/└─//g' | sed 's/├─//g' | awk '{print $1}'))
@@ -95,6 +97,7 @@ select_efi_partition() {
 }
 
 select_root_partition() {
+    source ./vars.sh
     local part="$1"
     local form="$2"
     local partitions=($(lsblk -ppnoNAME,SIZE,TYPE | grep -P "/dev/nvme|sd|mmcblk|vd" | grep -w "part" | sed 's/└─//g' | sed 's/├─//g' | awk '{print $1}'))
@@ -140,6 +143,7 @@ select_root_partition() {
 }
 
 determine_format() {
+    source ./vars.sh
     local form="$2"
     while true; do
         local options=(\
@@ -167,6 +171,7 @@ determine_format() {
 }
 
 start_format() {
+    source ./vars.sh
     continue_script 'Inform disk changes' 'Informing the Kernel about the disk changes.'
 
     local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))

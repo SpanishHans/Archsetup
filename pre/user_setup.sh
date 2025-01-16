@@ -15,9 +15,9 @@
 # the License.
 
 source ./commons.sh
-source ./vars.sh
 
 username_prompt() {
+    source ./vars.sh
     input_text username username_status "Non-admin user" "Menu for creating a username with no admin privileges.
 
 Enter the username for the new user: " "Enter the username for the new user: "
@@ -48,14 +48,17 @@ Enter the username for the new user: " "Enter the username for the new user: "
 }
 
 user_password_prompt () {
+    source ./vars.sh
     set_password user_password user_password_status "$fullname"
 }
 
 root_password_prompt () {
+    source ./vars.sh
     set_password root_password root_password_status "root"
 }
 
 sysadmin_password_prompt () {
+    source ./vars.sh
     set_password sysadmin_password sysadmin_password_status "sysadmin"
 }
 

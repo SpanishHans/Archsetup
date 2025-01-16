@@ -14,6 +14,4 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-source ./commons.sh
-
 # Just a place for global vars
