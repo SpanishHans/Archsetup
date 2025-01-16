@@ -34,7 +34,5 @@ EOF
     echo "LANG=$locale.UTF-8" > /mnt/etc/locale.conf
     echo "KEYMAP=$kblayout" > /mnt/etc/vconsole.conf
     echo "FONT=ter-u20n" > /mnt/etc/vconsole.conf
-
-    export $locale
 }
 

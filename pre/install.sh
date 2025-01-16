@@ -114,8 +114,14 @@ genfstab -U /mnt >> /mnt/etc/fstab || { pause_script '' "genfstab failed"; exit 
 
 continue_script 'Locales setup' 'Setting up hostname, locales, and keyboard layout'
 locales_setup
-pause_script 'Locales' "Your /mnt/etc/locale.gen looks like this:    $cat '/mnt/etc/locale.gen'"
+pause_script 'Locales' "Your /mnt/etc/locale.gen looks like this:    
+$cat '/mnt/etc/locale.gen'
 
+Your /mnt/etc/locale.conf looks like this:    
+$cat '/mnt/etc/locale.conf'
+
+Your /mnt/etc/vconsole.conf looks like this:    
+$cat '/mnt/etc/vconsole.conf'"
 
 continue_script 'Copy repo' 'Copying repo to machine'
 cp -R --no-preserve=ownership /root/Archsetup /mnt/root/Archsetup
