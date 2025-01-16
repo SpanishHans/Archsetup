@@ -89,8 +89,8 @@ select_efi_partition() {
     menu_prompt root_menu root_menu_status "$title" "$description" "${menu_items[@]}"
     local EFI_PART="${partitions[$((root_menu - 1))]}"
     local EFI_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
-    eval "$part='$EFI_PART'"
-    eval "$form='$EFI_FORM'"
+    eval "$part=$EFI_PART"
+    eval "$form=$EFI_FORM"
     pause_script "efi test" "$EFI_PART $EFI_FORM"
     pause_script "efi test" "$part $form"
 }
