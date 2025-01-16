@@ -66,11 +66,11 @@ echo "fullname=$fullname" >> "./vars.sh"
 echo "user_password=$user_password" >> "./vars.sh"
 echo "root_password=$root_password" >> "./vars.sh"
 echo "sysadmin_password=$sysadmin_password" >> "./vars.sh"
-export $username
-export $fullname
-export $user_password
-export $root_password
-export $sysadmin_password
+export username
+export fullname
+export user_password
+export root_password
+export sysadmin_password
 
 userdata="Username:    $username
 Full Name:    $fullname
