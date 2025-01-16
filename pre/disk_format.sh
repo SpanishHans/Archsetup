@@ -91,7 +91,7 @@ select_efi_partition() {
     local EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
     eval "$part='$EFI_PART'"
     eval "$form='$EFI_FORM'"
-    pause_script "efi test" "$EFI_PART ${lsblk -f | grep "$EFI_PART"}"
+    pause_script "efi test" "$EFI_PART $(lsblk -f | grep "$EFI_PART")"
     pause_script "efi test" "$part $form"
 }
 
