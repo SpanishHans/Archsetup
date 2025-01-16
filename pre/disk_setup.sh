@@ -48,7 +48,7 @@ With this in mind, lets pick between sane defaults or full custom mode.'
         1)  default_route;;
         2)  full_custom_route;;
         0)  exit;;
-        *)  pause_script "Option not valid" "That is not an option, retry.";exit;;
+        *)  pause_script "Option not valid" "That is not an option, returning to start menu.";exit;;
     esac
 }
 
