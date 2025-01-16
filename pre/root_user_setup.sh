@@ -22,7 +22,8 @@ root_password_prompt () {
     eval "$pass='$root_password'"
 }
 
-root_setup () {
+superuser_setup () {
+    clean
     pause_script "Entered root user setup!" "The following section will help you configure the password for the root user. This script does not create more users during install, they are created after install if you so desire.
 
 With this in mind, DONT LOOSE YOUR ROOT PASSWORD, or you wont be able to login after install."
