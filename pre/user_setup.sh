@@ -17,7 +17,7 @@
 source ./commons.sh
 
 username_prompt() {
-    source ./vars.sh
+    
     input_text username username_status "Non-admin user" "Menu for creating a username with no admin privileges.
 
 Enter the username for the new user: " "Enter the username for the new user: "
@@ -45,20 +45,23 @@ Enter the username for the new user: " "Enter the username for the new user: "
         input_text username username_status "Rootless username prompt" "Username for the user with no root access" "Enter the username for the new user: "
     done
     fullname="$(tr '[:lower:]' '[:upper:]' <<< "${username:0:1}")${username:1}"
+
+    export username
+    export fullname
 }
 
 user_password_prompt () {
-    source ./vars.sh
     set_password user_password user_password_status "$fullname"
+    export user_password
 }
 
 root_password_prompt () {
-    source ./vars.sh
     set_password root_password root_password_status "root"
+    export root_password
 }
 
 sysadmin_password_prompt () {
-    source ./vars.sh
     set_password sysadmin_password sysadmin_password_status "sysadmin"
+    export sysadmin_password
 }
 

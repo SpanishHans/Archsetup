@@ -17,7 +17,7 @@
 source ./commons.sh
 
 mount_btrfs() {
-    source ./vars.sh
+    
     local -n given_array=$1
     
     continue_script "Mounting $ROOT_PART on /mnt" "Mounting $ROOT_PART on /mnt in order to create subvolumes."
@@ -61,7 +61,7 @@ mount_btrfs() {
 
 
 run_btrfs_setup() {
-    source ./vars.sh
+    
     declare -A subvols
     local subvols=(
         ["@var_cache"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/cache | Cached data for apps and package managers, can be recreated if cleared."

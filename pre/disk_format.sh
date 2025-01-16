@@ -20,7 +20,7 @@ source ./pre/ext4_config.sh
 source ./pre/btrfs_config.sh
 
 select_disk_prompt() {
-    source ./vars.sh
+    
     local choice="$1"
     local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
     local title="Starting disk picker"
@@ -45,13 +45,12 @@ Please select a disk and format it to your liking. The script shall ask you for 
     case $disk_menu in
         0)  exit;;
         *)  cgdisk $DISK
-            export $DISK
             return;;
     esac
 }
 
 select_efi_partition() {
-    source ./vars.sh
+    
     local part="$1"
     local form="$2"
     local partitions=($(lsblk -ppnoNAME,SIZE,TYPE | grep -P "/dev/nvme|sd|mmcblk|vd" | grep -w "part" | sed 's/└─//g' | sed 's/├─//g' | awk '{print $1}'))
@@ -93,12 +92,10 @@ select_efi_partition() {
     local EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
     eval "$part='$EFI_PART'"
     eval "$form='$EFI_FORM'"
-    export $EFI_PART
-    export $EFI_FORM
 }
 
 select_root_partition() {
-    source ./vars.sh
+    
     local part="$1"
     local form="$2"
     local partitions=($(lsblk -ppnoNAME,SIZE,TYPE | grep -P "/dev/nvme|sd|mmcblk|vd" | grep -w "part" | sed 's/└─//g' | sed 's/├─//g' | awk '{print $1}'))
@@ -140,12 +137,10 @@ select_root_partition() {
     local ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
     eval "$part='$ROOT_PART'"
     eval "$form='$ROOT_FORM'"
-    export $ROOT_PART
-    export $ROOT_FORM
 }
 
 determine_format() {
-    source ./vars.sh
+    
     local form="$2"
     while true; do
         local options=(\
@@ -160,11 +155,9 @@ determine_format() {
         case $format_menu_choice in
             1)  local ROOT_FSTYPE='ext4'
                 eval "$form='$ROOT_FSTYPE'"
-                export $ROOT_FSTYPE
                 break;;
             2)  local ROOT_FSTYPE='btrfs'
                 eval "$form='$ROOT_FSTYPE'"
-                export $ROOT_FSTYPE
                 break;;
             0)  exit;;
             *)  output "Invalid choice, please try again.";;
@@ -173,7 +166,7 @@ determine_format() {
 }
 
 start_format() {
-    source ./vars.sh
+    
     continue_script 'Inform disk changes' 'Informing the Kernel about the disk changes.'
 
     local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))

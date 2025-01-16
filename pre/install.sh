@@ -15,7 +15,7 @@
 # the License.
 
 source ./commons.sh
-source ./vars.sh
+
 source ./pre/disk_format.sh
 source ./pre/networking.sh
 source ./pre/user_setup.sh
@@ -61,17 +61,6 @@ root_password="12345678"
 sysadmin_password="12345678"
 hostname="test_machine"
 
-echo "username=$username" >> "./vars.sh"
-echo "fullname=$fullname" >> "./vars.sh"
-echo "user_password=$user_password" >> "./vars.sh"
-echo "root_password=$root_password" >> "./vars.sh"
-echo "sysadmin_password=$sysadmin_password" >> "./vars.sh"
-export username
-export fullname
-export user_password
-export root_password
-export sysadmin_password
-
 userdata="Username:    $username
 Full Name:    $fullname
 User Password:    $masked_user_password
@@ -81,8 +70,6 @@ pause_script 'User confirmation' "$userdata"
 
 continue_script 'Networking' 'Starting section for networking, please wait.'
 # hostname_prompt
-echo "hostname=$hostname" >> "./vars.sh"
-export $hostname
 pause_script 'Hostname' "Hostname:    ${hostname}"
 
 continue_script 'Partitioning' 'Starting section for disk formatting and partitioning, please wait.'
@@ -91,12 +78,6 @@ select_efi_partition EFI_PART EFI_FORM
 select_root_partition ROOT_PART ROOT_FORM
 determine_format ROOT_FSTYPE
 
-echo "DISK=$DISK" >> "./vars.sh"
-echo "EFI_PART=$EFI_PART" >> "./vars.sh"
-echo "EFI_FORM=$EFI_FORM" >> "./vars.sh"
-echo "ROOT_PART=$ROOT_PART" >> "./vars.sh"
-echo "ROOT_FORM=$ROOT_FORM" >> "./vars.sh"
-echo "ROOT_FSTYPE=$ROOT_FSTYPE" >> "./vars.sh"
 export $DISK
 export $EFI_PART
 export $EFI_FORM
