@@ -45,24 +45,26 @@ With this in mind, lets pick between sane defaults or full custom mode.'
 
     menu_prompt install_mode_menu install_mode_menu_status "$title" "$description" "${options[@]}"
     continue_script "" "$install_mode_menu"
-
+    while true; do
         case $install_mode_menu in
             1)  default_route;;
             2)  full_custom_route;;
             0)  exit;;
-            *)  pause_script "Option not valid" "That is not an option, retry."
-                ;;
+            *)  pause_script "Option not valid" "That is not an option, retry.";;
         esac
+    done
 }
 
 default_route() {
     pause_script "Default route" "You picked the default route"
-    format_and_partition_disks
-    set_filesystem_for_partitions
+    # format_and_partition_disks
+    # set_filesystem_for_partitions
+    break
 }
 
 full_custom_route() {
     pause_script "Custom route" "You picked the custom route"
+    break
 }
 
 format_and_partition_disks() {
