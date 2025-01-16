@@ -19,12 +19,56 @@ source ./commons.sh
 source ./pre/ext4_config.sh
 source ./pre/btrfs_config.sh
 
-format_partition_disks_prompt() {
+choose_custom_or_default_layout() {
+    local title="Entered disk setup!" 
+    local description='The following section will help you configure anything disk related: Formatting, partitioning and mounting. Keep in mind those operations are DESTRUCTIVE and will result in data loss for the disks or partitions involved. 
+    
+BACKUP DATA BEFORE PROCEEDING, you have been warned!
+    
+Linux allows you to do whatever the fuck you want. If you so wish, parts of the system could be mounted to USB devices for all we care. We assume that your computer is modern enough to have UEFI support and that root is going to be on an SSD. If those conditions are not met, this script is not for you.
+We transfer the responsability of a reasonable setup to you, the final user. Yet, we provide some sane defaults if you prefer a "batteries included" experience.
+
+The default setup aims to give you full rollback support by using Copy on Write (CoW) from the new kid in the block: BTRFS. This makes it possible to go to a previous system state if an update breaks something...Useful on Archlinux.
+
+Default btrfs layout is as follows:
+    1. Paritition for /boot/efi. (Therefore no BIOS support, only UEFI.)
+    2. Paritition for /. (Ergo /home is on the same partition as /)
+    3. Subvolumes for things that should not be snappshotted and that should stay intact after a rollback like logs or temps or cache.
+
+No swap is required in any mode as this script sets up zram automatically.
+
+With this in mind, lets pick between sane defaults or full custom mode.'
+    local options=(\
+        "Go the default route" \
+        "Go the fully custom route"
+    )
+
+    menu_prompt install_mode_menu install_mode_menu_status "$title" "$description" "${options[@]}"
+    case $install_mode in
+        1)  default_route;;
+        2)  full_custom_route;;
+        0)  return;;
+        *)  continue_script "Option not valid" "That is not an option, retry."
+            ;;
+    esac
+}
+
+default_route() {
+    pause_script "Default route" "You picked the default route"
+    format_and_partition_disks
+    set_filesystem_for_partitions
+}
+
+full_custom_route() {
+    pause_script "Custom route" "You picked the custom route"
+}
+
+format_and_partition_disks() {
     local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
     local title="Starting disk picker"
     local description="The following menu shall help you format and partition disks in order to make space for installing arch. 
     
-Simply select a disk, format and come back here. When done, select the 0. Exit option."
+Simply select a disk, format and come back here. When done, select the 0. Exit option to continue script execution."
 
     if [ ${#disks[@]} -eq 0 ]; then
             pause_script "No disks found" "No valid storage devices found. Exiting."
@@ -32,9 +76,9 @@ Simply select a disk, format and come back here. When done, select the 0. Exit o
     fi
 
     while true; do
-        menu_prompt disk_menu disk_menu_status "$title" "$description" "${disks[@]}"
-        local DISK="${disks[$((disk_menu - 1))]}"
-        case $disk_menu in
+        menu_prompt format_disk_menu_choice format_disk_menu_status "$title" "$description" "${disks[@]}"
+        local DISK="${disks[$((format_disk_menu_choice - 1))]}"
+        case $format_disk_menu_choice in
             0)  break;;
             *)  if ! cgdisk "$DISK"; then
                     continue_script "Exited cgdisk for $DISK" "cgdisk exited for disk $DISK. Returning to menu."
@@ -44,31 +88,65 @@ Simply select a disk, format and come back here. When done, select the 0. Exit o
     done
 }
 
-determine_format() {
-    local form="$1"
-    while true; do
-        
-        local title="ROOT filesystem prompt"
-        local description="Please determine the filesystem to use on the ROOT System Partition (/)."
-
-        local options=(\
-            "Format as EXT4 (Reliable, fast, and widely supported. Ideal for most users, but lacks some advanced features of newer file systems like BTRFS.)" \
-            "Format as BTRFS (Offers advanced features like snapshots and compression, but may have higher overhead and less compatibility compared to EXT4.)"
-        )
-
-        menu_prompt format_menu_choice format_menu_choice_status "$title" "$description" "${options[@]}"
+set_filesystem_for_partitions() {
+    local partitions=($(lsblk -ppnoNAME,SIZE,TYPE | grep -P "/dev/nvme|sd|mmcblk|vd" | grep -w "part" | sed 's/└─//g' | sed 's/├─//g' | awk '{print $1}'))
+    local title="Starting partition formatter"
+    local description="The following menu shall help you assing a filesystem to a selected partition. 
     
-        case $format_menu_choice in
-            1)  local ROOT_FSTYPE='ext4';;
-            2)  local ROOT_FSTYPE='btrfs';;
-            0)  exit;;
-            *)  output "Invalid choice, please try again.";;
+Simply select a partition, format it on the menu that opens up and then come back here. When done, select the 0. Exit option to continue script execution"
+
+    if [ ${#partitions[@]} -eq 0 ]; then
+            pause_script "No partitions found" "No valid partitions found. Exiting."
+            exit 1
+    fi
+
+    while true; do
+        menu_prompt format_partition_menu format_partition_menu_status "$title" "$description" "${partitions[@]}"
+        local PARTITION="${partitions[$((format_partition_menu - 1))]}"
+        case $format_partition_menu in
+            0)  break;;
+            *)  format_a_partition "$PARTITION"
+                ;;
         esac
-        eval "$form='$ROOT_FSTYPE'"
-        pause_script "root fstype" "$form"
-        break
     done
 }
+
+format_a_partition() {
+    local partition="$1"
+    
+    local title="Pick a filesystem for $partition"
+    local description="You are now setting a filesystem for partition $partition. 
+    
+Please select a filesystem for it from the following:"
+    local options=(\
+        "Format as EXT4" \
+        "Format as BTRFS"
+    )
+    menu_prompt partition_menu partition_menu_status "$title" "$description" "${options[@]}"
+    local PARTITION="${partitions[$((partition_menu - 1))]}"
+    case $partition_menu in
+        1)  format_as_ext4 "$PARTITION";;
+        2)  format_as_btrfs "$PARTITION";;
+        0)  return;;
+        *)  continue_script "Option not valid" "That is not an option, retry.";;
+    esac
+}
+
+format_as_ext4() {
+    local partition="$1"
+    continue_script "Formatting $partition as EXT4" "You have decided to partition $partition as EXT4. FORMATTING...";;
+    mkfs.ext4 -F "${ROOT_PART}"
+    continue_script "$partition formatted" "the partition $partition has been formatted to EXT4,";;
+}
+
+format_as_btrfs() {
+    local partition="$1"
+    continue_script "Formatting $partition as BTRFS" "You have decided to partition $partition as BTRFS. FORMATTING...";;
+    mkfs.btrfs -f "${ROOT_PART}"
+    continue_script "$partition formatted" "the partition $partition has been formatted to BTRFS,";;
+}
+
+
 
 select_efi_partition() {
     local part="$1"
@@ -223,33 +301,12 @@ ROOT partition currently has the following filesystem: $(lsblk -no FSTYPE "$ROOT
 
 disk_setup() {
     clear
-    pause_script "Entered disk setup!" "The following section will help you configure anything disk related: Formatting, partitioning and mounting. Keep in mind those operations are DESTRUCTIVE and will result in data loss for the disks or partitions involved. 
-    
-BACKUP DATA BEFORE PROCEEDING, you have been warned!
-    
-Linux allows you to do whatever the fuck you want. If you so wish, parts of the system could be mounted to USB devices for all we care. We assume that your computer is modern enough to have UEFI support and that root is going to be on an SSD. If those conditions are not met, this script is not for you.
-We transfer the responsability of a reasonable setup to you, the final user. Yet, we provide some sane defaults if you prefer a "batteries included" experience.
+    choose_custom_or_default_layout
 
-With this in mind, lets continue."
+}
 
-
-thing="The default setup aims to give you full rollback support by using Copy on Write (CoW) from the new kid in the block: BTRFS, but you could use any filesystem you want.
-
-Default btrfs layout is as follows:
-    1. Paritition where /boot/efi shall reside. (Therefore no BIOS support, only UEFI.)
-    2. Paritition where /shall reside.
-    3. Optional /Home on another partition. (Otherwise this script assumes and prefers that its mounted on same partition as /)
-    4. No swap is required as this script sets up zram automatically.
-
-
-
-In this step we need you to format your disks and partitions in order to make space for arch. Do whatever you want here and when done formatting and partitioning select exit from the menu.
-
-If you plan on using the default, We need 2 partitions 
-Please select a disk and format it to your liking. The script shall ask you for what partitions to use for what later."
-
-    format_partition_disks_prompt
-
+    format_and_partition_disks
+    set_filesystem_for_partitions
 
 
 #     determine_format ROOT_FSTYPE
@@ -275,5 +332,4 @@ Please select a disk and format it to your liking. The script shall ask you for 
 # ROOT partition will have the following filesystem: $ROOT_FSTYPE
 
 # press ok to format or CANCEL NOW with ctrl+c or by selecting 0. Exit on the menu."
-    start_format
-}
+    # start_format
