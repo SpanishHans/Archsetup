@@ -44,7 +44,6 @@ With this in mind, lets pick between sane defaults or full custom mode.'
     )
 
     menu_prompt install_mode_menu install_mode_menu_status "$title" "$description" "${options[@]}"
-    continue_script "" "$install_mode_menu"
     while true; do
         case $install_mode_menu in
             1)  default_route;;
