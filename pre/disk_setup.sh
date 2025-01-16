@@ -35,7 +35,7 @@ Simply select a disk, format and come back here. When done, select the 0. Exit o
         menu_prompt disk_menu disk_menu_status "$title" "$description" "${disks[@]}"
         local DISK="${disks[$((disk_menu - 1))]}"
         case $disk_menu in
-            0)  exit;;
+            0)  break;;
             *)  if ! cgdisk "$DISK"; then
                     continue_script "Exited cgdisk for $DISK" "cgdisk exited for disk $DISK. Returning to menu."
                 fi
