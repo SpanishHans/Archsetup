@@ -47,10 +47,6 @@ continue_script 'User setup' 'Starting section for user setup, please wait.'
 user_setup
 pause_script 'User confirmation' "$userdata"
 
-continue_script 'Networking' 'Starting section for networking, please wait.'
-networking_setup
-pause_script 'Hostname' "Hostname:    ${hostname}"
-
 continue_script 'Partitioning' 'Starting section for disk formatting and partitioning, please wait.'
 disk_setup
 pause_script 'Preview format' "You are about to format the partitions in the following way:
@@ -111,6 +107,10 @@ pacstrap /mnt \
 
 continue_script 'New fstab' 'Generating a new fstab.'
 genfstab -U /mnt >> /mnt/etc/fstab || { pause_script '' "genfstab failed"; exit 1; }
+
+continue_script 'Networking' 'Starting section for networking, please wait.'
+networking_setup
+pause_script 'Hostname' "Hostname:    ${hostname}"
 
 continue_script 'Locales setup' 'Setting up hostname, locales, and keyboard layout'
 locales_setup
