@@ -86,10 +86,10 @@ user_setup () {
     masked_sysadmin_password="${sysadmin_password:0:1}*******${sysadmin_password: -1}"
 
     userdata="Username:    $username
-    Full Name:    $fullname
-    User Password:    $masked_user_password
-    Root Password:    $masked_root_password
-    Sysadmin Password:    $masked_sysadmin_password"
+Full Name:    $fullname
+User Password:    $masked_user_password
+Root Password:    $masked_root_password
+Sysadmin Password:    $masked_sysadmin_password"
 
     export username
     export fullname

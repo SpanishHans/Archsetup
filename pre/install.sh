@@ -17,8 +17,9 @@
 source ./commons.sh
 
 source ./pre/disk_format.sh
-source ./pre/networking.sh
 source ./pre/user_setup.sh
+source ./pre/networking.sh
+source ./pre/locales.sh
 
 if [ "$LIVE_ENV" = false ]; then
     pause_script "" "The install script must be run from the archlinux-YEAR.MONTH.DAY-x86_64.iso image.
