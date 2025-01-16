@@ -23,6 +23,7 @@ hostname_prompt () {
 }
 
 networking_setup() {
+    clear
     # hostname_prompt hostname
     hostname="test_machine"
 

@@ -71,6 +71,7 @@ sysadmin_password_prompt () {
 }
 
 user_setup () {
+    clear
     # username_prompt username fullname
     # user_password_prompt user_password
     # root_password_prompt root_password

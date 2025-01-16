@@ -23,6 +23,7 @@ hostname_prompt () {
 }
 
 locales_setup() {
+    clear
     locale=en_US
     kblayout=us
     cat <<EOF > /mnt/etc/locale.gen
