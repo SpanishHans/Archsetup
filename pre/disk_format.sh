@@ -226,10 +226,10 @@ disk_setup() {
     select_root_partition ROOT_PART ROOT_FORM
     determine_format ROOT_FSTYPE
 
-    export $DISK
-    export $EFI_PART
-    export $EFI_FORM
-    export $ROOT_PART
-    export $ROOT_FORM
-    export $ROOT_FSTYPE
+    export DISK
+    export EFI_PART
+    export EFI_FORM
+    export ROOT_PART
+    export ROOT_FORM
+    export ROOT_FSTYPE
 }

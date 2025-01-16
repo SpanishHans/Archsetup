@@ -91,9 +91,9 @@ user_setup () {
     Root Password:    $masked_root_password
     Sysadmin Password:    $masked_sysadmin_password"
 
-    export $username
-    export $fullname
-    export $user_password
-    export $root_password
-    export $sysadmin_password
+    export username
+    export fullname
+    export user_password
+    export root_password
+    export sysadmin_password
 }

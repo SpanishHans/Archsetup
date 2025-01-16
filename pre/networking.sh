@@ -33,6 +33,6 @@ networking_setup() {
 127.0.1.1    ${hostname}.localdomain    ${hostname}
 EOF
 
-    export $hostname
+    export hostname
 }
 
