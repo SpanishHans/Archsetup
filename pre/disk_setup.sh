@@ -19,7 +19,7 @@ source ./commons.sh
 source ./pre/ext4_config.sh
 source ./pre/btrfs_config.sh
 
-select_disk_prompt() {
+format_partition_disks_prompt() {
     local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
     local title="Starting disk picker"
     local description="The following menu shall help you format and partition disks in order to make space for installing arch. 
@@ -248,10 +248,8 @@ In this step we need you to format your disks and partitions in order to make sp
 If you plan on using the default, We need 2 partitions 
 Please select a disk and format it to your liking. The script shall ask you for what partitions to use for what later."
 
-    select_disk_prompt $DISK
+    format_partition_disks_prompt
 
-    pause_script "disk test in main funcction" "DISK: $DISK
-choice: $choice"
 
 
 #     determine_format ROOT_FSTYPE
