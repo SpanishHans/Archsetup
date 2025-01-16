@@ -231,4 +231,10 @@ disk_setup() {
     export ROOT_PART
     export ROOT_FORM
     export ROOT_FSTYPE
+    pause_script "" "DISK:$DISK
+EFI_PART:$EFI_PART
+EFI_FORM:$EFI_FORM
+ROOT_PART:$ROOT_PART
+ROOT_FORM:$ROOT_FORM
+ROOT_FSTYPE:$ROOT_FSTYPE"
 }

@@ -96,4 +96,9 @@ user_setup () {
     export user_password
     export root_password
     export sysadmin_password
+    pause_script "" "username:$username
+fullname:$fullname
+user_password:$user_password
+root_password:$root_password
+sysadmin_password:$sysadmin_password"
 }
