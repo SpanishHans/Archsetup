@@ -226,7 +226,9 @@ ROOT partition currently has the following filesystem: $(lsblk -no FSTYPE "$ROOT
 
 disk_setup() {
     clear
-    pause_script "Entered disk setup!" "The following section will help you configure anything disk related: Formatting, partitioning and mounting. Keep in mind those operations are DESTRUCTIVE and will result in data loss for the disks or partitions involved. BACKUP DATA BEFORE PROCEEDING, you have been warned!
+    pause_script "Entered disk setup!" "The following section will help you configure anything disk related: Formatting, partitioning and mounting. Keep in mind those operations are DESTRUCTIVE and will result in data loss for the disks or partitions involved. 
+    
+BACKUP DATA BEFORE PROCEEDING, you have been warned!
     
 Linux allows you to do whatever the fuck you want. If you so wish, parts of the system could be mounted to USB devices for all we care. We assume that your computer is modern enough to have UEFI support and that root is going to be on an SSD. If those conditions are not met, this script is not for you.
 We transfer the responsability of a reasonable setup to you, the final user. Yet, we provide some sane defaults if you prefer a "batteries included" experience.
