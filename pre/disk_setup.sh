@@ -127,10 +127,10 @@ Please select a filesystem for it from the following:"
         "Format as BTRFS"
     )
     menu_prompt partition_menu partition_menu_status "$title" "$description" "${options[@]}"
-    local PARTITION="${partitions[$((partition_menu - 1))]}"
+    local partition="${partitions[$((partition_menu - 1))]}"
     case $partition_menu in
-        1)  format_as_ext4 "$PARTITION";;
-        2)  format_as_btrfs "$PARTITION";;
+        1)  format_as_ext4 "$partition";;
+        2)  format_as_btrfs "$partition";;
         0)  return;;
         *)  continue_script "Option not valid" "That is not an option, retry.";;
     esac
