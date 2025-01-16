@@ -32,6 +32,7 @@ if [ "$USE_DIALOG" = false ]; then
         USE_DIALOG=false
     fi
     export USE_DIALOG
+    echo "export USE_DIALOG=\"$USE_DIALOG\"" > ./vars.sh
 fi
 
 sudo mv ./.dialogrc $HOME/.dialogrc

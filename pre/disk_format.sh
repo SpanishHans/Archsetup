@@ -37,6 +37,7 @@ Please select a disk and format it to your liking. The script shall ask you for 
     
     menu_prompt disk_menu disk_menu_status "$title" "$description" "${disks[@]}"
     export disk="${disks[$((disk_menu - 1))]}"
+    echo "export disk=\"$disk\"" > ./vars.sh
 
     case $disk_menu in
         0)  exit;;
@@ -188,5 +189,13 @@ start_format() {
 
 EFI partition currently has the following filesystem: $(lsblk -no FSTYPE "$EFI_PART")
 ROOT partition currently has the following filesystem: $(lsblk -no FSTYPE "$ROOT_PART")"
+
+    if [[ "$ROOT_FSTYPE" == "ext4" ]]; then
+        continue_script 'Configuring on mode: EXT4' 'Executing commands for EXT4 Setup. WAIT.'
+        run_ext4_setup
+    else [[ "$ROOT_FSTYPE" == "btrfs" ]]; then
+        continue_script 'Configuring on mode: BTRFS' 'Executing commands for BTRFS Setup. WAIT.'
+        run_btrfs_setup
+    fi
 }
 

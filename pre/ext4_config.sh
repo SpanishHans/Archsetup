@@ -26,7 +26,8 @@ mount_ext4() {
     pause_script "EXT4 Mounting" "Finished mouting EXT4"
 }
 
-
-if [[ "$ROOT_FSTYPE" == "ext4" ]]; then
-    mount_ext4
-fi
+run_ext4_setup() {
+    if [[ "$ROOT_FSTYPE" == "ext4" ]]; then
+        mount_ext4
+    fi
+}

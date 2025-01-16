@@ -60,6 +60,13 @@ root_password="12345678"
 sysadmin_password="12345678"
 hostname="test_machine"
 
+echo "export username=\"$username\"" > ./vars.sh
+echo "export fullname=\"$fullname\"" > ./vars.sh
+echo "export user_password=\"$user_password\"" > ./vars.sh
+echo "export root_password=\"$root_password\"" > ./vars.sh
+echo "export sysadmin_password=\"$sysadmin_password\"" > ./vars.sh
+echo "export hostname=\"$hostname\"" > ./vars.sh
+
 userdata="Username:    $username
 Full Name:    $fullname
 User Password:    $masked_user_password
@@ -89,8 +96,6 @@ ROOT partition will have the following filesystem: $ROOT_FSTYPE
 
 press ok to format or CANCEL NOW with ctrl+c or by selecting 0. Exit on the menu."
 start_format
-
-
 
 continue_script 'Detect CPU vendor' 'Detecting ucode for processor brand'
 CPU=$(grep -m 1 'vendor_id' /proc/cpuinfo)
