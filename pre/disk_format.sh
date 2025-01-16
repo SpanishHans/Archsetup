@@ -46,6 +46,7 @@ Please select a disk and format it to your liking. The script shall ask you for 
     case $disk_menu in
         0)  exit;;
         *)  cgdisk $DISK
+            export $DISK
             return;;
     esac
 }
@@ -93,7 +94,8 @@ select_efi_partition() {
     local EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
     eval "$part='$EFI_PART'"
     eval "$form='$EFI_FORM'"
-    pause_script "DEBUGGING-DELETE" "$ROOT_PART $ROOT_FORM"
+    export $EFI_PART
+    export $EFI_FORM
 }
 
 select_root_partition() {
@@ -139,7 +141,8 @@ select_root_partition() {
     local ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
     eval "$part='$ROOT_PART'"
     eval "$form='$ROOT_FORM'"
-    pause_script "DEBUGGING-DELETE" "$ROOT_PART $ROOT_FORM"
+    export $ROOT_PART
+    export $ROOT_FORM
 }
 
 determine_format() {
@@ -158,11 +161,11 @@ determine_format() {
         case $format_menu_choice in
             1)  local ROOT_FSTYPE='ext4'
                 eval "$form='$ROOT_FSTYPE'"
-                pause_script "DEBUGGING-DELETE" "$ROOT_FSTYPE"
+                export $ROOT_FSTYPE
                 break;;
             2)  local ROOT_FSTYPE='btrfs'
                 eval "$form='$ROOT_FSTYPE'"
-                pause_script "DEBUGGING-DELETE" "$ROOT_FSTYPE"
+                export $ROOT_FSTYPE
                 break;;
             0)  exit;;
             *)  output "Invalid choice, please try again.";;
