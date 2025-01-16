@@ -30,9 +30,13 @@ Exiting!!!"
     fi
 fi
 
-title="Welcome to the configuring scripts"
-description="This script provides a menu to run various installation scripts.
-Select an option from the menu to proceed."
+clear
+title="Arch configurator"
+description="you chose to confgure arch post install from the main menu. 
+
+Starting the toolchain, Enjoy!"
+
+pause_script "$title" "$description"
 
 while true; do
     options=(\

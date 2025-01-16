@@ -35,10 +35,11 @@ Exiting!!!"
     fi
 fi
 
-title="Welcome to the installer script"
-description="This script will help you install ArchLinux.
+clear
+title="Arch installer"
+description="you chose to install arch from the main menu. 
 
-Enjoy!"
+Starting the toolchain, Enjoy!"
 
 pause_script "$title" "$description"
 
