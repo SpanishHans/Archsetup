@@ -149,15 +149,14 @@ determine_format() {
         menu_prompt format_menu_choice format_menu_choice_status "$title" "$description" "${options[@]}"
     
         case $format_menu_choice in
-            1)  local ROOT_FSTYPE='ext4'
-                eval "$form='$ROOT_FSTYPE'"
-                break;;
-            2)  local ROOT_FSTYPE='btrfs'
-                eval "$form='$ROOT_FSTYPE'"
-                break;;
+            1)  local ROOT_FSTYPE='ext4';;
+            2)  local ROOT_FSTYPE='btrfs';;
             0)  exit;;
             *)  output "Invalid choice, please try again.";;
         esac
+        pause_script "" "$ROOT_FSTYPE"
+        eval "$form='$ROOT_FSTYPE'"
+        break
     done
 }
 
