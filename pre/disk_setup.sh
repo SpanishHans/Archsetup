@@ -53,13 +53,14 @@ With this in mind, lets pick between sane defaults or full custom mode.'
 }
 
 default_route() {
-    continue_script "Default route" "You chose to use the default route"
+    # continue_script "Default route" "You chose to use the default route"
     format_and_partition_disks
     set_filesystem_for_partitions
 }
 
 full_custom_route() {
     continue_script "Custom route" "You chose to use the custom route"
+    pause_script "" "continue"
 }
 
 format_and_partition_disks() {
