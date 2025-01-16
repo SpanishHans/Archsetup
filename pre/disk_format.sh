@@ -39,7 +39,7 @@ Please select a disk and format it to your liking. The script shall ask you for 
     
     menu_prompt disk_menu disk_menu_status "$title" "$description" "${disks[@]}"
     local DISK="${disks[$((disk_menu - 1))]}"
-    eval "$choice=\"$DISK\""
+    eval "$choice='$DISK'"
     pause_script "DEBUGGING-DELETE" "$DISK"
 
     case $disk_menu in
@@ -89,8 +89,8 @@ select_efi_partition() {
     menu_prompt esp_menu esp_menu_status "$title" "$description" "${menu_items[@]}"
     local EFI_PART="${partitions[$((esp_menu - 1))]}"
     local EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
-    eval "$part=\"$EFI_PART\""
-    eval "$form=\"$EFI_FORM\""
+    eval "$part='$EFI_PART'"
+    eval "$form='$EFI_FORM'"
     pause_script "DEBUGGING-DELETE" "$ROOT_PART $ROOT_FORM"
 }
 
@@ -134,8 +134,8 @@ select_root_partition() {
     menu_prompt root_menu root_menu_status "$title" "$description" "${menu_items[@]}"
     local ROOT_PART="${partitions[$((root_menu - 1))]}"
     local ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
-    eval "$part=\"$ROOT_PART\""
-    eval "$form=\"$ROOT_FORM\""
+    eval "$part='$ROOT_PART'"
+    eval "$form='$ROOT_FORM'"
     pause_script "DEBUGGING-DELETE" "$ROOT_PART $ROOT_FORM"
 }
 
@@ -153,11 +153,11 @@ determine_format() {
     
         case $format_menu_choice in
             1)  local ROOT_FSTYPE='ext4'
-                eval "$form=\"$ROOT_FSTYPE\""
+                eval "$form='$ROOT_FSTYPE'"
                 pause_script "DEBUGGING-DELETE" "$ROOT_FSTYPE"
                 break;;
             2)  local ROOT_FSTYPE='btrfs'
-                eval "$form=\"$ROOT_FSTYPE\""
+                eval "$form='$ROOT_FSTYPE'"
                 pause_script "DEBUGGING-DELETE" "$ROOT_FSTYPE"
                 break;;
             0)  exit;;
