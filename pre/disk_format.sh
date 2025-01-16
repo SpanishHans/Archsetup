@@ -137,7 +137,7 @@ select_root_partition() {
 }
 
 determine_format() {
-    local form="$2"
+    local form="$1"
     while true; do
         local options=(\
             "Format as EXT4 (Reliable, fast, and widely supported. Ideal for most users, but lacks some advanced features of newer file systems like BTRFS.)" \
