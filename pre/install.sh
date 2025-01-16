@@ -43,6 +43,34 @@ pause_script "$title" "$description"
 locale=en_US
 kblayout=us
 
+continue_script 'User setup' 'Starting section for user setup, please wait.'
+# username_prompt
+# user_password_prompt
+# root_password_prompt
+# sysadmin_password_prompt
+
+masked_user_password="${user_password:0:1}*******${user_password: -1}"
+masked_root_password="${root_password:0:1}*******${root_password: -1}"
+masked_sysadmin_password="${sysadmin_password:0:1}*******${sysadmin_password: -1}"
+
+username="tester"
+fullname="Tester"
+user_password="12345678"
+root_password="12345678"
+sysadmin_password="12345678"
+hostname="test_machine"
+
+userdata="Username:    $username
+Full Name:    $fullname
+User Password:    $masked_user_password
+Root Password:    $masked_root_password
+Sysadmin Password:    $masked_sysadmin_password"
+pause_script 'User confirmation' "$userdata"
+
+# continue_script 'Networking' 'Starting section for networking, please wait.'
+# hostname_prompt
+pause_script 'Hostname' "Hostname:    ${hostname}"
+
 continue_script 'Partitioning' 'Starting section for disk formatting and partitioning, please wait.'
 select_disk_prompt
 select_efi_partition
@@ -62,26 +90,7 @@ ROOT partition will have the following filesystem: $ROOT_FSTYPE
 press ok to format or CANCEL NOW with ctrl+c or by selecting 0. Exit on the menu."
 start_format
 
-continue_script 'User setup' 'Starting section for user setup, please wait.'
-username_prompt
-user_password_prompt
-root_password_prompt
-sysadmin_password_prompt
 
-masked_user_password="${user_password:0:1}*******${user_password: -1}"
-masked_root_password="${root_password:0:1}*******${root_password: -1}"
-masked_sysadmin_password="${sysadmin_password:0:1}*******${sysadmin_password: -1}"
-
-userdata="Username:    $username
-Full Name:    $fullname
-User Password:    $masked_user_password
-Root Password:    $masked_root_password
-Sysadmin Password:    $masked_sysadmin_password"
-pause_script 'User confirmation' "$userdata"
-
-continue_script 'Networking' 'Starting section for networking, please wait.'
-hostname_prompt
-pause_script 'Hostname' "Hostname:    ${hostname}"
 
 continue_script 'Detect CPU vendor' 'Detecting ucode for processor brand'
 CPU=$(grep -m 1 'vendor_id' /proc/cpuinfo)
