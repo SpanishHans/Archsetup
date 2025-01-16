@@ -299,7 +299,7 @@ ROOT partition currently has the following filesystem: $(lsblk -no FSTYPE "$ROOT
 
 }
 
-disk_setup() {
+start_disk_setup() {
     clear
     choose_custom_or_default_layout
 }

@@ -39,7 +39,7 @@ continue_script 'Change root user password' 'Starting section for changing root 
 superuser_setup
 
 continue_script 'Partitioning' 'Starting section for disk formatting and partitioning, please wait.'
-disk_setup
+start_disk_setup
 
 continue_script 'Detect CPU vendor' 'Detecting ucode for processor brand'
 CPU=$(grep -m 1 'vendor_id' /proc/cpuinfo)
