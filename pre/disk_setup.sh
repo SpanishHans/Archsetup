@@ -63,7 +63,8 @@ full_custom_route() {
 }
 
 format_and_partition_disks() {
-    local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
+    local disks=("1. Continue with script")
+    local disks+=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
     local title="Starting disk partitioner"
     local description="The following menu shall help you format and partition disks in order to make space for installing arch. 
     
@@ -78,7 +79,8 @@ Simply select a disk, format and come back here. When done, select the 0. Exit o
         menu_prompt format_disk_menu_choice format_disk_menu_status "$title" "$description" "${disks[@]}"
         local DISK="${disks[$((format_disk_menu_choice - 1))]}"
         case $format_disk_menu_choice in
-            0)  break;;
+            1)  break;;
+            0)  exit;;
             *)  if ! cgdisk "$DISK"; then
                     continue_script "Exited cgdisk for $DISK" "cgdisk exited for disk $DISK. Returning to menu."
                 fi
@@ -88,7 +90,8 @@ Simply select a disk, format and come back here. When done, select the 0. Exit o
 }
 
 set_filesystem_for_partitions() {
-    local partitions=($(lsblk -ppnoNAME,SIZE,TYPE | grep -P "/dev/nvme|sd|mmcblk|vd" | grep -w "part" | sed 's/└─//g' | sed 's/├─//g' | awk '{print $1}'))
+    local partitions=("1. Continue with script")
+    local partitions+=($(lsblk -ppnoNAME,SIZE,TYPE | grep -P "/dev/nvme|sd|mmcblk|vd" | grep -w "part" | sed 's/└─//g' | sed 's/├─//g' | awk '{print $1}'))
     local title="Starting partition formatter"
     local description="The following menu shall help you assing a filesystem to a selected partition. 
     
@@ -103,7 +106,8 @@ Simply select a partition, format it on the menu that opens up and then come bac
         menu_prompt format_partition_menu format_partition_menu_status "$title" "$description" "${partitions[@]}"
         local PARTITION="${partitions[$((format_partition_menu - 1))]}"
         case $format_partition_menu in
-            0)  break;;
+            1)  break;;
+            0)  exit;;
             *)  format_a_partition "$PARTITION"
                 ;;
         esac
