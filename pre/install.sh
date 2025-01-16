@@ -35,10 +35,10 @@ Exiting!!!"
     fi
 fi
 
-continue_script 'Change root user password' 'Starting section for changing root password, please wait.'
-superuser_setup
+# continue_script 'Change root user password' 'Starting section for changing root password, please wait.'
+# superuser_setup
 
-continue_script 'Partitioning' 'Starting section for disk formatting and partitioning, please wait.'
+# continue_script 'Partitioning' 'Starting section for disk formatting and partitioning, please wait.'
 start_disk_setup
 
 continue_script 'Detect CPU vendor' 'Detecting ucode for processor brand'
