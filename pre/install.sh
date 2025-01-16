@@ -61,12 +61,11 @@ root_password="12345678"
 sysadmin_password="12345678"
 hostname="test_machine"
 
-echo "export username=\"$username\"" > ./vars.sh
-echo "export fullname=\"$fullname\"" > ./vars.sh
-echo "export user_password=\"$user_password\"" > ./vars.sh
-echo "export root_password=\"$root_password\"" > ./vars.sh
-echo "export sysadmin_password=\"$sysadmin_password\"" > ./vars.sh
-echo "export hostname=\"$hostname\"" > ./vars.sh
+echo "username=$username" >> "./vars.sh"
+echo "fullname=$fullname" >> "./vars.sh"
+echo "user_password=$user_password" >> "./vars.sh"
+echo "root_password=$root_password" >> "./vars.sh"
+echo "sysadmin_password=$sysadmin_password" >> "./vars.sh"
 
 userdata="Username:    $username
 Full Name:    $fullname
@@ -77,6 +76,7 @@ pause_script 'User confirmation' "$userdata"
 
 continue_script 'Networking' 'Starting section for networking, please wait.'
 # hostname_prompt
+echo "hostname=$hostname" >> "./vars.sh"
 pause_script 'Hostname' "Hostname:    ${hostname}"
 
 continue_script 'Partitioning' 'Starting section for disk formatting and partitioning, please wait.'
@@ -85,12 +85,6 @@ select_efi_partition EFI_PART EFI_FORM
 select_root_partition ROOT_PART ROOT_FORM
 determine_format ROOT_FSTYPE
 
-echo "username=$username" >> "./vars.sh"
-echo "fullname=$fullname" >> "./vars.sh"
-echo "user_password=$user_password" >> "./vars.sh"
-echo "root_password=$root_password" >> "./vars.sh"
-echo "sysadmin_password=$sysadmin_password" >> "./vars.sh"
-echo "hostname=$hostname" >> "./vars.sh"
 echo "disk=$disk" >> "./vars.sh"
 echo "EFI_PART=$EFI_PART" >> "./vars.sh"
 echo "EFI_FORM=$EFI_FORM" >> "./vars.sh"
