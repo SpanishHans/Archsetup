@@ -71,6 +71,7 @@ sysadmin_password_prompt () {
 }
 
 user_setup () {
+    clear
     pause_script "Entered user setup!" "The following section will help you configure extra users for the machine as it was set to only have root by default by the install script. It is recommended to have one admin user with wheel/sudo permissions and one without them. The following menu shall help you create more users.
 
 Lets configure extra users.
