@@ -44,13 +44,15 @@ With this in mind, lets pick between sane defaults or full custom mode.'
     )
 
     menu_prompt install_mode_menu install_mode_menu_status "$title" "$description" "${options[@]}"
-    case $install_mode in
-        1)  default_route;;
-        2)  full_custom_route;;
-        0)  return;;
-        *)  pause_script "Option not valid" "That is not an option, retry."
-            ;;
-    esac
+    while true; do
+        case $install_mode in
+            1)  default_route;;
+            2)  full_custom_route;;
+            0)  break;;
+            *)  pause_script "Option not valid" "That is not an option, retry."
+                ;;
+        esac
+    done
 }
 
 default_route() {
