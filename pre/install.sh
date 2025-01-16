@@ -36,7 +36,7 @@ Exiting!!!"
 fi
 
 title="Welcome to the installer script"
-description="This script will help you format your disks to your needs and then install ArchLinux.
+description="This script will help you install ArchLinux.
 
 Enjoy!"
 

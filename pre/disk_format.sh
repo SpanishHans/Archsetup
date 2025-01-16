@@ -23,30 +23,54 @@ select_disk_prompt() {
     local choice="$1"
     local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
     local title="Starting disk picker"
-    local description="The following menu shall help you edit and format disks for installing arch. the script requires 2 partitions:
+    local description="The following menu shall help you format and partition disks in order to make space for installing arch. 
     
-1. Paritition where /boot/efi shall reside.
-2. Paritition where /shall reside.
-
-No swap is required as this script sets up zram automatically.
-
-Please select a disk and format it to your liking. The script shall ask you for what partitions to use for what later."
+Simply select a disk, format and come back here. When done, select the 0. Exit option."
 
     if [ ${#disks[@]} -eq 0 ]; then
-            dialog --msgbox "No valid storage devices found. Exiting." 10 50
+            pause_script "No disks found" "No valid storage devices found. Exiting."
             exit 1
     fi
-    
-    menu_prompt disk_menu disk_menu_status "$title" "$description" "${disks[@]}"
-    local DISK="${disks[$((disk_menu - 1))]}"
-    eval "$choice='$DISK'"
 
-    case $disk_menu in
-        0)  exit;;
-        *)  cgdisk $DISK
-            return;;
-    esac
-    pause_script "disk test" "$choice"
+    while true; do
+        menu_prompt disk_menu disk_menu_status "$title" "$description" "${disks[@]}"
+        local DISK="${disks[$((disk_menu - 1))]}"
+        eval "$choice='$DISK'"
+        pause_script "disk test" "$choice"
+
+        case $disk_menu in
+            0)  exit;;
+            *)  cgdisk $DISK
+                return;;
+        esac
+        
+    done
+}
+
+determine_format() {
+    local form="$1"
+    while true; do
+        
+        local title="ROOT filesystem prompt"
+        local description="Please determine the filesystem to use on the ROOT System Partition (/)."
+
+        local options=(\
+            "Format as EXT4 (Reliable, fast, and widely supported. Ideal for most users, but lacks some advanced features of newer file systems like BTRFS.)" \
+            "Format as BTRFS (Offers advanced features like snapshots and compression, but may have higher overhead and less compatibility compared to EXT4.)"
+        )
+
+        menu_prompt format_menu_choice format_menu_choice_status "$title" "$description" "${options[@]}"
+    
+        case $format_menu_choice in
+            1)  local ROOT_FSTYPE='ext4';;
+            2)  local ROOT_FSTYPE='btrfs';;
+            0)  exit;;
+            *)  output "Invalid choice, please try again.";;
+        esac
+        eval "$form='$ROOT_FSTYPE'"
+        pause_script "root fstype" "$form"
+        break
+    done
 }
 
 select_efi_partition() {
@@ -141,30 +165,6 @@ select_root_partition() {
     pause_script "root test" "$part $form"
 }
 
-determine_format() {
-    local form="$1"
-    while true; do
-        local options=(\
-            "Format as EXT4 (Reliable, fast, and widely supported. Ideal for most users, but lacks some advanced features of newer file systems like BTRFS.)" \
-            "Format as BTRFS (Offers advanced features like snapshots and compression, but may have higher overhead and less compatibility compared to EXT4.)"
-        )
-        local title="ROOT filesystem prompt"
-        local description="Please determine the filesystem to use on the ROOT System Partition (/)."
-
-        menu_prompt format_menu_choice format_menu_choice_status "$title" "$description" "${options[@]}"
-    
-        case $format_menu_choice in
-            1)  local ROOT_FSTYPE='ext4';;
-            2)  local ROOT_FSTYPE='btrfs';;
-            0)  exit;;
-            *)  output "Invalid choice, please try again.";;
-        esac
-        eval "$form='$ROOT_FSTYPE'"
-        pause_script "root fstype" "$form"
-        break
-    done
-}
-
 start_format() {
     continue_script 'Inform disk changes' 'Informing the Kernel about the disk changes.'
 
@@ -225,28 +225,55 @@ ROOT partition currently has the following filesystem: $(lsblk -no FSTYPE "$ROOT
 }
 
 disk_setup() {
+
+    pause_script "" "The following section will help you configure anything disk related: Formatting, partitioning and mounting. Keep in mind those operations are DESTRUCTIVE and will result in data loss for the disks or partitions involved. BACKUP DATA BEFORE PROCEEDING, you have been warned!
+    
+Linux allows you to do whatever the fuck you want. If you so wish, parts of the system could be mounted to USB devices for all we care. We assume that your computer is modern enough to have UEFI support and that root is going to be on an SSD. If those conditions are not met, this script is not for you.
+We transfer the responsability of a reasonable setup to you, the final user. Yet, we provide some sane defaults if you prefer a "batteries included" experience.
+
+With this in mind, lets continue."
+
+
+thing="The default setup aims to give you full rollback support by using Copy on Write (CoW) from the new kid in the block: BTRFS, but you could use any filesystem you want.
+
+Default btrfs layout is as follows:
+    1. Paritition where /boot/efi shall reside. (Therefore no BIOS support, only UEFI.)
+    2. Paritition where /shall reside.
+    3. Optional /Home on another partition. (Otherwise this script assumes and prefers that its mounted on same partition as /)
+    4. No swap is required as this script sets up zram automatically.
+
+
+
+In this step we need you to format your disks and partitions in order to make space for arch. Do whatever you want here and when done formatting and partitioning select exit from the menu.
+
+If you plan on using the default, We need 2 partitions 
+Please select a disk and format it to your liking. The script shall ask you for what partitions to use for what later."
+
     select_disk_prompt DISK
-    select_efi_partition EFI_PART EFI_FORM
-    select_root_partition ROOT_PART ROOT_FORM
-    determine_format ROOT_FSTYPE
 
-    export DISK
-    export EFI_PART
-    export EFI_FORM
-    export ROOT_PART
-    export ROOT_FORM
-    export ROOT_FSTYPE
-    pause_script 'Preview format' "You are about to format the partitions in the following way:
 
-EFI partition will be on: $EFI_PART
-ROOT partition will be on: $ROOT_PART
+#     determine_format ROOT_FSTYPE
+#     select_efi_partition EFI_PART EFI_FORM
+#     select_root_partition ROOT_PART ROOT_FORM
+    
 
-EFI partition currently has the following filesystem: $EFI_FORM
-ROOT partition currently has the following filesystem: $ROOT_FORM
+#     export DISK
+#     export EFI_PART
+#     export EFI_FORM
+#     export ROOT_PART
+#     export ROOT_FORM
+#     export ROOT_FSTYPE
+#     pause_script 'Preview format' "You are about to format the partitions in the following way:
 
-EFI partition will have the following filesystem: $EFI_FORM
-ROOT partition will have the following filesystem: $ROOT_FSTYPE
+# EFI partition will be on: $EFI_PART
+# ROOT partition will be on: $ROOT_PART
 
-press ok to format or CANCEL NOW with ctrl+c or by selecting 0. Exit on the menu."
+# EFI partition currently has the following filesystem: $EFI_FORM
+# ROOT partition currently has the following filesystem: $ROOT_FORM
+
+# EFI partition will have the following filesystem: $EFI_FORM
+# ROOT partition will have the following filesystem: $ROOT_FSTYPE
+
+# press ok to format or CANCEL NOW with ctrl+c or by selecting 0. Exit on the menu."
     start_format
 }
