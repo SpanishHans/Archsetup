@@ -16,8 +16,8 @@
 
 source ./commons.sh
 
-source ./pre/disk_format.sh
 source ./pre/root_user_setup.sh
+source ./pre/disk_setup.sh
 source ./pre/networking.sh
 source ./pre/locales.sh
 
