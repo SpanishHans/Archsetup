@@ -251,7 +251,7 @@ In this step we need you to format your disks and partitions in order to make sp
 If you plan on using the default, We need 2 partitions 
 Please select a disk and format it to your liking. The script shall ask you for what partitions to use for what later."
 
-    select_disk_prompt DISK
+    select_disk_prompt $DISK
 
 
 #     determine_format ROOT_FSTYPE
