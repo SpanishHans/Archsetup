@@ -17,6 +17,8 @@
 source ./commons.sh
 
 mount_btrfs() {
+
+    pause_script "TESTING" "entered mount_btrfs $ROOT_PART $EFI_PART"
     
     local -n given_array=$1
     
@@ -61,6 +63,8 @@ mount_btrfs() {
 
 
 run_btrfs_setup() {
+
+    pause_script "TESTING" "entered run_btrfs_setup $ROOT_PART $EFI_PART"
     
     declare -A subvols
     local subvols=(

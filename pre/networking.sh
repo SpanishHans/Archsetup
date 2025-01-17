@@ -35,5 +35,6 @@ networking_setup() {
 EOF
 
     export hostname
+    pause_script 'Hostname' "Hostname:    ${hostname}"
 }
 

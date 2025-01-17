@@ -40,10 +40,6 @@ superuser_setup
 
 continue_script 'Partitioning' 'Starting section for disk formatting and partitioning, please wait.'
 start_disk_setup
-pause_script "View default setup configs" "EFI_PART: $EFI_PART
-EFI_FORM: $EFI_FORM
-ROOT_PART: $ROOT_PART
-ROOT_FORM: $ROOT_FORM"
 
 continue_script 'Detect CPU vendor' 'Detecting ucode for processor brand'
 CPU=$(grep -m 1 'vendor_id' /proc/cpuinfo)
@@ -92,18 +88,11 @@ genfstab -U /mnt >> /mnt/etc/fstab || { pause_script '' "genfstab failed"; exit 
 
 continue_script 'Networking' 'Starting section for networking, please wait.'
 networking_setup
-pause_script 'Hostname' "Hostname:    ${hostname}"
+
 
 continue_script 'Locales setup' 'Setting up hostname, locales, and keyboard layout'
 locales_setup
-pause_script 'Locales' "Your /mnt/etc/locale.gen looks like this:    
-$cat '/mnt/etc/locale.gen'
 
-Your /mnt/etc/locale.conf looks like this:    
-$cat '/mnt/etc/locale.conf'
-
-Your /mnt/etc/vconsole.conf looks like this:    
-$cat '/mnt/etc/vconsole.conf'"
 
 continue_script 'Copy repo' 'Copying repo to machine'
 cp -R --no-preserve=ownership /root/Archsetup /mnt/root/Archsetup
