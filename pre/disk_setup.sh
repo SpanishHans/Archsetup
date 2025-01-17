@@ -211,11 +211,11 @@ select_efi_partition() {
     local EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
 
     if [[ "$EFI_FORM" != "vfat" ]]; then
-        pause_script "" "Error: The selected EFI partition ($EFI_PART) is not formatted as vfat.
-Please go back and format the partition as EFI System Partition (type EF00) with a FAT32 filesystem."
+        pause_script "" "Error: The selected partition ($EFI_PART) is not formatted as EFI.
+Please go back and format the partition as EFI Partition."
         exit
     else
-        pause_script "" "The EFI partition ($EFI_PART) is correctly formatted as vfat."
+        pause_script "" "The partition ($EFI_PART) is correctly formatted as EFI."
     fi
     
     pause_script "root test" "$EFI_PART $EFI_FORM"
@@ -260,6 +260,13 @@ select_root_partition() {
     menu_prompt root_menu root_menu_status "$title" "$description" "${menu_items[@]}"
     local ROOT_PART="${partitions[$((root_menu))]}"
     local ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
+    if [[ "$EFI_FORM" != "vfat" ]]; then
+        pause_script "" "Error: The selected partition ($ROOT_PART) is not formatted as BTRFS.
+Please go back and format the partition as BTRFS Partition."
+        exit
+    else
+        pause_script "" "The partition ($ROOT_PART) is correctly formatted as BTRFS."
+    fi
     pause_script "root test" "$ROOT_PART $ROOT_FORM"
 }
 
