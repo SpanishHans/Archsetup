@@ -46,8 +46,8 @@ With this in mind, lets pick between sane defaults or full custom mode.'
     while true; do
         menu_prompt install_mode_menu install_mode_menu_status "$title" "$description" "${options[@]}"
         case $install_mode_menu in
-            1)  default_route;;
-            2)  full_custom_route;;
+            0)  default_route;;
+            1)  full_custom_route;;
             e)  exit;;
             *)  pause_script "Option not valid" "That is not an option, returning to start menu.";exit;;
         esac
@@ -136,8 +136,8 @@ Please select a filesystem for it from the following:"
     menu_prompt partition_menu partition_menu_status "$title" "$description" "${options[@]}"
     local partition="${partitions[$((partition_menu))]}"
     case $partition_menu in
-        1)  format_as_ext4 "$partition";;
-        2)  format_as_btrfs "$partition";;
+        0)  format_as_ext4 "$partition";;
+        1)  format_as_btrfs "$partition";;
         b)  break;;
         e)  exit;;
         *)  continue_script "Option not valid" "That is not an option, retry.";;
