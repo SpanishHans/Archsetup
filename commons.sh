@@ -307,7 +307,7 @@ menu_prompt() {
     for i in "${!options[@]}"; do
         if [[ "${options[i]}" == "Continue" ]]; then
             menu_items+=("c" "${options[i]}")
-        elif [[ "${options[i]}" == "Cancel and exit" ]]; then
+        elif [[ "${options[i]}" == "Exit" ]]; then
             menu_items+=("e" "${options[i]}")
         elif [[ "${options[i]}" == "Back" ]]; then
             menu_items+=("b" "${options[i]}")

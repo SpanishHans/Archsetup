@@ -41,7 +41,7 @@ With this in mind, lets pick between sane defaults or full custom mode.'
     local options=(\
         "Go the default route" \
         "Go the fully custom route" \
-        "Cancel and exit"
+        "Exit"
     )
     while true; do
         menu_prompt install_mode_menu install_mode_menu_status "$title" "$description" "${options[@]}"
@@ -69,7 +69,7 @@ full_custom_route() {
 format_and_partition_disks() {
     local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
     local disks+=("Continue")
-    local disks+=("Cancel and exit")
+    local disks+=("Exit")
     local title="Starting disk partitioner"
     local description="The following menu shall help you format and partition disks in order to make space for installing arch. 
     
@@ -97,7 +97,7 @@ Simply select a disk, format and come back here. When done, select option 1 to c
 set_filesystem_for_partitions() {
     local partitions=($(lsblk -ppnoNAME,SIZE,TYPE | grep -P "/dev/nvme|sd|mmcblk|vd" | grep -w "part" | sed 's/└─//g' | sed 's/├─//g' | awk '{print $1}'))
     local partitions+=("Continue")
-    local partitions+=("Cancel and exit")
+    local partitions+=("Exit")
     local title="Starting partition formatter"
     local description="The following menu shall help you assing a filesystem to a selected partition. 
     
@@ -131,7 +131,7 @@ Please select a filesystem for it from the following:"
         "Format as EXT4" \
         "Format as BTRFS" \
         "Back" \
-        "Cancel and exit"
+        "Exit"
     )
     menu_prompt partition_menu partition_menu_status "$title" "$description" "${options[@]}"
     local partition="${partitions[$((partition_menu))]}"
