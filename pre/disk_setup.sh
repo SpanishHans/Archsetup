@@ -132,6 +132,7 @@ Please select a filesystem for it from the following:"
     local options=(\
         "Format as EXT4" \
         "Format as BTRFS" \
+        "Format as EFI" \
         "Back" \
         "Exit"
     )
@@ -139,10 +140,18 @@ Please select a filesystem for it from the following:"
     case $partition_menu in
         0)  format_as_ext4 "$partition";;
         1)  format_as_btrfs "$partition";;
+        1)  format_for_efi "$partition";;
         b)  return;;
         e)  exit;;
         *)  continue_script "Option not valid" "That is not an option, retry.";;
     esac
+}
+
+format_for_efi() {
+    local partition="$1"
+    continue_script "Formatting $partition as EFI" "You have decided to partition $partition as EFI. FORMATTING..."
+    mkfs.fat -F 32 "${partition}"
+    pause_script "$partition formatted" "the partition $partition has been formatted to EFI,"
 }
 
 format_as_ext4() {
