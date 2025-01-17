@@ -40,7 +40,6 @@ while true; do
         "Configure Plymouth" \
         "Configure Virt-Manager" \
         "Configure extra utils" \
-        "Back" \
         "Exit"
     )
     
@@ -55,7 +54,6 @@ while true; do
         5)  ./post/plymouth.sh;;
         6)  ./post/virt_manager.sh;;
         7)  ./post/tools.sh;;
-        b)  return;;
         e)  exit;;
         *)  output "Invalid choice, please try again.";;
     esac
