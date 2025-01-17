@@ -58,6 +58,8 @@ default_route() {
     # continue_script "Default route" "You chose to use the default route"
     format_and_partition_disks
     set_filesystem_for_partitions
+    select_efi_partition
+    select_root_partition
     exit
 }
 
@@ -161,7 +163,6 @@ format_as_btrfs() {
 
 select_efi_partition() {
     local part="$1"
-    local form="$2"
     local partitions=($(lsblk -ppnoNAME,SIZE,TYPE | grep -P "/dev/nvme|sd|mmcblk|vd" | grep -w "part" | sed 's/└─//g' | sed 's/├─//g' | awk '{print $1}'))
     local title="Select EFI Partition"
     local description="Please select a partition to use as the EFI System Partition (/boot/efi). ALL DATA SHALL BE WIPED"
@@ -197,17 +198,15 @@ select_efi_partition() {
     done
 
     menu_prompt root_menu root_menu_status "$title" "$description" "${menu_items[@]}"
-    local EFI_PART="${partitions[$((root_menu - 1))]}"
+    local EFI_PART="${partitions[$((root_menu))]}"
     local EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
-    eval "$part='$EFI_PART'"
-    eval "$form='$EFI_FORM'"
-    pause_script "efi test" "$EFI_PART $(lsblk -f | grep "$EFI_PART")"
-    pause_script "efi test" "$part $form"
+    eval "$part=\"$EFI_PART\""
+    pause_script "root test" "$ROOT_PART $ROOT_FORM"
+    pause_script "root test" "$part"
 }
 
 select_root_partition() {
     local part="$1"
-    local form="$2"
     local partitions=($(lsblk -ppnoNAME,SIZE,TYPE | grep -P "/dev/nvme|sd|mmcblk|vd" | grep -w "part" | sed 's/└─//g' | sed 's/├─//g' | awk '{print $1}'))
     local title="Select ROOT Partition"
     local description="Please select a partition to use as the ROOT System Partition (/). ALL DATA SHALL BE WIPED"
@@ -243,12 +242,9 @@ select_root_partition() {
     done
 
     menu_prompt root_menu root_menu_status "$title" "$description" "${menu_items[@]}"
-    local ROOT_PART="${partitions[$((root_menu - 1))]}"
+    local ROOT_PART="${partitions[$((root_menu))]}"
     local ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
-    eval "$part='$ROOT_PART'"
-    eval "$form='$ROOT_FORM'"
     pause_script "root test" "$ROOT_PART $ROOT_FORM"
-    pause_script "root test" "$part $form"
 }
 
 start_format() {
