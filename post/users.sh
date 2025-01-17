@@ -159,7 +159,7 @@ delete_user() {
         else
             user_is_admin="No"
         fi
-        menu_items+=("$(printf "$counter.") $(printf "%-${max_user_len}s" "$user") is wheel: $(printf "%-${max_admin_len}s" "$user_is_admin")")
+        menu_items+=("$(printf "$counter.") $(printf "%-${max_user_len}s" "$user")")
         ((counter++))
     done
 
