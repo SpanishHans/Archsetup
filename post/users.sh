@@ -23,6 +23,30 @@ user_password_prompt () {
     eval "$pass='$user_password'"
 }
 
+change_admin_privs() {
+    local username="$1"
+    local title="Should $username be sudo?"
+    local description="Please determine if user $username should have admin privileges or not."
+    local options=(\
+        "No, dont give admin privileges to $username." \
+        "Yes, give $username admin privileges."
+    )
+
+    while true; do
+        menu_prompt wheel_menu wheel_menu_status "$title" "$description" "${options[@]}"
+        case $wheel_menu in
+            0)  sudo_access="n";break;;
+            1)  sudo_access="y";break;;
+            *)  continue_script "Option not valid" "That is not an option, retry.";;
+        esac
+    done
+
+    if [[ "$sudo_access" == "y" ]]; then
+        usermod -aG wheel "$username" && continue_script "$username is now admin" "User $username now has admin privileges."
+    fi
+}
+
+
 configure_users() {
     local title="Entered user setup" 
     local description='The following section will help you create new users for your system. You can decide for each user if they should or should not be an admin user with sudo.'
@@ -81,25 +105,33 @@ create_user() {
 
     echo "$username:$user_password" | chpasswd
     
-    local title="Should $username be sudo?"
-    local description="Please determine if user $username should have admin privileges or not."
+    change_admin_privs
+}
+
+modify_user() {
+    input_text username username_status "Edit user" "Menu for editing a user." "Enter the username of the user to edit: "
+
+    fullname="$(tr '[:lower:]' '[:upper:]' <<< "${username:0:1}")${username:1}"
+    
+    local title="What do you want to do to $username"
+    local description="Please determine if you want to change password for $username or if you want to change the admin privileges of $username."
     local options=(\
-        "No, dont give admin privileges to $username." \
-        "Yes, give $username admin privileges."
+        "Change password" \
+        "Change admin privileges" \
+        "Back"
     )
 
     while true; do
         menu_prompt wheel_menu wheel_menu_status "$title" "$description" "${options[@]}"
         case $wheel_menu in
-            0)  sudo_access="n";break;;
-            1)  sudo_access="y";break;;
+            0)  user_password_prompt "$fullname" user_password
+                echo "$username:$user_password" | chpasswd
+                ;break;;
+            1)  change_admin_privs;break;;
+            b)  break;;
             *)  continue_script "Option not valid" "That is not an option, retry.";;
         esac
     done
-
-    if [[ "$sudo_access" == "y" ]]; then
-        usermod -aG wheel "$username" && continue_script "$username is now admin" "User $username now has admin privileges."
-    fi
 }
 
 delete_user() {
