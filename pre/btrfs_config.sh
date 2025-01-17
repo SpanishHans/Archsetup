@@ -81,8 +81,12 @@ run_btrfs_setup() {
         ["@var_lib_AccountsService"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/AccountsService | User account settings and data managed by AccountsService."
     )
 
+    pause_script "TESTING" "about to enter the loop"
+    
     if [[ "$ROOT_FORM" == "btrfs" ]]; then
         
+        pause_script "TESTING" "before multiselect"
+    
         multiselect_prompt \
             subvol_menu_choice \
             subvol_menu_choice_status \
@@ -95,6 +99,8 @@ run_btrfs_setup() {
         3. @snapshots
             
         Please choose what extra subvolumes you require."
+
+        pause_script "TESTING" "after multiselect"
         
         declare -A filtered_subvols
         for choice in "${subvol_menu_choice[@]}"; do
@@ -102,6 +108,7 @@ run_btrfs_setup() {
                 filtered_subvols["$choice"]="${subvols[$choice]}"
             fi
         done
+        pause_script "TESTING" "about to enter mount_btrfs"
         mount_btrfs filtered_subvols
     fi
 
