@@ -133,15 +133,17 @@ Please select a filesystem for it from the following:"
         "Back" \
         "Exit"
     )
-    menu_prompt partition_menu partition_menu_status "$title" "$description" "${options[@]}"
-    local partition="${partitions[$((partition_menu))]}"
-    case $partition_menu in
-        0)  format_as_ext4 "$partition";;
-        1)  format_as_btrfs "$partition";;
-        b)  break;;
-        e)  exit;;
-        *)  continue_script "Option not valid" "That is not an option, retry.";;
-    esac
+    while true; do
+        menu_prompt partition_menu partition_menu_status "$title" "$description" "${options[@]}"
+        local partition="${partitions[$((partition_menu))]}"
+        case $partition_menu in
+            0)  format_as_ext4 "$partition";;
+            1)  format_as_btrfs "$partition";;
+            b)  break;;
+            e)  exit;;
+            *)  continue_script "Option not valid" "That is not an option, retry.";;
+        esac
+    done
 }
 
 format_as_ext4() {
