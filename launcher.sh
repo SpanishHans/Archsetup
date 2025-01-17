@@ -52,7 +52,7 @@ while true; do
     case $main_menu_choice in
         1)  ./pre/install.sh;;
         2)  ./post/configure.sh;;
-        0)  exit;;
+        e)  exit;;
         *)  output "Invalid choice, please try again.";;
     esac
 done
