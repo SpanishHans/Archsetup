@@ -140,7 +140,7 @@ Please select a filesystem for it from the following:"
     case $partition_menu in
         0)  format_as_ext4 "$partition";;
         1)  format_as_btrfs "$partition";;
-        1)  format_for_efi "$partition";;
+        2)  format_for_efi "$partition";;
         b)  return;;
         e)  exit;;
         *)  continue_script "Option not valid" "That is not an option, retry.";;
