@@ -217,8 +217,6 @@ Please go back and format the partition as EFI Partition."
     else
         pause_script "" "The partition ($EFI_PART) is correctly formatted as EFI."
     fi
-    
-    pause_script "root test" "$EFI_PART $EFI_FORM"
 }
 
 select_root_partition() {
@@ -267,7 +265,6 @@ Please go back and format the partition as BTRFS Partition."
     else
         pause_script "" "The partition ($ROOT_PART) is correctly formatted as BTRFS."
     fi
-    pause_script "root test" "$ROOT_PART $ROOT_FORM"
 }
 
 start_format() {
