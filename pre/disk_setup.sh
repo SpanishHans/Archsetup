@@ -61,10 +61,11 @@ default_route() {
     select_efi_partition
     select_root_partition
     # run_btrfs_setup
-    pause_script "" "EFI_PART: $EFI_PART
-EFI_FORM: $EFI_FORM
-ROOT_PART: $ROOT_PART
-ROOT_FORM: $ROOT_FORM"
+#     pause_script "" "EFI_PART: $EFI_PART
+# EFI_FORM: $EFI_FORM
+# ROOT_PART: $ROOT_PART
+# ROOT_FORM: $ROOT_FORM"
+    echo "EFI_PART=$EFI_PART"
     exit
 }
 
@@ -218,7 +219,7 @@ select_efi_partition() {
     if [[ "$EFI_FORM" != "vfat" ]]; then
         pause_script "" "Error: The selected partition ($EFI_PART) is not formatted as EFI.
 Please go back and format the partition as EFI Partition."
-        export $EFI_PART $EFI_FORM
+        export EFI_PART EFI_FORM
         exit
     else
         pause_script "" "The partition ($EFI_PART) is correctly formatted as EFI."
