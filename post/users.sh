@@ -77,7 +77,7 @@ create_user() {
     done
     fullname="$(tr '[:lower:]' '[:upper:]' <<< "${username:0:1}")${username:1}"
     useradd -c "$fullname" -m "$username"
-    user_password_prompt fullname user_password
+    user_password_prompt "$fullname" user_password
 
     echo "$username:$user_password" | chpasswd
     
