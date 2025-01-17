@@ -52,24 +52,23 @@ libvirt_setup()
     while true; do
         clear
         output 'What hypervisor do you want to install?'
-        output '1) QEMU'
-        output '2) LXC'
-        output '3) VirtualBox'
-        output '0) Nothing'
+        output '0) QEMU'
+        output '1) LXC'
+        output '2) VirtualBox'
+        output 'b) Back'
         read -p 'Insert the number of your selection: ' -r QEMU_choice
         case $QEMU_choice in
             
-            1 ) qemu_setup
+            0)  qemu_setup
                 break
                 ;;
-            2 ) lxc_setup
+            1)  lxc_setup
                 break
                 ;;
-            3 ) virtualbox_setup
+            2)  virtualbox_setup
                 break
                 ;;
-            0 ) output 'I dont want shit, get out of here'
-                break
+            b)  break
                 ;;
             * ) output 'You did not enter a valid selection.'
         esac
@@ -87,10 +86,10 @@ qemu_setup()
     while true; do
         clear
         output 'What qemu packages to install?'
-        output '1) qemu-desktop (Full-system x86_64 only)'
-        output '2) qemu-emulators-full (Full-system and Usermode emulation both for x86 and ARM)'
-        output '3) qemu-full (Everything under the sun)'
-        output '0) Nothing'
+        output '0) qemu-desktop (Full-system x86_64 only)'
+        output '1) qemu-emulators-full (Full-system and Usermode emulation both for x86 and ARM)'
+        output '2) qemu-full (Everything under the sun)'
+        output 'b) Back'
         read -p 'Insert the number of your selection: ' -r QEMU_choice
         case $QEMU_choice in
             
@@ -103,8 +102,7 @@ qemu_setup()
             3 ) commands_to_run+=("pacman --noconfirm -S qemu-full")
                 break
                 ;;
-            0 ) output 'I dont want shit, get out of here'
-                break
+            0 ) break
                 ;;
             * ) output 'You did not enter a valid selection.'
         esac

@@ -40,6 +40,10 @@ superuser_setup
 
 continue_script 'Partitioning' 'Starting section for disk formatting and partitioning, please wait.'
 start_disk_setup
+pause_script "View default setup configs" "EFI_PART: $EFI_PART
+EFI_FORM: $EFI_FORM
+ROOT_PART: $ROOT_PART
+ROOT_FORM: $ROOT_FORM"
 
 continue_script 'Detect CPU vendor' 'Detecting ucode for processor brand'
 CPU=$(grep -m 1 'vendor_id' /proc/cpuinfo)

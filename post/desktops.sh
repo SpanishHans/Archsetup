@@ -297,18 +297,19 @@ WM_selector()
 
 while true; do
     options=(\
-        "1) Configure Display Manager" \
-        "2) Configure Desktop Environment" \
-        "3) Configure Window Manager" \
+        "Configure Display Manager" \
+        "Configure Desktop Environment" \
+        "Configure Window Manager" \
+        "Bacck" \
     )
     
     menu_prompt choice choice_status "$titulo" "$descripcion" "${options[@]}"
 
     case $choice in
-        1) DM_selector;;
-        2) DE_selector;;
-        3) WM_selector;;
-        0) exit;;
+        0) DM_selector;;
+        1) DE_selector;;
+        2) WM_selector;;
+        b) exit;;
         *) output "Invalid choice, please try again." ;;
     esac
 done

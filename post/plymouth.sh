@@ -34,39 +34,36 @@ plymouth_setup()
     while true; do
         clear
         output 'What theme to install?'
-        output '1) Connect'
-        output '2) Deus Ex'
-        output '3) Lone'
-        output '4) Red loader'
-        output '0) Nothing'
+        output '0) Connect'
+        output '1) Deus Ex'
+        output '2) Lone'
+        output '3) Red loader'
+        output 'b) Nothing'
         read -p 'Insert the number of your selection: ' -r theme_choice
         case $theme_choice in
-            1)
+            0)
                 commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S plymouth-theme-connect-git'")
                 commands_to_run+=("plymouth-set-default-theme -R connect")
                 break
                 ;;
-            2)
+            1)
                 commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S plymouth-theme-deus-ex-git'")
                 commands_to_run+=("plymouth-set-default-theme -R deus_ex")
                 break
                 ;;
-            3)
+            2)
                 commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S plymouth-theme-lone-git'")
                 commands_to_run+=("plymouth-set-default-theme -R lone")
                 break
                 ;;
-            4)
+            3)
                 commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S plymouth-theme-red-loader-git'")
                 commands_to_run+=("plymouth-set-default-theme -R red_loader")
                 break
                 ;;
-            0)
-                output 'I dont want shit, get out of here'
-                break
+            b)  break
                 ;;
-            *)
-                output 'You did not enter a valid selection.'
+            *)  output 'You did not enter a valid selection.'
                 ;;
         esac
     done
@@ -81,4 +78,3 @@ plymouth_setup()
 
 
 plymouth_setup
-get_out

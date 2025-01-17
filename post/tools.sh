@@ -123,20 +123,20 @@ while true; do
     clear
     output "Configuration Menu"
     output "-------------------"
-    output "1) Configure chezmoi"
-    output "2) Configure asdf"
-    output "3) Configure clipboard"
-    output "4) Configure python"
-    output "5) Configure node"
-    output "0) Exit"
+    output "0) Configure chezmoi"
+    output "1) Configure asdf"
+    output "2) Configure clipboard"
+    output "3) Configure python"
+    output "4) Configure node"
+    output "b) Exit"
     read -p "Please select an option: " -r choice
     case $choice in
-        1) configure_chezmoi;;
-        2) configure_asdf;;
-        3) configure_clipboard;;
-        4) configure_python;;
-        5) configure_node;;
-        0) output 'I dont want shit, get out of here'; break ;;
+        0) configure_chezmoi;;
+        1) configure_asdf;;
+        2) configure_clipboard;;
+        3) configure_python;;
+        4) configure_node;;
+        b) break ;;
         *) output "Invalid choice, please try again." ;;
     esac
 done

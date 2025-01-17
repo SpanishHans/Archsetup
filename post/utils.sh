@@ -205,20 +205,21 @@ while true; do
         "Configure flatpak" \
         "Configure docker" \
         "Configure distrobox" \
+        "Back" \
     )
     
     menu_prompt menu_choice_3 menu_choice_status_3 "$titulo" "$descripcion" "${options[@]}"
 
     case $menu_choice_3 in
-        1)  configure_git;;
-        2)  configure_paru;;
-        3)  configure_snp;;
-        4)  configure_snapper_rollback;;
-        5)  configure_terminal;;
-        6)  configure_flatpak;;
-        7)  configure_docker;;
-        8)  configure_distrobox;;
-        0)  exit;;
+        0)  configure_git;;
+        1)  configure_paru;;
+        2)  configure_snp;;
+        3)  configure_snapper_rollback;;
+        4)  configure_terminal;;
+        5)  configure_flatpak;;
+        6)  configure_docker;;
+        7)  configure_distrobox;;
+        b)  exit;;
         *)  pause_script "" "Invalid choice, please try again." ;;
     esac
 done

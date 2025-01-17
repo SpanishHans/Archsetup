@@ -28,16 +28,12 @@ nvidia_setup()
         read -p 'Insert the number of your selection: ' -r nvidia_choice
 
         case $nvidia_choice in
-            1)
-                commands_to_run+=("pacman --noconfirm -S base-devel linux-headers nvidia-open-dkms nvidia-utils nvidia-settings")
+            0)  commands_to_run+=("pacman --noconfirm -S base-devel linux-headers nvidia-open-dkms nvidia-utils nvidia-settings")
                 break
                 ;;
-            0)
-                output 'I dont want shit, get out of here'
-                break
+            b)  break
                 ;;
-            *)
-                output 'You did not enter a valid selection.'
+            *)  output 'You did not enter a valid selection.'
                 ;;
         esac
     done
@@ -101,4 +97,3 @@ nvidia_setup()
 
 
 nvidia_setup
-get_out
