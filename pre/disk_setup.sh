@@ -65,7 +65,7 @@ default_route() {
 # EFI_FORM: $EFI_FORM
 # ROOT_PART: $ROOT_PART
 # ROOT_FORM: $ROOT_FORM"
-    echo "EFI_PART=$EFI_PART"
+    pause_script "" "EFI_PART=$EFI_PART"
     exit
 }
 
