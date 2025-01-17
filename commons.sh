@@ -255,8 +255,7 @@ root_pass() {
 set_password() {
     local choice="$1"
     local status="$2"
-    local username="${3:-Default}"
-    user=$(echo -e "$username")
+    local user="$3"
     local password1 password2 exit_code
 
     while true; do
