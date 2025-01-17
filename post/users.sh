@@ -113,33 +113,37 @@ delete_user() {
 }
 
 list_users() {
-    local users=$(awk -F: '$3 >= 1000 && $3 < 65534 {print $1}' /etc/passwd | tr '\n' ' ')
-    
-    for i in "${!users[@]}"; do
-        local user="${users[$i]}"
+    local users=($(awk -F: '$3 >= 1000 && $3 < 65534 {print $1}' /etc/passwd))
+    local max_user_len=0
+    local max_admin_len=3
+    local menu_items=()
+
+    for user in "${users[@]}"; do
         if groups "$user" | grep -qw "wheel"; then
             user_is_admin="Yes"
         else
             user_is_admin="No"
         fi
 
-        max_user_len=$((${#user} > max_user_len ? ${#user} : max_user_len))
-        max_admin_len="3"
+        if (( ${#user} > max_user_len )); then
+            max_user_len=${#user}
+        fi
     done
 
-    for i in "${!users[@]}"; do
-        local user="${users[$i]}"
+    for user in "${users[@]}"; do
         if groups "$user" | grep -qw "wheel"; then
             user_is_admin="Yes"
         else
             user_is_admin="No"
         fi
-
         menu_items+=("$(printf "%-${max_user_len}s" "$user") $(printf "%-${max_admin_len}s" "$user_is_admin")")
     done
-    
+
+    local user_list=$(printf "%s\n" "${menu_items[@]}")
+
     pause_script "Existing users" "List of Existing Users:\n$user_list"
 }
+
 
 user_setup () {
     clear
