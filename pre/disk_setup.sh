@@ -60,12 +60,18 @@ default_route() {
     set_filesystem_for_partitions
     select_efi_partition
     select_root_partition
+    # run_btrfs_setup
+    pause_script "" "EFI_PART: $EFI_PART
+EFI_FORM: $EFI_FORM
+ROOT_PART: $ROOT_PART
+ROOT_FORM: $ROOT_FORM"
     exit
 }
 
 full_custom_route() {
     format_and_partition_disks
     set_filesystem_for_partitions
+    pause_script "Full custom not ready!" "The rest of the full custom logic for mounting whatever you want is not ready yet, sorry."
     exit
 }
 
@@ -169,8 +175,6 @@ format_as_btrfs() {
     pause_script "$partition formatted" "the partition $partition has been formatted to BTRFS,"
 }
 
-
-
 select_efi_partition() {
     local part="$1"
     local partitions=($(lsblk -ppnoNAME,SIZE,TYPE | grep -P "/dev/nvme|sd|mmcblk|vd" | grep -w "part" | sed 's/└─//g' | sed 's/├─//g' | awk '{print $1}'))
@@ -214,10 +218,12 @@ select_efi_partition() {
     if [[ "$EFI_FORM" != "vfat" ]]; then
         pause_script "" "Error: The selected partition ($EFI_PART) is not formatted as EFI.
 Please go back and format the partition as EFI Partition."
+        export EFI_PART EFI_FORM
         exit
     else
         pause_script "" "The partition ($EFI_PART) is correctly formatted as EFI."
     fi
+    
 }
 
 select_root_partition() {
@@ -262,101 +268,14 @@ select_root_partition() {
     if [[ "$ROOT_FORM" != "btrfs" ]]; then
         pause_script "" "Error: The selected partition ($ROOT_PART) is not formatted as BTRFS.
 Please go back and format the partition as BTRFS Partition."
+        export ROOT_PART ROOT_FORM
         exit
     else
         pause_script "" "The partition ($ROOT_PART) is correctly formatted as BTRFS."
     fi
 }
 
-start_format() {
-    continue_script 'Inform disk changes' 'Informing the Kernel about the disk changes.'
-
-    local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
-    for di in "${disks[@]}"; do
-        continue_script "partprobe on $di" "Running partprobe on $di"
-        if ! partprobe "$di"; then
-            continue_script '' "Failed to inform the kernel about changes for $di."
-        fi
-    done
-
-    continue_script 'Format partition ESP: FAT32' "Formatting the /boot/efi partition on $EFI_PART as FAT32."
-    if ! mkfs.fat -F 32 "${EFI_PART}"; then
-        pause_script '' "Failed to format ${EFI_PART} as FAT32. Aborting."
-        return 1
-    fi
-
-    if [[ "$ROOT_FSTYPE" == "ext4" ]]; then
-        continue_script 'Format partition: EXT4' "Formatting the / partition on $ROOT_FSTYPE as EXT4."
-        if ! mkfs.ext4 -F "${ROOT_PART}"; then
-            pause_script '' "Failed to format ${ROOT_PART} as EXT4. Aborting."
-            return 1
-        fi
-    elif [[ "$ROOT_FSTYPE" == "btrfs" ]]; then
-        continue_script 'Format partition: BTRFS' "Formatting the / partition on $ROOT_FSTYPE as BTRFS."
-        if ! mkfs.btrfs -f "${ROOT_PART}"; then
-            pause_script '' "Failed to format ${ROOT_PART} as BTRFS. Aborting."
-            return 1
-        fi
-    else
-        echo "Unsupported ROOT_FSTYPE: $ROOT_FSTYPE"
-        return 1
-    fi
-    pause_script 'Formatting finished' "Disks have been formatted.
-
-EFI partition currently has the following filesystem: $(lsblk -no FSTYPE "$EFI_PART")
-ROOT partition currently has the following filesystem: $(lsblk -no FSTYPE "$ROOT_PART")"
-
-    local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
-    for di in "${disks[@]}"; do
-        continue_script "partprobe on $di" "Running partprobe on $di"
-        if ! partprobe "$di"; then
-            continue_script '' "Failed to inform the kernel about changes for $di."
-        fi
-    done
-
-    if [[ "$(lsblk -no FSTYPE "$ROOT_PART")" == "ext4" ]]; then
-        continue_script 'Configuring on mode: EXT4' 'Executing commands for EXT4 Setup. WAIT.'
-        run_ext4_setup
-    elif [[ "$(lsblk -no FSTYPE "$ROOT_PART")" == "btrfs" ]]; then
-        continue_script 'Configuring on mode: BTRFS' 'Executing commands for BTRFS Setup. WAIT.'
-        run_btrfs_setup
-    else
-        echo "Unsupported filesystem type: $ROOT_FSTYPE"
-        exit 1
-    fi
-
-}
-
 start_disk_setup() {
     clear
     choose_custom_or_default_layout
 }
-
-    # format_and_partition_disks
-    # set_filesystem_for_partitions
-
-
-#     determine_format ROOT_FSTYPE
-#     select_efi_partition EFI_PART EFI_FORM
-#     select_root_partition ROOT_PART ROOT_FORM
-    
-
-#     export DISK
-#     export EFI_PART
-#     export EFI_FORM
-#     export ROOT_PART
-#     export ROOT_FORM
-#     export ROOT_FSTYPE
-#     pause_script 'Preview format' "You are about to format the partitions in the following way:
-
-# EFI partition will be on: $EFI_PART
-# ROOT partition will be on: $ROOT_PART
-
-# EFI partition currently has the following filesystem: $EFI_FORM
-# ROOT partition currently has the following filesystem: $ROOT_FORM
-
-# EFI partition will have the following filesystem: $EFI_FORM
-# ROOT partition will have the following filesystem: $ROOT_FSTYPE
-
-# press ok to format or CANCEL NOW with ctrl+c or by selecting 0. Exit on the menu."
-    # start_format
