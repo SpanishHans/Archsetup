@@ -114,7 +114,7 @@ delete_user() {
 
 list_users() {
     local users=$(awk -F: '$3 >= 1000 && $3 < 65534 {print $1}' /etc/passwd | tr '\n' ' ')
-    pause_script "List of Existing Users: $users"
+    pause_script "Existing users" "List of Existing Users: $users"
 }
 
 user_setup () {
