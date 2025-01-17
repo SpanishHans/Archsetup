@@ -137,8 +137,7 @@ list_users() {
         else
             user_is_admin="No"
         fi
-        fullname="$(tr '[:lower:]' '[:upper:]' <<< "${username:0:1}")${username:1}"
-        menu_items+=("$(printf "$counter.") $(printf "%-${max_user_len}s" "$fullname") is wheel: $(printf "%-${max_admin_len}s" "$user_is_admin")")
+        menu_items+=("$(printf "$counter.") $(printf "%-${max_user_len}s" "$user") is wheel: $(printf "%-${max_admin_len}s" "$user_is_admin")")
         ((counter++))
     done
 
