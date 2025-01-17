@@ -61,11 +61,10 @@ default_route() {
     select_efi_partition
     select_root_partition
     # run_btrfs_setup
-#     pause_script "" "EFI_PART: $EFI_PART
-# EFI_FORM: $EFI_FORM
-# ROOT_PART: $ROOT_PART
-# ROOT_FORM: $ROOT_FORM"
-    pause_script "" "EFI_PART=$EFI_PART"
+    pause_script "" "EFI_PART: $EFI_PART
+EFI_FORM: $EFI_FORM
+ROOT_PART: $ROOT_PART
+ROOT_FORM: $ROOT_FORM"
     exit
 }
 
