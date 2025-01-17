@@ -364,19 +364,28 @@ multiselect_prompt() {
         IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
         options+=("$key" "$desc" "on")
     done
-    
-    dialog_output=$(dialog \
-        --backtitle "$title" \
-        --checklist "$description" \
-        $full_height $full_width 15 \
-        "${options[@]}" \
-        2>&1 >/dev/tty)
-    exit_code=$?
-    
-    IFS=$' ' read -r -a choices_array <<< "$dialog_output"
-        
-    eval "$choices=(${choices_array[@]})"
-    eval "$status=\"$exit_code\""
 
-    handle_exit_code "$exit_code" "return"
+    if [ "$USE_DIALOG" = true ]; then
+    
+        dialog_output=$(dialog \
+            --backtitle "$title" \
+            --checklist "$description" \
+            $full_height $full_width 15 \
+            "${options[@]}" \
+            2>&1 >/dev/tty)
+        exit_code=$?
+        
+        IFS=$' ' read -r -a choices_array <<< "$dialog_output"
+            
+        eval "$choices=(${choices_array[@]})"
+        eval "$status=\"$exit_code\""
+
+        handle_exit_code "$exit_code" "return"
+    else
+        clear
+        terminal_title "$title"
+        output "$description"
+        output
+        
+    fi
 }
