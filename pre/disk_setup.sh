@@ -213,8 +213,8 @@ select_efi_partition() {
     done
 
     menu_prompt root_menu root_menu_status "$title" "$description" "${menu_items[@]}"
-    local EFI_PART="${partitions[$((root_menu))]}"
-    local EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
+    EFI_PART="${partitions[$((root_menu))]}"
+    EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
 
     if [[ "$EFI_FORM" != "vfat" ]]; then
         pause_script "" "Error: The selected partition ($EFI_PART) is not formatted as EFI.
@@ -264,8 +264,8 @@ select_root_partition() {
     done
 
     menu_prompt root_menu root_menu_status "$title" "$description" "${menu_items[@]}"
-    local ROOT_PART="${partitions[$((root_menu))]}"
-    local ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
+    ROOT_PART="${partitions[$((root_menu))]}"
+    ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
     if [[ "$ROOT_FORM" != "btrfs" ]]; then
         pause_script "" "Error: The selected partition ($ROOT_PART) is not formatted as BTRFS.
 Please go back and format the partition as BTRFS Partition."
