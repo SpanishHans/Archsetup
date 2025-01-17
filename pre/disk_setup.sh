@@ -165,7 +165,7 @@ select_efi_partition() {
     local part="$1"
     local partitions=($(lsblk -ppnoNAME,SIZE,TYPE | grep -P "/dev/nvme|sd|mmcblk|vd" | grep -w "part" | sed 's/└─//g' | sed 's/├─//g' | awk '{print $1}'))
     local title="Select EFI Partition"
-    local description="Please select a partition to use as the EFI System Partition (/boot/efi). ALL DATA SHALL BE WIPED"
+    local description="Please select a partition to use as the EFI System Partition (/boot/efi)."
 
     local menu_items=()
     local formatted_menu=()
@@ -200,16 +200,23 @@ select_efi_partition() {
     menu_prompt root_menu root_menu_status "$title" "$description" "${menu_items[@]}"
     local EFI_PART="${partitions[$((root_menu))]}"
     local EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
-    eval "$part=\"$EFI_PART\""
+
+    if [[ "$EFI_FORM" != "vfat" ]]; then
+        pause_script "" "Error: The selected EFI partition ($EFI_PART) is not formatted as vfat.
+Please go back and format the partition as EFI System Partition (type EF00) with a FAT32 filesystem."
+        exit
+    else
+        pause_script "" "The EFI partition ($EFI_PART) is correctly formatted as vfat."
+    fi
+    
     pause_script "root test" "$ROOT_PART $ROOT_FORM"
-    pause_script "root test" "$part"
 }
 
 select_root_partition() {
     local part="$1"
     local partitions=($(lsblk -ppnoNAME,SIZE,TYPE | grep -P "/dev/nvme|sd|mmcblk|vd" | grep -w "part" | sed 's/└─//g' | sed 's/├─//g' | awk '{print $1}'))
     local title="Select ROOT Partition"
-    local description="Please select a partition to use as the ROOT System Partition (/). ALL DATA SHALL BE WIPED"
+    local description="Please select a partition to use as the ROOT System Partition (/)."
 
     local menu_items=()
     local formatted_menu=()
