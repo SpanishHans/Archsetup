@@ -28,8 +28,8 @@ superuser_setup () {
 
 With this in mind, DONT LOOSE YOUR ROOT PASSWORD, or you wont be able to login after install."
 
-    # root_password_prompt root_password
-    root_password="12345678"
+    root_password_prompt root_password
+    # root_password="12345678"
     masked_root_password="${root_password:0:1}*******${root_password: -1}"
     export root_password
 
