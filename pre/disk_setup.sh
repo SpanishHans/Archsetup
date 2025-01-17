@@ -121,7 +121,7 @@ Simply select a partition, format it on the menu that opens up and then come bac
 }
 
 format_a_partition() {
-    local partition="$0"
+    local partition="$1"
     
     local title="Pick a filesystem for $partition"
     local description="You are now setting a filesystem for partition $partition. 
