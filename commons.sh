@@ -353,7 +353,7 @@ menu_prompt() {
 multiselect_prompt() {
     local choices="$1"
     local status="$2"
-    local -n given_array=$3
+    local -n given_array="$3"
     local msg_title="${4:-Default}"
     local msg_text="${5:-Default}"
     local title=$(echo -e "$msg_title")
