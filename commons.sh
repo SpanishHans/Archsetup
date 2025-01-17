@@ -371,7 +371,6 @@ multiselect_prompt() {
         $full_height $full_width 15 \
         "${options[@]}" \
         2>&1 >/dev/tty)
-    
     exit_code=$?
     
     IFS=$' ' read -r -a choices_array <<< "$dialog_output"
