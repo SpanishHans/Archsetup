@@ -165,7 +165,7 @@ delete_user() {
 
     local user_list=$(printf "%s\n" "${menu_items[@]}")
     
-    input_text username username_status "Delete user" "Menu for deleting a user. This will DELETE THEIR FILES! $$user_list" "Enter the username to delete: "
+    input_text username username_status "Delete user" "Menu for deleting a user. This will DELETE THEIR FILES! \n$user_list" "Enter the username to delete: "
     
 
 
