@@ -32,6 +32,7 @@ source ./commons.sh
 
 while true; do
     options=(\
+        "Configure users and passwords" \
         "Configure Btrfs subvolumes and Snapper" \
         "Configure basic utils" \
         "Configure DEs" \
@@ -39,19 +40,23 @@ while true; do
         "Configure Plymouth" \
         "Configure Virt-Manager" \
         "Configure extra utils" \
+        "Back" \
+        "Exit"
     )
     
-    menu_prompt main_menu_choice main_menu_choice_status "$title" "$description" "${options[@]}"
+    menu_prompt configure_choice configure_choice_status "$title" "$description" "${options[@]}"
 
-    case $main_menu_choice in
-        2)  ./post/snapper_config.sh;;
-        3)  ./post/utils.sh;;
-        4)  ./post/desktops.sh;;
-        5)  ./post/nvidia.sh;;
-        6)  ./post/plymouth.sh;;
-        7)  ./post/virt_manager.sh;;
-        8)  ./post/tools.sh;;
-        0)  exit;;
+    case $configure_choice in
+        0)  ./post/users.sh;;
+        1)  ./post/snapper_config.sh;;
+        2)  ./post/utils.sh;;
+        3)  ./post/desktops.sh;;
+        4)  ./post/nvidia.sh;;
+        5)  ./post/plymouth.sh;;
+        6)  ./post/virt_manager.sh;;
+        7)  ./post/tools.sh;;
+        b)  return;;
+        e)  exit;;
         *)  output "Invalid choice, please try again.";;
     esac
 done
