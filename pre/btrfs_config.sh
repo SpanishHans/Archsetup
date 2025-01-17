@@ -61,8 +61,11 @@ mount_btrfs() {
 
 run_btrfs_setup() {
 
-    pause_script "TESTING" "entered run_btrfs_setup EFI:$EFI_PART ROOT:$ROOT_PART"
-    
+    pause_script "View default setup configs" "This is the partitions that the default setup will user as selected by you before.
+
+EFI (/boot/efi) will be on: $EFI_PART
+ROOT (/) will be on: $ROOT_PART"
+
     declare -A subvols
     local subvols=(
         ["@var_cache"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/cache | Cached data for apps and package managers, can be recreated if cleared."

@@ -60,10 +60,6 @@ default_route() {
     set_filesystem_for_partitions
     select_efi_partition
     select_root_partition
-    pause_script "View default setup configs" "EFI_PART: $EFI_PART
-EFI_FORM: $EFI_FORM
-ROOT_PART: $ROOT_PART
-ROOT_FORM: $ROOT_FORM"
     run_btrfs_setup
     exit
 }
