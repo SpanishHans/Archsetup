@@ -114,7 +114,31 @@ delete_user() {
 
 list_users() {
     local users=$(awk -F: '$3 >= 1000 && $3 < 65534 {print $1}' /etc/passwd | tr '\n' ' ')
-    pause_script "Existing users" "List of Existing Users: $users"
+    
+    for i in "${!users[@]}"; do
+        local user="${users[$i]}"
+        if groups "$user" | grep -qw "wheel"; then
+            user_is_admin="Yes"
+        else
+            user_is_admin="No"
+        fi
+
+        max_user_len=$((${#user} > max_user_len ? ${#user} : max_user_len))
+        max_admin_len="3"
+    done
+
+    for i in "${!users[@]}"; do
+        local user="${users[$i]}"
+        if groups "$user" | grep -qw "wheel"; then
+            user_is_admin="Yes"
+        else
+            user_is_admin="No"
+        fi
+
+        menu_items+=("$(printf "%-${max_user_len}s" "$user") $(printf "%-${max_admin_len}s" "$user_is_admin")")
+    done
+    
+    pause_script "Existing users" "List of Existing Users:\n$user_list"
 }
 
 user_setup () {
