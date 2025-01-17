@@ -135,7 +135,6 @@ Please select a filesystem for it from the following:"
     )
     while true; do
         menu_prompt partition_menu partition_menu_status "$title" "$description" "${options[@]}"
-        local partition="${partitions[$((partition_menu))]}"
         case $partition_menu in
             0)  format_as_ext4 "$partition";;
             1)  format_as_btrfs "$partition";;
