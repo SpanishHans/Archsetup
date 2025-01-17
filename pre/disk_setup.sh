@@ -218,7 +218,7 @@ Please go back and format the partition as EFI System Partition (type EF00) with
         pause_script "" "The EFI partition ($EFI_PART) is correctly formatted as vfat."
     fi
     
-    pause_script "root test" "$ROOT_PART $ROOT_FORM"
+    pause_script "root test" "$EFI_PART $EFI_FORM"
 }
 
 select_root_partition() {
