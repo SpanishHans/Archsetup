@@ -312,7 +312,7 @@ menu_prompt() {
         elif [[ "${options[i]}" == "Back" ]]; then
             menu_items+=("b" "${options[i]}")
         else
-            menu_items+=($((i + 1)) "${options[i]}")
+            menu_items+=($((i)) "${options[i]}")
         fi
     done
 
