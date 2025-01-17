@@ -218,7 +218,7 @@ select_efi_partition() {
     if [[ "$EFI_FORM" != "vfat" ]]; then
         pause_script "" "Error: The selected partition ($EFI_PART) is not formatted as EFI.
 Please go back and format the partition as EFI Partition."
-        export EFI_PART EFI_FORM
+        export $EFI_PART $EFI_FORM
         exit
     else
         pause_script "" "The partition ($EFI_PART) is correctly formatted as EFI."
