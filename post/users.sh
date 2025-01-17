@@ -123,5 +123,6 @@ user_setup () {
 
 Lets configure extra users."
     configure_users
-
 }
+
+user_setup
