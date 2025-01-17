@@ -64,8 +64,9 @@ default_route() {
 }
 
 full_custom_route() {
-    continue_script "Custom route" "You chose to use the custom route"
-    pause_script "" "continue"
+    format_and_partition_disks
+    set_filesystem_for_partitions
+    exit
 }
 
 format_and_partition_disks() {
