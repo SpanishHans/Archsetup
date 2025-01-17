@@ -63,8 +63,8 @@ run_btrfs_setup() {
 
     pause_script "View default setup configs" "This is the partitions that the default setup will user as selected by you before.
 
-EFI (/boot/efi) will be on: $EFI_PART
-ROOT (/) will be on: $ROOT_PART"
+EFI (/boot/efi)      will be on:      $EFI_PART
+ROOT (/)             will be on:      $ROOT_PART"
 
     declare -A subvols
     local subvols=(
