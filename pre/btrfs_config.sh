@@ -17,10 +17,9 @@
 source ./commons.sh
 
 mount_btrfs() {
+    local -n given_array="$1"
 
-    pause_script "TESTING" "entered mount_btrfs $ROOT_PART $EFI_PART"
-    
-    local -n given_array=$1
+    pause_script "TESTING" "entered mount_btrfs $EFI_PART $ROOT_PART"
     
     continue_script "Mounting $ROOT_PART on /mnt" "Mounting $ROOT_PART on /mnt in order to create subvolumes."
     mount "${ROOT_PART}" /mnt
@@ -64,7 +63,7 @@ mount_btrfs() {
 
 run_btrfs_setup() {
 
-    pause_script "TESTING" "entered run_btrfs_setup $ROOT_PART $EFI_PART"
+    pause_script "TESTING" "entered run_btrfs_setup EFI:$EFI_PART ROOT:$ROOT_PART"
     
     declare -A subvols
     local subvols=(
