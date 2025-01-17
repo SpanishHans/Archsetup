@@ -110,7 +110,7 @@ Simply select a partition, format it on the menu that opens up and then come bac
 
     while true; do
         menu_prompt format_partition_menu format_partition_menu_status "$title" "$description" "${partitions[@]}"
-        local partition="${partitions[$((format_partition_menu - 1))]}"
+        local partition="${partitions[$((format_partition_menu))]}"
         case $format_partition_menu in
             c)  break;;
             e)  exit;;
@@ -134,7 +134,7 @@ Please select a filesystem for it from the following:"
         "Cancel and exit"
     )
     menu_prompt partition_menu partition_menu_status "$title" "$description" "${options[@]}"
-    local partition="${partitions[$((partition_menu - 1))]}"
+    local partition="${partitions[$((partition_menu))]}"
     case $partition_menu in
         1)  format_as_ext4 "$partition";;
         2)  format_as_btrfs "$partition";;
