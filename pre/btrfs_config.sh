@@ -81,7 +81,7 @@ run_btrfs_setup() {
         ["@var_lib_AccountsService"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/AccountsService | User account settings and data managed by AccountsService."
     )
 
-    if [[ "$ROOT_FSTYPE" == "btrfs" ]]; then
+    if [[ "$ROOT_FORM" == "btrfs" ]]; then
         
         multiselect_prompt \
             subvol_menu_choice \
