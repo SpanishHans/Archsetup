@@ -43,7 +43,8 @@ Select an option from the menu to proceed."
 while true; do
     options=(\
         "Install Arch" \
-        "Configure Arch after install"
+        "Configure Arch after install" \
+        "Exit"
     )
     
     menu_prompt main_menu_choice main_menu_choice_status "$title" "$description" "${options[@]}"

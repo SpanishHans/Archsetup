@@ -40,16 +40,18 @@ No swap is required in any mode as this script sets up zram automatically.
 With this in mind, lets pick between sane defaults or full custom mode.'
     local options=(\
         "Go the default route" \
-        "Go the fully custom route"
+        "Go the fully custom route" \
+        "Cancel and exit"
     )
-
-    menu_prompt install_mode_menu install_mode_menu_status "$title" "$description" "${options[@]}"
-    case $install_mode_menu in
-        1)  default_route;;
-        2)  full_custom_route;;
-        0)  exit;;
-        *)  pause_script "Option not valid" "That is not an option, returning to start menu.";exit;;
-    esac
+    while true; do
+        menu_prompt install_mode_menu install_mode_menu_status "$title" "$description" "${options[@]}"
+        case $install_mode_menu in
+            1)  default_route;;
+            2)  full_custom_route;;
+            e)  exit;;
+            *)  pause_script "Option not valid" "That is not an option, returning to start menu.";exit;;
+        esac
+    done
 }
 
 default_route() {
@@ -65,8 +67,9 @@ full_custom_route() {
 }
 
 format_and_partition_disks() {
-    local disks=("Continue to the next step")
-    local disks+=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
+    local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
+    local disks+=("Continue to the next step")
+    local disks+=("Cancel and exit")
     local title="Starting disk partitioner"
     local description="The following menu shall help you format and partition disks in order to make space for installing arch. 
     
@@ -81,8 +84,8 @@ Simply select a disk, format and come back here. When done, select option 1 to c
         menu_prompt format_disk_menu_choice format_disk_menu_status "$title" "$description" "${disks[@]}"
         local DISK="${disks[$((format_disk_menu_choice - 1))]}"
         case $format_disk_menu_choice in
-            1)  break;;
-            0)  exit;;
+            c)  break;;
+            e)  exit;;
             *)  if ! cgdisk "$DISK"; then
                     continue_script "Exited cgdisk for $DISK" "cgdisk exited for disk $DISK. Returning to menu."
                 fi
@@ -92,8 +95,9 @@ Simply select a disk, format and come back here. When done, select option 1 to c
 }
 
 set_filesystem_for_partitions() {
-    local partitions=("Continue to the next step")
-    local partitions+=($(lsblk -ppnoNAME,SIZE,TYPE | grep -P "/dev/nvme|sd|mmcblk|vd" | grep -w "part" | sed 's/└─//g' | sed 's/├─//g' | awk '{print $1}'))
+    local partitions=($(lsblk -ppnoNAME,SIZE,TYPE | grep -P "/dev/nvme|sd|mmcblk|vd" | grep -w "part" | sed 's/└─//g' | sed 's/├─//g' | awk '{print $1}'))
+    local partitions+=("Continue to the next step")
+    local partitions+=("Cancel and exit")
     local title="Starting partition formatter"
     local description="The following menu shall help you assing a filesystem to a selected partition. 
     
@@ -108,8 +112,8 @@ Simply select a partition, format it on the menu that opens up and then come bac
         menu_prompt format_partition_menu format_partition_menu_status "$title" "$description" "${partitions[@]}"
         local partition="${partitions[$((format_partition_menu - 1))]}"
         case $format_partition_menu in
-            1)  break;;
-            0)  exit;;
+            c)  break;;
+            e)  exit;;
             *)  format_a_partition "$partition"
                 ;;
         esac
@@ -124,16 +128,18 @@ format_a_partition() {
     
 Please select a filesystem for it from the following:"
     local options=(\
-        "Continue to the next step" \
         "Format as EXT4" \
-        "Format as BTRFS"
+        "Format as BTRFS" \
+        "Back" \
+        "Cancel and exit"
     )
     menu_prompt partition_menu partition_menu_status "$title" "$description" "${options[@]}"
     local partition="${partitions[$((partition_menu - 1))]}"
     case $partition_menu in
         1)  format_as_ext4 "$partition";;
         2)  format_as_btrfs "$partition";;
-        0)  exit;;
+        b)  break;;
+        e)  exit;;
         *)  continue_script "Option not valid" "That is not an option, retry.";;
     esac
 }
