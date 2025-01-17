@@ -260,7 +260,7 @@ select_root_partition() {
     menu_prompt root_menu root_menu_status "$title" "$description" "${menu_items[@]}"
     local ROOT_PART="${partitions[$((root_menu))]}"
     local ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
-    if [[ "$EFI_FORM" != "btrfs" ]]; then
+    if [[ "$ROOT_FORM" != "btrfs" ]]; then
         pause_script "" "Error: The selected partition ($ROOT_PART) is not formatted as BTRFS.
 Please go back and format the partition as BTRFS Partition."
         exit
