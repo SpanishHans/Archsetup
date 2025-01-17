@@ -37,6 +37,7 @@ fi
 
 continue_script 'Change root user password' 'Starting section for changing root password, please wait.'
 superuser_setup
+pause_script "test for root" "root from global $root_password"
 
 continue_script 'Partitioning' 'Starting section for disk formatting and partitioning, please wait.'
 start_disk_setup
