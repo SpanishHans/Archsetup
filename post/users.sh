@@ -105,7 +105,7 @@ create_user() {
 
     echo "$username:$user_password" | chpasswd
     
-    change_admin_privs username
+    change_admin_privs "$username"
 }
 
 modify_user() {
@@ -127,7 +127,7 @@ modify_user() {
             0)  user_password_prompt "$fullname" user_password
                 echo "$username:$user_password" | chpasswd
                 break;;
-            1)  change_admin_privs username;break;;
+            1)  change_admin_privs "$username";break;;
             b)  break;;
             *)  continue_script "Option not valid" "That is not an option, retry.";;
         esac
