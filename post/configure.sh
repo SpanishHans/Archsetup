@@ -30,6 +30,9 @@ source ./commons.sh
 #     fi
 # fi
 
+title="Configure your PC after install"
+description="Welcome to the menu for setting things up after install. Here you can find a lot of utilities to make the process of setting your pc as easy as possible."
+
 while true; do
     options=(\
         "Configure users and passwords" \
