@@ -21,19 +21,19 @@ source ./pre/disk_setup.sh
 source ./pre/networking.sh
 source ./pre/locales.sh
 
-if [ "$LIVE_ENV" = false ]; then
-    pause_script "" "The install script must be run from the archlinux-YEAR.MONTH.DAY-x86_64.iso image.
+# if [ "$LIVE_ENV" = false ]; then
+#     pause_script "" "The install script must be run from the archlinux-YEAR.MONTH.DAY-x86_64.iso image.
 
-Exiting!!!
-    "
-    exit
-    if [ "$(id -u)" -ne 0 ]; then
-        pause_script "" "The install script must be run as root user.
+# Exiting!!!
+#     "
+#     exit
+#     if [ "$(id -u)" -ne 0 ]; then
+#         pause_script "" "The install script must be run as root user.
 
-Exiting!!!"
-        exit
-    fi
-fi
+# Exiting!!!"
+#         exit
+#     fi
+# fi
 
 continue_script 'Change root user password' 'Starting section for changing root password, please wait.'
 superuser_setup
