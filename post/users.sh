@@ -130,13 +130,15 @@ list_users() {
         fi
     done
 
+    local counter=1
     for user in "${users[@]}"; do
         if groups "$user" | grep -qw "wheel"; then
             user_is_admin="Yes"
         else
             user_is_admin="No"
         fi
-        menu_items+=("$(printf "%-${max_user_len}s" "$user") $(printf "%-${max_admin_len}s" "$user_is_admin")")
+        menu_items+=("$(printf "%-3s" "$counter") $(printf "%-${max_user_len}s" "$user") is wheel: $(printf "%-${max_admin_len}s" "$user_is_admin")")
+        ((counter++))
     done
 
     local user_list=$(printf "%s\n" "${menu_items[@]}")
