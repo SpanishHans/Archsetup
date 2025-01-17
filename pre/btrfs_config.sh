@@ -18,8 +18,6 @@ source ./commons.sh
 
 mount_btrfs() {
     local -n given_array="$1"
-
-    pause_script "TESTING" "entered mount_btrfs $EFI_PART $ROOT_PART"
     
     continue_script "Mounting $ROOT_PART on /mnt" "Mounting $ROOT_PART on /mnt in order to create subvolumes."
     mount "${ROOT_PART}" /mnt
@@ -80,8 +78,6 @@ run_btrfs_setup() {
         ["@var_lib_gdm"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/gdm | Configuration and session data for GNOME Display Manager (GDM)."
         ["@var_lib_AccountsService"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/AccountsService | User account settings and data managed by AccountsService."
     )
-
-    pause_script "TESTING" "about to enter the loop"
     
     if [[ "$ROOT_FORM" == "btrfs" ]]; then
         
