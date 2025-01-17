@@ -126,7 +126,7 @@ modify_user() {
         case $wheel_menu in
             0)  user_password_prompt "$fullname" user_password
                 echo "$username:$user_password" | chpasswd
-                ;break;;
+                break;;
             1)  change_admin_privs;break;;
             b)  break;;
             *)  continue_script "Option not valid" "That is not an option, retry.";;
