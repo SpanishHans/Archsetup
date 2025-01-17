@@ -135,8 +135,42 @@ modify_user() {
 }
 
 delete_user() {
-    input_text username username_status "Delete user" "Menu for deleting a user. This will DELETE THEIR FILES!" "Enter the username to delete: "
+    local users=($(awk -F: '$3 >= 1000 && $3 < 65534 {print $1}' /etc/passwd))
+    local max_user_len=0
+    local max_admin_len=3
+    local menu_items=()
+
+    for user in "${users[@]}"; do
+        if groups "$user" | grep -qw "wheel"; then
+            user_is_admin="Yes"
+        else
+            user_is_admin="No"
+        fi
+
+        if (( ${#user} > max_user_len )); then
+            max_user_len=${#user}
+        fi
+    done
+
+    local counter=1
+    for user in "${users[@]}"; do
+        if groups "$user" | grep -qw "wheel"; then
+            user_is_admin="Yes"
+        else
+            user_is_admin="No"
+        fi
+        menu_items+=("$(printf "$counter.") $(printf "%-${max_user_len}s" "$user") is wheel: $(printf "%-${max_admin_len}s" "$user_is_admin")")
+        ((counter++))
+    done
+
+    local user_list=$(printf "%s\n" "${menu_items[@]}")
     
+    input_text username username_status "Delete user" "Menu for deleting a user. This will DELETE THEIR FILES!" "Enter the username to delete: 
+
+$user_list"
+    
+
+
     if id "$username" &>/dev/null; then
         userdel -r "$username" && pause_script "$username deleted" "User $username and their files deleted."
     else
