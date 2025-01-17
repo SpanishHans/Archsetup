@@ -82,7 +82,7 @@ Simply select a disk, format and come back here. When done, select option 1 to c
 
     while true; do
         menu_prompt format_disk_menu_choice format_disk_menu_status "$title" "$description" "${disks[@]}"
-        local DISK="${disks[$((format_disk_menu_choice - 1))]}"
+        local DISK="${disks[$((format_disk_menu_choice))]}"
         case $format_disk_menu_choice in
             c)  break;;
             e)  exit;;
