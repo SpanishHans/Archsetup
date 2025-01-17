@@ -305,8 +305,17 @@ menu_prompt() {
     local menu_items=()
     
     for i in "${!options[@]}"; do
-        menu_items+=($((i + 1)) "${options[i]}")
+        if [[ "${options[i]}" == "Continue" ]]; then
+            menu_items+=("c" "${options[i]}")
+        elif [[ "${options[i]}" == "Cancel and exit" ]]; then
+            menu_items+=("e" "${options[i]}")
+        elif [[ "${options[i]}" == "Back" ]]; then
+            menu_items+=("b" "${options[i]}")
+        else
+            menu_items+=($((i + 1)) "${options[i]}")
+        fi
     done
+
 
     if [ "$USE_DIALOG" = true ]; then
         dialog_output=$(dialog \
