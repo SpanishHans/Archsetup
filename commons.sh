@@ -337,7 +337,7 @@ menu_prompt() {
         output
         
         for ((i=0; i<${#menu_items[@]}; i+=2)); do
-            echo "${menu_items[i]}. ${menu_items[i+1]}"
+            output "${menu_items[i]}. ${menu_items[i+1]}"
         done
         output
 
@@ -385,6 +385,11 @@ multiselect_prompt() {
         clear
         terminal_title "$title"
         output "$description"
+        output
+
+        for ((i=0; i<${#menu_items[@]}; i+=2)); do
+            output "${menu_items[i]}. ${menu_items[i+1]}"
+        done
         output
         
     fi
