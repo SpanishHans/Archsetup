@@ -45,7 +45,7 @@ With this in mind, lets pick between sane defaults or full custom mode.'
         "Exit"
     )
     while true; do
-        menu_prompt install_mode_menu install_mode_menu_status "" "" "${options[@]}"
+        menu_prompt install_mode_menu install_mode_menu_status "$title" "" "${options[@]}"
         pause_script "loop" "$install_mode_menu"
     #     case $install_mode_menu in
     #         0)  full_default_route;;
