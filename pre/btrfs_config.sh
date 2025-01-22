@@ -18,42 +18,41 @@ source ./commons.sh
 
 mount_btrfs() {
     local -n given_array="$1"
+    commands_to_run=()
     
-    continue_script "Mounting $ROOT_PART on /mnt" "Mounting $ROOT_PART on /mnt in order to create subvolumes."
-    mount "${ROOT_PART}" /mnt
+    commands_to_run+=("mount \"${ROOT_PART}\" /mnt")
+    commands_to_run+=("btrfs su cr /mnt/@")
+    commands_to_run+=("btrfs su cr /mnt/@home")
+    commands_to_run+=("btrfs su cr /mnt/@snapshots")
     
-    btrfs su cr /mnt/@
-    btrfs su cr /mnt/@home
-    btrfs su cr /mnt/@snapshots
+    commands_to_run+=("chattr +C /mnt/@home")
+    commands_to_run+=("chattr +C /mnt/@snapshots")
     
-    chattr +C /mnt/@home
-    chattr +C /mnt/@snapshots
+    commands_to_run+=("mkdir -p /mnt/efi")
+    commands_to_run+=("mkdir -p /mnt/.btrfsroot")
+    commands_to_run+=("mkdir -p /mnt/home")
+    commands_to_run+=("mkdir -p /mnt/.snapshots")
     
-    mkdir -p /mnt/efi
-    mkdir -p /mnt/.btrfsroot
-    mkdir -p /mnt/home
-    mkdir -p /mnt/.snapshots
-    
-    continue_script "Dismounting $ROOT_PART from /mnt" "Dismounting $ROOT_PART from /mnt in order to mount subvolumes created before."
-    umount /mnt
-    
-    mount -o ssd,noatime,compress=zstd,subvol=@ "${ROOT_PART}" /mnt
-    mount -o ssd,noatime,compress=zstd,subvolid=5 "${ROOT_PART}" /mnt/.btrfsroot
-    mount -o ssd,noatime,compress=zstd,subvol=@home "${ROOT_PART}" /mnt/home
-    mount -o ssd,noatime,compress=zstd,subvol=@snapshots "${ROOT_PART}" /mnt/.snapshots
-    mount -o nodev,nosuid,noexec "${EFI_PART}" /mnt/efi
+    commands_to_run+=("umount /mnt")
+    commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvol=@ \"${ROOT_PART}\" /mnt")
+    commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvolid=5 \"${ROOT_PART}\" /mnt/.btrfsroot")
+    commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvol=@home \"${ROOT_PART}\" /mnt/home")
+    commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvol=@snapshots \"${ROOT_PART}\" /mnt/.snapshots")
+    commands_to_run+=("mount -o nodev,nosuid,noexec \"${EFI_PART}\" /mnt/efi")
+
     
     local options=()
     for key in "${!given_array[@]}"; do
         IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
-        btrfs su cr /mnt/"$key"
-        chattr +C /mnt/"$key"
-        mkdir -p /mnt/"$path"
-        mount -o "$flags,subvol=$key" "$disk" "$path"
+        commands_to_run+=("btrfs su cr /mnt/$key")
+        commands_to_run+=("chattr +C /mnt/$key")
+        commands_to_run+=("mkdir -p /mnt/$path")
+        commands_to_run+=("mount -o $flags,subvol=$key $disk $path")
         options+=("$key $desc")
     done
-    pause_script "Created" "$(printf "%s\n" "${options[@]}")"
 
+    live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
+    pause_script "Created" "$(printf "%s\n" "${options[@]}")"
     pause_script "BTRFS Mounting" "Finished mouting BTRFS"
 }
 
