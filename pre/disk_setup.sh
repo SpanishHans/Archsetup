@@ -83,11 +83,9 @@ full_default_route() {
     commands_to_run+=("sgdisk -g $DISK")
     commands_to_run+=("sgdisk -n 1:0:+1024M -t 1:ef00 -c 1:'ESP' $DISK")
     commands_to_run+=("sgdisk -n 2:0:0 -c 2:'rootfs' $DISK")
-    
-    
-    
 
-    
+    EFI_PART="/dev/disk/by-partlabel/ESP"
+    ROOT_PART="/dev/disk/by-partlabel/rootfs"    
 
     if ! lsblk -no FSTYPE $EFI_PART | grep -q "vfat"; then
         EFI_FORM='vfat'
