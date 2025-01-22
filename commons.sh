@@ -49,6 +49,17 @@ output() {
     printf '\e[1;31m%s\e[m\n' "$*"
 }
 
+terminal_title() {
+    local msg_title="${1:-Default}"
+    local length=${#msg_title}
+    local border=$(printf '%*s' $((length + 4)) '' | tr ' ' '-')
+    local title=$(echo -e "$msg_title")
+    
+    printf '\e[1;34m%-6s\e[m\n' "$border"
+    printf '\e[1;34m%-6s\e[m\n' "| $title |"
+    printf '\e[1;34m%-6s\e[m\n' "$border"
+}
+
 pause_script() {
     local msg_title="${1:-Default}"
     local msg_text="${2:-Nothing}"
@@ -126,7 +137,7 @@ live_command_output() {
     execute_command() {
         local cmd="$1"
         {
-            echo -e "\n--- Running: $cmd ---\n" >> "$combined_log"
+            terminal_title "Running: $cmd" >> "$combined_log"
             if [ "$user" = "root" ]; then
                 eval "$cmd" >> "$combined_log" 2>&1
             else
