@@ -52,11 +52,11 @@ output() {
 terminal_title() {
     local msg_title="${1:-Default}"
     local length=${#msg_title}
-    local border=$(printf '%*s' $((length + 4)) '' | tr ' ' '-')
+    local border=$(printf '%*s' $((length + 4)) '' | tr ' ' '=')
     local title=$(echo -e "$msg_title")
 
     echo -e "$border"
-    echo -e "| $title |"
+    echo -e ">>> $title <<<"
     echo -e "$border"
 }
 
