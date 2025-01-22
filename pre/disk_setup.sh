@@ -79,23 +79,24 @@ full_default_route() {
     done
 
     commands_to_run=()
-    commands_to_run+=("sgdisk --zap-all $DISK")
-    commands_to_run+=("sgdisk -g $DISK")
-    commands_to_run+=("sgdisk -n 1:0:+1024M -t 1:ef00 -c 1:'ESP' $DISK")
-    commands_to_run+=("sgdisk -n 2:0:0 -c 2:'rootfs' $DISK")
+    commands_to_run+=("sgdisk --zap-all \"${DISK}\"")
+    commands_to_run+=("sgdisk -g \"${DISK}\"")
+    commands_to_run+=("sgdisk -n 1:0:+1024M -t 1:ef00 -c 1:'ESP' \"${DISK}\"")
+    commands_to_run+=("sgdisk -n 2:0:0 -c 2:'rootfs' \"${DISK}\"")
 
     EFI_PART="/dev/disk/by-partlabel/ESP"
-    ROOT_PART="/dev/disk/by-partlabel/rootfs"    
+    ROOT_PART="/dev/disk/by-partlabel/rootfs"
 
-    if ! lsblk -no FSTYPE $EFI_PART | grep -q "vfat"; then
+    if ! lsblk -no FSTYPE "${EFI_PART}" | grep -q "vfat"; then
         EFI_FORM='vfat'
-        commands_to_run+=("mkfs.vfat -F 32 -n ESP $EFI_PART")
+        commands_to_run+=("mkfs.vfat -F 32 -n ESP \"${EFI_PART}\"")
     fi
 
-    if ! lsblk -no FSTYPE $ROOT_PART | grep -q "btrfs"; then
+    if ! lsblk -no FSTYPE "${ROOT_PART}" | grep -q "btrfs"; then
         ROOT_FORM='btrfs'
-        commands_to_run+=("mkfs.btrfs -L rootfs $ROOT_PART")
+        commands_to_run+=("mkfs.btrfs -L rootfs \"${ROOT_PART}\"")
     fi
+
 
     commands_to_run+=("sync")
     commands_to_run+=("udevadm settle")
