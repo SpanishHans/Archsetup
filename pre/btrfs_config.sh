@@ -24,9 +24,23 @@ mount_btrfs() {
     commands_to_run+=("btrfs su cr /mnt/@")
     commands_to_run+=("btrfs su cr /mnt/@home")
     commands_to_run+=("btrfs su cr /mnt/@snapshots")
+
+    local options=()
+    for key in "${!given_array[@]}"; do
+        IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
+        commands_to_run+=("btrfs su cr /mnt/$key")
+        options+=("$key $desc")
+    done
     
     commands_to_run+=("chattr +C /mnt/@home")
     commands_to_run+=("chattr +C /mnt/@snapshots")
+
+    local options=()
+    for key in "${!given_array[@]}"; do
+        IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
+        commands_to_run+=("chattr +C /mnt/$key")
+        options+=("$key $desc")
+    done
     
     commands_to_run+=("umount /mnt")
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvol=@ \"${ROOT_PART}\" /mnt")
@@ -35,6 +49,13 @@ mount_btrfs() {
     commands_to_run+=("mkdir -p /mnt/.btrfsroot")
     commands_to_run+=("mkdir -p /mnt/home")
     commands_to_run+=("mkdir -p /mnt/.snapshots")    
+
+    local options=()
+    for key in "${!given_array[@]}"; do
+        IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
+        commands_to_run+=("mkdir -p /mnt/$path")
+        options+=("$key $desc")
+    done
     
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvolid=5 \"${ROOT_PART}\" /mnt/.btrfsroot")
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvol=@home \"${ROOT_PART}\" /mnt/home")
@@ -45,9 +66,6 @@ mount_btrfs() {
     local options=()
     for key in "${!given_array[@]}"; do
         IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
-        commands_to_run+=("btrfs su cr /mnt/$key")
-        commands_to_run+=("chattr +C /mnt/$key")
-        commands_to_run+=("mkdir -p /mnt/$path")
         commands_to_run+=("mount -o $flags,subvol=$key $disk $path")
         options+=("$key $desc")
     done
