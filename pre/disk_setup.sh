@@ -78,12 +78,11 @@ full_default_route() {
         esac
     done
 
-
-    # Step 1: Wipe and Partition the Disk
-        commands_to_run=("sgdisk --zap-all $DISK")
-        commands_to_run=("sgdisk -g $DISK")
-        commands_to_run=("sgdisk -n 1:0:+1024M -t 1:ef00 -c 1:'ESP' $DISK")
-        commands_to_run=("sgdisk -n 2:0:0 -c 2:'rootfs' $DISK")
+    commands_to_run=()
+    commands_to_run+=("sgdisk --zap-all $DISK")
+    commands_to_run+=("sgdisk -g $DISK")
+    commands_to_run+=("sgdisk -n 1:0:+1024M -t 1:ef00 -c 1:'ESP' $DISK")
+    commands_to_run+=("sgdisk -n 2:0:0 -c 2:'rootfs' $DISK")
     
 
     live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
@@ -100,11 +99,9 @@ full_default_route() {
         mkfs.btrfs -L rootfs $ROOT_PART
     fi
 
-    # Force re-synchronization to ensure the kernel updates partition table
     sync
     udevadm settle
 
-    # Ensure filesystems are detected properly
     if [[ -z "$EFI_FORM" ]]; then
         echo "Warning: Unable to detect filesystem on $EFI_PART. Manually verifying."
         EFI_FORM="unknown"
@@ -115,12 +112,7 @@ full_default_route() {
         ROOT_FORM="unknown"
     fi
 
-    # Pause script with filesystem information
     pause_script "" "Antes de run_btrfs_setup $EFI_PART $EFI_FORM, $ROOT_PART $ROOT_FORM"
-
-
-    pause_script "" "Antes de run_btrfs_setup $EFI_PART $EFI_FORM, $ROOT_PART $ROOT_FORM"
-    
     run_btrfs_setup
     exit
 }
