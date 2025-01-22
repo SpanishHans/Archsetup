@@ -415,11 +415,11 @@ multiselect_prompt() {
         # Handle user input
         while true; do
             draw_menu
-            read -rsn1 key  # Capture a single keypress
+            read -rsn1 key
             
             case "$key" in
-            $'\x1b') # Handle arrow keys (Escape sequences)
-                read -rsn2 -t 0.1 key # Read the rest of the escape sequence
+            $'\x1b') 
+                read -rsn2 -t 0.1 key 
                 case "$key" in
                 "[A") # Up arrow
                     ((current_index = (current_index - 1 + num_items) % num_items))
@@ -429,15 +429,15 @@ multiselect_prompt() {
                     ;;
                 esac
                 ;;
-            " ") # Toggle selection with Space
+            " ")
                 if [[ "${selected[current_index]}" == "on" ]]; then
                     selected[current_index]="off"
                 else
                     selected[current_index]="on"
                 fi
                 ;;
-            "") # Enter key
-                # Collect selected items
+            "")
+
                 choices_array=()
                 for i in "${!selected[@]}"; do
                     if [[ "${selected[i]}" == "on" ]]; then
