@@ -247,21 +247,19 @@ menu_prompt() {
     done
 
 
-    if [ "$USE_DIALOG" = true ]; then
-        dialog_output=$(dialog \
-            --backtitle "$title" \
-            --ok-label "Select" \
-            --menu "$description" \
-            $half_height $half_width 15 \
-            "${menu_items[@]}" \
-            2>&1 >/dev/tty)
-        exit_code=$?
-        eval "$choice=\"$dialog_output\""
-        eval "$status=\"$exit_code\""
+    dialog_output=$(dialog \
+        --backtitle "$title" \
+        --ok-label "Select" \
+        --menu "$description" \
+        $half_height $half_width 15 \
+        "${menu_items[@]}" \
+        2>&1 >/dev/tty)
+    exit_code=$?
+    eval "$choice=\"$dialog_output\""
+    eval "$status=\"$exit_code\""
 
-        handle_exit_code "$exit_code" "return"
+    handle_exit_code "$exit_code" "return"
 
-    fi
 }
 
 multiselect_prompt() {

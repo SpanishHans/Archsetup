@@ -44,7 +44,7 @@ With this in mind, lets pick between sane defaults or full custom mode.'
         "Dont preconfigure, i want to partition and mount myself, then autoinstall." \
         "Exit"
     )
-    # while true; do
+    while true; do
         menu_prompt install_mode_menu install_mode_menu_status "$title" "$description" "${options[@]}"
         case $install_mode_menu in
             0)  full_default_route;;
@@ -53,7 +53,7 @@ With this in mind, lets pick between sane defaults or full custom mode.'
             e)  exit;;
             *)  pause_script "Option not valid" "That is not an option, returning to start menu.";exit;;
         esac
-    # done
+    done
 }
 
 full_default_route() {
