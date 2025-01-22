@@ -21,23 +21,23 @@ source ./pre/btrfs_config.sh
 
 choose_custom_or_default_layout() {
     local title="Entered disk setup!" 
-    local description='The following section will help you configure anything disk related: Formatting, partitioning and mounting. Keep in mind those operations are DESTRUCTIVE and will result in data loss for the disks or partitions involved. 
-    
+    local description="The following section will help you configure anything disk related: Formatting, partitioning and mounting. Keep in mind those operations are DESTRUCTIVE and will result in data loss for the disks or partitions involved.
+
 BACKUP DATA BEFORE PROCEEDING, you have been warned!
-    
+
 Linux allows you to do whatever the fuck you want. If you so wish, parts of the system could be mounted to USB devices for all we care. We assume that your computer is modern enough to have UEFI support and that root is going to be on an SSD. If those conditions are not met, this script is not for you.
-We transfer the responsability of a reasonable setup to you, the final user. Yet, we provide some sane defaults if you prefer a "batteries included" experience.
+We transfer the responsibility of a reasonable setup to you, the final user. Yet, we provide some sane defaults if you prefer a "batteries included" experience.
 
 The default setup aims to give you full rollback support by using Copy on Write (CoW) from the new kid in the block: BTRFS. This makes it possible to go to a previous system state if an update breaks something...Useful on Archlinux.
 
 Default btrfs layout is as follows:
-    *. Paritition for /boot/efi. (Therefore no BIOS support, only UEFI.)
-    *. Paritition for /. (Ergo /home is on the same partition as /)
-    *. Subvolumes for things that should not be snappshotted and that should stay intact after a rollback like logs or temps or cache.
+    *. Partition for /boot/efi. (Therefore no BIOS support, only UEFI.)
+    *. Partition for /. (Ergo /home is on the same partition as /)
+    *. Subvolumes for things that should not be snapshotted and that should stay intact after a rollback like logs or temps or cache.
 
 No swap is required in any mode as this script sets up zram automatically.
 
-With this in mind, lets pick between sane defaults or full custom mode.'
+With this in mind, let's pick between sane defaults or full custom mode."
     local options=(\
         "Use default partitioning scheme and autoinstall everything on one disk" \
         "Use default partitioning but i'll select EFI and ROOT partitions myself, then autoinstall" \
@@ -47,13 +47,13 @@ With this in mind, lets pick between sane defaults or full custom mode.'
     while true; do
         menu_prompt install_mode_menu install_mode_menu_status "$title" "" "${options[@]}"
         pause_script "loop" "$install_mode_menu"
-    #     case $install_mode_menu in
-    #         0)  full_default_route;;
-    #         1)  custom_default_route;;
-    #         2)  full_custom_route;;
-    #         e)  exit;;
-    #         *)  pause_script "Option not valid" "That is not an option, returning to start menu.";exit;;
-    #     esac
+        case $install_mode_menu in
+            0)  full_default_route;;
+            1)  custom_default_route;;
+            2)  full_custom_route;;
+            e)  exit;;
+            *)  pause_script "Option not valid" "That is not an option, returning to start menu.";exit;;
+        esac
     done
 }
 
