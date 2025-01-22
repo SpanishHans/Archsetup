@@ -35,7 +35,6 @@ source ./pre/locales.sh
 #     fi
 # fi
 
-continue_script 'Partitioning' 'Starting section for disk formatting and partitioning, please wait.'
 start_disk_setup
 
 continue_script 'Detect CPU vendor' 'Detecting ucode for processor brand'
@@ -83,13 +82,10 @@ pacstrap /mnt \
 continue_script 'New fstab' 'Generating a new fstab.'
 genfstab -U /mnt >> /mnt/etc/fstab || { pause_script '' "genfstab failed"; exit 1; }
 
-continue_script 'Networking' 'Starting section for networking, please wait.'
 networking_setup
 
-continue_script 'Locales setup' 'Setting up hostname, locales, and keyboard layout'
 locales_setup
 
-continue_script 'Change root user password' 'Starting section for changing root password, please wait.'
 superuser_setup
 
 continue_script 'Copy repo' 'Copying repo to machine'
