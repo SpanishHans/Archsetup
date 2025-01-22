@@ -28,13 +28,14 @@ mount_btrfs() {
     commands_to_run+=("chattr +C /mnt/@home")
     commands_to_run+=("chattr +C /mnt/@snapshots")
     
+    commands_to_run+=("umount /mnt")
+    commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvol=@ \"${ROOT_PART}\" /mnt")
+
     commands_to_run+=("mkdir -p /mnt/efi")
     commands_to_run+=("mkdir -p /mnt/.btrfsroot")
     commands_to_run+=("mkdir -p /mnt/home")
-    commands_to_run+=("mkdir -p /mnt/.snapshots")
+    commands_to_run+=("mkdir -p /mnt/.snapshots")    
     
-    commands_to_run+=("umount /mnt")
-    commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvol=@ \"${ROOT_PART}\" /mnt")
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvolid=5 \"${ROOT_PART}\" /mnt/.btrfsroot")
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvol=@home \"${ROOT_PART}\" /mnt/home")
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvol=@snapshots \"${ROOT_PART}\" /mnt/.snapshots")
