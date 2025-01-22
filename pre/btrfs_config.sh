@@ -59,12 +59,6 @@ mount_btrfs() {
 
 
 run_btrfs_setup() {
-
-    pause_script "View default setup configs" "This is the partitions that the default setup will user as selected by you before.
-
-EFI (/boot/efi)      will be on:      $EFI_PART
-ROOT (/)             will be on:      $ROOT_PART"
-
     declare -A subvols
     local subvols=(
         ["@var_cache"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/cache | Cached data for apps and package managers, can be recreated if cleared."
@@ -82,8 +76,6 @@ ROOT (/)             will be on:      $ROOT_PART"
     )
     
     if [[ "$ROOT_FORM" == "btrfs" ]]; then
-        
-        pause_script "TESTING" "before multiselect"
     
         multiselect_prompt \
             subvol_menu_choice \
@@ -98,15 +90,12 @@ ROOT (/)             will be on:      $ROOT_PART"
             
         Please choose what extra subvolumes you require."
 
-        pause_script "TESTING" "after multiselect"
-        
         declare -A filtered_subvols
         for choice in "${subvol_menu_choice[@]}"; do
             if [[ -n "${subvols[$choice]}" ]]; then
                 filtered_subvols["$choice"]="${subvols[$choice]}"
             fi
         done
-        pause_script "TESTING" "about to enter mount_btrfs"
         mount_btrfs filtered_subvols
     fi
 
