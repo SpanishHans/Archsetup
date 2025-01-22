@@ -31,9 +31,9 @@ We transfer the responsability of a reasonable setup to you, the final user. Yet
 The default setup aims to give you full rollback support by using Copy on Write (CoW) from the new kid in the block: BTRFS. This makes it possible to go to a previous system state if an update breaks something...Useful on Archlinux.
 
 Default btrfs layout is as follows:
-    1. Paritition for /boot/efi. (Therefore no BIOS support, only UEFI.)
-    2. Paritition for /. (Ergo /home is on the same partition as /)
-    3. Subvolumes for things that should not be snappshotted and that should stay intact after a rollback like logs or temps or cache.
+    0. Paritition for /boot/efi. (Therefore no BIOS support, only UEFI.)
+    1. Paritition for /. (Ergo /home is on the same partition as /)
+    2. Subvolumes for things that should not be snappshotted and that should stay intact after a rollback like logs or temps or cache.
 
 No swap is required in any mode as this script sets up zram automatically.
 
