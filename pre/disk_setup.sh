@@ -39,23 +39,60 @@ No swap is required in any mode as this script sets up zram automatically.
 
 With this in mind, lets pick between sane defaults or full custom mode.'
     local options=(\
-        "Go the default route" \
-        "Go the fully custom route" \
+        "Use default partitioning scheme and autoinstall everything on one disk" \
+        "Use default partitioning but i'll select EFI and ROOT partitions myself, then autoinstall" \
+        "Dont preconfigure, i want to partition and mount myself, then autoinstall." \
         "Exit"
     )
     while true; do
         menu_prompt install_mode_menu install_mode_menu_status "$title" "$description" "${options[@]}"
         case $install_mode_menu in
-            0)  default_route;;
-            1)  full_custom_route;;
+            0)  full_default_route;;
+            1)  custom_default_route;;
+            2)  full_custom_route;;
             e)  exit;;
             *)  pause_script "Option not valid" "That is not an option, returning to start menu.";exit;;
         esac
     done
 }
 
-default_route() {
-    # continue_script "Default route" "You chose to use the default route"
+full_default_route() {
+    local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
+    local disks+=("Continue")
+    local disks+=("Exit")
+    local title="Starting disk partitioner"
+    local description="The following menu shall help you select a disk for full wipe and automatic partitioning. ALL DATA ON IT SHALL BE DELETED."
+
+    if [ ${#disks[@]} -eq 0 ]; then
+            pause_script "No disks found" "No valid storage devices found. Exiting."
+            exit
+    fi
+
+    while true; do
+        menu_prompt format_disk_menu_choice format_disk_menu_status "$title" "$description" "${disks[@]}"
+        local DISK="${disks[$((format_disk_menu_choice))]}"
+        case $format_disk_menu_choice in
+            c)  break;;
+            e)  exit;;
+            *)  if ! cgdisk "$DISK"; then
+                    continue_script "Exited cgdisk for $DISK" "cgdisk exited for disk $DISK. Returning to menu."
+                fi
+                ;;
+        esac
+    done
+
+    sgdisk --zap-all "${DISK}"
+    sgdisk -g "${DISK}"
+    sgdisk -I -n 1:0:+1G -t 1:ef00 -c 1:'ESP' "${DISK}"
+    sgdisk -I -n 2:0:0 -c 2:'rootfs' "${DISK}"
+    
+    select_efi_partition
+    select_root_partition
+    run_btrfs_setup
+    exit
+}
+
+custom_default_route() {
     format_and_partition_disks
     set_filesystem_for_partitions
     select_efi_partition
@@ -78,7 +115,7 @@ format_and_partition_disks() {
     local title="Starting disk partitioner"
     local description="The following menu shall help you format and partition disks in order to make space for installing arch. 
     
-Simply select a disk, format and come back here. When done, select option 1 to continue script execution."
+Simply select a disk, format and come back here. When done, select option 'c' to continue script execution."
 
     if [ ${#disks[@]} -eq 0 ]; then
             pause_script "No disks found" "No valid storage devices found. Exiting."
