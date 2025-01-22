@@ -14,6 +14,8 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
+set -e
+
 source ./commons.sh
 
 source ./pre/ext4_config.sh
@@ -90,29 +92,17 @@ full_default_route() {
     
 
     if ! lsblk -no FSTYPE $EFI_PART | grep -q "vfat"; then
-        continue_script "" "Formatting ESP partition as FAT32."
         EFI_FORM='vfat'
         commands_to_run+=("mkfs.vfat -F 32 -n ESP $EFI_PART")
     fi
 
     if ! lsblk -no FSTYPE $ROOT_PART | grep -q "btrfs"; then
-        continue_script "" "Formatting root partition as Btrfs."
         ROOT_FORM='btrfs'
         commands_to_run+=("mkfs.btrfs -L rootfs $ROOT_PART")
     fi
 
     commands_to_run+=("sync")
     commands_to_run+=("udevadm settle")
-
-    if [[ -z "$EFI_FORM" ]]; then
-        echo "Warning: Unable to detect filesystem on $EFI_PART. Manually verifying."
-        EFI_FORM="unknown"
-    fi
-
-    if [[ -z "$ROOT_FORM" ]]; then
-        echo "Warning: Unable to detect filesystem on $ROOT_PART. Manually verifying."
-        ROOT_FORM="unknown"
-    fi
 
     live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
     pause_script "" "Antes de run_btrfs_setup $EFI_PART $EFI_FORM, $ROOT_PART $ROOT_FORM"

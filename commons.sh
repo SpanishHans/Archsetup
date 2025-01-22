@@ -146,10 +146,13 @@ live_command_output() {
             exit_code=$?
             output_error "$cmd" "$exit_code"
         }
+        if [ $exit_code -ne 0 ]; then
+            return $exit_code  # Ensure the function returns on failure
+        fi
     }
 
     for cmd in "${commands[@]}"; do
-        execute_command "$cmd"
+        execute_command "$cmd" || { exit_code=$?; break; }
     done &
 
     dialog --title "Live Command Output for $context" \
