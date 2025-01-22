@@ -40,20 +40,21 @@ No swap is required in any mode as this script sets up zram automatically.
 With this in mind, lets pick between sane defaults or full custom mode.'
     local options=(\
         "Use default partitioning scheme and autoinstall everything on one disk" \
-        "Use default partitioning but i will select EFI and ROOT partitions myself, then autoinstall" \
+        "Use default partitioning but i'll select EFI and ROOT partitions myself, then autoinstall" \
         "Dont preconfigure, i want to partition and mount myself, then autoinstall." \
         "Exit"
     )
-    while true; do
-        menu_prompt install_mode_menu install_mode_menu_status "$title" "$description" "${options[@]}"
-        case $main_menu_choice in
-            0)  return;;
-            1)  return;;
-            2)  return;;
-            e)  exit;;
-            *)  output "Invalid choice, please try again.";;
-        esac
-    done
+    printf "%s\n" "${local_options[@]}"
+    # while true; do
+    #     menu_prompt install_mode_menu install_mode_menu_status "$title" "$description" "${options[@]}"
+    #     case $install_mode_menu in
+    #         0)  full_default_route;;
+    #         1)  custom_default_route;;
+    #         2)  full_custom_route;;
+    #         e)  exit;;
+    #         *)  pause_script "Option not valid" "That is not an option, returning to start menu.";exit;;
+    #     esac
+    # done
 }
 
 full_default_route() {
@@ -88,8 +89,8 @@ full_default_route() {
     ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
     EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
     
-    format_for_efi "$EFI_PART"
-    format_as_btrfs "$ROOT_PART"
+    # format_for_efi "$EFI_PART"
+    # format_as_btrfs "$ROOT_PART"
     
     run_btrfs_setup
     exit
