@@ -89,18 +89,21 @@ full_default_route() {
     EFI_PART="/dev/disk/by-partlabel/ESP"
     ROOT_PART="/dev/disk/by-partlabel/rootfs"
 
+    commands_to_run=()
+
+    if ! lsblk -no FSTYPE "$EFI_PART" | grep -q "vfat"; then
+        echo "Formatting ESP partition as FAT32."
+        mkfs.vfat -F 32 -n ESP "$EFI_PART"
+    fi
+
+    if ! lsblk -no FSTYPE "$ROOT_PART" | grep -q "btrfs"; then
+        echo "Formatting root partition as Btrfs."
+        mkfs.btrfs -L rootfs "$ROOT_PART"
+    fi
+
     ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
     EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
 
-    commands_to_run=()
-
-    if [ -z "$EFI_FORM" ]; then
-        commands_to_run+=("format_for_efi $EFI_PART")
-    fi
-
-    if [ -z "$ROOT_FORM" ]; then
-        commands_to_run+=("format_as_btrfs $ROOT_PART")
-    fi
     pause_script "" "Antes de run_btrfs_setup $EFI_PART $EFI_FORM, $ROOT_PART $ROOT_FORM"
     
     run_btrfs_setup
