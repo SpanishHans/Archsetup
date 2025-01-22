@@ -49,17 +49,6 @@ output() {
     printf '\e[1;31m%s\e[m\n' "$*"
 }
 
-terminal_title() {
-    local msg_title="${1:-Default}"
-    local length=${#msg_title}
-    local border=$(printf '%*s' $((length + 4)) '' | tr ' ' '-')
-    local title=$(echo -e "$msg_title")
-    
-    printf '\e[1;34m%-6s\e[m\n' "$border"
-    printf '\e[1;34m%-6s\e[m\n' "| $title |"
-    printf '\e[1;34m%-6s\e[m\n' "$border"
-}
-
 pause_script() {
     local msg_title="${1:-Default}"
     local msg_text="${2:-Nothing}"
@@ -73,18 +62,7 @@ pause_script() {
             0)  return;;
             1)  exit;;
         esac
-    else
-        output
-        terminal_title "$title"
 
-        output "$message"
-        output
-        read -p 'Continue...'
-        exit_code=$?
-        case $exit_code in
-            0)  return;;
-            1)  exit;;
-        esac
     fi
 }
 
@@ -102,17 +80,7 @@ continue_script() {
             0)  return;;
             1)  exit;;
         esac
-    else
-        output
-        terminal_title "$title"
-        output "$message"
-        output
-        exit_code=$?
-        sleep 0.7
-        case $exit_code in
-            0)  return;;
-            1)  exit;;
-        esac
+
     fi
 }
 
@@ -172,16 +140,7 @@ Error Message: $err\n\
         done
         dialog --exit-label "Ok" --backtitle "Live command output for $context" --tailbox "$combined_log" "$full_height" "$full_width" 2>&1 >/dev/tty
         exit_code=$?
-    else
-        clear
-        terminal_title "Live Command Output"
-        output "Press Ctrl+C to stop."
-        output
-        for cmd in "${commands[@]}"; do
-            execute_command "$cmd"
-        done
-        exit_code=$?
-        pause_script "Live command" "Command has finished execution"
+
     fi
     
     handle_exit_code "$exit_code" "return"
@@ -206,14 +165,6 @@ input_text() {
         exit_code=$?
         eval "$choice=\"$dialog_output\""
 
-    else
-        clear
-        terminal_title "$text"
-        output "$message"
-        output
-        read -p "$prompt" console_output
-        exit_code=$?
-        eval "$choice=\"$console_output\""
     fi
     eval "$status=\"$exit_code\""
     handle_exit_code "$exit_code" "return"
@@ -229,14 +180,7 @@ root_pass() {
             ROOT_PASS=$(dialog --backtitle "Sudo Password" --ok-label "Continue" \
                 --insecure --passwordbox "Enter your sudo password: " $half_height $half_width 2>&1 >/dev/tty)
             exit_code=$?
-        else
-            clear
-            terminal_title "Sudo Password"
-            output
 
-            read -s -p "This script requires root permissions. Enter your root password: " -r ROOT_PASS
-            exit_code=$?
-            output
         fi
         
         handle_exit_code "$exit_code" "return"
@@ -244,7 +188,6 @@ root_pass() {
         if echo "$ROOT_PASS" | sudo -S whoami 2>/dev/null | grep -q "^root$"; then
             ROOT_PASS_SET=true
             export ROOT_PASS
-            echo "export ROOT_PASS=\"$ROOT_PASS\"" > ./vars.sh
             break
         else
             pause_script "Title" "Invalid password. Please try again."
@@ -265,18 +208,6 @@ set_password() {
             exit_code=$?
 
             password2=$(dialog --backtitle "Password Prompt for '$user'" --ok-label "Continue" --insecure --passwordbox "Re-enter password for '$user'" $half_height $half_width 2>&1 >/dev/tty)
-            exit_code=$?
-
-        else
-            clear
-            terminal_title "Password Prompt for '$user'"
-            output "Please enter a password for: '$user'"
-            output
-            
-            read -s -p "Enter password for '$user': " password1
-            exit_code=$?
-            output
-            read -s -p "Re-enter password for '$user': " password2
             exit_code=$?
 
         fi
@@ -330,23 +261,6 @@ menu_prompt() {
 
         handle_exit_code "$exit_code" "return"
 
-    else
-        clear
-        terminal_title "$title"
-        output "$description"
-        output
-        
-        for ((i=0; i<${#menu_items[@]}; i+=2)); do
-            output "${menu_items[i]}. ${menu_items[i+1]}"
-        done
-        output
-
-        read -p "Choose an option from the above: " -r console_output
-        exit_code=0
-        eval "$choice=\"$console_output\""
-        eval "$status=\"$exit_code\""
-
-        handle_exit_code "$exit_code" "return"
     fi
 }
 
@@ -381,78 +295,6 @@ multiselect_prompt() {
         eval "$status=\"$exit_code\""
 
         handle_exit_code "$exit_code" "return"
-    else
-        # Terminal fallback mode
-        local keys=("${!given_array[@]}")
-        local selected=()  # Tracks which items are selected
-        local num_items="${#keys[@]}"
-        local current_index=0
         
-        # Initialize selected array
-        for _ in "${keys[@]}"; do
-            selected+=("off")
-        done
-        
-        # Draw the menu
-        draw_menu() {
-            clear
-            echo -e "\e[1m$msg_title\e[0m"
-            echo -e "\n$msg_text\n"
-            
-            for i in "${!keys[@]}"; do
-                local is_selected="${selected[i]}"
-                local display_text="${given_array[${keys[i]}]}"
-                if [[ "$i" -eq "$current_index" ]]; then
-                    # Highlight the current selection
-                    echo -e " \e[7m[${is_selected}] ${display_text}\e[0m"
-                else
-                    echo -e " [${is_selected}] ${display_text}"
-                fi
-            done
-            echo -e "\nNavigate with ↑ ↓, toggle with SPACE, confirm with ENTER, or cancel with q."
-        }
-
-        # Handle user input
-        while true; do
-            draw_menu
-            read -rsn1 key  # Capture a single keypress
-            
-            case "$key" in
-            $'\x1b') # Handle arrow keys (Escape sequences)
-                read -rsn2 -t 0.1 key # Read the rest of the escape sequence
-                case "$key" in
-                "[A") # Up arrow
-                    ((current_index = (current_index - 1 + num_items) % num_items))
-                    ;;
-                "[B") # Down arrow
-                    ((current_index = (current_index + 1) % num_items))
-                    ;;
-                esac
-                ;;
-            " ") # Toggle selection with Space
-                if [[ "${selected[current_index]}" == "on" ]]; then
-                    selected[current_index]="off"
-                else
-                    selected[current_index]="on"
-                fi
-                ;;
-            "") # Enter key
-                # Collect selected items
-                choices_array=()
-                for i in "${!selected[@]}"; do
-                    if [[ "${selected[i]}" == "on" ]]; then
-                        choices_array+=("${keys[i]}")
-                    fi
-                done
-                eval "$choices=(${choices_array[@]})"
-                eval "$status=\"0\""
-                return 0
-                ;;
-            "q") # Quit with 'q'
-                eval "$status=\"1\""
-                return 1
-                ;;
-            esac
-        done
     fi
 }
