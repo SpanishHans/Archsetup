@@ -44,6 +44,7 @@ With this in mind, lets pick between sane defaults or full custom mode.'
         "Dont preconfigure, i want to partition and mount myself, then autoinstall." \
         "Exit"
     )
+    pause_script "TESTING" "antes loop"
     while true; do
         menu_prompt install_mode_menu install_mode_menu_status "$title" "$description" "${options[@]}"
         case $install_mode_menu in
@@ -315,7 +316,5 @@ Please go back and format the partition as BTRFS Partition."
 
 start_disk_setup() {
     clear
-    pause_script "TESTING" "Antes de choose_custom_or_default_layout"
     choose_custom_or_default_layout
-    pause_script "TESTING" "Despues de choose_custom_or_default_layout"
 }
