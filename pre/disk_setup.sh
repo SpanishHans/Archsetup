@@ -83,13 +83,14 @@ full_default_route() {
     # sgdisk -I -n 1:0:+1G -t 1:ef00 -c 1:'ESP' "${DISK}"
     # sgdisk -I -n 2:0:0 -c 2:'rootfs' "${DISK}"
 
-    # EFI_PART="/dev/disk/by-partlabel/ESP"
-    # ROOT_PART="/dev/disk/by-partlabel/rootfs"
+    EFI_PART="/dev/disk/by-partlabel/ESP"
+    ROOT_PART="/dev/disk/by-partlabel/rootfs"
+    ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
+    EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
     
     # format_for_efi "$EFI_PART"
     # format_as_btrfs "$ROOT_PART"
-    ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
-    EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
+    
     run_btrfs_setup
     exit
 }
