@@ -44,7 +44,7 @@ With this in mind, lets pick between sane defaults or full custom mode.'
         "Dont preconfigure, i want to partition and mount myself, then autoinstall." \
         "Exit"
     )
-    printf "%s\n" "${local_options[@]}"
+    pause_script "" "${options[@]}"
     # while true; do
     #     menu_prompt install_mode_menu install_mode_menu_status "$title" "$description" "${options[@]}"
     #     case $install_mode_menu in
