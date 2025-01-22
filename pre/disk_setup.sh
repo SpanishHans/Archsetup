@@ -88,14 +88,19 @@ full_default_route() {
 
     EFI_PART="/dev/disk/by-partlabel/ESP"
     ROOT_PART="/dev/disk/by-partlabel/rootfs"
+
     ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
     EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
 
     commands_to_run=()
-    commands_to_run+=("format_for_efi $EFI_PART")
-    commands_to_run+=("format_as_btrfs $ROOT_PART")
 
-    live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
+    if [ -z "$EFI_FORM" ]; then
+        commands_to_run+=("format_for_efi $EFI_PART")
+    fi
+
+    if [ -z "$ROOT_FORM" ]; then
+        commands_to_run+=("format_as_btrfs $ROOT_PART")
+    fi
     
     run_btrfs_setup
     exit
