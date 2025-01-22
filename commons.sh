@@ -90,17 +90,9 @@ handle_exit_code() {
     esac
 }
 
-live_command_output() {
-    local user="${1:-root}"
-    local context="${2:-Default}"
-    shift 2
-    local commands=("$@")
-    local exit_code=0
-    local combined_log=$(mktemp)
-    
-    output_error() {
+output_error() {
         local cmd="$1"
-        local err="$2"
+        local exit_code="$2"
         if [ "$exit_code" -eq 0 ]; then
             echo -e "\
 ================================================\n\
@@ -112,30 +104,49 @@ live_command_output() {
 >>> CRITICAL ERROR: COMMAND EXECUTION FAILED! <<<\n\
 ------------------------------------------------------------\n\
 Failed Command: $cmd\n\
-Error Message: $err\n\
+Exit Code: $exit_code\n\
 ===========================================================\n" >> "$combined_log"
         fi
     }
+
+live_command_output() {
+    local user="${1:-root}"
+    local context="${2:-Default}"
+    shift 2
+    local commands=("$@")
+    local combined_log=$(mktemp)
+    local exit_code=0
+
+    cleanup() {
+        rm -f "$combined_log"
+    }
+    trap cleanup EXIT
+
     
     execute_command() {
         local cmd="$1"
-        local error_msg
-        if [ "$user" = "root" ]; then
-            $cmd >> "$combined_log" 2>&1  # Capture both stdout and stderr in the same log
-            exit_code=$?  # Capture the exit code of the command
-        else
-            sudo -u "$user" bash -c "$cmd" >> "$combined_log" 2>&1
-            exit_code=$?  # Capture the exit code of the command
-        fi
-        output_error "$cmd" "$exit_code"
+        {
+            echo -e "\n--- Running: $cmd ---\n" >> "$combined_log"
+            if [ "$user" = "root" ]; then
+                eval "$cmd" >> "$combined_log" 2>&1
+            else
+                sudo -u "$user" bash -c "$cmd" >> "$combined_log" 2>&1
+            fi
+            exit_code=$?
+            output_error "$cmd" "$exit_code"
+        }
     }
 
     for cmd in "${commands[@]}"; do
-        execute_command "$cmd" &
-    done
-    dialog --exit-label "Ok" --backtitle "Live command output for $context" --tailbox "$combined_log" "$full_height" "$full_width" 2>&1 >/dev/tty
-    exit_code=$?
+        execute_command "$cmd"
+    done &
 
+    dialog --title "Live Command Output for $context" \
+           --backtitle "Command Execution Viewer" \
+           --tailbox "$combined_log" "$full_height" "$full_width" 2>&1 >/dev/tty
+
+    wait
+    exit_code=$?
     
     handle_exit_code "$exit_code" "return"
 }
