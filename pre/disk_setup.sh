@@ -44,10 +44,8 @@ With this in mind, lets pick between sane defaults or full custom mode.'
         "Dont preconfigure, i want to partition and mount myself, then autoinstall." \
         "Exit"
     )
-    options_string=$(printf "%s\n" "${options[@]}")
-    pause_script "loop" "$options_string"
     while true; do
-        menu_prompt install_mode_menu install_mode_menu_status "$title" "$description" "${options[@]}"
+        menu_prompt install_mode_menu install_mode_menu_status "" "" "${options[@]}"
         pause_script "loop" "$install_mode_menu"
     #     case $install_mode_menu in
     #         0)  full_default_route;;
