@@ -79,10 +79,10 @@ full_default_route() {
     done
 
     commands_to_run=()
-    commands_to_run+=("sgdisk --zap-all \"${DISK}\"")
-    commands_to_run+=("sgdisk -g \"${DISK}\"")
-    commands_to_run+=("sgdisk -I -n 1:0:+1G -t 1:ef00 -c 1:'ESP' \"${DISK}\"")
-    commands_to_run+=("sgdisk -I -n 2:0:0 -c 2:'rootfs' \"${DISK}\"")
+    commands_to_run+=("sgdisk --zap-all $DISK")
+    commands_to_run+=("sgdisk -g $DISK")
+    commands_to_run+=("sgdisk -I -n 1:0:+1G -t 1:ef00 -c 1:'ESP' $DISK")
+    commands_to_run+=("sgdisk -I -n 2:0:0 -c 2:'rootfs' $DISK")
 
     live_command_output "" "Format disk" "${commands_to_run[@]}"
 
