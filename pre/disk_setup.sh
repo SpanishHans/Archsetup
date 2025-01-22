@@ -92,20 +92,18 @@ full_default_route() {
     if ! lsblk -no FSTYPE "$EFI_PART" | grep -q "vfat"; then
         continue_script "" "Formatting ESP partition as FAT32."
         mkfs.vfat -F 32 -n ESP "$EFI_PART"
+        EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
     fi
 
     if ! lsblk -no FSTYPE "$ROOT_PART" | grep -q "btrfs"; then
         continue_script "" "Formatting root partition as Btrfs."
         mkfs.btrfs -L rootfs "$ROOT_PART"
+        ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
     fi
 
     # Force re-synchronization to ensure the kernel updates partition table
     sync
     udevadm settle
-
-    # Retrieve the filesystem types after formatting
-    EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
-    ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
 
     # Ensure filesystems are detected properly
     if [[ -z "$EFI_FORM" ]]; then
