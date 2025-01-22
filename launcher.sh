@@ -30,6 +30,8 @@ if [ "$USE_DIALOG" = false ]; then
         USE_DIALOG=true
     else
         USE_DIALOG=false
+        echo "Dialog installation skipped. Quitting as it is required."
+        exit 1 
     fi
 fi
 
