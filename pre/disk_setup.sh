@@ -105,6 +105,9 @@ full_default_route() {
         mkfs.btrfs -L rootfs "$ROOT_PART"
     fi
 
+    EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
+    ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
+
     pause_script "" "Antes de run_btrfs_setup $EFI_PART $EFI_FORM, $ROOT_PART $ROOT_FORM"
     
     run_btrfs_setup
