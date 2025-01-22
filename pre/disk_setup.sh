@@ -91,12 +91,10 @@ full_default_route() {
     commands_to_run+=("format_for_efi "$EFI_PART"")
     commands_to_run+=("format_as_btrfs "$ROOT_PART"")
 
+    live_command_output "" "Format disk" "${commands_to_run[@]}"
+
     ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
     EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
-
-    live_command_output "" "Format disk" "${commands_to_run[@]}"
-    
-    
     
     
     run_btrfs_setup
