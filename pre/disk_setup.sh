@@ -70,13 +70,10 @@ full_default_route() {
 
     while true; do
         menu_prompt format_disk_menu_choice format_disk_menu_status "$title" "$description" "${disks[@]}"
-        local DISK="${disks[$((format_disk_menu_choice))]}"
         case $format_disk_menu_choice in
             c)  break;;
             e)  exit;;
-            *)  if ! cgdisk "$DISK"; then
-                    continue_script "Exited cgdisk for $DISK" "cgdisk exited for disk $DISK. Returning to menu."
-                fi
+            *)  local DISK="${disks[$((format_disk_menu_choice))]}"
                 ;;
         esac
     done
