@@ -82,7 +82,7 @@ full_default_route() {
     # Step 1: Wipe and Partition the Disk
         commands_to_run=("sgdisk --zap-all $DISK")
         commands_to_run=("sgdisk -g $DISK")
-        commands_to_run=("sgdisk -n 1:0:+1G -t 1:ef00 -c 1:'ESP' $DISK")
+        commands_to_run=("sgdisk -n 1:0:+1024M -t 1:ef00 -c 1:'ESP' $DISK")
         commands_to_run=("sgdisk -n 2:0:0 -c 2:'rootfs' $DISK")
     
 
@@ -91,13 +91,13 @@ full_default_route() {
     if ! lsblk -no FSTYPE $EFI_PART | grep -q "vfat"; then
         continue_script "" "Formatting ESP partition as FAT32."
         EFI_FORM='vfat'
-        mkfs.vfat -F 32 -n ESP "$EFI_PART"
+        mkfs.vfat -F 32 -n ESP $EFI_PART
     fi
 
     if ! lsblk -no FSTYPE $ROOT_PART | grep -q "btrfs"; then
         continue_script "" "Formatting root partition as Btrfs."
         ROOT_FORM='btrfs'
-        mkfs.btrfs -L rootfs "$ROOT_PART"
+        mkfs.btrfs -L rootfs $ROOT_PART
     fi
 
     # Force re-synchronization to ensure the kernel updates partition table
