@@ -322,6 +322,7 @@ start_disk_setup() {
         "Exit"
     )
     while true; do
-        menu_prompt install_mode_menu install_mode_menu_status "$title" "$description" "${options[@]}"
+    menu_prompt install_mode_menu install_mode_menu_status "$title" "$description" "${options[@]}"
+    done
     choose_custom_or_default_layout
 }
