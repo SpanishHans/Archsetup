@@ -80,25 +80,24 @@ full_default_route() {
 
 
     # Step 1: Wipe and Partition the Disk
-    commands_to_run=(
-        "sgdisk --zap-all $DISK" 
-        "sgdisk -g $DISK" 
-        "sgdisk -n 1:0:+1G -t 1:ef00 -c 1:'ESP' $DISK" 
-        "sgdisk -n 2:0:0 -c 2:'rootfs' $DISK"
-    )
+        commands_to_run=("sgdisk --zap-all $DISK")
+        commands_to_run=("sgdisk -g $DISK")
+        commands_to_run=("sgdisk -n 1:0:+1G -t 1:ef00 -c 1:'ESP' $DISK")
+        commands_to_run=("sgdisk -n 2:0:0 -c 2:'rootfs' $DISK")
+    
 
     live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
 
-    if ! lsblk -no FSTYPE "$EFI_PART" | grep -q "vfat"; then
+    if ! lsblk -no FSTYPE $EFI_PART | grep -q "vfat"; then
         continue_script "" "Formatting ESP partition as FAT32."
+        EFI_FORM='vfat'
         mkfs.vfat -F 32 -n ESP "$EFI_PART"
-        EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
     fi
 
-    if ! lsblk -no FSTYPE "$ROOT_PART" | grep -q "btrfs"; then
+    if ! lsblk -no FSTYPE $ROOT_PART | grep -q "btrfs"; then
         continue_script "" "Formatting root partition as Btrfs."
+        ROOT_FORM='btrfs'
         mkfs.btrfs -L rootfs "$ROOT_PART"
-        ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
     fi
 
     # Force re-synchronization to ensure the kernel updates partition table
