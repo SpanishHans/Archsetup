@@ -146,9 +146,6 @@ live_command_output() {
             exit_code=$?
             output_error "$cmd" "$exit_code"
         }
-        if [ $exit_code -ne 0 ]; then
-            return $exit_code  # Ensure the function returns on failure
-        fi
     }
 
     for cmd in "${commands[@]}"; do
