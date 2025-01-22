@@ -57,39 +57,39 @@ With this in mind, lets pick between sane defaults or full custom mode.'
 }
 
 full_default_route() {
-    # local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
-    # local disks+=("Continue")
-    # local disks+=("Exit")
-    # local title="Starting disk partitioner"
-    # local description="The following menu shall help you select a disk for full wipe and automatic partitioning. ALL DATA ON IT SHALL BE DELETED."
+    local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
+    local disks+=("Continue")
+    local disks+=("Exit")
+    local title="Starting disk partitioner"
+    local description="The following menu shall help you select a disk for full wipe and automatic partitioning. ALL DATA ON IT SHALL BE DELETED."
 
-    # if [ ${#disks[@]} -eq 0 ]; then
-    #         pause_script "No disks found" "No valid storage devices found. Exiting."
-    #         exit
-    # fi
+    if [ ${#disks[@]} -eq 0 ]; then
+            pause_script "No disks found" "No valid storage devices found. Exiting."
+            exit
+    fi
 
-    # while true; do
-    #     menu_prompt format_disk_menu_choice format_disk_menu_status "$title" "$description" "${disks[@]}"
-    #     case $format_disk_menu_choice in
-    #         c)  break;;
-    #         e)  exit;;
-    #         *)  local DISK="${disks[$((format_disk_menu_choice))]}";break
-    #             ;;
-    #     esac
-    # done
+    while true; do
+        menu_prompt format_disk_menu_choice format_disk_menu_status "$title" "$description" "${disks[@]}"
+        case $format_disk_menu_choice in
+            c)  break;;
+            e)  exit;;
+            *)  local DISK="${disks[$((format_disk_menu_choice))]}";break
+                ;;
+        esac
+    done
 
-    # sgdisk --zap-all "${DISK}"
-    # sgdisk -g "${DISK}"
-    # sgdisk -I -n 1:0:+1G -t 1:ef00 -c 1:'ESP' "${DISK}"
-    # sgdisk -I -n 2:0:0 -c 2:'rootfs' "${DISK}"
+    sgdisk --zap-all "${DISK}"
+    sgdisk -g "${DISK}"
+    sgdisk -I -n 1:0:+1G -t 1:ef00 -c 1:'ESP' "${DISK}"
+    sgdisk -I -n 2:0:0 -c 2:'rootfs' "${DISK}"
 
     EFI_PART="/dev/disk/by-partlabel/ESP"
     ROOT_PART="/dev/disk/by-partlabel/rootfs"
     ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
     EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
     
-    # format_for_efi "$EFI_PART"
-    # format_as_btrfs "$ROOT_PART"
+    format_for_efi "$EFI_PART"
+    format_as_btrfs "$ROOT_PART"
     
     run_btrfs_setup
     exit
@@ -315,23 +315,5 @@ Please go back and format the partition as BTRFS Partition."
 
 start_disk_setup() {
     clear
-
-    local options=(\
-        "Use default partitioning scheme and autoinstall everything on one disk" \
-        "Use default partitioning but i'll select EFI and ROOT partitions myself, then autoinstall" \
-        "Dont preconfigure, i want to partition and mount myself, then autoinstall." \
-        "Exit"
-    )
-    while true; do
-        menu_prompt install_mode_menu install_mode_menu_status "$title" "$description" "${options[@]}"
-        pause_script "" "$install_mode_menu"
-        case $install_mode_menu in
-            0)  full_default_route;;
-            1)  custom_default_route;;
-            2)  full_custom_route;;
-            e)  exit;;
-            *)  pause_script "Option not valid" "That is not an option, returning to start menu.";exit;;
-        esac
-    done
-    # choose_custom_or_default_layout
+    choose_custom_or_default_layout
 }
