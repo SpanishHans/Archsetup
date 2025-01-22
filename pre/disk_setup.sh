@@ -101,6 +101,7 @@ full_default_route() {
     if [ -z "$ROOT_FORM" ]; then
         commands_to_run+=("format_as_btrfs $ROOT_PART")
     fi
+    pause_script "" "Antes de run_btrfs_setup $EFI_PART $EFI_FORM, $ROOT_PART $ROOT_FORM"
     
     run_btrfs_setup
     exit
