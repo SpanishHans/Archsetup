@@ -382,15 +382,77 @@ multiselect_prompt() {
 
         handle_exit_code "$exit_code" "return"
     else
-        clear
-        terminal_title "$title"
-        output "$description"
-        output
-
-        for ((i=0; i<${#menu_items[@]}; i+=2)); do
-            output "${menu_items[i]}. ${menu_items[i+1]}"
-        done
-        output
+        # Terminal fallback mode
+        local keys=("${!given_array[@]}")
+        local selected=()  # Tracks which items are selected
+        local num_items="${#keys[@]}"
+        local current_index=0
         
+        # Initialize selected array
+        for _ in "${keys[@]}"; do
+            selected+=("off")
+        done
+        
+        # Draw the menu
+        draw_menu() {
+            clear
+            echo -e "\e[1m$msg_title\e[0m"
+            echo -e "\n$msg_text\n"
+            
+            for i in "${!keys[@]}"; do
+                local is_selected="${selected[i]}"
+                local display_text="${given_array[${keys[i]}]}"
+                if [[ "$i" -eq "$current_index" ]]; then
+                    # Highlight the current selection
+                    echo -e " \e[7m[${is_selected}] ${display_text}\e[0m"
+                else
+                    echo -e " [${is_selected}] ${display_text}"
+                fi
+            done
+            echo -e "\nNavigate with ↑ ↓, toggle with SPACE, confirm with ENTER, or cancel with q."
+        }
+
+        # Handle user input
+        while true; do
+            draw_menu
+            read -rsn1 key  # Capture a single keypress
+            
+            case "$key" in
+            $'\x1b') # Handle arrow keys (Escape sequences)
+                read -rsn2 -t 0.1 key # Read the rest of the escape sequence
+                case "$key" in
+                "[A") # Up arrow
+                    ((current_index = (current_index - 1 + num_items) % num_items))
+                    ;;
+                "[B") # Down arrow
+                    ((current_index = (current_index + 1) % num_items))
+                    ;;
+                esac
+                ;;
+            " ") # Toggle selection with Space
+                if [[ "${selected[current_index]}" == "on" ]]; then
+                    selected[current_index]="off"
+                else
+                    selected[current_index]="on"
+                fi
+                ;;
+            "") # Enter key
+                # Collect selected items
+                choices_array=()
+                for i in "${!selected[@]}"; do
+                    if [[ "${selected[i]}" == "on" ]]; then
+                        choices_array+=("${keys[i]}")
+                    fi
+                done
+                eval "$choices=(${choices_array[@]})"
+                eval "$status=\"0\""
+                return 0
+                ;;
+            "q") # Quit with 'q'
+                eval "$status=\"1\""
+                return 1
+                ;;
+            esac
+        done
     fi
 }
