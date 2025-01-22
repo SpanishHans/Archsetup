@@ -51,10 +51,8 @@ while true; do
     menu_prompt main_menu_choice main_menu_choice_status "$title" "$description" "${options[@]}"
 
     case $main_menu_choice in
-        0)  pause_script "" "0"
-            ./pre/install.sh;;
-        1)  pause_script "" "1"
-            ./post/configure.sh;;
+        0)  ./pre/install.sh;;
+        1)  ./post/configure.sh;;
         e)  exit;;
         *)  output "Invalid choice, please try again.";;
     esac

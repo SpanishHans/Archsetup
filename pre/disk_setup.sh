@@ -46,12 +46,12 @@ With this in mind, lets pick between sane defaults or full custom mode.'
     )
     while true; do
         menu_prompt install_mode_menu install_mode_menu_status "$title" "$description" "${options[@]}"
-        case $install_mode_menu in
+        case $main_menu_choice in
             0)  return;;
             1)  return;;
             2)  return;;
             e)  exit;;
-            *)  pause_script "Option not valid" "That is not an option, returning to start menu.";exit;;
+            *)  output "Invalid choice, please try again.";;
         esac
     done
 }
