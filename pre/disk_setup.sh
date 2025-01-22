@@ -315,5 +315,7 @@ Please go back and format the partition as BTRFS Partition."
 
 start_disk_setup() {
     clear
+    pause_script "TESTING" "Antes de choose_custom_or_default_layout"
     choose_custom_or_default_layout
+    pause_script "TESTING" "Despues de choose_custom_or_default_layout"
 }
