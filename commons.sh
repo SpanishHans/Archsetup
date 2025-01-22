@@ -250,7 +250,7 @@ menu_prompt() {
         --backtitle "$title" \
         --ok-label "Select" \
         --menu "$description" \
-        $half_height $half_width 15 \
+        $full_height $full_width 15 \
         "${menu_items[@]}" \
         2>&1 >/dev/tty)
     exit_code=$?
