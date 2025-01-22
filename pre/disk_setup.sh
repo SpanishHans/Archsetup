@@ -84,7 +84,7 @@ full_default_route() {
     commands_to_run+=("sgdisk -I -n 1:0:+1G -t 1:ef00 -c 1:'ESP' \"${DISK}\"")
     commands_to_run+=("sgdisk -I -n 2:0:0 -c 2:'rootfs' \"${DISK}\"")
 
-    live_command_output "Format disk" "Formatting disk with full default mode." "${commands_to_run[@]}"
+    live_command_output "" "Format disk" "${commands_to_run[@]}"
 
     
 
