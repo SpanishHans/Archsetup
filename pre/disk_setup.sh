@@ -88,8 +88,8 @@ full_default_route() {
     ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
     EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
     
-    # format_for_efi "$EFI_PART"
-    # format_as_btrfs "$ROOT_PART"
+    format_for_efi "$EFI_PART"
+    format_as_btrfs "$ROOT_PART"
     
     run_btrfs_setup
     exit

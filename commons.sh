@@ -55,15 +55,13 @@ pause_script() {
     local title=$(echo -e "$msg_title")
     local message=$(echo -e "$msg_text")
 
-    if [ "$USE_DIALOG" = true ]; then
-        dialog --ok-label "Ok" --backtitle "$title" --msgbox "$message" $half_height $half_width 2>&1 >/dev/tty
-        exit_code=$?
-        case $exit_code in
-            0)  return;;
-            1)  exit;;
-        esac
+    dialog --ok-label "Ok" --backtitle "$title" --msgbox "$message" $half_height $half_width 2>&1 >/dev/tty
+    exit_code=$?
+    case $exit_code in
+        0)  return;;
+        1)  exit;;
+    esac
 
-    fi
 }
 
 continue_script() {
@@ -72,16 +70,14 @@ continue_script() {
     local title=$(echo -e "$msg_title")
     local message=$(echo -e "$msg_text")
 
-    if [ "$USE_DIALOG" = true ]; then
-        dialog --ok-label "Ok" --backtitle "$title" --infobox "$message" $half_height $half_width 2>&1 >/dev/tty
-        exit_code=$?
-        sleep 0.7
-        case $exit_code in
-            0)  return;;
-            1)  exit;;
-        esac
+    dialog --ok-label "Ok" --backtitle "$title" --infobox "$message" $half_height $half_width 2>&1 >/dev/tty
+    exit_code=$?
+    sleep 0.7
+    case $exit_code in
+        0)  return;;
+        1)  exit;;
+    esac
 
-    fi
 }
 
 handle_exit_code() {
@@ -134,14 +130,12 @@ Error Message: $err\n\
         output_error "$cmd" "$exit_code"
     }
 
-    if [ "$USE_DIALOG" = true ]; then
-        for cmd in "${commands[@]}"; do
-            execute_command "$cmd" &
-        done
-        dialog --exit-label "Ok" --backtitle "Live command output for $context" --tailbox "$combined_log" "$full_height" "$full_width" 2>&1 >/dev/tty
-        exit_code=$?
+    for cmd in "${commands[@]}"; do
+        execute_command "$cmd" &
+    done
+    dialog --exit-label "Ok" --backtitle "Live command output for $context" --tailbox "$combined_log" "$full_height" "$full_width" 2>&1 >/dev/tty
+    exit_code=$?
 
-    fi
     
     handle_exit_code "$exit_code" "return"
 }
@@ -159,13 +153,11 @@ input_text() {
     local console_output
     local exit_code=0
 
-    if [ "$USE_DIALOG" = true ]; then
-        dialog_output=$(dialog --backtitle "$title" --ok-label "Continue" \
-            --inputbox "$message" $half_height $half_width 2>&1 >/dev/tty)
-        exit_code=$?
-        eval "$choice=\"$dialog_output\""
+    dialog_output=$(dialog --backtitle "$title" --ok-label "Continue" \
+        --inputbox "$message" $half_height $half_width 2>&1 >/dev/tty)
+    exit_code=$?
+    eval "$choice=\"$dialog_output\""
 
-    fi
     eval "$status=\"$exit_code\""
     handle_exit_code "$exit_code" "return"
 }
@@ -176,12 +168,10 @@ root_pass() {
     fi
 
     while true; do
-        if [ "$USE_DIALOG" = true ]; then
-            ROOT_PASS=$(dialog --backtitle "Sudo Password" --ok-label "Continue" \
-                --insecure --passwordbox "Enter your sudo password: " $half_height $half_width 2>&1 >/dev/tty)
-            exit_code=$?
+        ROOT_PASS=$(dialog --backtitle "Sudo Password" --ok-label "Continue" \
+            --insecure --passwordbox "Enter your sudo password: " $half_height $half_width 2>&1 >/dev/tty)
+        exit_code=$?
 
-        fi
         
         handle_exit_code "$exit_code" "return"
 
@@ -202,15 +192,12 @@ set_password() {
     local password1 password2 exit_code
 
     while true; do
-        if [ "$USE_DIALOG" = true ]; then
+        password1=$(dialog --backtitle "Password Prompt for '$user'" --ok-label "Continue" --insecure --passwordbox "Enter password for '$user'" $half_height $half_width 2>&1 >/dev/tty)
+        exit_code=$?
 
-            password1=$(dialog --backtitle "Password Prompt for '$user'" --ok-label "Continue" --insecure --passwordbox "Enter password for '$user'" $half_height $half_width 2>&1 >/dev/tty)
-            exit_code=$?
+        password2=$(dialog --backtitle "Password Prompt for '$user'" --ok-label "Continue" --insecure --passwordbox "Re-enter password for '$user'" $half_height $half_width 2>&1 >/dev/tty)
+        exit_code=$?
 
-            password2=$(dialog --backtitle "Password Prompt for '$user'" --ok-label "Continue" --insecure --passwordbox "Re-enter password for '$user'" $half_height $half_width 2>&1 >/dev/tty)
-            exit_code=$?
-
-        fi
         
         if [ "$password1" != "$password2" ]; then
             pause_script "Password Error" "Passwords for '$user' do not match. Please try again."
@@ -276,22 +263,19 @@ multiselect_prompt() {
         options+=("$key" "$desc" "on")
     done
 
-    if [ "$USE_DIALOG" = true ]; then
+    dialog_output=$(dialog \
+        --backtitle "$title" \
+        --checklist "$description" \
+        $full_height $full_width 15 \
+        "${options[@]}" \
+        2>&1 >/dev/tty)
+    exit_code=$?
     
-        dialog_output=$(dialog \
-            --backtitle "$title" \
-            --checklist "$description" \
-            $full_height $full_width 15 \
-            "${options[@]}" \
-            2>&1 >/dev/tty)
-        exit_code=$?
+    IFS=$' ' read -r -a choices_array <<< "$dialog_output"
         
-        IFS=$' ' read -r -a choices_array <<< "$dialog_output"
-            
-        eval "$choices=(${choices_array[@]})"
-        eval "$status=\"$exit_code\""
+    eval "$choices=(${choices_array[@]})"
+    eval "$status=\"$exit_code\""
 
-        handle_exit_code "$exit_code" "return"
-        
-    fi
+    handle_exit_code "$exit_code" "return"
+
 }
