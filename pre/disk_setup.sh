@@ -78,7 +78,6 @@ full_default_route() {
         esac
     done
 
-    pause_script "" "Selected Disk: $DISK"
 
     # Step 1: Wipe and Partition the Disk
     commands_to_run=(
@@ -90,23 +89,38 @@ full_default_route() {
 
     live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
 
-    # Step 2: Define Partition Paths
-    EFI_PART="/dev/disk/by-partlabel/ESP"
-    ROOT_PART="/dev/disk/by-partlabel/rootfs"
-
-    # Step 3: Ensure Filesystems are Created
     if ! lsblk -no FSTYPE "$EFI_PART" | grep -q "vfat"; then
-        echo "Formatting ESP partition as FAT32."
+        continue_script "" "Formatting ESP partition as FAT32."
         mkfs.vfat -F 32 -n ESP "$EFI_PART"
     fi
 
     if ! lsblk -no FSTYPE "$ROOT_PART" | grep -q "btrfs"; then
-        echo "Formatting root partition as Btrfs."
+        continue_script "" "Formatting root partition as Btrfs."
         mkfs.btrfs -L rootfs "$ROOT_PART"
     fi
 
+    # Force re-synchronization to ensure the kernel updates partition table
+    sync
+    udevadm settle
+
+    # Retrieve the filesystem types after formatting
     EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
     ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
+
+    # Ensure filesystems are detected properly
+    if [[ -z "$EFI_FORM" ]]; then
+        echo "Warning: Unable to detect filesystem on $EFI_PART. Manually verifying."
+        EFI_FORM="unknown"
+    fi
+
+    if [[ -z "$ROOT_FORM" ]]; then
+        echo "Warning: Unable to detect filesystem on $ROOT_PART. Manually verifying."
+        ROOT_FORM="unknown"
+    fi
+
+    # Pause script with filesystem information
+    pause_script "" "Antes de run_btrfs_setup $EFI_PART $EFI_FORM, $ROOT_PART $ROOT_FORM"
+
 
     pause_script "" "Antes de run_btrfs_setup $EFI_PART $EFI_FORM, $ROOT_PART $ROOT_FORM"
     
