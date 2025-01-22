@@ -22,7 +22,6 @@ if [ "$USE_DIALOG" = false ]; then
     terminal_title "Command dialog not available."
     output
     output "The 'dialog' command is not installed."
-    output "Would you like to install it to improve the user experience?"
     output
     read -p "Install dialog? (y/n): " install_dialog
 
