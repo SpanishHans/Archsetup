@@ -46,8 +46,9 @@ With this in mind, lets pick between sane defaults or full custom mode.'
     )
     options_string=$(printf "%s\n" "${options[@]}")
     pause_script "loop" "$options_string"
-    # while true; do
-    #     menu_prompt install_mode_menu install_mode_menu_status "$title" "$description" "${options[@]}"
+    while true; do
+        menu_prompt install_mode_menu install_mode_menu_status "$title" "$description" "${options[@]}"
+        pause_script "loop" "$install_mode_menu"
     #     case $install_mode_menu in
     #         0)  full_default_route;;
     #         1)  custom_default_route;;
@@ -55,7 +56,7 @@ With this in mind, lets pick between sane defaults or full custom mode.'
     #         e)  exit;;
     #         *)  pause_script "Option not valid" "That is not an option, returning to start menu.";exit;;
     #     esac
-    # done
+    done
 }
 
 full_default_route() {
