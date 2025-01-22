@@ -84,17 +84,18 @@ full_default_route() {
     commands_to_run+=("sgdisk -I -n 1:0:+1G -t 1:ef00 -c 1:'ESP' $DISK")
     commands_to_run+=("sgdisk -I -n 2:0:0 -c 2:'rootfs' $DISK")
 
-    live_command_output "" "Format disk" "${commands_to_run[@]}"
-
-    
-
     EFI_PART="/dev/disk/by-partlabel/ESP"
     ROOT_PART="/dev/disk/by-partlabel/rootfs"
     ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
     EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
+
+    commands_to_run+=("format_for_efi "$EFI_PART"")
+    commands_to_run+=("format_as_btrfs "$ROOT_PART"")
+
+    live_command_output "" "Format disk" "${commands_to_run[@]}"
     
-    format_for_efi "$EFI_PART"
-    format_as_btrfs "$ROOT_PART"
+    
+    
     
     run_btrfs_setup
     exit
