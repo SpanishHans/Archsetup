@@ -54,10 +54,10 @@ terminal_title() {
     local length=${#msg_title}
     local border=$(printf '%*s' $((length + 4)) '' | tr ' ' '-')
     local title=$(echo -e "$msg_title")
-    
-    printf '\e[1;34m%-6s\e[m\n' "$border"
-    printf '\e[1;34m%-6s\e[m\n' "| $title |"
-    printf '\e[1;34m%-6s\e[m\n' "$border"
+
+    echo -e "$border"
+    echo -e "| $title |"
+    echo -e "$border"
 }
 
 pause_script() {
