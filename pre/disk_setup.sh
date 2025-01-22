@@ -82,9 +82,12 @@ full_default_route() {
     sgdisk -g "${DISK}"
     sgdisk -I -n 1:0:+1G -t 1:ef00 -c 1:'ESP' "${DISK}"
     sgdisk -I -n 2:0:0 -c 2:'rootfs' "${DISK}"
+
+    ESP="/dev/$DISK/by-partlabel/ESP"
+    BTRFS="/dev/$DISK/by-partlabel/rootfs"
     
-    select_efi_partition
-    select_root_partition
+    format_for_efi "$ESP"
+    format_as_btrfs "$BTRFS"
     run_btrfs_setup
     exit
 }
