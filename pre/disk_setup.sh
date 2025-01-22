@@ -79,23 +79,26 @@ full_default_route() {
     done
 
     commands_to_run=()
-    commands_to_run+=("sgdisk --zap-all $DISK")
-    commands_to_run+=("sgdisk -g $DISK")
-    commands_to_run+=("sgdisk -I -n 1:0:+1G -t 1:ef00 -c 1:'ESP' $DISK")
-    commands_to_run+=("sgdisk -I -n 2:0:0 -c 2:'rootfs' $DISK")
+    commands_to_run+=("sgdisk --zap-all \"${DISK}\"")
+    commands_to_run+=("sgdisk -g \"${DISK}\"")
+    commands_to_run+=("sgdisk -I -n 1:0:+1G -t 1:ef00 -c 1:'ESP' \"${DISK}\"")
+    commands_to_run+=("sgdisk -I -n 2:0:0 -c 2:'rootfs' \"${DISK}\"")
+
+    live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
+
+    
 
     EFI_PART="/dev/disk/by-partlabel/ESP"
     ROOT_PART="/dev/disk/by-partlabel/rootfs"
-    
-
-    commands_to_run+=("format_for_efi "$EFI_PART"")
-    commands_to_run+=("format_as_btrfs "$ROOT_PART"")
-
-    live_command_output "" "Format disk" "${commands_to_run[@]}"
-
     ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
     EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
+
+    commands_to_run=()
+    commands_to_run+=("format_for_efi "$EFI_PART"")
+    commands_to_run+=("format_as_btrfs "$ROOT_PART"")
     
+    
+    live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
     
     run_btrfs_setup
     exit
@@ -198,17 +201,23 @@ Please select a filesystem for it from the following:"
 
 format_for_efi() {
     local partition="$1"
+    continue_script "Formatting $partition as EFI" "You have decided to partition $partition as EFI. FORMATTING..."
     mkfs.fat -F 32 "${partition}"
+    pause_script "$partition formatted" "the partition $partition has been formatted to EFI,"
 }
 
 format_as_ext4() {
     local partition="$1"
+    continue_script "Formatting $partition as EXT4" "You have decided to partition $partition as EXT4. FORMATTING..."
     mkfs.ext4 -F "${partition}"
+    pause_script "$partition formatted" "the partition $partition has been formatted to EXT4,"
 }
 
 format_as_btrfs() {
     local partition="$1"
+    continue_script "Formatting $partition as BTRFS" "You have decided to partition $partition as BTRFS. FORMATTING..."
     mkfs.btrfs -f "${partition}"
+    pause_script "$partition formatted" "the partition $partition has been formatted to BTRFS,"
 }
 
 select_efi_partition() {
