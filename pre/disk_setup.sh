@@ -84,23 +84,25 @@ full_default_route() {
     commands_to_run+=("sgdisk -n 1:0:+1024M -t 1:ef00 -c 1:'ESP' $DISK")
     commands_to_run+=("sgdisk -n 2:0:0 -c 2:'rootfs' $DISK")
     
+    
+    
 
-    live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
+    
 
     if ! lsblk -no FSTYPE $EFI_PART | grep -q "vfat"; then
         continue_script "" "Formatting ESP partition as FAT32."
         EFI_FORM='vfat'
-        mkfs.vfat -F 32 -n ESP $EFI_PART
+        commands_to_run+=("mkfs.vfat -F 32 -n ESP $EFI_PART")
     fi
 
     if ! lsblk -no FSTYPE $ROOT_PART | grep -q "btrfs"; then
         continue_script "" "Formatting root partition as Btrfs."
         ROOT_FORM='btrfs'
-        mkfs.btrfs -L rootfs $ROOT_PART
+        commands_to_run+=("mkfs.btrfs -L rootfs $ROOT_PART")
     fi
 
-    sync
-    udevadm settle
+    commands_to_run+=("sync")
+    commands_to_run+=("udevadm settle")
 
     if [[ -z "$EFI_FORM" ]]; then
         echo "Warning: Unable to detect filesystem on $EFI_PART. Manually verifying."
@@ -112,6 +114,7 @@ full_default_route() {
         ROOT_FORM="unknown"
     fi
 
+    live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
     pause_script "" "Antes de run_btrfs_setup $EFI_PART $EFI_FORM, $ROOT_PART $ROOT_FORM"
     run_btrfs_setup
     exit
