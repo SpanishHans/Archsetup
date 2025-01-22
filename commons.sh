@@ -246,7 +246,6 @@ menu_prompt() {
         fi
     done
 
-
     dialog_output=$(dialog \
         --backtitle "$title" \
         --ok-label "Select" \

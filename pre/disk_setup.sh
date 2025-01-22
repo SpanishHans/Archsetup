@@ -46,14 +46,13 @@ With this in mind, lets pick between sane defaults or full custom mode.'
     )
     while true; do
         menu_prompt install_mode_menu install_mode_menu_status "$title" "$description" "${options[@]}"
-        pause_script "" "$install_mode_menu"
-        # case $install_mode_menu in
-        #     0)  full_default_route;;
-        #     1)  custom_default_route;;
-        #     2)  full_custom_route;;
-        #     e)  exit;;
-        #     *)  pause_script "Option not valid" "That is not an option, returning to start menu.";exit;;
-        # esac
+        case $install_mode_menu in
+            0)  full_default_route;;
+            1)  custom_default_route;;
+            2)  full_custom_route;;
+            e)  exit;;
+            *)  pause_script "Option not valid" "That is not an option, returning to start menu.";exit;;
+        esac
     done
 }
 
@@ -316,5 +315,23 @@ Please go back and format the partition as BTRFS Partition."
 
 start_disk_setup() {
     clear
-    choose_custom_or_default_layout
+
+    local options=(\
+        "Use default partitioning scheme and autoinstall everything on one disk" \
+        "Use default partitioning but i'll select EFI and ROOT partitions myself, then autoinstall" \
+        "Dont preconfigure, i want to partition and mount myself, then autoinstall." \
+        "Exit"
+    )
+    while true; do
+        menu_prompt install_mode_menu install_mode_menu_status "$title" "$description" "${options[@]}"
+        pause_script "" "$install_mode_menu"
+        # case $install_mode_menu in
+        #     0)  full_default_route;;
+        #     1)  custom_default_route;;
+        #     2)  full_custom_route;;
+        #     e)  exit;;
+        #     *)  pause_script "Option not valid" "That is not an option, returning to start menu.";exit;;
+        # esac
+    done
+    # choose_custom_or_default_layout
 }
