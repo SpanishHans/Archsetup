@@ -73,7 +73,7 @@ full_default_route() {
         case $format_disk_menu_choice in
             c)  break;;
             e)  exit;;
-            *)  local DISK="${disks[$((format_disk_menu_choice))]}"
+            *)  local DISK="${disks[$((format_disk_menu_choice))]}";break
                 ;;
         esac
     done
