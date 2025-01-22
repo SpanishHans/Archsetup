@@ -66,7 +66,11 @@ pause_script() {
     local title=$(echo -e "$msg_title")
     local message=$(echo -e "$msg_text")
 
-    dialog --ok-label "Ok" --backtitle "$title" --msgbox "$message" $half_height $half_width 2>&1 >/dev/tty
+    dialog \
+        --ok-label "Ok" \
+        --backtitle "$title" \
+        --msgbox "$message" \
+        $half_height $half_width 2>&1 >/dev/tty
     exit_code=$?
     case $exit_code in
         0)  return;;
@@ -81,7 +85,11 @@ continue_script() {
     local title=$(echo -e "$msg_title")
     local message=$(echo -e "$msg_text")
 
-    dialog --ok-label "Ok" --backtitle "$title" --infobox "$message" $half_height $half_width 2>&1 >/dev/tty
+    dialog \
+        --ok-label "Ok" \
+        --backtitle "$title" \
+        --infobox "$message" \
+        $half_height $half_width 2>&1 >/dev/tty
     exit_code=$?
     sleep 0.7
     case $exit_code in
@@ -146,6 +154,9 @@ live_command_output() {
             exit_code=$?
             output_error "$cmd" "$exit_code"
         }
+        if [ $exit_code -ne 0 ]; then
+            return $exit_code  # Ensure the function returns on failure
+        fi
     }
 
     for cmd in "${commands[@]}"; do
@@ -154,7 +165,8 @@ live_command_output() {
 
     dialog --title "Live Command Output for $context" \
            --backtitle "Command Execution Viewer" \
-           --tailbox "$combined_log" "$full_height" "$full_width" 2>&1 >/dev/tty
+           --tailbox "$combined_log" \
+           "$full_height" "$full_width" 2>&1 >/dev/tty
 
     wait
     exit_code=$?
@@ -175,8 +187,11 @@ input_text() {
     local console_output
     local exit_code=0
 
-    dialog_output=$(dialog --backtitle "$title" --ok-label "Continue" \
-        --inputbox "$message" $half_height $half_width 2>&1 >/dev/tty)
+    dialog_output=$(dialog \
+        --backtitle "$title" \
+        --ok-label "Continue" \
+        --inputbox "$message" \
+        $half_height $half_width 2>&1 >/dev/tty)
     exit_code=$?
     eval "$choice=\"$dialog_output\""
 
@@ -190,8 +205,12 @@ root_pass() {
     fi
 
     while true; do
-        ROOT_PASS=$(dialog --backtitle "Sudo Password" --ok-label "Continue" \
-            --insecure --passwordbox "Enter your sudo password: " $half_height $half_width 2>&1 >/dev/tty)
+        ROOT_PASS=$(dialog \
+            --backtitle "Sudo Password" \
+            --ok-label "Continue" \
+            --insecure \
+            --passwordbox "Enter your sudo password: " \
+            $half_height $half_width 2>&1 >/dev/tty)
         exit_code=$?
 
         
@@ -214,10 +233,20 @@ set_password() {
     local password1 password2 exit_code
 
     while true; do
-        password1=$(dialog --backtitle "Password Prompt for '$user'" --ok-label "Continue" --insecure --passwordbox "Enter password for '$user'" $half_height $half_width 2>&1 >/dev/tty)
+        password1=$(dialog \
+            --backtitle "Password Prompt for '$user'" \
+            --ok-label "Continue" \
+            --insecure \
+            --passwordbox "Enter password for '$user'" \
+            $half_height $half_width 2>&1 >/dev/tty)
         exit_code=$?
 
-        password2=$(dialog --backtitle "Password Prompt for '$user'" --ok-label "Continue" --insecure --passwordbox "Re-enter password for '$user'" $half_height $half_width 2>&1 >/dev/tty)
+        password2=$(dialog \
+            --backtitle "Password Prompt for '$user'" \
+            --ok-label "Continue" \
+            --insecure \
+            --passwordbox "Re-enter password for '$user'" \
+            $half_height $half_width 2>&1 >/dev/tty)
         exit_code=$?
 
         
@@ -259,9 +288,7 @@ menu_prompt() {
         --backtitle "$title" \
         --ok-label "Select" \
         --menu "$description" \
-        $full_height $full_width 15 \
-        "${menu_items[@]}" \
-        2>&1 >/dev/tty)
+        $full_height $full_width 15 "${menu_items[@]}" 2>&1 >/dev/tty)
     exit_code=$?
     eval "$choice=\"$dialog_output\""
     eval "$status=\"$exit_code\""
@@ -288,9 +315,7 @@ multiselect_prompt() {
     dialog_output=$(dialog \
         --backtitle "$title" \
         --checklist "$description" \
-        $full_height $full_width 15 \
-        "${options[@]}" \
-        2>&1 >/dev/tty)
+        $full_height $full_width 15 "${options[@]}" 2>&1 >/dev/tty)
     exit_code=$?
     
     IFS=$' ' read -r -a choices_array <<< "$dialog_output"

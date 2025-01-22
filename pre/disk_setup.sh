@@ -14,8 +14,6 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-set -e
-
 source ./commons.sh
 
 source ./pre/ext4_config.sh
