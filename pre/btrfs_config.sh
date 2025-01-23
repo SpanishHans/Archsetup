@@ -27,6 +27,10 @@ mount_btrfs() {
 
     for key in "${!given_array[@]}"; do
         IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
+        disk=$(echo "$disk" | xargs)
+        flags=$(echo "$flags" | xargs)
+        path=$(echo "$path" | xargs)
+        desc=$(echo "$desc" | xargs)
         commands_to_run+=("btrfs su cr /mnt/$key")
     done
     live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
@@ -37,6 +41,10 @@ mount_btrfs() {
 
     for key in "${!given_array[@]}"; do
         IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
+        disk=$(echo "$disk" | xargs)
+        flags=$(echo "$flags" | xargs)
+        path=$(echo "$path" | xargs)
+        desc=$(echo "$desc" | xargs)
         commands_to_run+=("chattr +C /mnt/$key")
     done
     live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
@@ -51,6 +59,10 @@ mount_btrfs() {
 
     for key in "${!given_array[@]}"; do
         IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
+        disk=$(echo "$disk" | xargs)
+        flags=$(echo "$flags" | xargs)
+        path=$(echo "$path" | xargs)
+        desc=$(echo "$desc" | xargs)
         commands_to_run+=("mkdir -p /mnt$path")
     done
     live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
@@ -63,6 +75,10 @@ mount_btrfs() {
     options=()
     for key in "${!given_array[@]}"; do
         IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
+        disk=$(echo "$disk" | xargs)
+        flags=$(echo "$flags" | xargs)
+        path=$(echo "$path" | xargs)
+        desc=$(echo "$desc" | xargs)
         commands_to_run+=("mount -o $flags,subvol=$key $disk $path")
         options+=("$key $desc")
     done
@@ -101,7 +117,7 @@ run_btrfs_setup() {
         ["@var_lib_docker"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/docker | Container images, volumes, and metadata for Docker environments."
         ["@var_lib_distrobox"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/distrobox | Data and images for running and managing Distrobox containers."
         ["@var_lib_gdm"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/gdm | Configuration and session data for GNOME Display Manager (GDM)."
-        ["@var_lib_AccountsService"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/AccountsService | User account settings and data managed by AccountsService."
+        ["@var_lib_accounts"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/AccountsService | User account settings and data managed by AccountsService."
     )
     
     if [[ "$ROOT_FORM" == "btrfs" ]]; then
