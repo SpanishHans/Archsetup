@@ -55,8 +55,10 @@ terminal_title() {
     local border=$(printf '%*s' $((length + 8)) '' | tr ' ' '=')
     local title=$(echo -e "$msg_title")
 
+    local wrapped_title=$(echo "$msg_title" | fold -s -w 100)
+
     echo -e "$border"
-    echo -e ">>> $title <<<"
+    echo -e ">>> $wrapped_title <<<"
     echo -e "$border"
 }
 
@@ -122,8 +124,8 @@ output_error() {
 ============================================================\n\
 >>> CRITICAL ERROR: COMMAND EXECUTION FAILED! <<<\n\
 ------------------------------------------------------------\n\
-Failed Command: $cmd\n\
 Exit Code: $exit_code\n\
+Failed Command: $cmd\n\
 ===========================================================\n\n" >> "$combined_log"
         fi
     }
