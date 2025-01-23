@@ -47,9 +47,9 @@ With this in mind, let's pick between sane defaults or full custom mode."
     while true; do
         menu_prompt install_mode_menu install_mode_menu_status "$title" "" "${options[@]}"
         case $install_mode_menu in
-            0)  full_default_route;;
-            1)  custom_default_route;;
-            2)  full_custom_route;;
+            0)  full_default_route;break;;
+            1)  custom_default_route;break;;
+            2)  full_custom_route;break;;
             e)  exit;;
             *)  pause_script "Option not valid" "That is not an option, returning to start menu.";exit;;
         esac
@@ -323,5 +323,4 @@ Please go back and format the partition as BTRFS Partition."
 start_disk_setup() {
     clear
     choose_custom_or_default_layout
-    exit
 }
