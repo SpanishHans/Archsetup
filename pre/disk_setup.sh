@@ -119,8 +119,8 @@ custom_default_route() {
 }
 
 full_custom_route() {
-    format_and_partition_disks
-    set_filesystem_for_partitions
+    # format_and_partition_disks
+    # set_filesystem_for_partitions
     pause_script "Full custom not ready!" "The rest of the full custom logic for mounting whatever you want is not ready yet, sorry."
 }
 
