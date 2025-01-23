@@ -60,9 +60,11 @@ mount_btrfs() {
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvol=@home \"${ROOT_PART}\" /mnt/home")
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvol=@snapshots \"${ROOT_PART}\" /mnt/.snapshots")
     
+    options=()
     for key in "${!given_array[@]}"; do
         IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
         commands_to_run+=("mount -o $flags,subvol=$key $disk $path")
+        options+=("$key $desc")
     done
     live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
 
@@ -71,8 +73,16 @@ mount_btrfs() {
     commands_to_run+=("mount -o nodev,nosuid,noexec \"${EFI_PART}\" /mnt/efi")
 
     live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
-    pause_script "Created" "$(printf "%s\n" "${options[@]}")"
-    pause_script "BTRFS Mounting" "Finished mouting BTRFS"
+    pause_script "Finished BTRFS setup" "Finished mouting BTRFS and all of its required structure.
+
+    /           is on subvol @
+    /home       is on subvol @home
+    /.snapshots is on subvol @snapshots
+    /.btrfsroot is on subvolid 5
+
+    Additionally:
+    
+    $(printf "%s\n" "${options[@]}")"
 }
 
 
