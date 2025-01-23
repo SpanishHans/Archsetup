@@ -65,7 +65,7 @@ pause_script() {
     local msg_title="${1:-Default}"
     local msg_text="${2:-Nothing}"
     local title=$(echo -e "$msg_title")
-    local message=$(echo -e "$msg_text")
+    local message=$(printf "%s" "$msg_text")  # Use printf to preserve spaces
 
     dialog \
         --ok-label "Ok" \
@@ -77,8 +77,8 @@ pause_script() {
         0)  return;;
         1)  exit;;
     esac
-
 }
+
 
 continue_script() {
     local msg_title="${1:-Default}"
