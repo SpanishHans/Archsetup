@@ -37,12 +37,12 @@ EOF
     echo "FONT=ter-u20n" > /mnt/etc/vconsole.conf
 
     pause_script 'Locales' "Your /mnt/etc/locale.gen looks like this:    
-$cat '/mnt/etc/locale.gen'
+\$(cat '/mnt/etc/locale.gen')
 
 Your /mnt/etc/locale.conf looks like this:    
-$cat '/mnt/etc/locale.conf'
+\$(cat '/mnt/etc/locale.conf')
 
 Your /mnt/etc/vconsole.conf looks like this:    
-$cat '/mnt/etc/vconsole.conf'"
+\$(cat '/mnt/etc/vconsole.conf')"
 }
 

@@ -60,6 +60,7 @@ configure_git() {
     fi
     commands_to_run+=("cat $ssh_key_path")
 
+    commands_to_run+=("terminal_title 'Done with segment execuption'")
     live_command_output "" "${commands_to_run[@]}"
     pause_script "" "Git Setup complete!"
 }
@@ -73,6 +74,7 @@ configure_paru()
     commands_to_run+=("sudo -u sysadmin bash -c 'rustup default stable'")
     commands_to_run+=("sudo -u sysadmin bash -i -c 'cd /home/sysadmin/.paru &&  makepkg -si'")
 
+    commands_to_run+=("terminal_title 'Done with segment execuption'")
     live_command_output "" "${commands_to_run[@]}"
     pause_script "" "Paru Setup complete!"
 }
@@ -83,6 +85,7 @@ configure_snp()
     commands_to_run+=("sudo -u sysadmin bash -c 'paru -S snp [edit: --noconfirm ]'")
     # commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S snp'")
 
+    commands_to_run+=("terminal_title 'Done with segment execuption'")
     live_command_output "" "Snp" "${commands_to_run[@]}"
     pause_script "" "Snp Setup complete!"
 }
@@ -100,6 +103,7 @@ configure_snapper_rollback()
             echo \"mountpoint entry not found in /etc/snapper-rollback.conf\"
         fi")
 
+    commands_to_run+=("terminal_title 'Done with segment execuption'")
     live_command_output "" "${commands_to_run[@]}"
     pause_script "" "Snapper-rollback Setup complete!"
 }
@@ -148,6 +152,7 @@ configure_terminal() {
         esac
     done
 
+    commands_to_run+=("terminal_title 'Done with segment execuption'")
     live_command_output "" "${commands_to_run[@]}"
     pause_script "" "Terminal Setup complete!"
 }
@@ -158,6 +163,7 @@ configure_flatpak()
     commands_to_run=()
     commands_to_run+=("pacman --noconfirm -S flatpak")
 
+    commands_to_run+=("terminal_title 'Done with segment execuption'")
     live_command_output "" "${commands_to_run[@]}"
     pause_script "" "Flatpak Setup complete!"
 }
@@ -176,6 +182,7 @@ configure_docker()
     commands_to_run+=("systemctl enable docker")
     commands_to_run+=("systemctl start --now docker")
 
+    commands_to_run+=("terminal_title 'Done with segment execuption'")
     live_command_output "" "${commands_to_run[@]}"
     pause_script "" "Docker Setup complete!"
 }
@@ -186,6 +193,7 @@ configure_distrobox()
     commands_to_run=()
     commands_to_run+=("pacman --noconfirm -S distrobox")
 
+    commands_to_run+=("terminal_title 'Done with segment execuption'")
     live_command_output "" "${commands_to_run[@]}"
     pause_script "" "Distrobox Setup complete!"
 }

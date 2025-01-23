@@ -36,6 +36,7 @@ initial_setup()
         fi
     ")
 
+    commands_to_run+=("terminal_title 'Done with segment execuption'")
     live_command_output "" "${commands_to_run[@]}"
 
     output "Initial Setup complete!"
@@ -108,7 +109,8 @@ qemu_setup()
         esac
     done
 
-    live_command_output "${commands_to_run[@]}"
+    commands_to_run+=("terminal_title 'Done with segment execuption'")
+    live_command_output "" "${commands_to_run[@]}"
 
     output "Qemu Setup complete!"
     pause_script
@@ -127,7 +129,8 @@ virtualbox_setup()
     commands_to_run+=("pacman --noconfirm -S virtualbox virtualbox-host-modules-arch,")
     commands_to_run+=("snp paru -S virtualbox-ext-oracle")
 
-    live_command_output "${commands_to_run[@]}"
+    commands_to_run+=("terminal_title 'Done with segment execuption'")
+    live_command_output "" "${commands_to_run[@]}"
 
     output "Virtualbox Setup complete!"
     pause_script

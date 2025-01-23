@@ -80,8 +80,8 @@ commands_to_run+=("pacstrap /mnt \
   pipewire-jack \
   snap-pac")
 
-continue_script 'New fstab' 'Generating a new fstab.'
 commands_to_run+=("genfstab -U /mnt >> /mnt/etc/fstab")
+commands_to_run+=("terminal_title 'Done with segment execuption'")
 live_command_output "" "${commands_to_run[@]}"
 
 networking_setup
@@ -105,7 +105,8 @@ this automatically:
     8. Installs grub for the system with btrfs and snapper-rollback support"
     
 pause_script 'Chroot description' "$description"
-arch-chroot /mnt /bin/bash -e <<EOF
+commands_to_run=("")
+commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
 
     echo '#### STARTING 1. #### ->> time and locales'
     ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
@@ -116,7 +117,7 @@ arch-chroot /mnt /bin/bash -e <<EOF
     systemctl enable NetworkManager
 
     echo '#### STARTING 3. #### ->> root_password_setup'
-    echo "root:$root_password" | chpasswd
+    echo \"root:\$root_password\" | chpasswd
 
     echo '#### STARTING 4. #### ->> configure pacman color'
     sed -i 's/^#Color/Color/' /etc/pacman.conf
@@ -124,16 +125,18 @@ arch-chroot /mnt /bin/bash -e <<EOF
     echo '#### STARTING 5. #### ->> configure sudoers'
     sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /etc/sudoers
 
-    echo '#### STARTING 6. #### ->> no  timeout grub and quiet splash'
+    echo '#### STARTING 6. #### ->> no timeout grub and quiet splash'
     sed -i 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/' /etc/default/grub
-    sed -i 's/^\(GRUB_CMDLINE_LINUX_DEFAULT=\)".*"/\1"quiet splash"/' /etc/default/grub
+    sed -i 's/^\\(GRUB_CMDLINE_LINUX_DEFAULT=\\)\".*\"/\\1\"quiet splash\"/' /etc/default/grub
     
     echo '#### STARTING 7. #### ->> initramfs'
-    mkinitcpio -P || { echo "mkinitcpio failed"; exit 1; }
+    mkinitcpio -P || { echo \"mkinitcpio failed\"; exit 1; }
     
     echo '#### STARTING 8. #### ->> grub-install'
-    grub-install --target=x86_64-efi --efi-directory=/efi --boot-directory=/boot --bootloader-id=GRUB || { echo "grub-install failed"; exit 1; }
-    grub-mkconfig -o /boot/grub/grub.cfg || { echo "grub-mkconfig failed"; exit 1; }
-EOF
+    grub-install --target=x86_64-efi --efi-directory=/efi --boot-directory=/boot --bootloader-id=GRUB || { echo \"grub-install failed\"; exit 1; }
+    grub-mkconfig -o /boot/grub/grub.cfg || { echo \"grub-mkconfig failed\"; exit 1; }
+EOF")
+
+live_command_output "" "${commands_to_run[@]}"
 
 pause_script 'Finished' 'Done, you may now wish to reboot (further changes can be done by chrooting into /mnt).'
