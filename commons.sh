@@ -137,7 +137,8 @@ live_command_output() {
     local context="${2:-Default}"
     shift 2
     local commands=("$@")
-    local combined_log=$(mktemp)
+    local script_name=$(basename "$0")
+    local combined_log=$(mktemp "/tmp/${script_name}_XXXXXX.log")
     local exit_code=0
 
     cleanup() {
