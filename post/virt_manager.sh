@@ -50,28 +50,28 @@ libvirt_setup()
 
     live_command_output "${commands_to_run[@]}"
 
+    title='What hypervisor do you want to install?'
+    description="This script aids the installation of hypervisors."
+
     while true; do
-        clear
-        output 'What hypervisor do you want to install?'
-        output '0) QEMU'
-        output '1) LXC'
-        output '2) VirtualBox'
-        output 'b) Back'
-        read -p 'Insert the number of your selection: ' -r QEMU_choice
-        case $QEMU_choice in
-            
+        options=(\
+            'QEMU'\
+            'LXC'\
+            'VirtualBox'\
+            "Back"
+        )
+
+        menu_prompt tools_menu_choice tools_menu_choice_status "$title" "$description" "${options[@]}"
+
+        case $tools_menu_choice in
             0)  qemu_setup
-                break
-                ;;
+                break;;
             1)  lxc_setup
-                break
-                ;;
+                break;;
             2)  virtualbox_setup
-                break
-                ;;
-            b)  break
-                ;;
-            * ) output 'You did not enter a valid selection.'
+                break;;
+            b) exit;;
+            *) output "Invalid choice, please try again." ;;
         esac
     done
 
@@ -84,28 +84,28 @@ qemu_setup()
 
     commands_to_run=()
 
+    title='What qemu packages to install?'
+    description="This script aids the installation of QEMU versions."
+
     while true; do
-        clear
-        output 'What qemu packages to install?'
-        output '0) qemu-desktop (Full-system x86_64 only)'
-        output '1) qemu-emulators-full (Full-system and Usermode emulation both for x86 and ARM)'
-        output '2) qemu-full (Everything under the sun)'
-        output 'b) Back'
-        read -p 'Insert the number of your selection: ' -r QEMU_choice
-        case $QEMU_choice in
-            
-            1 ) commands_to_run+=("pacman --noconfirm -S qemu-desktop")
-                break
-                ;;
-            2 ) commands_to_run+=("pacman --noconfirm -S qemu-emulators-full")
-                break
-                ;;
-            3 ) commands_to_run+=("pacman --noconfirm -S qemu-full")
-                break
-                ;;
-            0 ) break
-                ;;
-            * ) output 'You did not enter a valid selection.'
+        options=(\
+            'qemu-desktop (Full-system x86_64 only)'\
+            'qemu-emulators-full (Full-system and Usermode emulation both for x86 and ARM)'\
+            'qemu-full (Everything under the sun)'\
+            "Back"
+        )
+
+        menu_prompt tools_menu_choice tools_menu_choice_status "$title" "$description" "${options[@]}"
+
+        case $tools_menu_choice in
+            0)  commands_to_run+=("pacman --noconfirm -S qemu-desktop")
+                break;;
+            1)  commands_to_run+=("pacman --noconfirm -S qemu-emulators-full")
+                break;;
+            2)  commands_to_run+=("pacman --noconfirm -S qemu-full")
+                break;;
+            b) exit;;
+            *) output "Invalid choice, please try again." ;;
         esac
     done
 

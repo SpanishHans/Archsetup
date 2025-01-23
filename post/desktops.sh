@@ -83,7 +83,7 @@ DM_console()
                 commands_to_run+=("systemctl start --now lemurs.service")
                 break
                 ;;
-            b)  exit
+            b)  break
                 ;;
             *)  pause_script "" 'You did not enter a valid selection.'
         esac
@@ -138,7 +138,7 @@ DM_graphical()
                 commands_to_run+=("systemctl start --now greetd.service")
                 break
                 ;;
-            b)  exit
+            b)  break
                 ;;
             *)  pause_script "" 'You did not enter a valid selection.'
         esac
@@ -248,7 +248,7 @@ DE_selector()
             13) commands_to_run+=("echo'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S xfce"'")
                 break
                 ;;
-            b)  exit
+            b)  break
                 ;;
             *)  pause_script "" 'You did not enter a valid selection.'
         esac
@@ -293,7 +293,7 @@ WM_selector()
                 commands_to_run+=("systemctl start --now ly.service")
                 break
                 ;;
-            b)  exit
+            b)  break
                 ;;
             *)  output 'You did not enter a valid selection.'
         esac

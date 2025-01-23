@@ -55,7 +55,7 @@ configure_users() {
         "Modify Existing User" \
         "Delete User" \
         "List Existing Users" \
-        "back"
+        "Back"
     )
 
     

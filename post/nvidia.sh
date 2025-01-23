@@ -20,21 +20,23 @@ nvidia_setup()
 {
     commands_to_run=()
 
-    while true; do
-        clear
-        output 'What driver to install?'
-        output '1) nvidia-open-dkms'
-        output '0) Nothing'
-        read -p 'Insert the number of your selection: ' -r nvidia_choice
+    title="Welcome to the Nvidia Installer"
+    description="This script aids the installation of Nvidia drivers."
 
-        case $nvidia_choice in
-            0)  commands_to_run+=("pacman --noconfirm -S base-devel linux-headers nvidia-open-dkms nvidia-utils nvidia-settings")
-                break
-                ;;
-            b)  break
-                ;;
-            *)  output 'You did not enter a valid selection.'
-                ;;
+
+    while true; do
+        options=(\
+            'nvidia-open-dkms'\
+            "Back"
+        )
+
+        menu_prompt nvidia_menu_choice nvidia_menu_choice_status "$title" "$description" "${options[@]}"
+
+        case $nvidia_menu_choice in
+            0) commands_to_run+=("pacman --noconfirm -S base-devel linux-headers nvidia-open-dkms nvidia-utils nvidia-settings")
+               break;;
+            b) exit;;
+            *) output "Invalid choice, please try again." ;;
         esac
     done
 

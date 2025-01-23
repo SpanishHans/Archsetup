@@ -31,40 +31,35 @@ plymouth_setup()
         fi
     ')
 
+    title='What theme to install?'
+    description="This script aids the installation of Plymouth themes for startup animation."
+
     while true; do
-        clear
-        output 'What theme to install?'
-        output '0) Connect'
-        output '1) Deus Ex'
-        output '2) Lone'
-        output '3) Red loader'
-        output 'b) Nothing'
-        read -p 'Insert the number of your selection: ' -r theme_choice
-        case $theme_choice in
-            0)
-                commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S plymouth-theme-connect-git'")
+        options=(\
+            'Connect'\
+            'Deus Ex'\
+            'Lone'\
+            'Red loader'\
+            "Back"
+        )
+
+        menu_prompt plymouth_menu_choice plymouth_menu_choice_status "$title" "$description" "${options[@]}"
+
+        case $plymouth_menu_choice in
+            0)  commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S plymouth-theme-connect-git'")
                 commands_to_run+=("plymouth-set-default-theme -R connect")
-                break
-                ;;
-            1)
-                commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S plymouth-theme-deus-ex-git'")
+                break;;
+            1)  commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S plymouth-theme-deus-ex-git'")
                 commands_to_run+=("plymouth-set-default-theme -R deus_ex")
-                break
-                ;;
-            2)
-                commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S plymouth-theme-lone-git'")
+                break;;
+            2)  commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S plymouth-theme-lone-git'")
                 commands_to_run+=("plymouth-set-default-theme -R lone")
-                break
-                ;;
-            3)
-                commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S plymouth-theme-red-loader-git'")
+                break;;
+            3)  commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S plymouth-theme-red-loader-git'")
                 commands_to_run+=("plymouth-set-default-theme -R red_loader")
-                break
-                ;;
-            b)  break
-                ;;
-            *)  output 'You did not enter a valid selection.'
-                ;;
+                break;;
+            b) exit;;
+            *) output "Invalid choice, please try again." ;;
         esac
     done
 
