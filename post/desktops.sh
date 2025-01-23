@@ -312,9 +312,9 @@ while true; do
         "Back"
     )
     
-    menu_prompt choice choice_status "$titulo" "$descripcion" "${options[@]}"
+    menu_prompt des_choice des_choice_status "$titulo" "$descripcion" "${options[@]}"
 
-    case $choice in
+    case $des_choice in
         0) DM_selector;break;;
         1) DE_selector;break;;
         2) WM_selector;break;;
