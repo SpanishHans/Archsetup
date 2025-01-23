@@ -145,7 +145,7 @@ while true; do
         2) configure_clipboard;;
         3) configure_python;;
         4) configure_node;;
-        b) break ;;
+        b) exit ;;
         *) output "Invalid choice, please try again." ;;
     esac
 done
