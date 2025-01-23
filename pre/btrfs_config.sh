@@ -29,8 +29,9 @@ mount_btrfs() {
         IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
         commands_to_run+=("btrfs su cr /mnt/$key")
     done
-    continue_script "" "btrfs su cr /mnt/$key"
+    live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
     
+    commands_to_run=()
     commands_to_run+=("chattr +C /mnt/@home")
     commands_to_run+=("chattr +C /mnt/@snapshots")
 
@@ -38,8 +39,9 @@ mount_btrfs() {
         IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
         commands_to_run+=("chattr +C /mnt/$key")
     done
-    continue_script "" "chattr +C /mnt/$key"
+    live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
     
+    commands_to_run=()
     commands_to_run+=("umount /mnt")
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvol=@ \"${ROOT_PART}\" /mnt")
 
@@ -51,8 +53,9 @@ mount_btrfs() {
         IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
         commands_to_run+=("mkdir -p /mnt$path")
     done
-    continue_script "" "mkdir -p /mnt$path"
+    live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
     
+    commands_to_run=()
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvolid=5 \"${ROOT_PART}\" /mnt/.btrfsroot")
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvol=@home \"${ROOT_PART}\" /mnt/home")
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvol=@snapshots \"${ROOT_PART}\" /mnt/.snapshots")
@@ -61,8 +64,9 @@ mount_btrfs() {
         IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
         commands_to_run+=("mount -o $flags,subvol=$key $disk $path")
     done
-    continue_script "" "mount -o $flags,subvol=$key $disk $path"
+    live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
 
+    commands_to_run=()
     commands_to_run+=("mkdir -p /mnt/efi")
     commands_to_run+=("mount -o nodev,nosuid,noexec \"${EFI_PART}\" /mnt/efi")
 
