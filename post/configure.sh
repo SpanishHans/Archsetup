@@ -16,19 +16,19 @@
 
 source ./commons.sh
 
-# if [ "$LIVE_ENV" = true ]; then
-#     pause_script "ERROR" "The configure script must be run from a machine with ArchLinux already installed.
+if [ "$LIVE_ENV" = true ]; then
+    pause_script "ERROR" "The configure script must be run from a machine with ArchLinux already installed.
 
-# Exiting!!!
-#     "
-#     exit
-#     if [ "$(id -u)" -ne 0 ]; then
-#         pause_script "ERROR" "The configure script must be run as root user.
+Exiting!!!
+    "
+    exit
+    if [ "$(id -u)" -ne 0 ]; then
+        pause_script "ERROR" "The configure script must be run as root user.
 
-# Exiting!!!"
-#         exit
-#     fi
-# fi
+Exiting!!!"
+        exit
+    fi
+fi
 
 title="Configure your PC after install"
 description="Welcome to the menu for setting things up after install. Here you can find a lot of utilities to make the process of setting your pc as easy as possible."
