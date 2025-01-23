@@ -309,7 +309,7 @@ while true; do
         "Configure Display Manager" \
         "Configure Desktop Environment" \
         "Configure Window Manager" \
-        "Bacck" \
+        "Back" \
     )
     
     menu_prompt choice choice_status "$titulo" "$descripcion" "${options[@]}"
