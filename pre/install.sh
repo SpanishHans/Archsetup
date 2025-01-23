@@ -35,7 +35,6 @@ Exiting!!!"
     fi
 fi
 
-continue_script 'Starting disk formatter' 'Starting utility for disk selection, formatting and partitioning.'
 start_disk_setup
 
 commands_to_run=()
@@ -90,7 +89,6 @@ locales_setup
 
 superuser_setup
 
-continue_script 'Copy repo' 'Copying repo to machine'
 cp -R --no-preserve=ownership /root/Archsetup /mnt/root/Archsetup
 
 description="About to chroot into the machine
