@@ -56,10 +56,15 @@ mount_btrfs() {
     commands_to_run+=("mkdir -p /mnt/.btrfsroot")
     commands_to_run+=("mkdir -p /mnt/home")
     commands_to_run+=("mkdir -p /mnt/.snapshots")
+    commands_to_run+=("mkdir -p /mnt/efi")
 
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvolid=5 \"${ROOT_PART}\" /mnt/.btrfsroot")
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvol=@home \"${ROOT_PART}\" /mnt/home")
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvol=@snapshots \"${ROOT_PART}\" /mnt/.snapshots")
+    commands_to_run+=("mount -o nodev,nosuid,noexec \"${EFI_PART}\" /mnt/efi")
+    live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
+    
+    commands_to_run=()
 
     options=()
     for key in "${!given_array[@]}"; do
@@ -78,8 +83,7 @@ mount_btrfs() {
     live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
 
     commands_to_run=()
-    commands_to_run+=("mkdir -p /mnt/efi")
-    commands_to_run+=("mount -o nodev,nosuid,noexec \"${EFI_PART}\" /mnt/efi")
+    
 
     live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
     pause_script "Finished BTRFS setup" "Finished mouting BTRFS and all of its required structure.
