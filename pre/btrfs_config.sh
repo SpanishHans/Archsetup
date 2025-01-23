@@ -77,7 +77,7 @@ mount_btrfs() {
             commands_to_run+=("mkdir -p /mnt$path")
         fi
         
-        commands_to_run+=("mount -o $flags,subvol=$key $disk $path")
+        commands_to_run+=("mount -o $flags,subvol=$key $disk /mnt$path")
         options+=("$key $desc")
     done
     live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
