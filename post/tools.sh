@@ -128,7 +128,7 @@ title="Welcome to the tools Installer"
 description="This script aids the installation of additional useful tools."
 
 while true; do
-    options=(\  
+    options=(\
         "Configure chezmoi" \
         "Configure asdf" \
         "Configure clipboard" \
