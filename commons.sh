@@ -138,7 +138,7 @@ live_command_output() {
     shift 2
     local commands=("$@")
     local script_name=$(basename "$0")
-    local combined_log=$(mktemp "/tmp/${script_name}_XXXXXX.log")
+    local combined_log="/tmp/${script_name}_$(date +%Y%m%d%H%M%S).log"
     local exit_code=0
 
     cleanup() {
