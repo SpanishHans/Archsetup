@@ -57,21 +57,10 @@ mount_btrfs() {
     commands_to_run+=("mkdir -p /mnt/home")
     commands_to_run+=("mkdir -p /mnt/.snapshots")
 
-    for key in "${!given_array[@]}"; do
-        IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
-        disk=$(echo "$disk" | xargs)
-        flags=$(echo "$flags" | xargs)
-        path=$(echo "$path" | xargs)
-        desc=$(echo "$desc" | xargs)
-        commands_to_run+=("mkdir -p /mnt$path")
-    done
-    live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
-    
-    commands_to_run=()
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvolid=5 \"${ROOT_PART}\" /mnt/.btrfsroot")
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvol=@home \"${ROOT_PART}\" /mnt/home")
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvol=@snapshots \"${ROOT_PART}\" /mnt/.snapshots")
-    
+
     options=()
     for key in "${!given_array[@]}"; do
         IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
@@ -79,6 +68,10 @@ mount_btrfs() {
         flags=$(echo "$flags" | xargs)
         path=$(echo "$path" | xargs)
         desc=$(echo "$desc" | xargs)
+        if [ ! -d "/mnt$path" ]; then
+            commands_to_run+=("mkdir -p /mnt$path")
+        fi
+        
         commands_to_run+=("mount -o $flags,subvol=$key $disk $path")
         options+=("$key $desc")
     done
