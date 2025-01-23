@@ -101,13 +101,6 @@ full_default_route() {
     
 
     live_command_output "" "${commands_to_run[@]}"
-    pause_script "Format of $DISK finished" "The selected disk $DISK was partitioned liked so:
-    
-/boot/efi will be on: $EFI_PART
-/         will be on: $ROOT_PART
-
-$EFI_PART is formatted as $EFI_FORM
-$ROOT_PART is formatted as $ROOT_FORM"
     run_btrfs_setup
 }
 
