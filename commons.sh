@@ -51,16 +51,15 @@ output() {
 
 terminal_title() {
     local msg_title="${1:-Default}"
-    local length=${#msg_title}
-    local border=$(printf '%*s' $((length + 8)) '' | tr ' ' '=')
-    local title=$(echo -e "$msg_title")
-
     local wrapped_title=$(echo "$msg_title" | fold -s -w 100)
+    local length=$(echo "$wrapped_title" | awk 'BEGIN { max = 0 } { if (length($0) > max) max = length($0) } END { print max }')
+    local border=$(printf '%*s' $((length + 8)) '' | tr ' ' '=')
 
     echo -e "$border"
     echo -e ">>> $wrapped_title <<<"
     echo -e "$border"
 }
+
 
 pause_script() {
     local msg_title="${1:-Default}"
@@ -114,6 +113,9 @@ handle_exit_code() {
 output_error() {
         local cmd="$1"
         local exit_code="$2"
+               
+        local wrapped_cmd=$(echo "$cmd" | fold -s -w 100)
+
         if [ "$exit_code" -eq 0 ]; then
             echo -e "\
 ================================================\n\
@@ -125,7 +127,7 @@ output_error() {
 >>> CRITICAL ERROR: COMMAND EXECUTION FAILED! <<<\n\
 ------------------------------------------------------------\n\
 Exit Code: $exit_code\n\
-Failed Command: $cmd\n\
+Failed Command: $wrapped_cmd\n\
 ===========================================================\n\n" >> "$combined_log"
         fi
     }
