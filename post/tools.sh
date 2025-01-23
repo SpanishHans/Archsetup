@@ -66,6 +66,7 @@ configure_asdf()
         fi"
     )
 
+    commands_to_run+=("terminal_title 'Done with segment execuption'")
     live_command_output "" "${commands_to_run[@]}"
 
     output "ASDF Setup complete!"
@@ -77,6 +78,7 @@ configure_clipboard()
     commands_to_run=()
     commands_to_run+=("pacman --noconfirm -S rofi-wayland wl-clipboard cliphist grim slurp")
 
+    commands_to_run+=("terminal_title 'Done with segment execuption'")
     live_command_output "" "${commands_to_run[@]}"
 
     output "Clipboard Setup complete!"
@@ -95,6 +97,7 @@ configure_python()
     commands_to_run+=("sudo -u $username asdf plugin add python")
     commands_to_run+=("sudo -u $username asdf install python 3.12.3")
 
+    commands_to_run+=("terminal_title 'Done with segment execuption'")
     live_command_output "" "${commands_to_run[@]}"
 
     output "Python Setup complete!"
@@ -114,24 +117,29 @@ configure_node()
     commands_to_run+=("sudo -u $username asdf install node latest")
     commands_to_run+=("sudo -u $username asdf global nodejs latest")
 
+    commands_to_run+=("terminal_title 'Done with segment execuption'")    
     live_command_output "" "${commands_to_run[@]}"
 
     output "Python Setup complete!"
     pause_script
 }
 
+title="Welcome to the tools Installer"
+description="This script aids the installation of additional useful tools."
+
 while true; do
-    clear
-    output "Configuration Menu"
-    output "-------------------"
-    output "0) Configure chezmoi"
-    output "1) Configure asdf"
-    output "2) Configure clipboard"
-    output "3) Configure python"
-    output "4) Configure node"
-    output "b) Exit"
-    read -p "Please select an option: " -r choice
-    case $choice in
+    options=(\  
+        "Configure chezmoi" \
+        "Configure asdf" \
+        "Configure clipboard" \
+        "Configure python" \
+        "Configure node" \
+        "Exit"
+    )
+
+    menu_prompt tools_menu_choice tools_menu_choice_status "$title" "$description" "${options[@]}"
+
+    case $tools_menu_choice in
         0) configure_chezmoi;;
         1) configure_asdf;;
         2) configure_clipboard;;
