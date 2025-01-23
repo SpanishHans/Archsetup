@@ -38,7 +38,7 @@ configure_chezmoi()
 
     # CHECK THIS ON DOCUMENTATION. HAS TO BE STARTED ON USER HOME.
     sudo -u "$username" chezmoi init "$chezmoi_repo"
-    pause_script "" "Chezmoi Setup complete for user $username!"
+    pause_script "Chezmoi" "Chezmoi Setup complete for user $username!"
 }
 
 
@@ -66,7 +66,7 @@ configure_asdf()
 
     
     live_command_output "" "${commands_to_run[@]}"
-    pause_script "" "ASDF Setup complete!"
+    pause_script "ASDF" "ASDF Setup complete!"
 }
 
 configure_clipboard()
@@ -76,7 +76,7 @@ configure_clipboard()
 
     
     live_command_output "" "${commands_to_run[@]}"
-    pause_script "" "Clipboard Setup complete!"
+    pause_script "Clipboard" "Clipboard Setup complete!"
 }
 
 configure_python()
@@ -93,7 +93,7 @@ configure_python()
 
     
     live_command_output "" "${commands_to_run[@]}"
-    pause_script "" "Python Setup complete!"
+    pause_script "Python" "Python Setup complete!"
 }
 
 configure_node()

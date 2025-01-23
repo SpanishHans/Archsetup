@@ -92,7 +92,7 @@ nvidia_setup()
     ')
     
     live_command_output "" "${commands_to_run[@]}"
-    pause_script "" "Nvidia Setup complete!"
+    pause_script "Nvidia" "Nvidia Setup complete!"
 }
 
 nvidia_setup

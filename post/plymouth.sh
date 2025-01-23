@@ -66,7 +66,7 @@ plymouth_setup()
     commands_to_run+=("grub-mkconfig -o /boot/grub/grub.cfg")
 
     live_command_output "" "${commands_to_run[@]}"
-    pause_script "" "Plymouth Setup complete!"
+    pause_script "Plymouth" "Plymouth Setup complete!"
 }
 
 plymouth_setup

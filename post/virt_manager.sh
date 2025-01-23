@@ -77,8 +77,7 @@ libvirt_setup()
         esac
     done
 
-    output "Libvirt and whatever hypervisor you installed have been setup correctly!"
-    pause_script "Libvirt" "Libvirt setup complete"
+    pause_script "Libvirt" "Libvirt and whatever hypervisor you installed have been setup correctly!"
 }
 
 qemu_setup()
@@ -113,7 +112,7 @@ qemu_setup()
 
     
     live_command_output "" "${commands_to_run[@]}"
-    pause_script "" ""Qemu Setup complete!""
+    pause_script "Qemu" ""Qemu Setup complete!""
 }
 
 lxc_setup()

@@ -39,8 +39,6 @@ DM_selector()
             *)  pause_script "" 'You did not enter a valid selection.'
         esac
     done
-
-    pause_script "" "Display Manager Setup complete!"
 }
 
 DM_console()
@@ -90,7 +88,7 @@ DM_console()
     done
 
     live_command_output "" "${commands_to_run[@]}"
-    pause_script "" "Display Manager Console Setup complete!"
+    pause_script "Display Manager Console" "Display Manager Console Setup complete!"
 }
 
 DM_graphical()
@@ -144,7 +142,7 @@ DM_graphical()
     done
 
     live_command_output "" "${commands_to_run[@]}"
-    pause_script "" "Display Manager Graphical Setup complete!"
+    pause_script "Display Manager Graphical" "Display Manager Graphical Setup complete!"
 }
 
 
@@ -253,7 +251,7 @@ DE_selector()
     done
 
     live_command_output "" "${commands_to_run[@]}"
-    pause_script "" "Desktop Environment Setup complete!"
+    pause_script "Desktop Environment" "Desktop Environment Setup complete!"
 }
 
 WM_selector()
@@ -297,7 +295,7 @@ WM_selector()
     done
 
     live_command_output "" "${commands_to_run[@]}"
-    pause_script "" "Window Manager Setup complete!"
+    pause_script "Window Manager" "Window Manager Setup complete!"
 }
 
 while true; do
