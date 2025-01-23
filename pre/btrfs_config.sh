@@ -49,8 +49,8 @@ mount_btrfs() {
 
     for key in "${!given_array[@]}"; do
         IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
-        continue_script "" "mkdir -p /mnt/$path"
-        commands_to_run+=("mkdir -p /mnt/$path")
+        continue_script "" "mkdir -p /mnt$path"
+        commands_to_run+=("mkdir -p /mnt$path")
     done
     
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvolid=5 \"${ROOT_PART}\" /mnt/.btrfsroot")
