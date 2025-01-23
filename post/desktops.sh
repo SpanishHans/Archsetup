@@ -306,10 +306,10 @@ WM_selector()
 
 while true; do
     options=(\
-        "Configure Display Manager" \
-        "Configure Desktop Environment" \
-        "Configure Window Manager" \
-        "Back" \
+        "Configure Display Manager"\
+        "Configure Desktop Environment"\
+        "Configure Window Manager"\
+        "Back"
     )
     
     menu_prompt choice choice_status "$titulo" "$descripcion" "${options[@]}"
