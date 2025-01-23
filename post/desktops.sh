@@ -318,7 +318,7 @@ while true; do
         0) DM_selector;break;;
         1) DE_selector;break;;
         2) WM_selector;break;;
-        b) exit;;
+        b) break;;
         *) output "Invalid choice, please try again." ;;
     esac
 done
