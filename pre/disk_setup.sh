@@ -110,7 +110,6 @@ full_default_route() {
 $EFI_PART is formatted as $EFI_FORM
 $ROOT_PART is formatted as $ROOT_FORM"
     run_btrfs_setup
-    exit
 }
 
 custom_default_route() {
@@ -119,14 +118,12 @@ custom_default_route() {
     select_efi_partition
     select_root_partition
     run_btrfs_setup
-    exit
 }
 
 full_custom_route() {
     format_and_partition_disks
     set_filesystem_for_partitions
     pause_script "Full custom not ready!" "The rest of the full custom logic for mounting whatever you want is not ready yet, sorry."
-    exit
 }
 
 format_and_partition_disks() {

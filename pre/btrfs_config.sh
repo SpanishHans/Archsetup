@@ -78,7 +78,7 @@ mount_btrfs() {
         fi
         
         commands_to_run+=("mount -o $flags,subvol=$key $disk /mnt$path")
-        options+=("$key $desc")
+        options+=("$key has $path")
     done
     live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
 
@@ -88,10 +88,10 @@ mount_btrfs() {
     live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
     pause_script "Finished BTRFS setup" "Finished mouting BTRFS and all of its required structure.
 
-    /           is on subvol @
-    /home       is on subvol @home
-    /.snapshots is on subvol @snapshots
-    /.btrfsroot is on subvolid 5
+    @ has /
+    @home has /home
+    @snapshots has /.snapshots
+    subvolid 5 has /.btrfsroot
 
     Additionally:
     
