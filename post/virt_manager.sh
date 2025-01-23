@@ -38,7 +38,11 @@ initial_setup()
 
     
     live_command_output "" "${commands_to_run[@]}"
-    pause_script "Virt-Manager" "Initial setup complete"
+    pause_script "Virt-Manager" "Virt manager initial setup completed. FYI:
+
+1) Virtualization is enabled for your PC on BIOS.
+2) Your processor supports KVM.
+"
 }
 
 libvirt_setup()
