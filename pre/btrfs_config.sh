@@ -74,7 +74,7 @@ mount_btrfs() {
         local options+=("$key has $path")
     done  
 
-    live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
     pause_script "Finished BTRFS setup" "Finished mouting BTRFS and all of its required structure.
 
     @ has /

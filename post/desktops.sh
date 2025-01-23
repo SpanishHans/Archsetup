@@ -50,7 +50,7 @@ DM_console()
     for dm in "${all_dms[@]}"; do
         commands_to_run+=("systemctl disable $dm")
     done
-    live_command_output "" "Things" "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
     
     commands_to_run=()
 
@@ -87,7 +87,7 @@ DM_console()
         esac
     done
 
-    live_command_output "" "console display manager (DM)" "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
     pause_script "" "Display Manager Console Setup complete!"
 }
 
@@ -99,7 +99,7 @@ DM_graphical()
     for dm in "${all_dms[@]}"; do
         commands_to_run+=("systemctl disable $dm")
     done
-    live_command_output "" "Things" "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
     
     commands_to_run=()
 
@@ -140,7 +140,7 @@ DM_graphical()
         esac
     done
 
-    live_command_output "" "graphical display manager (DM)" "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
     pause_script "" "Display Manager Graphical Setup complete!"
 }
 
@@ -153,7 +153,7 @@ DE_selector()
     for dm in "${all_dms[@]}"; do
         commands_to_run+=("systemctl disable $dm")
     done
-    live_command_output "" "Things" "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
 
     commands_to_run=()
 
@@ -248,7 +248,7 @@ DE_selector()
         esac
     done
 
-    live_command_output "" "desktop environment (DE)" "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
     pause_script "" "Desktop Environment Setup complete!"
 }
 
@@ -260,7 +260,7 @@ WM_selector()
     for dm in "${all_dms[@]}"; do
         commands_to_run+=("systemctl disable $dm")
     done
-    live_command_output "" "Things" "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
 
     commands_to_run=()
     commands_to_run+=("pacman --noconfirm -S brightnessctl")
@@ -291,7 +291,7 @@ WM_selector()
         esac
     done
 
-    live_command_output "" "window manager (wm)" "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
     pause_script "" "Window Manager Setup complete!"
 }
 

@@ -36,7 +36,7 @@ initial_setup()
         fi
     ")
 
-    live_command_output "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
 
     output "Initial Setup complete!"
     pause_script

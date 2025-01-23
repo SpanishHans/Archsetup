@@ -99,7 +99,7 @@ full_default_route() {
     commands_to_run+=("sync")
     commands_to_run+=("udevadm settle")
 
-    live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
     pause_script "Format of $DISK finished" "The selected disk $DISK was partitioned liked so:
     
 /boot/efi will be on: $EFI_PART
@@ -119,8 +119,8 @@ custom_default_route() {
 }
 
 full_custom_route() {
-    # format_and_partition_disks
-    # set_filesystem_for_partitions
+    format_and_partition_disks
+    set_filesystem_for_partitions
     pause_script "Full custom not ready!" "The rest of the full custom logic for mounting whatever you want is not ready yet, sorry."
 }
 

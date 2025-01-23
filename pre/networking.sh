@@ -24,8 +24,7 @@ hostname_prompt () {
 
 networking_setup() {
     clear
-    # hostname_prompt hostname
-    hostname="test_machine"
+    hostname_prompt hostname
 
     echo "$hostname" > /mnt/etc/hostname
     cat <<EOF > /mnt/etc/hosts

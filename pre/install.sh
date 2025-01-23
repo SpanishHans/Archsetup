@@ -21,21 +21,25 @@ source ./pre/disk_setup.sh
 source ./pre/networking.sh
 source ./pre/locales.sh
 
-# if [ "$LIVE_ENV" = false ]; then
-#     pause_script "" "The install script must be run from the archlinux-YEAR.MONTH.DAY-x86_64.iso image.
+if [ "$LIVE_ENV" = false ]; then
+    pause_script "" "The install script must be run from the archlinux-YEAR.MONTH.DAY-x86_64.iso image.
 
-# Exiting!!!
-#     "
-#     exit
-#     if [ "$(id -u)" -ne 0 ]; then
-#         pause_script "" "The install script must be run as root user.
+Exiting!!!
+    "
+    exit
+    if [ "$(id -u)" -ne 0 ]; then
+        pause_script "" "The install script must be run as root user.
 
-# Exiting!!!"
-#         exit
-#     fi
-# fi
+Exiting!!!"
+        exit
+    fi
+fi
 
+continue_script 'Starting disk formatter' 'Starting utility for disk selection, formatting and partitioning.'
 start_disk_setup
+
+commands_to_run=()
+commands_to_run+=("")
 
 continue_script 'Detect CPU vendor' 'Detecting ucode for processor brand'
 CPU=$(grep -m 1 'vendor_id' /proc/cpuinfo)
@@ -51,11 +55,11 @@ else
 fi
 
 continue_script 'Installing base system' 'Installing the base system (it may take a while).'
-pacstrap /mnt \
+commands_to_run+=("pacstrap /mnt \
   base \
   linux \
   linux-firmware \
-  "${microcode}" \
+  \"\${microcode}\" \
   grub \
   efibootmgr \
   sudo \
@@ -74,13 +78,11 @@ pacstrap /mnt \
   pipewire-alsa \
   pipewire-pulse \
   pipewire-jack \
-  snap-pac || {
-    pause_script 'Install failed somewhere in pacstrap' "Installation failed"
-    exit 1
-  }
+  snap-pac")
 
 continue_script 'New fstab' 'Generating a new fstab.'
-genfstab -U /mnt >> /mnt/etc/fstab || { pause_script '' "genfstab failed"; exit 1; }
+commands_to_run+=("genfstab -U /mnt >> /mnt/etc/fstab")
+live_command_output "" "${commands_to_run[@]}"
 
 networking_setup
 

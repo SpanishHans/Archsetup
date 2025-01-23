@@ -134,8 +134,7 @@ Failed Command: $wrapped_cmd\n\
 
 live_command_output() {
     local user="${1:-root}"
-    local context="${2:-Default}"
-    shift 2
+    shift 1
     local commands=("$@")
     local script_name=$(basename "$(realpath "$0")")
     local combined_log="/tmp/${script_name}_$(date +%Y%m%d%H%M%S).log"
@@ -168,7 +167,7 @@ live_command_output() {
         execute_command "$cmd" || { exit_code=$?; break; }
     done &
 
-    dialog --title "Live Command Output for $context" \
+    dialog \
            --backtitle "Command Execution Viewer" \
            --tailbox "$combined_log" \
            "$full_height" "$full_width" 2>&1 >/dev/tty

@@ -89,7 +89,7 @@ nvidia_setup()
         grub-mkconfig -o /boot/grub/grub.cfg
     ')
 
-    live_command_output "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
 
     output "Nvidia Setup complete!"
     pause_script

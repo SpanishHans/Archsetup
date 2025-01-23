@@ -33,7 +33,7 @@ configure_chezmoi()
     commands_to_run=()
     commands_to_run+=("pacman --noconfirm -S chezmoi")
 
-    live_command_output "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
 
     # CHECK THIS ON DOCUMENTATION. HAS TO BE STARTED ON USER HOME.
     sudo -u "$username" chezmoi init "$chezmoi_repo"
@@ -65,7 +65,7 @@ configure_asdf()
         fi"
     )
 
-    live_command_output "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
 
     output "ASDF Setup complete!"
     pause_script
@@ -76,7 +76,7 @@ configure_clipboard()
     commands_to_run=()
     commands_to_run+=("pacman --noconfirm -S rofi-wayland wl-clipboard cliphist grim slurp")
 
-    live_command_output "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
 
     output "Clipboard Setup complete!"
     pause_script
@@ -94,7 +94,7 @@ configure_python()
     commands_to_run+=("sudo -u $username asdf plugin add python")
     commands_to_run+=("sudo -u $username asdf install python 3.12.3")
 
-    live_command_output "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
 
     output "Python Setup complete!"
     pause_script
@@ -113,7 +113,7 @@ configure_node()
     commands_to_run+=("sudo -u $username asdf install node latest")
     commands_to_run+=("sudo -u $username asdf global nodejs latest")
 
-    live_command_output "${commands_to_run[@]}"
+    live_command_output "" "${commands_to_run[@]}"
 
     output "Python Setup complete!"
     pause_script
