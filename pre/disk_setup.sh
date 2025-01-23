@@ -78,7 +78,6 @@ full_default_route() {
         esac
     done
 
-    commands_to_run=()
     commands_to_run+=("sgdisk --zap-all \"${DISK}\"")
     commands_to_run+=("sgdisk -g \"${DISK}\"")
     commands_to_run+=("sgdisk -n 1:0:+1024M -t 1:ef00 -c 1:'ESP' \"${DISK}\"")
@@ -96,7 +95,6 @@ full_default_route() {
         ROOT_FORM='btrfs'
         commands_to_run+=("mkfs.btrfs -L rootfs \"${ROOT_PART}\"")
     fi
-
 
     commands_to_run+=("sync")
     commands_to_run+=("udevadm settle")
@@ -325,4 +323,5 @@ Please go back and format the partition as BTRFS Partition."
 start_disk_setup() {
     clear
     choose_custom_or_default_layout
+    exit
 }

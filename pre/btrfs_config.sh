@@ -33,9 +33,7 @@ mount_btrfs() {
         desc=$(echo "$desc" | xargs)
         commands_to_run+=("btrfs su cr /mnt/$key")
     done
-    live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
     
-    commands_to_run=()
     commands_to_run+=("chattr +C /mnt/@home")
     commands_to_run+=("chattr +C /mnt/@snapshots")
 
@@ -47,9 +45,7 @@ mount_btrfs() {
         desc=$(echo "$desc" | xargs)
         commands_to_run+=("chattr +C /mnt/$key")
     done
-    live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
-    
-    commands_to_run=()
+
     commands_to_run+=("umount /mnt")
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvol=@ \"${ROOT_PART}\" /mnt")
 
@@ -62,11 +58,8 @@ mount_btrfs() {
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvol=@home \"${ROOT_PART}\" /mnt/home")
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvol=@snapshots \"${ROOT_PART}\" /mnt/.snapshots")
     commands_to_run+=("mount -o nodev,nosuid,noexec \"${EFI_PART}\" /mnt/efi")
-    live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
-    
-    commands_to_run=()
 
-    options=()
+    local options=()
     for key in "${!given_array[@]}"; do
         IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
         disk=$(echo "$disk" | xargs)
@@ -78,12 +71,8 @@ mount_btrfs() {
         fi
         
         commands_to_run+=("mount -o $flags,subvol=$key $disk /mnt$path")
-        options+=("$key has $path")
-    done
-    live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
-
-    commands_to_run=()
-    
+        local options+=("$key has $path")
+    done  
 
     live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
     pause_script "Finished BTRFS setup" "Finished mouting BTRFS and all of its required structure.
