@@ -145,7 +145,6 @@ live_command_output() {
     }
     trap cleanup EXIT
 
-    
     execute_command() {
         local cmd="$1"
         {
@@ -158,27 +157,33 @@ live_command_output() {
             exit_code=$?
             output_error "$cmd" "$exit_code"
         }
-        if [ $exit_code -ne 0 ]; then
-            return $exit_code  # Ensure the function returns on failure
-        fi
+        return $exit_code
     }
 
-    for cmd in "${commands[@]}"; do
-        execute_command "$cmd" || { exit_code=$?; break; }
-    done &
+    # Execute all commands in the background and pipe output to dialog
+    {
+        for cmd in "${commands[@]}"; do
+            execute_command "$cmd" || { exit_code=$?; break; }
+        done
 
-    terminal_title "Done, press enter" >> "$combined_log"
+        # If all commands succeeded, add the "Done" message
+        if [ $exit_code -eq 0 ]; then
+            terminal_title "Done, press enter" >> "$combined_log"
+        fi
+    } &
 
+    # Show the dialog live
     dialog \
-           --backtitle "Command Execution Viewer" \
-           --tailbox "$combined_log" \
-           "$full_height" "$full_width" 2>&1 >/dev/tty
+        --backtitle "Command Execution Viewer" \
+        --tailbox "$combined_log" \
+        "$full_height" "$full_width" 2>&1 >/dev/tty
 
+    # Wait for all commands to finish
     wait
-    exit_code=$?
-    
+
     handle_exit_code "$exit_code" "return"
 }
+
 
 input_text() {
     local choice="$1"
