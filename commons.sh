@@ -91,7 +91,7 @@ continue_script() {
         --infobox "$message" \
         $half_height $half_width 2>&1 >/dev/tty
     exit_code=$?
-    sleep 0.7
+    sleep 2
     case $exit_code in
         0)  return;;
         1)  exit;;

@@ -25,50 +25,46 @@ mount_btrfs() {
     commands_to_run+=("btrfs su cr /mnt/@home")
     commands_to_run+=("btrfs su cr /mnt/@snapshots")
 
-    local options=()
     for key in "${!given_array[@]}"; do
         IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
+        continue_script "" "btrfs su cr /mnt/$key"
         commands_to_run+=("btrfs su cr /mnt/$key")
-        options+=("$key $desc")
     done
     
     commands_to_run+=("chattr +C /mnt/@home")
     commands_to_run+=("chattr +C /mnt/@snapshots")
 
-    local options=()
     for key in "${!given_array[@]}"; do
         IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
+        continue_script "" "chattr +C /mnt/$key"
         commands_to_run+=("chattr +C /mnt/$key")
-        options+=("$key $desc")
     done
     
     commands_to_run+=("umount /mnt")
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvol=@ \"${ROOT_PART}\" /mnt")
 
-    commands_to_run+=("mkdir -p /mnt/efi")
     commands_to_run+=("mkdir -p /mnt/.btrfsroot")
     commands_to_run+=("mkdir -p /mnt/home")
-    commands_to_run+=("mkdir -p /mnt/.snapshots")    
+    commands_to_run+=("mkdir -p /mnt/.snapshots")
 
-    local options=()
     for key in "${!given_array[@]}"; do
         IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
+        continue_script "" "mkdir -p /mnt/$path"
         commands_to_run+=("mkdir -p /mnt/$path")
-        options+=("$key $desc")
     done
     
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvolid=5 \"${ROOT_PART}\" /mnt/.btrfsroot")
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvol=@home \"${ROOT_PART}\" /mnt/home")
     commands_to_run+=("mount -o ssd,noatime,compress=zstd,subvol=@snapshots \"${ROOT_PART}\" /mnt/.snapshots")
-    commands_to_run+=("mount -o nodev,nosuid,noexec \"${EFI_PART}\" /mnt/efi")
-
     
-    local options=()
     for key in "${!given_array[@]}"; do
         IFS=" | " read -r disk flags path desc <<< "${given_array[$key]}"
+        continue_script "" "mount -o $flags,subvol=$key $disk $path"
         commands_to_run+=("mount -o $flags,subvol=$key $disk $path")
-        options+=("$key $desc")
     done
+
+    commands_to_run+=("mkdir -p /mnt/efi")
+    commands_to_run+=("mount -o nodev,nosuid,noexec \"${EFI_PART}\" /mnt/efi")
 
     live_command_output "" "Formatting disk with full default mode." "${commands_to_run[@]}"
     pause_script "Created" "$(printf "%s\n" "${options[@]}")"
