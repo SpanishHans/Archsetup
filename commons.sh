@@ -175,7 +175,7 @@ live_command_output() {
     # Show the dialog live
     dialog \
         --backtitle "Command Execution Viewer" \
-        --progressbox "$combined_log" \
+        --tailbox "$combined_log" \
         "$full_height" "$full_width" 2>&1 >/dev/tty
 
     # Wait for all commands to finish
