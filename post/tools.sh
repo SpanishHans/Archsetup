@@ -33,14 +33,12 @@ configure_chezmoi()
     commands_to_run=()
     commands_to_run+=("pacman --noconfirm -S chezmoi")
 
-    commands_to_run+=("terminal_title 'Done with segment execuption'")
+    
     live_command_output "" "${commands_to_run[@]}"
 
     # CHECK THIS ON DOCUMENTATION. HAS TO BE STARTED ON USER HOME.
     sudo -u "$username" chezmoi init "$chezmoi_repo"
-
-    output "Chezmoi Setup complete for user $username!"
-    pause_script
+    pause_script "" "Chezmoi Setup complete for user $username!"
 }
 
 
@@ -66,11 +64,9 @@ configure_asdf()
         fi"
     )
 
-    commands_to_run+=("terminal_title 'Done with segment execuption'")
+    
     live_command_output "" "${commands_to_run[@]}"
-
-    output "ASDF Setup complete!"
-    pause_script
+    pause_script "" "ASDF Setup complete!"
 }
 
 configure_clipboard()
@@ -78,11 +74,9 @@ configure_clipboard()
     commands_to_run=()
     commands_to_run+=("pacman --noconfirm -S rofi-wayland wl-clipboard cliphist grim slurp")
 
-    commands_to_run+=("terminal_title 'Done with segment execuption'")
+    
     live_command_output "" "${commands_to_run[@]}"
-
-    output "Clipboard Setup complete!"
-    pause_script
+    pause_script "" "Clipboard Setup complete!"
 }
 
 configure_python()
@@ -97,11 +91,9 @@ configure_python()
     commands_to_run+=("sudo -u $username asdf plugin add python")
     commands_to_run+=("sudo -u $username asdf install python 3.12.3")
 
-    commands_to_run+=("terminal_title 'Done with segment execuption'")
+    
     live_command_output "" "${commands_to_run[@]}"
-
-    output "Python Setup complete!"
-    pause_script
+    pause_script "" "Python Setup complete!"
 }
 
 configure_node()
@@ -117,11 +109,9 @@ configure_node()
     commands_to_run+=("sudo -u $username asdf install node latest")
     commands_to_run+=("sudo -u $username asdf global nodejs latest")
 
-    commands_to_run+=("terminal_title 'Done with segment execuption'")    
+        
     live_command_output "" "${commands_to_run[@]}"
-
-    output "Python Setup complete!"
-    pause_script
+    pause_script "Node" "Node Setup complete!"
 }
 
 title="Welcome to the tools Installer"

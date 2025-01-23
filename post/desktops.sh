@@ -89,7 +89,6 @@ DM_console()
         esac
     done
 
-    commands_to_run+=("terminal_title 'Done with segment execuption'")
     live_command_output "" "${commands_to_run[@]}"
     pause_script "" "Display Manager Console Setup complete!"
 }
@@ -144,7 +143,6 @@ DM_graphical()
         esac
     done
 
-    commands_to_run+=("terminal_title 'Done with segment execuption'")
     live_command_output "" "${commands_to_run[@]}"
     pause_script "" "Display Manager Graphical Setup complete!"
 }
@@ -254,7 +252,6 @@ DE_selector()
         esac
     done
 
-    commands_to_run+=("terminal_title 'Done with segment execuption'")
     live_command_output "" "${commands_to_run[@]}"
     pause_script "" "Desktop Environment Setup complete!"
 }
@@ -299,7 +296,6 @@ WM_selector()
         esac
     done
 
-    commands_to_run+=("terminal_title 'Done with segment execuption'")
     live_command_output "" "${commands_to_run[@]}"
     pause_script "" "Window Manager Setup complete!"
 }

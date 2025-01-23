@@ -36,11 +36,9 @@ initial_setup()
         fi
     ")
 
-    commands_to_run+=("terminal_title 'Done with segment execuption'")
+    
     live_command_output "" "${commands_to_run[@]}"
-
-    output "Initial Setup complete!"
-    pause_script
+    pause_script "Virt-Manager" "Initial setup complete"
 }
 
 libvirt_setup()
@@ -76,7 +74,7 @@ libvirt_setup()
     done
 
     output "Libvirt and whatever hypervisor you installed have been setup correctly!"
-    pause_script
+    pause_script "Libvirt" "Libvirt setup complete"
 }
 
 qemu_setup()
@@ -109,17 +107,14 @@ qemu_setup()
         esac
     done
 
-    commands_to_run+=("terminal_title 'Done with segment execuption'")
+    
     live_command_output "" "${commands_to_run[@]}"
-
-    output "Qemu Setup complete!"
-    pause_script
+    pause_script "" ""Qemu Setup complete!""
 }
 
 lxc_setup()
 {
-    output "Lxc Setup complete!"
-    pause_script
+    pause_script "Lxc" "Lxc Setup complete!"
 }
 
 virtualbox_setup()
@@ -129,11 +124,9 @@ virtualbox_setup()
     commands_to_run+=("pacman --noconfirm -S virtualbox virtualbox-host-modules-arch,")
     commands_to_run+=("snp paru -S virtualbox-ext-oracle")
 
-    commands_to_run+=("terminal_title 'Done with segment execuption'")
+    
     live_command_output "" "${commands_to_run[@]}"
-
-    output "Virtualbox Setup complete!"
-    pause_script
+    pause_script "Virtualbox" "Virtualbox Setup complete!"
 }
 
 initial_setup

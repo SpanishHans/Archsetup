@@ -81,7 +81,7 @@ commands_to_run+=("pacstrap /mnt \
   snap-pac")
 
 commands_to_run+=("genfstab -U /mnt >> /mnt/etc/fstab")
-commands_to_run+=("terminal_title 'Done with segment execuption'")
+
 live_command_output "" "${commands_to_run[@]}"
 
 networking_setup

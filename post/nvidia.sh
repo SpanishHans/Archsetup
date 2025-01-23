@@ -90,12 +90,9 @@ nvidia_setup()
 
         grub-mkconfig -o /boot/grub/grub.cfg
     ')
-
-    commands_to_run+=("terminal_title 'Done with segment execuption'")
+    
     live_command_output "" "${commands_to_run[@]}"
-
-    output "Nvidia Setup complete!"
-    pause_script
+    pause_script "" "Nvidia Setup complete!"
 }
 
 nvidia_setup

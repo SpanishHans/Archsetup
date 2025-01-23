@@ -98,7 +98,7 @@ full_default_route() {
 
     commands_to_run+=("sync")
     commands_to_run+=("udevadm settle")
-    commands_to_run+=("terminal_title 'Done with segment execuption'")
+    
 
     live_command_output "" "${commands_to_run[@]}"
     pause_script "Format of $DISK finished" "The selected disk $DISK was partitioned liked so:

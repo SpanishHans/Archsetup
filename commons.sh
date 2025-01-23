@@ -167,6 +167,8 @@ live_command_output() {
         execute_command "$cmd" || { exit_code=$?; break; }
     done &
 
+    terminal_title "Done, press enter" 
+
     dialog \
            --backtitle "Command Execution Viewer" \
            --tailbox "$combined_log" \

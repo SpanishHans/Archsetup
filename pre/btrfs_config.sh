@@ -74,7 +74,7 @@ mount_btrfs() {
         local options+=("$key has $path")
     done
 
-    commands_to_run+=("terminal_title 'Done with segment execuption'")
+    
     live_command_output "" "${commands_to_run[@]}"
     pause_script "Finished BTRFS setup" "Finished mouting BTRFS and all of its required structure.
 

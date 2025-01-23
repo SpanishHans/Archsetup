@@ -60,9 +60,9 @@ configure_git() {
     fi
     commands_to_run+=("cat $ssh_key_path")
 
-    commands_to_run+=("terminal_title 'Done with segment execuption'")
+    
     live_command_output "" "${commands_to_run[@]}"
-    pause_script "" "Git Setup complete!"
+    pause_script "Git" "Git Setup complete!"
 }
 
 configure_paru()
@@ -74,9 +74,9 @@ configure_paru()
     commands_to_run+=("sudo -u sysadmin bash -c 'rustup default stable'")
     commands_to_run+=("sudo -u sysadmin bash -i -c 'cd /home/sysadmin/.paru &&  makepkg -si'")
 
-    commands_to_run+=("terminal_title 'Done with segment execuption'")
+    
     live_command_output "" "${commands_to_run[@]}"
-    pause_script "" "Paru Setup complete!"
+    pause_script "Paru" "Paru Setup complete!"
 }
 
 configure_snp()
@@ -85,9 +85,9 @@ configure_snp()
     commands_to_run+=("sudo -u sysadmin bash -c 'paru -S snp [edit: --noconfirm ]'")
     # commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S snp'")
 
-    commands_to_run+=("terminal_title 'Done with segment execuption'")
+    
     live_command_output "" "Snp" "${commands_to_run[@]}"
-    pause_script "" "Snp Setup complete!"
+    pause_script "Snp" "Snp Setup complete!"
 }
 
 configure_snapper_rollback()
@@ -103,9 +103,9 @@ configure_snapper_rollback()
             echo \"mountpoint entry not found in /etc/snapper-rollback.conf\"
         fi")
 
-    commands_to_run+=("terminal_title 'Done with segment execuption'")
+    
     live_command_output "" "${commands_to_run[@]}"
-    pause_script "" "Snapper-rollback Setup complete!"
+    pause_script "Snapper-rollback" "Snapper-rollback Setup complete!"
 }
 
 configure_terminal() {
@@ -152,9 +152,9 @@ configure_terminal() {
         esac
     done
 
-    commands_to_run+=("terminal_title 'Done with segment execuption'")
+    
     live_command_output "" "${commands_to_run[@]}"
-    pause_script "" "Terminal Setup complete!"
+    pause_script "Terminal" "Terminal Setup complete!"
 }
 
 configure_flatpak()
@@ -163,9 +163,9 @@ configure_flatpak()
     commands_to_run=()
     commands_to_run+=("pacman --noconfirm -S flatpak")
 
-    commands_to_run+=("terminal_title 'Done with segment execuption'")
+    
     live_command_output "" "${commands_to_run[@]}"
-    pause_script "" "Flatpak Setup complete!"
+    pause_script "Flatpak" "Flatpak Setup complete!"
 }
 
 configure_docker()
@@ -182,9 +182,9 @@ configure_docker()
     commands_to_run+=("systemctl enable docker")
     commands_to_run+=("systemctl start --now docker")
 
-    commands_to_run+=("terminal_title 'Done with segment execuption'")
+    
     live_command_output "" "${commands_to_run[@]}"
-    pause_script "" "Docker Setup complete!"
+    pause_script "Docker" "Docker Setup complete!"
 }
 
 configure_distrobox()
@@ -193,9 +193,9 @@ configure_distrobox()
     commands_to_run=()
     commands_to_run+=("pacman --noconfirm -S distrobox")
 
-    commands_to_run+=("terminal_title 'Done with segment execuption'")
+    
     live_command_output "" "${commands_to_run[@]}"
-    pause_script "" "Distrobox Setup complete!"
+    pause_script "Distrobox" "Distrobox Setup complete!"
 }
 
 titulo="Basic tools installer"

@@ -65,11 +65,8 @@ plymouth_setup()
 
     commands_to_run+=("grub-mkconfig -o /boot/grub/grub.cfg")
 
-    commands_to_run+=("terminal_title 'Done with segment execuption'")
     live_command_output "" "${commands_to_run[@]}"
-
-    output "Plymouth Setup complete!"
-    pause_script
+    pause_script "" "Plymouth Setup complete!"
 }
 
 plymouth_setup
