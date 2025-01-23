@@ -315,9 +315,9 @@ while true; do
     menu_prompt choice choice_status "$titulo" "$descripcion" "${options[@]}"
 
     case $choice in
-        0) DM_selector;;
-        1) DE_selector;;
-        2) WM_selector;;
+        0) DM_selector;break;;
+        1) DE_selector;break;;
+        2) WM_selector;break;;
         b) exit;;
         *) output "Invalid choice, please try again." ;;
     esac

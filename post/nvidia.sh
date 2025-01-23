@@ -98,5 +98,4 @@ nvidia_setup()
     pause_script
 }
 
-
 nvidia_setup

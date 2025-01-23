@@ -138,4 +138,3 @@ virtualbox_setup()
 
 initial_setup
 libvirt_setup
-get_out

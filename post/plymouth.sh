@@ -72,5 +72,4 @@ plymouth_setup()
     pause_script
 }
 
-
 plymouth_setup
