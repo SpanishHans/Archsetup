@@ -20,20 +20,21 @@ DM_selector()
 {
     while true; do
         options=(\
-            "1) Console-based" \
-            "2) Graphical-based" \
+            "Console-based" \
+            "Graphical-based" \
+            "Back" \
         )
         
         menu_prompt category_choice category_choice_status "$titulo" "$descripcion" "${options[@]}"
 
         case $category_choice in
-            1)  DM_console
+            0)  DM_console
                 break
                 ;;
-            2)  DM_graphical
+            1)  DM_graphical
                 break
                 ;;
-            0)  exit
+            b)  exit
                 ;;
             *)  pause_script "" 'You did not enter a valid selection.'
         esac
@@ -56,32 +57,33 @@ DM_console()
 
     while true; do
         options=(\
-            "1) Ly" \
-            "2) Tbsm" \
-            "3) Emptty" \
-            "4) Lemurs" \
+            "Ly" \
+            "Tbsm" \
+            "Emptty" \
+            "Lemurs" \
+            "Back" \
         )
         
         menu_prompt console_choice console_choice_status "$titulo" "$descripcion" "${options[@]}"
 
         case $console_choice in
-            1)  commands_to_run+=("pacman --noconfirm -S ly")
+            0)  commands_to_run+=("pacman --noconfirm -S ly")
                 commands_to_run+=("systemctl enable ly.service")
                 commands_to_run+=("systemctl start --now ly.service")
                 break
                 ;;
-            2)  commands_to_run+=("echo'Not yet implemented, but shall "snp paru -S tbsm"'")
+            1)  commands_to_run+=("echo'Not yet implemented, but shall "snp paru -S tbsm"'")
                 break
                 ;;
-            3)  commands_to_run+=("echo'Not yet implemented, but shall "pacman --noconfirm -S emptty"'")
+            2)  commands_to_run+=("echo'Not yet implemented, but shall "pacman --noconfirm -S emptty"'")
                 break
                 ;;
-            4)  commands_to_run+=("pacman --noconfirm -S lemurs")
+            3)  commands_to_run+=("pacman --noconfirm -S lemurs")
                 commands_to_run+=("systemctl enable lemurs.service")
                 commands_to_run+=("systemctl start --now lemurs.service")
                 break
                 ;;
-            0)  exit
+            b)  exit
                 ;;
             *)  pause_script "" 'You did not enter a valid selection.'
         esac
@@ -106,36 +108,37 @@ DM_graphical()
 
     while true; do
         options=(\
-            "1) Gdm (Gnome)" \
-            "2) Lightdm (generalist)" \
-            "3) Sddm (KDE)" \
-            "4) Greetd (generalist)" \
+            "Gdm (Gnome)" \
+            "Lightdm (generalist)" \
+            "Sddm (KDE)" \
+            "Greetd (generalist)" \
+            "Back" \
         )
         
         menu_prompt graphical_choice graphical_choice_status "$titulo" "$descripcion" "${options[@]}"
 
         case $graphical_choice in
-            1)  commands_to_run+=("pacman --noconfirm -S gdm")
+            0)  commands_to_run+=("pacman --noconfirm -S gdm")
                 commands_to_run+=("systemctl enable gdm.service")
                 commands_to_run+=("systemctl start --now gdm.service")
                 break
                 ;;
-            2)  commands_to_run+=("pacman --noconfirm -S lightdm")
+            1)  commands_to_run+=("pacman --noconfirm -S lightdm")
                 commands_to_run+=("systemctl enable ly.service")
                 commands_to_run+=("systemctl start --now ly.service")
                 break
                 ;;
-            3)  commands_to_run+=("pacman --noconfirm -S sddm")
+            2)  commands_to_run+=("pacman --noconfirm -S sddm")
                 commands_to_run+=("systemctl enable sddm.service")
                 commands_to_run+=("systemctl start --now sddm.service")
                 break
                 ;;
-            4)  commands_to_run+=("pacman --noconfirm -S greetd")
+            3)  commands_to_run+=("pacman --noconfirm -S greetd")
                 commands_to_run+=("systemctl enable greetd.service")
                 commands_to_run+=("systemctl start --now greetd.service")
                 break
                 ;;
-            0)  exit
+            b)  exit
                 ;;
             *)  pause_script "" 'You did not enter a valid selection.'
         esac
@@ -161,90 +164,91 @@ DE_selector()
 
     while true; do
         options=(\
-            "1) Budgie" \
-            "2) Cinnamon " \
-            "3) Cosmic" \
-            "4) Cutefish" \
-            "5) Deepin" \
-            "6) Enlightenment" \
-            "7) Gnome" \
-            "8) Gnome Flashback" \
-            "9) KDE Plasma" \
-            "10) LXDE (Not implemented)" \
-            "11) LXQt (Not implemented)" \
-            "12) Mate" \
-            "13) Pantheon" \
-            "14) XFCE (Not implemented)" \
+            "Budgie" \
+            "Cinnamon " \
+            "Cosmic" \
+            "Cutefish" \
+            "Deepin" \
+            "Enlightenment" \
+            "Gnome" \
+            "Gnome Flashback" \
+            "KDE Plasma" \
+            "LXDE (Not implemented)" \
+            "LXQt (Not implemented)" \
+            "Mate" \
+            "Pantheon" \
+            "XFCE (Not implemented)" \
+            "Back" \
         )
         
         menu_prompt DE_choice DE_choice_status "$titulo" "$descripcion" "${options[@]}"
         
         case $DE_choice in
-            1)  commands_to_run+=("pacman --noconfirm -S budgie lightdm-gtk-greeter budgie-desktop-view budgie-backgrounds network-manager-applet arc-gtk-theme papirus-icon-theme")
+            0)  commands_to_run+=("pacman --noconfirm -S budgie lightdm-gtk-greeter budgie-desktop-view budgie-backgrounds network-manager-applet arc-gtk-theme papirus-icon-theme")
                 commands_to_run+=("systemctl enable ly.service")
                 commands_to_run+=("systemctl start --now ly.service")
                 break
                 ;;
-            2)  commands_to_run+=("pacman --noconfirm -S cinnamon xed xreader metacity gnome-shell gnome-keyring")
+            1)  commands_to_run+=("pacman --noconfirm -S cinnamon xed xreader metacity gnome-shell gnome-keyring")
                 commands_to_run+=("systemctl enable ly.service")
                 commands_to_run+=("systemctl start --now ly.service")
                 break
                 ;;
-            3)  commands_to_run+=("pacman --noconfirm -S cosmic cosmic-text-editor cosmic-files cosmic-terminal cosmic-wallpapers")
+            2)  commands_to_run+=("pacman --noconfirm -S cosmic cosmic-text-editor cosmic-files cosmic-terminal cosmic-wallpapers")
                 commands_to_run+=("systemctl enable cosmic-greeter.service")
                 commands_to_run+=("systemctl start --now cosmic-greeter.service")
                 break
                 ;;
-            4)  commands_to_run+=("pacman --noconfirm -S cutefish sddm")
+            3)  commands_to_run+=("pacman --noconfirm -S cutefish sddm")
                 commands_to_run+=("systemctl enable sddm.service")
                 commands_to_run+=("systemctl start --now sddm.service")
                 break
                 ;;
-            5)  commands_to_run+=("pacman --noconfirm -S deepin deepin-kwin deepin-extra")
+            4)  commands_to_run+=("pacman --noconfirm -S deepin deepin-kwin deepin-extra")
                 commands_to_run+=("systemctl enable ly.service")
                 commands_to_run+=("systemctl start --now ly.service")
                 break
                 ;;
-            6)  commands_to_run+=("pacman --noconfirm -S enlightenment ecrire ephoto evisum rage terminology connman")
+            5)  commands_to_run+=("pacman --noconfirm -S enlightenment ecrire ephoto evisum rage terminology connman")
                 commands_to_run+=("systemctl enable ly.service")
                 commands_to_run+=("systemctl start --now ly.service")
                 break
                 ;;
-            7)  commands_to_run+=("pacman --noconfirm -S gnome gdm")
+            6)  commands_to_run+=("pacman --noconfirm -S gnome gdm")
                 commands_to_run+=("systemctl enable gdm.service")
                 commands_to_run+=("systemctl start --now gdm.service")
                 break
                 ;;
-            8)  commands_to_run+=("pacman --noconfirm -S gnome-flashback gnome-applets sensors-applet gdm")
+            7)  commands_to_run+=("pacman --noconfirm -S gnome-flashback gnome-applets sensors-applet gdm")
                 commands_to_run+=("systemctl enable gdm.service")
                 commands_to_run+=("systemctl start --now gdm.service")
                 break
                 ;;
-            9)  commands_to_run+=("pacman --noconfirm -S plasma kde-applications-meta sddm")
+            8)  commands_to_run+=("pacman --noconfirm -S plasma kde-applications-meta sddm")
                 commands_to_run+=("systemctl enable sddm.service")
                 commands_to_run+=("systemctl start --now sddm.service")
                 break
                 ;;
-            10) commands_to_run+=("echo'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S lxde"'")
+            9) commands_to_run+=("echo'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S lxde"'")
                 break
                 ;;
-            11) commands_to_run+=("echo'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S lxqt"'")
+            10) commands_to_run+=("echo'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S lxqt"'")
                 break
                 ;;
-            12) commands_to_run+=("pacman --noconfirm -S mate mate-extra lightdm")
+            11) commands_to_run+=("pacman --noconfirm -S mate mate-extra lightdm")
                 commands_to_run+=("systemctl enable ly.service")
                 commands_to_run+=("systemctl start --now ly.service")
                 break
                 ;;
-            13) commands_to_run+=("pacman --noconfirm -S pantheon lightdm")
+            12) commands_to_run+=("pacman --noconfirm -S pantheon lightdm")
                 commands_to_run+=("systemctl enable ly.service")
                 commands_to_run+=("systemctl start --now ly.service")
                 break
                 ;;
-            14) commands_to_run+=("echo'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S xfce"'")
+            13) commands_to_run+=("echo'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S xfce"'")
                 break
                 ;;
-            0)  exit
+            b)  exit
                 ;;
             *)  pause_script "" 'You did not enter a valid selection.'
         esac
@@ -270,25 +274,26 @@ WM_selector()
 
     while true; do
         options=(\
-            "1) Sway" \
-            "2) Hyprland" \
+            "Sway" \
+            "Hyprland" \
+            "Back" \
         )
 
         menu_prompt WM_choice WM_choice_status "$titulo" "$descripcion" "${options[@]}"
 
         case $WM_choice in
             
-            1)  commands_to_run+=("pacman --noconfirm -S sway kitty wayland")
+            0)  commands_to_run+=("pacman --noconfirm -S sway kitty wayland")
                 commands_to_run+=("systemctl enable ly.service")
                 commands_to_run+=("systemctl start --now ly.service")
                 break
                 ;;
-            2)  commands_to_run+=("pacman --noconfirm -S hyprland hypridle hyprpaper hyprlock xdg-desktop-portal-hyprland kitty wayland")
+            1)  commands_to_run+=("pacman --noconfirm -S hyprland hypridle hyprpaper hyprlock xdg-desktop-portal-hyprland kitty wayland")
                 commands_to_run+=("systemctl enable ly.service")
                 commands_to_run+=("systemctl start --now ly.service")
                 break
                 ;;
-            0)  exit
+            b)  exit
                 ;;
             *)  output 'You did not enter a valid selection.'
         esac
