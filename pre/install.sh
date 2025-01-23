@@ -22,13 +22,13 @@ source ./pre/networking.sh
 source ./pre/locales.sh
 
 if [ "$LIVE_ENV" = false ]; then
-    pause_script "" "The install script must be run from the archlinux-YEAR.MONTH.DAY-x86_64.iso image.
+    pause_script "ERROR" "The install script must be run from the archlinux-YEAR.MONTH.DAY-x86_64.iso image.
 
 Exiting!!!
     "
     exit
     if [ "$(id -u)" -ne 0 ]; then
-        pause_script "" "The install script must be run as root user.
+        pause_script "ERROR" "The install script must be run as root user.
 
 Exiting!!!"
         exit

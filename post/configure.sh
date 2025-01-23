@@ -17,13 +17,13 @@
 source ./commons.sh
 
 # if [ "$LIVE_ENV" = true ]; then
-#     pause_script "" "The configure script must be run from a machine with ArchLinux already installed.
+#     pause_script "ERROR" "The configure script must be run from a machine with ArchLinux already installed.
 
 # Exiting!!!
 #     "
 #     exit
 #     if [ "$(id -u)" -ne 0 ]; then
-#         pause_script "" "The configure script must be run as root user.
+#         pause_script "ERROR" "The configure script must be run as root user.
 
 # Exiting!!!"
 #         exit
