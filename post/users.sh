@@ -55,7 +55,7 @@ configure_users() {
         "Modify Existing User" \
         "Delete User" \
         "List Existing Users" \
-        "Exit"
+        "back"
     )
 
     
@@ -66,7 +66,7 @@ configure_users() {
             1)  modify_user;;
             2)  delete_user;;
             3)  list_users;;
-            e)  exit;;
+            b)  exit;;
             *)  pause_script "Option not valid" "That is not an option, returning to start menu.";exit;;
         esac
     done
