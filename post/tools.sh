@@ -134,7 +134,7 @@ while true; do
         "Configure clipboard" \
         "Configure python" \
         "Configure node" \
-        "Exit"
+        "Back"
     )
 
     menu_prompt tools_menu_choice tools_menu_choice_status "$title" "$description" "${options[@]}"
