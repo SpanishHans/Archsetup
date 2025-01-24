@@ -237,7 +237,7 @@ WM_selector() {
 
         case $WM_choice in
             
-            0)  commands_to_run+=("pacman --noconfirm -S sway kitty waybar rofi-wayland")
+            0)  commands_to_run+=("pacman --noconfirm -S sway kitty")
                 break
                 ;;
             1)  commands_to_run+=("pacman --noconfirm -S hyprland hypridle xdg-desktop-portal-hyprland kitty waybar rofi-wayland")

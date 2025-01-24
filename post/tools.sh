@@ -62,17 +62,13 @@ configure_clipboard()
     pause_script "Clipboard" "Clipboard Setup complete!"
 }
 
-configure_python()
-{
-    read -p 'What user to add asdf python for?: ' -r username
-    while [ -z "$username" ]; do
-        output "Error: You need to enter a user."
-        read -p 'What user to add asdf python for?: ' -r username
-    done
+configure_python() {
+
+    input_text python_user python_user_status "User asdf python" "Please enter the user whose asdf python shall be configured" 'What user to add asdf python for?: '
 
     commands_to_run=()
-    commands_to_run+=("sudo -u $username asdf plugin add python")
-    commands_to_run+=("sudo -u $username asdf install python 3.12.3")
+    commands_to_run+=("sudo -u $python_user asdf plugin add python")
+    commands_to_run+=("sudo -u $python_user asdf install python 3.12.3")
 
     
     live_command_output "" "${commands_to_run[@]}"
@@ -81,16 +77,12 @@ configure_python()
 
 configure_node()
 {
-    read -p 'What user to add asdf python for?: ' -r username
-    while [ -z "$username" ]; do
-        output "Error: You need to enter a user."
-        read -p 'What user to add asdf python for?: ' -r username
-    done
+    input_text node_user node_user_status "User asdf node" "Please enter the user whose asdf node shall be configured" 'What user to add asdf node for?: '
 
     commands_to_run=()
-    commands_to_run+=("sudo -u $username asdf plugin add nodejs")
-    commands_to_run+=("sudo -u $username asdf install node latest")
-    commands_to_run+=("sudo -u $username asdf global nodejs latest")
+    commands_to_run+=("sudo -u $node_user asdf plugin add nodejs")
+    commands_to_run+=("sudo -u $node_user asdf install node latest")
+    commands_to_run+=("sudo -u $node_user asdf global nodejs latest")
 
         
     live_command_output "" "${commands_to_run[@]}"
