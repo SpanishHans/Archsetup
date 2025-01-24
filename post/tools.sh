@@ -18,23 +18,12 @@ source ./commons.sh
 
 configure_chezmoi()
 {
-    read -p 'What user to configure chezmoi for?: ' -r username
-    while [ -z "$username" ]; do
-        output "Error: You need to enter a user."
-        read -p 'What user to configure chezmoi for?: ' -r username
-    done
-    
-    read -p "Provide the Git repository URL for ChezMoi: " chezmoi_repo
-    while [ -z "$chezmoi_repo" ]; do
-        echo "Error: You need to enter a valid Git repository URL."
-        exit 1
-    done
-    
+    input_text chezmoi_username chezmoi_username_status "Chezmoi User to setup" "Please enter the user whose chezmoi shall be configured" 'What user to configure chezmoi for?: '
+    input_text chezmoi_repo chezmoi_repo_status "Chezmoi repo to setup" "Please enter the repo to sync from/to." "Provide the Git repository URL for ChezMoi: "
+
     commands_to_run=()
     commands_to_run+=("pacman --noconfirm -S chezmoi")
-    commands_to_run+=("sudo -u \"$username\" chezmoi init \"$chezmoi_repo\"")
-
-     live_command_output "" "${commands_to_run[@]}"
+    commands_to_run+=("sudo -u \"$chezmoi_username\" bash -c \"chezmoi init $chezmoi_repo\"")
     
     live_command_output "" "${commands_to_run[@]}"
     pause_script "Chezmoi" "Chezmoi Setup complete for user $username!"
@@ -43,11 +32,7 @@ configure_chezmoi()
 
 configure_asdf()
 {
-    read -p 'What user to add asdf for?: ' -r username
-    while [ -z "$username" ]; do
-        output "Error: You need to enter a user."
-        read -p 'What user to add asdf for?: ' -r username
-    done
+    input_text chezmoi_repo chezmoi_repo_status "User asdf" "Please enter the user whose asdf shall be configured" 'What user to add asdf for?: '
 
     commands_to_run=()
     commands_to_run+=("git clone https://github.com/asdf-vm/asdf.git /home/$username/.asdf")
@@ -62,7 +47,6 @@ configure_asdf()
             echo \"asdf initialization already present in .zshrc\"
         fi"
     )
-
     
     live_command_output "" "${commands_to_run[@]}"
     pause_script "ASDF" "ASDF Setup complete!"
@@ -71,7 +55,7 @@ configure_asdf()
 configure_clipboard()
 {
     commands_to_run=()
-    commands_to_run+=("pacman --noconfirm -S rofi-wayland wl-clipboard cliphist grim slurp")
+    commands_to_run+=("pacman --noconfirm -S wl-clipboard cliphist grim slurp")
 
     
     live_command_output "" "${commands_to_run[@]}"

@@ -45,6 +45,7 @@ configure_git() {
             ui = auto
         EOF"
     )
+    commands_to_run+=("chown $git_user:$git_user $gitconfig_path")
 
     ssh_key_path="$home_path/.ssh/id_ed25519"
     if [ -f "$ssh_key_path" ]; then
@@ -54,7 +55,6 @@ configure_git() {
         commands_to_run+=("mkdir -p $home_path/.ssh")
         commands_to_run+=("ssh-keygen -t ed25519 -C '$gitemail' -f '$ssh_key_path'")
         commands_to_run+=("chown -R $git_user:$git_user $home_path/.ssh")
-        commands_to_run+=("chown $git_user:$git_user $gitconfig_path")
         commands_to_run+=("sudo -u $git_user bash -c \"eval \$(ssh-agent -s) && ssh-add '$ssh_key_path'\"")
 
     fi
@@ -65,24 +65,24 @@ configure_git() {
     pause_script "Git" "Git Setup complete!"
 }
 
-configure_paru()
-{
+configure_paru() {
+    input_text paru_user paru_user_status "Paru requires a sudo user to exist" "Please enter the sudo user who shall install Paru as root cannot do it." "What sudo user shall install Paru?: "
     commands_to_run=()
     commands_to_run+=("pacman --noconfirm -S --needed base-devel rustup")
-    commands_to_run+=("git clone https://aur.archlinux.org/paru.git /home/sysadmin/.paru")
-    commands_to_run+=("chown -R sysadmin:sysadmin /home/sysadmin/.paru")
-    commands_to_run+=("sudo -u sysadmin bash -c 'rustup default stable'")
-    commands_to_run+=("sudo -u sysadmin bash -i -c 'cd /home/sysadmin/.paru &&  makepkg -si'")
+    commands_to_run+=("git clone https://aur.archlinux.org/paru.git /home/paru_user/.paru")
+    commands_to_run+=("chown -R paru_user:paru_user /home/paru_user/.paru")
+    commands_to_run+=("sudo -u paru_user bash -c 'rustup default stable'")
+    commands_to_run+=("sudo -u paru_user bash -i -c 'cd /home/paru_user/.paru &&  makepkg -si'")
 
     
     live_command_output "" "${commands_to_run[@]}"
     pause_script "Paru" "Paru Setup complete!"
 }
 
-configure_snp()
-{
+configure_snp() {
+    input_text snp_user snp_user_status "Snp requires a sudo user to exist" "Please enter the sudo user who shall install Snp as root cannot do it." "What sudo user shall install Snp?: "
     commands_to_run=()
-    commands_to_run+=("sudo -u sysadmin bash -c 'paru -S snp [edit: --noconfirm ]'")
+    commands_to_run+=("sudo -u snp_user bash -c 'paru -S snp [edit: --noconfirm ]'")
     # commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S snp'")
 
     
@@ -90,10 +90,10 @@ configure_snp()
     pause_script "Snp" "Snp Setup complete!"
 }
 
-configure_snapper_rollback()
-{
+configure_snapper_rollback() {
+    input_text snapper_rollback_user snapper_rollback_user_status "Snapper-rollback requires a sudo user to exist" "Please enter the sudo user who shall install Snapper-rollback as root cannot do it." "What sudo user shall install Snapper-rollback?: "
     commands_to_run=()
-    commands_to_run+=("sudo -u sysadmin bash -c 'paru -S snapper-rollback [edit: --noconfirm ]'")
+    commands_to_run+=("sudo -u snapper_rollback_user bash -c 'paru -S snapper-rollback [edit: --noconfirm ]'")
     # commands_to_run+=("sudo -u sysadmin bash -i -c 'paru -S snapper-rollback'")
     commands_to_run+=("
         if grep -qE '^[#]*mountpoint[[:space:]]*=[[:space:]]*/btrfsroot' /etc/snapper-rollback.conf; then
