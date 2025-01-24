@@ -32,12 +32,11 @@ configure_chezmoi()
     
     commands_to_run=()
     commands_to_run+=("pacman --noconfirm -S chezmoi")
+    commands_to_run+=("sudo -u \"$username\" chezmoi init \"$chezmoi_repo\"")
 
+     live_command_output "" "${commands_to_run[@]}"
     
     live_command_output "" "${commands_to_run[@]}"
-
-    # CHECK THIS ON DOCUMENTATION. HAS TO BE STARTED ON USER HOME.
-    sudo -u "$username" chezmoi init "$chezmoi_repo"
     pause_script "Chezmoi" "Chezmoi Setup complete for user $username!"
 }
 
