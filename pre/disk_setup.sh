@@ -93,7 +93,7 @@ full_default_route() {
 
     if ! lsblk -no FSTYPE "${ROOT_PART}" | grep -q "btrfs"; then
         ROOT_FORM='btrfs'
-        commands_to_run+=("mkfs.btrfs -L rootfs \"${ROOT_PART}\"")
+        commands_to_run+=("mkfs.btrfs -L rootfs -f \"${ROOT_PART}\"")
     fi
 
     commands_to_run+=("sync")
