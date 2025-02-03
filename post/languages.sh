@@ -1,0 +1,123 @@
+#!/bin/sh
+
+# Copyright (C) 2021-2024 Thien Tran
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not
+# use this file except in compliance with the License. You may obtain a copy of
+# the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations under
+# the License.
+
+source ./commons.sh
+source ./post/users.sh
+
+configure_asdf() {
+    local asdf_username="$1"
+    local build_path="/home/$asdf_username/.asdf"
+
+    if ! check_folder_exists "$build_path"; then
+        commands_to_run=()
+        commands_to_run+=("mkdir -p $build_path")
+        commands_to_run+=("git clone $url $build_path")
+        commands_to_run+=("chown -R $asdf_username:$asdf_username $build_path")
+        live_command_output "" "" "Cloning asdf" "${commands_to_run[@]}"
+    else
+        continue_script "" "asdf repository already exists at $build_path. Skipping clone."
+    fi
+
+    # THIS HAS TO BE CHANGED LATER FOR MORE SHELLS. HERE SHELL HECKINg MUST BE DONE.
+
+    # commands_to_run=()
+    # commands_to_run+=(
+    #     "if ! grep -Fxq '. \"\$HOME/.asdf/asdf.sh\"' /home/$asdf_username/.zshrc; then
+    #         echo '' >> /home/$asdf_username/.zshrc
+    #         echo '. \"\$HOME/.asdf/asdf.sh\"' >> /home/$asdf_username/.zshrc
+    #         echo 'fpath=(\${ASDF_DIR}/completions \$fpath)' >> /home/$asdf_username/.zshrc
+    #         echo 'autoload -Uz compinit && compinit' >> /home/$asdf_username/.zshrc
+    #     else
+    #         echo \"asdf initialization already present in .zshrc\"
+    #     fi"
+    # )
+    
+    # live_command_output "" "" "Configuring ASDF" "${commands_to_run[@]}"
+    continue_script "ASDF" "ASDF Setup complete!"
+}
+
+configure_python() {
+    local python_user="$1"
+
+    commands_to_run=()
+    commands_to_run+=("sudo -u $python_user asdf plugin add python")
+    commands_to_run+=("sudo -u $python_user asdf install python 3.12.3")
+
+    live_command_output "" "" "Configuring python from ASDF" "${commands_to_run[@]}"
+    continue_script "Python" "Python Setup complete!"
+}
+
+configure_node() {
+    local node_user="$1"
+
+    commands_to_run=()
+    commands_to_run+=("sudo -u $node_user asdf plugin add nodejs")
+    commands_to_run+=("sudo -u $node_user asdf install node latest")
+
+    live_command_output "" "" "Configuring Node from ASDF" "${commands_to_run[@]}"
+    continue_script "Node" "Node Setup complete!"
+}
+
+configure_java() {
+    local java_user="$1"
+
+    continue_script "Java" "Java Setup complete!"
+}
+
+configure_rust() {
+    local rust_user="$1"
+    continue_script "Rust" "Rust Setup complete!"
+}
+
+configure_c() {
+    local c_user="$1"
+    continue_script "C" "C Setup complete!"
+}
+
+language_menu () {
+    local title='Programming Language Installation with ASDF'
+    local description="This script helps you easily install and manage programming languages using the ASDF version manager."
+
+    get_users userlist
+    input_text\
+        langs_username\
+        "User to installa asdf and programming language installation and support."\
+        "Please enter the user who shall get asdf and programming language installation and support.\n\n$userlist"\
+        'What user to add asdf and programming language installation and support for?: '
+    configure_asdf "$langs_username"
+
+    while true; do
+        local options=(\
+            'Python                     (Installs Python and its dependencies)'\
+            'Node                       (Installs Node.js and npm for JavaScript development)'\
+            'Java                       (Installs the Java Development Kit (JDK) for Java development)'\
+            'Rust                       (Installs the Rust programming language and cargo)'\
+            'C                          (Installs GCC and necessary tools for C development)'\
+            "Back"
+        )
+
+        menu_prompt virt_menu_choice "$title" "$description" "${options[@]}"
+        case $virt_menu_choice in
+            0)  configure_python;;
+            1)  configure_node;;
+            2)  configure_java;;
+            3)  configure_rust;;
+            4)  configure_c;;
+            b)  break;;
+            *)  continue_script "Not a valid choice!" "Invalid choice, please try again." ;;
+        esac
+    done
+}
