@@ -80,12 +80,29 @@ Please choose what fonts you require."
 # Terminals
 ################################################################################
 
-configure_bash() {
-    install_pacman_package "bash" "$"
-    local commands_to_run=()
-    local commands_to_run+=("chsh -s \$(which bash)")
-
-    live_command_output "" "" "" "${commands_to_run[@]}"
+configure_kitty() {
+    install_pacman_package "kitty" ""
+    live_command_output "" "" "Configuring kitty terminal" "${local commands_to_run[@]}"
+}
+configure_alacritty() {
+    install_pacman_package "alacritty" ""
+    live_command_output "" "" "Configuring alacritty terminal" "${local commands_to_run[@]}"
+}
+configure_terminator() {
+    install_pacman_package "terminator" ""
+    live_command_output "" "" "Configuring terminator terminal" "${local commands_to_run[@]}"
+}
+configure_tilix() {
+    install_pacman_package "tilix" ""
+    live_command_output "" "" "Configuring tilix terminal" "${local commands_to_run[@]}"
+}
+configure_gnome_terminal() {
+    install_pacman_package "gnome-terminal" ""
+    live_command_output "" "" "Configuring gnome-terminal terminal" "${local commands_to_run[@]}"
+}
+configure_konsole() {
+    install_pacman_package "konsole" ""
+    live_command_output "" "" "Configuring konsole terminal" "${local commands_to_run[@]}"
 }
 
 ################################################################################
@@ -93,78 +110,124 @@ configure_bash() {
 ################################################################################
 
 configure_bash() {
+    local term_user="$1"
+
     install_pacman_package "bash" ""
     local commands_to_run=()
-    local commands_to_run+=("chsh -s \$(which bash)")
-
+    if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/bash" ]; then
+        local commands_to_run+=("chsh -s /bin/bash $term_user")
+    fi
     live_command_output "" "" "Configuring bash terminal" "${local commands_to_run[@]}"
+
+    local title="Install frameworks for bash"
+    local description="This allows you to set up different frameworks for bash. Please select the framework which shall be configured."
+    while true; do
+        local options=(\
+            "Bash it"\
+            "Back"
+        )
+        menu_prompt bash_choice "$title" "$description" "${options[@]}"
+        case $bash_choice in
+            1)  configure_bash_it;break;;
+            7)  break;;
+            *)  echo "Invalid option. Please try again.";;
+        esac
+    done
 }
 
 configure_zsh() {
+    local term_user="$1"
+
     install_pacman_package "zsh" ""
     local commands_to_run=()
     if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/zsh" ]; then
         local commands_to_run+=("chsh -s /bin/zsh $term_user")
     fi
-    local commands_to_run+=("chsh -s \$(which zsh)")
-    local commands_to_run+=("sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\"")
-
     live_command_output "" "" "Configuring zsh terminal" "${local commands_to_run[@]}"
+
+    local title="Install frameworks for zsh"
+    local description="This allows you to set up different frameworks for zsh. Please select the framework which shall be configured."
+    while true; do
+        local options=(\
+            "Oh My Zsh"\
+            "Back"
+        )
+        menu_prompt zsh_choice "$title" "$description" "${options[@]}"
+        case $zsh_choice in
+            1)  configure_oh_my_zsh;break;;
+            7)  break;;
+            *)  echo "Invalid option. Please try again.";;
+        esac
+    done
 }
 
 configure_fish() {
+    local term_user="$1"
+
     install_pacman_package "fish" ""
     local commands_to_run=()
     if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/fish" ]; then
         local commands_to_run+=("chsh -s /bin/fish $term_user")
     fi
-    local commands_to_run+=("curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher")
-
     live_command_output "" "" "Configuring fish terminal" "${local commands_to_run[@]}"
+
+    local title="Install frameworks for fish"
+    local description="This allows you to set up different frameworks for fish. Please select the framework which shall be configured."
+    while true; do
+        local options=(\
+            "Fisher"\
+            "Back"
+        )
+        menu_prompt fish_choice "$title" "$description" "${options[@]}"
+        case $fish_choice in
+            1)  configure_fisher;break;;
+            7)  break;;
+            *)  echo "Invalid option. Please try again.";;
+        esac
+    done
 }
 
 configure_elvish() {
+    local term_user="$1"
+
     install_pacman_package "elvish" ""
     local commands_to_run=()
-    local commands_to_run+=("chsh -s \$(which elvish)")
-
     if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/elvish" ]; then
         local commands_to_run+=("chsh -s /bin/elvish $term_user")
     fi
-
     live_command_output "" "" "Configuring elvish terminal" "${local commands_to_run[@]}"
 }
 
 configure_tcsh() {
+    local term_user="$1"
+
     install_pacman_package "tcsh" ""
     local commands_to_run=()
-
     if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/tcsh" ]; then
         local commands_to_run+=("chsh -s /bin/tcsh $term_user")
     fi
-
     live_command_output "" "" "Configuring tcsh terminal" "${local commands_to_run[@]}"
 }
 
 configure_ksh() {
+    local term_user="$1"
+
     install_pacman_package "ksh" ""
     local commands_to_run=()
-
     if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/ksh" ]; then
         local commands_to_run+=("chsh -s /bin/ksh $term_user")
     fi
-
     live_command_output "" "" "Configuring ksh terminal" "${local commands_to_run[@]}"
 }
 
 configure_dash() {
+    local term_user="$1"
+
     install_pacman_package "dash" ""
     local commands_to_run=()
-
     if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/dash" ]; then
         local commands_to_run+=("chsh -s /bin/dash $term_user")
     fi
-
     live_command_output "" "" "Configuring dash terminal" "${local commands_to_run[@]}"
 }
 
@@ -172,148 +235,218 @@ configure_dash() {
 # Frameworks
 ################################################################################
 
-configure_bash() {
-    local commands_to_run=()
-    if ! command -v bash &> /dev/null; then
-        local commands_to_run+=("sudo pacman -S --noconfirm bash")
-    fi
-    local commands_to_run+=("chsh -s \$(which bash)")
+configure_bash_it() {
+    local term_user="$1"
+    local term_pass="$2"
 
-    for cmd in "${local commands_to_run[@]}"; do
-        eval "$cmd"
-    done
+    if ! check_folder_exists "/home/$term_user/.bash_it"; then
+        local commands_to_run=()
+        commands_to_run+=("git clone --depth=1 https://github.com/Bash-it/bash-it.git /home/$term_user/.bash_it && /home/$term_user/.bash_it/install.sh")
+        live_command_output "$term_user" "$term_pass" "Installing Bash-it" "${commands_to_run[@]}"
+    else
+        continue_script "Bash-it is already installed."
+    fi
 }
 
-configure_zsh() {
-    local commands_to_run=()
-    if ! command -v zsh &> /dev/null; then
-        local commands_to_run+=("sudo pacman -S --noconfirm zsh")
-    fi
-    local commands_to_run+=("chsh -s \$(which zsh)")
-    local commands_to_run+=("sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\"")
+configure_oh_my_zsh() {
+    local term_user="$1"
+    local term_pass="$2"
 
-    for cmd in "${local commands_to_run[@]}"; do
-        eval "$cmd"
-    done
+    if ! check_folder_exists "$/home/$term_user/.oh-my-zsh"; then
+        local commands_to_run=()
+        local commands_to_run+=("curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | bash")
+        live_command_output "$term_user" "$term_pass" "Installing ohmyzsh" "${commands_to_run[@]}"
+    else
+        continue_script "Ohmyzsh is already installed."
+    fi
 }
 
-configure_fish() {
-    local commands_to_run=()
-    if ! command -v fish &> /dev/null; then
-        local commands_to_run+=("sudo pacman -S --noconfirm fish")
+configure_fisher() {
+    local term_user="$1"
+    local term_pass="$2"
+
+    if ! check_folder_exists "/home/$term_user/.config/fish/functions/fisher.fish"; then
+        local commands_to_run=()
+        commands_to_run+=("fish -c 'curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher'")
+        live_command_output "$term_user" "$term_pass" "Installing Fisher for Fish" "${commands_to_run[@]}"
+    else
+        continue_script "Fisher is already installed."
     fi
-    local commands_to_run+=("chsh -s \$(which fish)")
-    local commands_to_run+=("curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher")
-
-    for cmd in "${local commands_to_run[@]}"; do
-        eval "$cmd"
-    done
-}
-
-configure_elvish() {
-    local commands_to_run=()
-    if ! command -v elvish &> /dev/null; then
-        local commands_to_run+=("sudo pacman -S --noconfirm elvish")
-    fi
-    local commands_to_run+=("chsh -s \$(which elvish)")
-
-    for cmd in "${local commands_to_run[@]}"; do
-        eval "$cmd"
-    done
-}
-
-configure_tcsh() {
-    local commands_to_run=()
-    if ! command -v tcsh &> /dev/null; then
-        local commands_to_run+=("pacman --noconfirm -S tcsh")
-    fi
-
-    if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/tcsh" ]; then
-        local commands_to_run+=("chsh -s /bin/tcsh $term_user")
-    fi
-
-    for cmd in "${local commands_to_run[@]}"; do
-        eval "$cmd"
-    done
-}
-
-configure_ksh() {
-    local commands_to_run=()
-    if ! command -v ksh &> /dev/null; then
-        local commands_to_run+=("pacman --noconfirm -S ksh")
-    fi
-
-    if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/ksh" ]; then
-        local commands_to_run+=("chsh -s /bin/ksh $term_user")
-    fi
-
-    for cmd in "${local commands_to_run[@]}"; do
-        eval "$cmd"
-    done
-}
-
-configure_dash() {
-    local commands_to_run=()
-    if ! command -v dash &> /dev/null; then
-        local commands_to_run+=("pacman --noconfirm -S dash")
-    fi
-
-    if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/dash" ]; then
-        local commands_to_run+=("chsh -s /bin/dash $term_user")
-    fi
-
-    for cmd in "${local commands_to_run[@]}"; do
-        eval "$cmd"
-    done
 }
 
 ################################################################################
-# extras
+# styling
 ################################################################################
 
-set_oh_my_zsh () {
-    local term_user="$1"
-    local term_pass="$2"
-    
-    configure_zsh
+starship_theme_pure_prompt() {
+    local term_username="$1"
 
-    if [ ! -d "/home/$term_user/.oh-my-zsh" ]; then
-        local commands_to_run=()
-        local commands_to_run+=("curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | bash")
-    fi
-
-    live_command_output "" "" "Configuring zsh for $term_user" "${local commands_to_run[@]}"
-}
-
-
-set_oh_my_zsh_and_starship () {
-    local term_user="$1"
-    local term_pass="$2"
-    
-    configure_zsh
-
-    if [ ! -d "/home/$term_user/.oh-my-zsh" ]; then
-        local commands_to_run=()
-        local commands_to_run+=("curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | bash")
-    fi
-
-    local commands_to_run+=(
-        "if ! grep -Fxq 'eval \"\$(starship init zsh)\"' /home/$term_username/.zshrc; then
-            echo 'eval \"\$(starship init zsh)\"' >> /home/$term_username/.zshrc
-            echo \"Starship initialization added to .zshrc\"
-        else
-            echo \"Starship initialization already present in .zshrc\"
-        fi"
-    )
-    local commands_to_run+=("mkdir -p /home/$term_username/.config && touch /home/$term_username/.config/starship.toml")
+    local commands_to_run=()
     local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
     live_command_output "" "" "Configuring starship for $term_username" "${local commands_to_run[@]}"
+}
+
+starship_theme_pastel_powerline() {
+    local term_username="$1"
+
+    local commands_to_run=()
+    local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
+    live_command_output "" "" "Configuring starship for $term_username" "${local commands_to_run[@]}"
+}
+
+starship_theme_tokyo_night() {
+    local term_username="$1"
+
+    local commands_to_run=()
+    local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
+    live_command_output "" "" "Configuring starship for $term_username" "${local commands_to_run[@]}"
+}
+
+starship_theme_gruvbox_rainbow() {
+    local term_username="$1"
+
+    local commands_to_run=()
+    local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
+    live_command_output "" "" "Configuring starship for $term_username" "${local commands_to_run[@]}"
+}
+
+starship_theme_jetpack() {
+    local term_username="$1"
+
+    local commands_to_run=()
+    local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
+    live_command_output "" "" "Configuring starship for $term_username" "${local commands_to_run[@]}"
+}
+
+starship_themes() {
+    title="Shell configurator: pick shell"
+    description="Please select a shell from the menu below."
+    while true; do
+        local options=(
+            "Pure Prompt"\
+            "Pastel Powerline"\
+            "Tokyo Night"\
+            "Gruvbox Rainbow"\
+            "Jetpack"\
+            "Back"
+        )
+        menu_prompt shell_choice "$title" "$description" "${options[@]}"
+        case $shell_choice in
+            0)  starship_theme_pure_prompt;;
+            1)  starship_theme_pastel_powerline;;
+            2)  starship_theme_tokyo_night;;
+            3)  starship_theme_gruvbox_rainbow;;
+            4)  starship_theme_jetpack;;
+            b)  break;;
+            *)  echo "Invalid option. Please try again.";;
+        esac
+    done
+}
+
+configure_starship () {
+    local term_user="$1"
+    local term="$2"
+    local starship_config_path="/home/$term_username/.config"
+
+    if ! check_folder_exists "$starship_config_path/starship.toml"; then
+        commands_to_run=()
+        local commands_to_run+=("mkdir -p $starship_config_path && touch $starship_config_path/starship.toml")
+        live_command_output "" "" "Creating config file" "${commands_to_run[@]}"
+    else
+        continue_script "" "config file already exists at $starship_config_path. Skipping."
+    fi
+
+
+    if [ "$(getent passwd "$term_user" | cut -d: -f7)" = "/bin/bash" ]; then
+        starship_themes
+        local commands_to_run+=(
+            "if ! grep -Fxq 'eval \"\$(starship init bash)\"' /home/$term_username/.bashrc; then
+                echo 'eval \"\$(starship init bash)\"' >> /home/$term_username/.bashrc
+                echo \"Starship initialization added to .bashrc\"
+            else
+                echo \"Starship initialization already present in .bashrc\"
+            fi"
+        )
+    else [ "$(getent passwd "$term_user" | cut -d: -f7)" = "/bin/zsh" ]; then
+        starship_themes
+        local commands_to_run+=(
+            "if ! grep -Fxq 'eval \"\$(starship init zsh)\"' /home/$term_username/.zshrc; then
+                echo 'eval \"\$(starship init zsh)\"' >> /home/$term_username/.zshrc
+                echo \"Starship initialization added to .zshrc\"
+            else
+                echo \"Starship initialization already present in .zshrc\"
+            fi"
+        )
+    else [ "$(getent passwd "$term_user" | cut -d: -f7)" = "/bin/fish" ]; then
+        starship_themes
+        local commands_to_run+=(
+            "if ! grep -Fxq 'starship init fish | source' /home/$term_username/.config/fish/config.fish; then
+                echo 'starship init fish | source' >> /home/$term_username/.config/fish/config.fish
+                echo \"Starship initialization added to ~/.config/fish/config.fish"
+            else
+                echo \"Starship initialization already present in ~/.config/fish/config.fish"
+            fi"
+        )
+    else [ "$(getent passwd "$term_user" | cut -d: -f7)" = "/bin/elvish" ]; then
+        starship_themes
+        local commands_to_run+=(
+            "if ! grep -Fxq 'eval (starship init elvish)' /home/$term_username/.zshrc; then
+                echo 'eval (starship init elvish)' >> /home/$term_username/.zshrc
+                echo \"Starship initialization added to .zshrc\"
+            else
+                echo \"Starship initialization already present in .zshrc\"
+            fi"
+        )
+    else [ "$(getent passwd "$term_user" | cut -d: -f7)" = "/bin/tcsh" ]; then
+        starship_themes
+        local commands_to_run+=(
+            "if ! grep -Fxq 'eval `starship init tcsh`' /home/$term_username/.tcshrc; then
+                echo 'eval `starship init tcsh`' >> /home/$term_username/.tcshrc
+                echo \"Starship initialization added to .tcshrc\"
+            else
+                echo \"Starship initialization already present in .tcshrc\"
+            fi"
+        )
+    else [ "$(getent passwd "$term_user" | cut -d: -f7)" = "/bin/ksh" ]; then
+        continue_script "Starship not available" "Starship is not supported for this shell"
+    else [ "$(getent passwd "$term_user" | cut -d: -f7)" = "/bin/dash" ]; then
+        continue_script "Starship not available" "Starship is not supported for this shell"
+    fi
     
+    live_command_output "" "" "Configuring starship for $term_username" "${local commands_to_run[@]}"
+
 }
 
 ################################################################################
 # Menus
 ################################################################################
+
+configure_terminal() {
+    local title="Terminal configurator."
+    local description="This allows you to set up different terminals. Please select the terminal which shall be configured."
+    while true; do
+        local options=(\
+            "Kitty"\
+            "Alacritty"\
+            "Terminator"\
+            "Tilix"\
+            "GNOME Terminal"\
+            "Konsole"\
+            "Back"
+        )
+        menu_prompt term_choice "$title" "$description" "${options[@]}"
+        case $term_choice in
+            0)  configure_kitty;;
+            1)  configure_alacritty;;
+            2)  configure_terminator;;
+            3)  configure_tilix;;
+            4)  configure_gnome_terminal;;
+            5)  configure_konsole;;
+            b)  break;;
+            *)  echo "Invalid option. Please try again.";;
+        esac
+    done
+}
 
 configure_shell() {
     get_users userlist
@@ -338,58 +471,39 @@ configure_shell() {
             "Tcsh"\
             "Ksh"\
             "Dash"\
-            "Exit"
+            "Back"
         )
         menu_prompt shell_choice "$title" "$description" "${options[@]}"
-        case $choice in
-            1)  echo "You selected Bash.";;
-            7)  break;;
+        case $shell_choice in
+            0)  configure_bash;;
+            1)  configure_zsh;;
+            2)  configure_fish;;
+            3)  configure_elvish;;
+            4)  configure_tcsh;;
+            5)  configure_ksh;;
+            6)  configure_dash;;
+            b)  break;;
             *)  echo "Invalid option. Please try again.";;
         esac
     done
-
-    pause_script "Terminal" "Terminal Setup complete!"
 }
 
-configure_terminal() {
-    get_users userlist
+menu_terminal() {
 
-    local title="Terminal configurator: pick user"
-    local description="This allows you to set up different modes of zsh for a given user. Please select the user whose terminal shall be configured.\n\n$userlist"
-    get_users
-    input_text\
-        term_username\
-        "Terminal configuration"\
-        "This allows you to set up different terminal frameworks for a given user. Please select the user whose terminal shall be configured.\n\n$userlist"\
-        "What user to configure terminal for?: "
-    input_pass\
-        term_pass\
-        "$term_username"
-
-    title="Terminal configurator: pick mode"
-    description="Please select configuration mode from the menu below."
+    local title="Terminal global configurator."
+    local description="This allows you to set up terminals, shells and frameworks for a given user."
     while true; do
         local options=(\
-            "Kitty"\
-            "Alacritty"\
-            "Terminator"\
-            "Tilix"\
-            "GNOME Terminal"\
-            "Konsole"\
+            "configure terminals"\
+            "configure shells"\
             "Back"
         )
         menu_prompt term_choice "$title" "$description" "${options[@]}"
-        case $choice in
-            1)  configure_kitty;;
-            2)  configure_alacritty;;
-            3)  configure_terminator;;
-            4)  configure_tilix;;
-            5)  configure_gnome_terminal;;
-            6)  configure_konsole;;
+        case $term_choice in
+            1)  configure_terminal;;
+            2)  configure_shell;;
             7)  break;;
             *)  echo "Invalid option. Please try again.";;
         esac
     done
-
-    pause_script "Terminal" "Terminal Setup complete!"
 }
