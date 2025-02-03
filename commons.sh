@@ -55,6 +55,18 @@ check_command_exists() {
     fi
 }
 
+install_pacman_package*() {
+    local package="$1"
+    local deps="$2"
+    if ! check_command_exists "$package"; then
+        local commands_to_run=()
+        local commands_to_run+=("sudo pacman -S --noconfirm $package $deps")
+        live_command_output "" "" "Installing $package" "${commands_to_run[@]}"
+    else
+        continue_script "$package is already installed."
+    fi
+}
+
 check_live_env
 check_dialog
 

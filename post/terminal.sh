@@ -23,7 +23,7 @@ source ./post/users.sh
 
 install_fonts() {
     local -n given_array="$1"
-    commands_to_run=()
+    local commands_to_run=()
 
     local options=()
     for key in "${!given_array[@]}"; do
@@ -31,11 +31,11 @@ install_fonts() {
 
         pac_name=$(echo "$pac_name" | xargs)
         desc=$(echo "$desc" | xargs)
-        commands_to_run+=("pacman --noconfirm -S $pac_name")
+        local commands_to_run+=("pacman --noconfirm -S $pac_name")
         local options+=("$pac_name")
     done
 
-    live_command_output "" "" "Configuring selected fonts" "${commands_to_run[@]}"
+    live_command_output "" "" "Configuring selected fonts" "${local commands_to_run[@]}"
     pause_script "Finished configuring fonts" "Finished installing all selected fonts.
 
 Installed:    
@@ -77,107 +77,195 @@ Please choose what fonts you require."
 }
 
 ################################################################################
+# Terminals
+################################################################################
+
+configure_bash() {
+    install_pacman_package "bash" "$"
+    local commands_to_run=()
+    local commands_to_run+=("chsh -s \$(which bash)")
+
+    live_command_output "" "" "" "${commands_to_run[@]}"
+}
+
+################################################################################
 # Shell
 ################################################################################
 
 configure_bash() {
-    commands_to_run=()
-    if ! command -v bash &> /dev/null; then
-        commands_to_run+=("sudo pacman -S --noconfirm bash")
-    fi
-    commands_to_run+=("chsh -s \$(which bash)")
+    install_pacman_package "bash" ""
+    local commands_to_run=()
+    local commands_to_run+=("chsh -s \$(which bash)")
 
-    for cmd in "${commands_to_run[@]}"; do
-        eval "$cmd"
-    done
+    live_command_output "" "" "Configuring bash terminal" "${local commands_to_run[@]}"
 }
 
 configure_zsh() {
-    commands_to_run=()
-    if ! command -v zsh &> /dev/null; then
-        commands_to_run+=("sudo pacman -S --noconfirm zsh")
+    install_pacman_package "zsh" ""
+    local commands_to_run=()
+    if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/zsh" ]; then
+        local commands_to_run+=("chsh -s /bin/zsh $term_user")
     fi
-    commands_to_run+=("chsh -s \$(which zsh)")
-    commands_to_run+=("sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\"")
+    local commands_to_run+=("chsh -s \$(which zsh)")
+    local commands_to_run+=("sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\"")
 
-    for cmd in "${commands_to_run[@]}"; do
-        eval "$cmd"
-    done
+    live_command_output "" "" "Configuring zsh terminal" "${local commands_to_run[@]}"
 }
 
 configure_fish() {
-    commands_to_run=()
-    if ! command -v fish &> /dev/null; then
-        commands_to_run+=("sudo pacman -S --noconfirm fish")
+    install_pacman_package "fish" ""
+    local commands_to_run=()
+    if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/fish" ]; then
+        local commands_to_run+=("chsh -s /bin/fish $term_user")
     fi
-    commands_to_run+=("chsh -s \$(which fish)")
-    commands_to_run+=("curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher")
+    local commands_to_run+=("curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher")
 
-    for cmd in "${commands_to_run[@]}"; do
-        eval "$cmd"
-    done
+    live_command_output "" "" "Configuring fish terminal" "${local commands_to_run[@]}"
 }
 
 configure_elvish() {
-    commands_to_run=()
-    if ! command -v elvish &> /dev/null; then
-        commands_to_run+=("sudo pacman -S --noconfirm elvish")
-    fi
-    commands_to_run+=("chsh -s \$(which elvish)")
+    install_pacman_package "elvish" ""
+    local commands_to_run=()
+    local commands_to_run+=("chsh -s \$(which elvish)")
 
-    for cmd in "${commands_to_run[@]}"; do
-        eval "$cmd"
-    done
+    if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/elvish" ]; then
+        local commands_to_run+=("chsh -s /bin/elvish $term_user")
+    fi
+
+    live_command_output "" "" "Configuring elvish terminal" "${local commands_to_run[@]}"
 }
 
 configure_tcsh() {
-    commands_to_run=()
-    if ! command -v tcsh &> /dev/null; then
-        commands_to_run+=("pacman --noconfirm -S tcsh")
-    fi
+    install_pacman_package "tcsh" ""
+    local commands_to_run=()
 
     if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/tcsh" ]; then
-        commands_to_run+=("chsh -s /bin/tcsh $term_user")
+        local commands_to_run+=("chsh -s /bin/tcsh $term_user")
     fi
 
-    for cmd in "${commands_to_run[@]}"; do
-        eval "$cmd"
-    done
+    live_command_output "" "" "Configuring tcsh terminal" "${local commands_to_run[@]}"
 }
 
 configure_ksh() {
-    commands_to_run=()
-    if ! command -v ksh &> /dev/null; then
-        commands_to_run+=("pacman --noconfirm -S ksh")
-    fi
+    install_pacman_package "ksh" ""
+    local commands_to_run=()
 
     if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/ksh" ]; then
-        commands_to_run+=("chsh -s /bin/ksh $term_user")
+        local commands_to_run+=("chsh -s /bin/ksh $term_user")
     fi
 
-    for cmd in "${commands_to_run[@]}"; do
-        eval "$cmd"
-    done
+    live_command_output "" "" "Configuring ksh terminal" "${local commands_to_run[@]}"
 }
 
 configure_dash() {
-    commands_to_run=()
-    if ! command -v dash &> /dev/null; then
-        commands_to_run+=("pacman --noconfirm -S dash")
-    fi
+    install_pacman_package "dash" ""
+    local commands_to_run=()
 
     if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/dash" ]; then
-        commands_to_run+=("chsh -s /bin/dash $term_user")
+        local commands_to_run+=("chsh -s /bin/dash $term_user")
     fi
 
-    for cmd in "${commands_to_run[@]}"; do
-        eval "$cmd"
-    done
+    live_command_output "" "" "Configuring dash terminal" "${local commands_to_run[@]}"
 }
 
 ################################################################################
 # Frameworks
 ################################################################################
+
+configure_bash() {
+    local commands_to_run=()
+    if ! command -v bash &> /dev/null; then
+        local commands_to_run+=("sudo pacman -S --noconfirm bash")
+    fi
+    local commands_to_run+=("chsh -s \$(which bash)")
+
+    for cmd in "${local commands_to_run[@]}"; do
+        eval "$cmd"
+    done
+}
+
+configure_zsh() {
+    local commands_to_run=()
+    if ! command -v zsh &> /dev/null; then
+        local commands_to_run+=("sudo pacman -S --noconfirm zsh")
+    fi
+    local commands_to_run+=("chsh -s \$(which zsh)")
+    local commands_to_run+=("sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\"")
+
+    for cmd in "${local commands_to_run[@]}"; do
+        eval "$cmd"
+    done
+}
+
+configure_fish() {
+    local commands_to_run=()
+    if ! command -v fish &> /dev/null; then
+        local commands_to_run+=("sudo pacman -S --noconfirm fish")
+    fi
+    local commands_to_run+=("chsh -s \$(which fish)")
+    local commands_to_run+=("curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher")
+
+    for cmd in "${local commands_to_run[@]}"; do
+        eval "$cmd"
+    done
+}
+
+configure_elvish() {
+    local commands_to_run=()
+    if ! command -v elvish &> /dev/null; then
+        local commands_to_run+=("sudo pacman -S --noconfirm elvish")
+    fi
+    local commands_to_run+=("chsh -s \$(which elvish)")
+
+    for cmd in "${local commands_to_run[@]}"; do
+        eval "$cmd"
+    done
+}
+
+configure_tcsh() {
+    local commands_to_run=()
+    if ! command -v tcsh &> /dev/null; then
+        local commands_to_run+=("pacman --noconfirm -S tcsh")
+    fi
+
+    if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/tcsh" ]; then
+        local commands_to_run+=("chsh -s /bin/tcsh $term_user")
+    fi
+
+    for cmd in "${local commands_to_run[@]}"; do
+        eval "$cmd"
+    done
+}
+
+configure_ksh() {
+    local commands_to_run=()
+    if ! command -v ksh &> /dev/null; then
+        local commands_to_run+=("pacman --noconfirm -S ksh")
+    fi
+
+    if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/ksh" ]; then
+        local commands_to_run+=("chsh -s /bin/ksh $term_user")
+    fi
+
+    for cmd in "${local commands_to_run[@]}"; do
+        eval "$cmd"
+    done
+}
+
+configure_dash() {
+    local commands_to_run=()
+    if ! command -v dash &> /dev/null; then
+        local commands_to_run+=("pacman --noconfirm -S dash")
+    fi
+
+    if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/dash" ]; then
+        local commands_to_run+=("chsh -s /bin/dash $term_user")
+    fi
+
+    for cmd in "${local commands_to_run[@]}"; do
+        eval "$cmd"
+    done
+}
 
 ################################################################################
 # extras
@@ -190,11 +278,11 @@ set_oh_my_zsh () {
     configure_zsh
 
     if [ ! -d "/home/$term_user/.oh-my-zsh" ]; then
-        commands_to_run=()
-        commands_to_run+=("curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | bash")
+        local commands_to_run=()
+        local commands_to_run+=("curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | bash")
     fi
 
-    live_command_output "" "" "Configuring zsh for $term_user" "${commands_to_run[@]}"
+    live_command_output "" "" "Configuring zsh for $term_user" "${local commands_to_run[@]}"
 }
 
 
@@ -205,11 +293,11 @@ set_oh_my_zsh_and_starship () {
     configure_zsh
 
     if [ ! -d "/home/$term_user/.oh-my-zsh" ]; then
-        commands_to_run=()
-        commands_to_run+=("curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | bash")
+        local commands_to_run=()
+        local commands_to_run+=("curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | bash")
     fi
 
-    commands_to_run+=(
+    local commands_to_run+=(
         "if ! grep -Fxq 'eval \"\$(starship init zsh)\"' /home/$term_username/.zshrc; then
             echo 'eval \"\$(starship init zsh)\"' >> /home/$term_username/.zshrc
             echo \"Starship initialization added to .zshrc\"
@@ -217,9 +305,9 @@ set_oh_my_zsh_and_starship () {
             echo \"Starship initialization already present in .zshrc\"
         fi"
     )
-    commands_to_run+=("mkdir -p /home/$term_username/.config && touch /home/$term_username/.config/starship.toml")
-    commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
-    live_command_output "" "" "Configuring starship for $term_username" "${commands_to_run[@]}"
+    local commands_to_run+=("mkdir -p /home/$term_username/.config && touch /home/$term_username/.config/starship.toml")
+    local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
+    live_command_output "" "" "Configuring starship for $term_username" "${local commands_to_run[@]}"
     
 }
 
@@ -282,22 +370,22 @@ configure_terminal() {
     description="Please select configuration mode from the menu below."
     while true; do
         local options=(\
-            "Bash"\
-            "Zsh"\
-            "Fish"\
-            "Tcsh"\
-            "Ksh"\
-            "Dash"\
+            "Kitty"\
+            "Alacritty"\
+            "Terminator"\
+            "Tilix"\
+            "GNOME Terminal"\
+            "Konsole"\
             "Back"
         )
         menu_prompt term_choice "$title" "$description" "${options[@]}"
         case $choice in
-            1)  configure_bash;;
-            2)  configure_zsh;;
-            3)  configure_fish;;
-            4)  configure_tcsh;;
-            5)  configure_ksh;;
-            6)  configure_dash;;
+            1)  configure_kitty;;
+            2)  configure_alacritty;;
+            3)  configure_terminator;;
+            4)  configure_tilix;;
+            5)  configure_gnome_terminal;;
+            6)  configure_konsole;;
             7)  break;;
             *)  echo "Invalid option. Please try again.";;
         esac
