@@ -209,26 +209,15 @@ configure_tcsh() {
     live_command_output "" "" "Configuring tcsh terminal" "${local commands_to_run[@]}"
 }
 
-configure_ksh() {
+configure_nushell() {
     local term_user="$1"
 
-    install_pacman_package "ksh" ""
+    install_pacman_package "nushell" ""
     local commands_to_run=()
-    if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/ksh" ]; then
-        local commands_to_run+=("chsh -s /bin/ksh $term_user")
+    if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/nu" ]; then
+        local commands_to_run+=("chsh -s /bin/nu $term_user")
     fi
-    live_command_output "" "" "Configuring ksh terminal" "${local commands_to_run[@]}"
-}
-
-configure_dash() {
-    local term_user="$1"
-
-    install_pacman_package "dash" ""
-    local commands_to_run=()
-    if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/dash" ]; then
-        local commands_to_run+=("chsh -s /bin/dash $term_user")
-    fi
-    live_command_output "" "" "Configuring dash terminal" "${local commands_to_run[@]}"
+    live_command_output "" "" "Configuring nu terminal" "${local commands_to_run[@]}"
 }
 
 ################################################################################
@@ -343,78 +332,149 @@ starship_themes() {
     done
 }
 
-configure_starship () {
-    local term_user="$1"
-    local term="$2"
-    local starship_config_path="/home/$term_username/.config"
+configure_oh_my_posh(){
+    local term_username="$1"
+    local shell_path="$(getent passwd "$term_username" | cut -d: -f7)"
 
     if ! check_folder_exists "$starship_config_path/starship.toml"; then
-        commands_to_run=()
-        local commands_to_run+=("mkdir -p $starship_config_path && touch $starship_config_path/starship.toml")
+        local commands_to_run=("mkdir -p $starship_config_path && touch $starship_config_path/starship.toml")
         live_command_output "" "" "Creating config file" "${commands_to_run[@]}"
     else
-        continue_script "" "config file already exists at $starship_config_path. Skipping."
+        continue_script "" "Config file already exists at $starship_config_path. Skipping."
     fi
 
+    case "$shell_path" in
+        "/bin/bash")
+            config_file="/home/$term_username/.bashrc"
+            init_command='eval "$(starship init bash)"'
+            starship_themes
+            ;;
+        "/bin/zsh")
+            config_file="/home/$term_username/.zshrc"
+            init_command='eval "$(starship init zsh)"'
+            starship_themes
+            ;;
+        "/bin/fish")
+            config_file="/home/$term_username/.config/fish/config.fish"
+            init_command='starship init fish | source'
+            starship_themes
+            ;;
+        "/bin/elvish")
+            config_file="/home/$term_username/.elvish/rc.elv"
+            init_command='eval (starship init elvish)'
+            starship_themes
+            ;;
+        "/bin/tcsh")
+            config_file="/home/$term_username/.tcshrc"
+            init_command='eval `starship init tcsh`'
+            starship_themes
+            ;;
+        *)
+            continue_script "Starship not available" "Starship is not supported for this shell"
+            return
+            ;;
+    esac
 
-    if [ "$(getent passwd "$term_user" | cut -d: -f7)" = "/bin/bash" ]; then
-        starship_themes
-        local commands_to_run+=(
-            "if ! grep -Fxq 'eval \"\$(starship init bash)\"' /home/$term_username/.bashrc; then
-                echo 'eval \"\$(starship init bash)\"' >> /home/$term_username/.bashrc
-                echo \"Starship initialization added to .bashrc\"
-            else
-                echo \"Starship initialization already present in .bashrc\"
-            fi"
-        )
-    else [ "$(getent passwd "$term_user" | cut -d: -f7)" = "/bin/zsh" ]; then
-        starship_themes
-        local commands_to_run+=(
-            "if ! grep -Fxq 'eval \"\$(starship init zsh)\"' /home/$term_username/.zshrc; then
-                echo 'eval \"\$(starship init zsh)\"' >> /home/$term_username/.zshrc
-                echo \"Starship initialization added to .zshrc\"
-            else
-                echo \"Starship initialization already present in .zshrc\"
-            fi"
-        )
-    else [ "$(getent passwd "$term_user" | cut -d: -f7)" = "/bin/fish" ]; then
-        starship_themes
-        local commands_to_run+=(
-            "if ! grep -Fxq 'starship init fish | source' /home/$term_username/.config/fish/config.fish; then
-                echo 'starship init fish | source' >> /home/$term_username/.config/fish/config.fish
-                echo \"Starship initialization added to ~/.config/fish/config.fish"
-            else
-                echo \"Starship initialization already present in ~/.config/fish/config.fish"
-            fi"
-        )
-    else [ "$(getent passwd "$term_user" | cut -d: -f7)" = "/bin/elvish" ]; then
-        starship_themes
-        local commands_to_run+=(
-            "if ! grep -Fxq 'eval (starship init elvish)' /home/$term_username/.zshrc; then
-                echo 'eval (starship init elvish)' >> /home/$term_username/.zshrc
-                echo \"Starship initialization added to .zshrc\"
-            else
-                echo \"Starship initialization already present in .zshrc\"
-            fi"
-        )
-    else [ "$(getent passwd "$term_user" | cut -d: -f7)" = "/bin/tcsh" ]; then
-        starship_themes
-        local commands_to_run+=(
-            "if ! grep -Fxq 'eval `starship init tcsh`' /home/$term_username/.tcshrc; then
-                echo 'eval `starship init tcsh`' >> /home/$term_username/.tcshrc
-                echo \"Starship initialization added to .tcshrc\"
-            else
-                echo \"Starship initialization already present in .tcshrc\"
-            fi"
-        )
-    else [ "$(getent passwd "$term_user" | cut -d: -f7)" = "/bin/ksh" ]; then
-        continue_script "Starship not available" "Starship is not supported for this shell"
-    else [ "$(getent passwd "$term_user" | cut -d: -f7)" = "/bin/dash" ]; then
-        continue_script "Starship not available" "Starship is not supported for this shell"
+    local commands_to_run=(
+        "if ! grep -Fxq '$init_command' $config_file; then
+            echo '$init_command' >> $config_file
+            echo 'Starship initialization added to $config_file'
+        else
+            echo 'Starship initialization already present in $config_file'
+        fi"
+    )
+    live_command_output "$term_username" "" "Configuring Starship for $term_username." "${commands_to_run[@]}"
+}
+
+configure_starship () {
+    local term_username="$1"
+    local starship_config_path="/home/$term_username/.config"
+    local shell_path
+    shell_path="$(getent passwd "$term_username" | cut -d: -f7)"
+
+    if ! check_folder_exists "$starship_config_path/starship.toml"; then
+        local commands_to_run=("mkdir -p $starship_config_path && touch $starship_config_path/starship.toml")
+        live_command_output "" "" "Creating config file" "${commands_to_run[@]}"
+    else
+        continue_script "" "Config file already exists at $starship_config_path. Skipping."
     fi
-    
-    live_command_output "" "" "Configuring starship for $term_username" "${local commands_to_run[@]}"
 
+    case "$shell_path" in
+        "/bin/bash")
+            config_file="/home/$term_username/.bashrc"
+            init_command='eval "$(starship init bash)"'
+            starship_themes
+            ;;
+        "/bin/zsh")
+            config_file="/home/$term_username/.zshrc"
+            init_command='eval "$(starship init zsh)"'
+            starship_themes
+            ;;
+        "/bin/fish")
+            config_file="/home/$term_username/.config/fish/config.fish"
+            init_command='starship init fish | source'
+            starship_themes
+            ;;
+        "/bin/elvish")
+            config_file="/home/$term_username/.elvish/rc.elv"
+            init_command='eval (starship init elvish)'
+            starship_themes
+            ;;
+        "/bin/tcsh")
+            config_file="/home/$term_username/.tcshrc"
+            init_command='eval `starship init tcsh`'
+            starship_themes
+            ;;
+        *)
+            continue_script "Starship not available" "Starship is not supported for this shell"
+            return
+            ;;
+    esac
+
+    local commands_to_run=(
+        "if ! grep -Fxq '$init_command' $config_file; then
+            echo '$init_command' >> $config_file
+            echo 'Starship initialization added to $config_file'
+        else
+            echo 'Starship initialization already present in $config_file'
+        fi"
+    )
+    live_command_output "$term_username" "" "Configuring Starship for $term_username." "${commands_to_run[@]}"
+}
+
+prompts_bash(){
+    local title="zsh prompt picker"
+    local description="This allows you to pick a prompt tool for your shell."
+    while true; do
+        local options=(\
+            "Starship"\
+            "OhMyPosh"\
+            "Back"
+        )
+        menu_prompt term_choice "$title" "$description" "${options[@]}"
+        case $term_choice in
+            0)  configure_starship;;
+            b)  break;;
+            *)  echo "Invalid option. Please try again.";;
+        esac
+    done
+}
+
+prompts_zsh(){
+    local title="prompt picker"
+    local description="This allows you to pick a prompt tool for your shell."
+    while true; do
+        local options=(\
+            "Starship"\
+            "Back"
+        )
+        menu_prompt term_choice "$title" "$description" "${options[@]}"
+        case $term_choice in
+            0)  configure_starship;;
+            b)  break;;
+            *)  echo "Invalid option. Please try again.";;
+        esac
+    done
 }
 
 ################################################################################
@@ -469,8 +529,7 @@ configure_shell() {
             "Fish"\
             "Elvish"\
             "Tcsh"\
-            "Ksh"\
-            "Dash"\
+            "Nushell"\
             "Back"
         )
         menu_prompt shell_choice "$title" "$description" "${options[@]}"
@@ -480,8 +539,7 @@ configure_shell() {
             2)  configure_fish;;
             3)  configure_elvish;;
             4)  configure_tcsh;;
-            5)  configure_ksh;;
-            6)  configure_dash;;
+            5)  configure_nushell;;
             b)  break;;
             *)  echo "Invalid option. Please try again.";;
         esac
