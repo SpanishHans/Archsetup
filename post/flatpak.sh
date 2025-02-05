@@ -17,10 +17,7 @@
 source ./commons.sh
 
 configure_flatpak() {
-    commands_to_run=()
-    commands_to_run+=("pacman --noconfirm -S flatpak")
-
-    live_command_output "" "" "Installing Flatpak" "${commands_to_run[@]}"
+    install_pacman_packages flatpak
     continue_script "Flatpak" "Flatpak Setup complete!"
 }
 

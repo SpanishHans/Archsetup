@@ -18,10 +18,7 @@ source ./commons.sh
 source ./post/aur.sh
 
 install_chezmoi() {
-    commands_to_run=()
-    commands_to_run+=("pacman --noconfirm -S chezmoi")
-
-    live_command_output "" "" "Installing Chezmoi" "${commands_to_run[@]}"
+    install_pacman_packages chezmoi
     continue_script "Chezmoi" "Chezmoi Setup complete!"
 }
 

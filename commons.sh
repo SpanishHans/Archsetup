@@ -66,16 +66,19 @@ check_command_exists() {
     fi
 }
 
-install_pacman_package*() {
-    local package="$1"
-    local deps="$2"
-    if ! check_command_exists "$package"; then
-        local commands_to_run=()
-        local commands_to_run+=("sudo pacman -S --noconfirm $package $deps")
-        live_command_output "" "" "Installing $package" "${commands_to_run[@]}"
-    else
-        continue_script "$package is already installed."
-    fi
+install_pacman_packages() {
+    local packages=($@)  # This will split the string into an array
+    local commands_to_run=()
+
+    for package in "${packages[@]}"; do
+        if ! check_command_exists "$package"; then
+            local commands_to_run+=("sudo pacman -S --noconfirm $package")
+            
+        else
+            continue_script "$package is already installed."
+        fi
+    done
+    live_command_output "" "" "Installing $package" "${commands_to_run[@]}"
 }
 
 check_live_env
@@ -180,7 +183,7 @@ scroll_window_output() {
     local file="$1"
     content="$prompt\n\n$(cat "$file")"
     dialog\
-        --backtitle "Viewing: PKGBUILD"\
+        --backtitle "Viewing logs"\
         --textbox <(echo -e "$content")\
         $full_height $full_width
 }
@@ -189,7 +192,8 @@ live_command_output() {
     local user="${1:-root}"
     local pass="$2"
     local context="$3"
-    shift 3
+    local show_logs="${4:-no}"
+    shift 4
     local commands=("$@")
     local script_name=$(basename "$(realpath "$0")")
     local combined_log="/tmp/${script_name}_$(date +%Y%m%d%H%M%S).log"
@@ -227,17 +231,21 @@ live_command_output() {
         fi
     } &
 
-    # Show the dialog live
     dialog \
         --backtitle "$script_name on live viewer" \
-        --tailbox "$combined_log" \
-        "$full_height" "$full_width" 2>&1 >/dev/tty
+        --programbox "tail -f $combined_log" \
+        "$full_height" "$full_width" 2>&1 >/dev/tty &
 
-    # Wait for all commands to finish
+    dialog_pid=$!
     wait
+    
+    kill "$dialog_pid" 2>/dev/null
+
+    if [[ "${show_logs,,}" == "yes" ]]; then
+        scroll_window_output "$(terminal_title "$script_name finished and the logs are:")" "$combined_log"
+    fi
 
     handle_exit_code "$exit_code" "return"
-    scroll_window_output "$(terminal_title "$script_name finished and the logs are:")" "$combined_log"
 }
 
 
