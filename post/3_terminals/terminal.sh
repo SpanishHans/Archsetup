@@ -25,12 +25,14 @@ terminal_menu() {
         local options=(\
             "configure terminals"\
             "configure shells"\
+            "configure prompts"\
             "Back"
         )
         menu_prompt term_choice "$title" "$description" "${options[@]}"
         case $term_choice in
-            1)  configure_terminal;;
-            2)  configure_shell;;
+            0)  terminals_menu;;
+            1)  shells_menu;;
+            2)  prompts_menu;;
             b)  break;;
             *)  echo "Invalid option. Please try again.";;
         esac
@@ -125,7 +127,7 @@ configure_konsole() {
     live_command_output "" "" "Configuring konsole terminal" "${local commands_to_run[@]}"
 }
 
-configure_terminal() {
+terminals_menu() {
     local title="Terminal configurator."
     local description="This allows you to set up different terminals. Please select the terminal which shall be configured."
     while true; do
@@ -310,7 +312,7 @@ configure_nushell() {
     live_command_output "" "" "Configuring nu terminal" "${local commands_to_run[@]}"
 }
 
-configure_shell() {
+shells_menu() {
     get_users userlist
 
     input_text\

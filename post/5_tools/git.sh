@@ -15,7 +15,6 @@
 # the License.
 
 source ./commons.sh
-source ./post/chezmoi.sh
 source ./post/users.sh
 
 configure_git() {
@@ -80,35 +79,4 @@ configure_git() {
     
     live_command_output "" "" "Installing git" "${commands_to_run[@]}"
     pause_script "Git" "Git Setup complete!"
-}
-
-configure_clipboard() {
-    commands_to_run=()
-    commands_to_run+=("pacman --noconfirm -S wl-clipboard cliphist grim slurp")
-
-    live_command_output "" "" "Configuring clipboard" "${commands_to_run[@]}"
-    pause_script "Clipboard" "Clipboard Setup complete!"
-}
-
-tools_menu () {
-    local title="Basic Tools Installer"
-    local description="This script provides an easy way to install essential tools for your system. Select an option to install the tool of your choice."
-
-
-    while true; do
-        local options=(\
-            "Git                (Version control)" \
-            "Chezmoi            (dotfile manager)" \
-            "Clipboard          (History)" \
-            "Back" \
-        )
-        menu_prompt tools_menu_choice "$title" "$description" "${options[@]}"
-        case $tools_menu_choice in
-            0)  configure_git;;
-            3)  chezmoi_mode;;
-            4)  configure_clipboard;;
-            b)  break;;
-            *)  continue_script "Not a valid choice!" "Invalid choice, please try again." ;;
-        esac
-    done
 }
