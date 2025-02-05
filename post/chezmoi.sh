@@ -15,55 +15,11 @@
 # the License.
 
 source ./commons.sh
+source ./post/pacman.sh
 source ./post/aur.sh
 
-install_chezmoi() {
+chezmoi_menu() {
     install_pacman_packages chezmoi
-    continue_script "Chezmoi" "Chezmoi Setup complete!"
-}
-
-configure_chezmoi_default() {
-    input_text chezmoi_username "Chezmoi User to setup" "Please enter the user whose chezmoi shall be configured" 'What user to configure chezmoi for?: '
-
-    if ! check_command_exists "chezmoi"; then
-        install_chezmoi
-    else
-        continue_script "Chezmoi already installed" "Chezmoi is already installed."
-    fi
-
-    # commands_to_run+=("sudo -u \"$chezmoi_username\" bash -c \"chezmoi init https://github.com/SpanishHans/Archsetup\"")
-    live_command_output "" "" "Configuring chezmoi" "${commands_to_run[@]}"
-
-    commands_to_run=()
-    commands_to_run+=("chezmoi init https://github.com/SpanishHans/Archsetup")
-    commands_to_run+=("mv /home/$chezmoi_username/.local/share/chezmoi/* /home/$chezmoi_username/.config/")
-    live_command_output "$chezmoi_username" "" "Configuring chezmoi" "${commands_to_run[@]}"
-
-    pause_script "Chezmoi" "Chezmoi Setup complete for user $chezmoi_username!"
-}
-
-configure_chezmoi_no_default() {
-    input_text chezmoi_username "Chezmoi User to setup" "Please enter the user whose chezmoi shall be configured" 'What user to configure chezmoi for?: '
-    input_text chezmoi_repo "Chezmoi repo to setup" "Please enter the repo to sync from/to." "Provide the Git repository URL for ChezMoi: "
-
-    if ! check_command_exists "chezmoi"; then
-        install_chezmoi
-    else
-        continue_script "Chezmoi is already installed."
-    fi
-
-    # commands_to_run+=("sudo -u \"$chezmoi_username\" bash -c \"chezmoi init https://github.com/SpanishHans/Archsetup\"")
-    live_command_output "" "" "Configuring chezmoi" "${commands_to_run[@]}"
-
-    commands_to_run=()
-    commands_to_run+=("chezmoi init https://github.com/SpanishHans/Archsetup")
-    commands_to_run+=("mv /home/$chezmoi_username/.local/share/chezmoi/* /home/$chezmoi_username/.config/")
-    live_command_output "$chezmoi_username" "" "Configuring chezmoi" "${commands_to_run[@]}"
-
-    pause_script "Chezmoi" "Chezmoi Setup complete for user $chezmoi_username!"
-}
-
-chezmoi_mode () {
     local title="Chezmoi Installer"
     local description="This script provides an easy way to install Chezmoi for your system. Select a mode to install Chezmoi with."
 
@@ -82,4 +38,33 @@ chezmoi_mode () {
             *)  continue_script "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
     done
+}
+
+configure_chezmoi_default() {
+    input_text chezmoi_username "Chezmoi User to setup" "Please enter the user whose chezmoi shall be configured" 'What user to configure chezmoi for?: '
+
+    # commands_to_run+=("sudo -u \"$chezmoi_username\" bash -c \"chezmoi init https://github.com/SpanishHans/Archsetup\"")
+    live_command_output "" "" "Configuring chezmoi" "${commands_to_run[@]}"
+
+    commands_to_run=()
+    commands_to_run+=("chezmoi init https://github.com/SpanishHans/Archsetup")
+    commands_to_run+=("mv /home/$chezmoi_username/.local/share/chezmoi/* /home/$chezmoi_username/.config/")
+    live_command_output "$chezmoi_username" "" "Configuring chezmoi" "${commands_to_run[@]}"
+
+    pause_script "Chezmoi" "Chezmoi Setup complete for user $chezmoi_username!"
+}
+
+configure_chezmoi_no_default() {
+    input_text chezmoi_username "Chezmoi User to setup" "Please enter the user whose chezmoi shall be configured" 'What user to configure chezmoi for?: '
+    input_text chezmoi_repo "Chezmoi repo to setup" "Please enter the repo to sync from/to." "Provide the Git repository URL for ChezMoi: "
+
+    # commands_to_run+=("sudo -u \"$chezmoi_username\" bash -c \"chezmoi init https://github.com/SpanishHans/Archsetup\"")
+    live_command_output "" "" "Configuring chezmoi" "${commands_to_run[@]}"
+
+    commands_to_run=()
+    commands_to_run+=("chezmoi init https://github.com/SpanishHans/Archsetup")
+    commands_to_run+=("mv /home/$chezmoi_username/.local/share/chezmoi/* /home/$chezmoi_username/.config/")
+    live_command_output "$chezmoi_username" "" "Configuring chezmoi" "${commands_to_run[@]}"
+
+    pause_script "Chezmoi" "Chezmoi Setup complete for user $chezmoi_username!"
 }

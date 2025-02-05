@@ -18,7 +18,7 @@ source ./commons.sh
 source ./post/aur.sh
 source ./post/flatpak.sh
 
-select_software_source() {
+software_menu() {
     local title="Install extra software"
     local description="Welcome to the extra software installation menu. Select the software tool to install."
 

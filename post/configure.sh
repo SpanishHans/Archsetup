@@ -64,8 +64,8 @@ configure_menu () {
             0)  users_menu;;
             1)  rollback_menu;;
             2)  desktops_menu;;
-            3)  configure_terminal;;
-            4)  select_software_source;;
+            3)  terminal_menu;;
+            4)  software_menu;;
             5)  tools_menu;;
             6)  virtualization_menu;;
             7)  language_menu;;

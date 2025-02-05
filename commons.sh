@@ -66,21 +66,6 @@ check_command_exists() {
     fi
 }
 
-install_pacman_packages() {
-    local packages=($@)  # This will split the string into an array
-    local commands_to_run=()
-
-    for package in "${packages[@]}"; do
-        if ! check_command_exists "$package"; then
-            local commands_to_run+=("sudo pacman -S --noconfirm $package")
-            
-        else
-            continue_script "$package is already installed."
-        fi
-    done
-    live_command_output "" "" "Installing $package" "${commands_to_run[@]}"
-}
-
 check_live_env
 check_dialog
 
@@ -191,8 +176,8 @@ scroll_window_output() {
 live_command_output() {
     local user="${1:-root}"
     local pass="$2"
-    local context="$3"
-    local show_logs="${4:-no}"
+    local show_logs="${3:-no}"
+    local context="$4"
     shift 4
     local commands=("$@")
     local script_name=$(basename "$(realpath "$0")")

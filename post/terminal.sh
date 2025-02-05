@@ -17,6 +17,26 @@
 source ./commons.sh
 source ./post/users.sh
 
+terminal_menu() {
+
+    local title="Terminal global configurator."
+    local description="This allows you to set up terminals, shells and frameworks for a given user."
+    while true; do
+        local options=(\
+            "configure terminals"\
+            "configure shells"\
+            "Back"
+        )
+        menu_prompt term_choice "$title" "$description" "${options[@]}"
+        case $term_choice in
+            1)  configure_terminal;;
+            2)  configure_shell;;
+            b)  break;;
+            *)  echo "Invalid option. Please try again.";;
+        esac
+    done
+}
+
 ################################################################################
 # Fonts
 ################################################################################
@@ -582,28 +602,4 @@ configure_oh_my_posh () {
         fi"
     )
     live_command_output "$term_username" "" "Configuring Oh my posh for $term_username." "${commands_to_run[@]}"
-}
-
-################################################################################
-# Menus
-################################################################################
-
-menu_terminal() {
-
-    local title="Terminal global configurator."
-    local description="This allows you to set up terminals, shells and frameworks for a given user."
-    while true; do
-        local options=(\
-            "configure terminals"\
-            "configure shells"\
-            "Back"
-        )
-        menu_prompt term_choice "$title" "$description" "${options[@]}"
-        case $term_choice in
-            1)  configure_terminal;;
-            2)  configure_shell;;
-            b)  break;;
-            *)  echo "Invalid option. Please try again.";;
-        esac
-    done
 }

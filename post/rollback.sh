@@ -15,47 +15,7 @@
 # the License.
 
 source ./commons.sh
-
-configure_snapper() {
-    commands_to_run=()
-    commands_to_run+=("pacman --noconfirm -S snapper")
-    commands_to_run+=("sed -i '/^#.*\\/dev\\//d' /etc/fstab && sed -i '/^[[:space:]]*$/d' /etc/fstab")
-    commands_to_run+=("umount /.snapshots && rm -rf /.snapshots && snapper -c root create-config /")
-    commands_to_run+=("mount -a")
-    commands_to_run+=("systemctl daemon-reload")
-    
-    live_command_output "" "" "Configuring Snapper for rollbacks" "${commands_to_run[@]}"
-    pause_script "Snapper" "Snapper setup complete!"
-}
-
-configure_snap_pac() {
-    commands_to_run=()
-    commands_to_run+=("pacman --noconfirm -S snap-pac")
-    
-    live_command_output "" "" "Configuring Snap-pac for  auto pacman snaps" "${commands_to_run[@]}"
-    pause_script "Snap-pac" "Snap-pac setup complete!"
-}
-
-configure_snp() {
-    local user="$1"
-    install_aur_package "$user" "https://aur.archlinux.org/snp.git"
-}
-
-configure_snapper_rollback() {
-    local user="$1"
-    install_aur_package "$user" "https://aur.archlinux.org/snapper-rollback.git"
-
-
-    commands_to_run=()
-    commands_to_run+=("
-        if grep -qE '^[#]*mountpoint[[:space:]]*=[[:space:]]*/btrfsroot' /etc/snapper-rollback.conf; then
-            sed -i 's|^[#]*mountpoint[[:space:]]*=[[:space:]]*/btrfsroot|mountpoint = /.btrfsroot|' /etc/snapper-rollback.conf
-            echo \"mountpoint updated to /.btrfsroot in /etc/snapper-rollback.conf\"
-        else
-            echo \"mountpoint entry not found in /etc/snapper-rollback.conf\"
-        fi")
-    live_command_output "" "" "Configuring snapper-rollback" "${commands_to_run[@]}"
-}
+source ./post/pacman.sh
 
 rollback_menu() {
     local title="BTRFS Rollback Configurator"
@@ -79,4 +39,42 @@ rollback_menu() {
             *)  continue_script "Not a valid choice!" "Invalid choice, please try again.";;
         esac
     done
+}
+
+configure_snapper() {
+    install_pacman_packages snapper
+    commands_to_run=()
+    commands_to_run+=("sed -i '/^#.*\\/dev\\//d' /etc/fstab && sed -i '/^[[:space:]]*$/d' /etc/fstab")
+    commands_to_run+=("umount /.snapshots && rm -rf /.snapshots && snapper -c root create-config /")
+    commands_to_run+=("mount -a")
+    commands_to_run+=("systemctl daemon-reload")
+    
+    live_command_output "" "" "Configuring Snapper for rollbacks" "${commands_to_run[@]}"
+    pause_script "Snapper" "Snapper setup complete!"
+}
+
+configure_snap_pac() {
+    install_pacman_packages snap-pac
+    continue_script "Snap-pac" "Snap-pac setup complete!"
+}
+
+configure_snapper_rollback() {
+    local user="$1"
+    install_aur_package "$user" "https://aur.archlinux.org/snapper-rollback.git"
+
+
+    commands_to_run=()
+    commands_to_run+=("
+        if grep -qE '^[#]*mountpoint[[:space:]]*=[[:space:]]*/btrfsroot' /etc/snapper-rollback.conf; then
+            sed -i 's|^[#]*mountpoint[[:space:]]*=[[:space:]]*/btrfsroot|mountpoint = /.btrfsroot|' /etc/snapper-rollback.conf
+            echo \"mountpoint updated to /.btrfsroot in /etc/snapper-rollback.conf\"
+        else
+            echo \"mountpoint entry not found in /etc/snapper-rollback.conf\"
+        fi")
+    live_command_output "" "" "Configuring snapper-rollback" "${commands_to_run[@]}"
+}
+
+configure_snp() {
+    local user="$1"
+    install_aur_package "$user" "https://aur.archlinux.org/snp.git"
 }

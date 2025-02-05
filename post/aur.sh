@@ -17,6 +17,29 @@
 source ./commons.sh
 source ./post/users.sh
 
+aur_menu() {
+
+    local title="Install extra software from the AUR"
+    local description="Welcome to the AUR software installation menu. Select the software to install."
+    local user=USER_WITH_SUDO_USER
+    local pass=USER_WITH_SUDO_PASS
+
+    while true; do
+        local options=(\
+            "Install Paru"\
+            "Install Rofi power menu"\
+            "Back"
+        )
+        menu_prompt aur_choice "$title" "$description" "${options[@]}"
+        case $aur_choice in
+            0)  configure_paru "$user" "$pass";;
+            1)  configure_aur_rofi_power_menu "$user" "$pass";;
+            b)  break;;
+            *)  continue_script "Not a valid choice!" "Invalid choice, please try again.";;
+        esac
+    done
+}
+
 install_aur_package () {
     local user="$1"
     local pass="$2"
@@ -69,28 +92,7 @@ install_without_paru() {
     continue_script "$package_name" "$package_name install complete!"
 }
 
-install_from_aur() {
 
-    local title="Install extra software from the AUR"
-    local description="Welcome to the AUR software installation menu. Select the software to install."
-    local user=USER_WITH_SUDO_USER
-    local pass=USER_WITH_SUDO_PASS
-
-    while true; do
-        local options=(\
-            "Install Paru"\
-            "Install Rofi power menu"\
-            "Back"
-        )
-        menu_prompt aur_choice "$title" "$description" "${options[@]}"
-        case $aur_choice in
-            0)  configure_paru "$user" "$pass";;
-            1)  configure_aur_rofi_power_menu "$user" "$pass";;
-            b)  break;;
-            *)  continue_script "Not a valid choice!" "Invalid choice, please try again.";;
-        esac
-    done
-}
 
 configure_paru() {
     local user="$1"

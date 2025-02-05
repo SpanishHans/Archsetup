@@ -15,18 +15,10 @@
 # the License.
 
 source ./commons.sh
+source ./post/pacman.sh
 
-configure_flatpak() {
+flatpak_menu() {
     install_pacman_packages flatpak
-    continue_script "Flatpak" "Flatpak Setup complete!"
-}
-
-install_from_flatpak() {
-    if ! check_command_exists "flatpak"; then
-        configure_flatpak
-    else
-        continue_script "Flatpak is already installed."
-    fi
 
     local title="Install extra software from Flatpak."
     local description="Welcome to the flatpak software installation menu. Select the software to install."

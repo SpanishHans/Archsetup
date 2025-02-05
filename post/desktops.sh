@@ -16,30 +16,51 @@
 
 source ./commons.sh
 
+desktops_menu () {
+    local title="Desktop UI Configuration"
+    local description="Welcome to the system configuration menu. Here you can set up your display manager, choose a desktop environment, or configure your window manager to get your system up and running."
+
+    while true; do
+        local options=(\
+            "Display Manager               (GDM, LY, LIGHTDM)"\
+            "Desktop Environment           (Gnome, Kde, Cosmic, Mate, Cinnamon...)"\
+            "Window Manager                (Sway, Hyprland)"\
+            "Back"
+        )
+        
+        menu_prompt des_choice "$title" "$description" "${options[@]}"
+
+        case $des_choice in
+            0)  DM_selector;;
+            1)  DE_selector;;
+            2)  WM_selector;;
+            b)  break;;
+            *)  continue_script "Not a valid choice!" "Invalid choice, please try again." ;;
+        esac
+    done
+}
+
 ################################################################################
 # TTY DM
 ################################################################################
 
-
 install_ly() {
-    commands_to_run+=("pacman --noconfirm -S ly")
-    commands_to_run+=("systemctl enable ly.service")
+    install_pacman_packages ly
+    commands_to_run=("systemctl enable ly.service")
     live_command_output "" "" "Installing selected TTY DM: Ly" "${commands_to_run[@]}"
 }
 
 install_tbsm() {
-    commands_to_run+=("echo'Not yet implemented, but shall "snp paru -S tbsm"'")
-    live_command_output "" "" "Installing selected TTY DM: Tbsm" "${commands_to_run[@]}"
+    continue_script "" 'Not yet implemented, but shall "snp paru -S tbsm"'
 }
 
 install_emptty() {
-    commands_to_run+=("echo'Not yet implemented, but shall "pacman --noconfirm -S emptty"'")
-    live_command_output "" "" "Installing selected TTY DM: Emptty" "${commands_to_run[@]}"
+    continue_script "" 'Not yet implemented, but shall "pacman --noconfirm -S emptty"'
 }
 
 install_lemurs() {
-    commands_to_run+=("pacman --noconfirm -S lemurs")
-    commands_to_run+=("systemctl enable lemurs.service")
+    install_pacman_packages lemurs
+    commands_to_run=("systemctl enable lemurs.service")
     live_command_output "" "" "Installing selected TTY DM: Lemurs" "${commands_to_run[@]}"
 }
 
@@ -48,26 +69,26 @@ install_lemurs() {
 ################################################################################
 
 install_gdm() {
-    commands_to_run+=("pacman --noconfirm -S gdm")
-    commands_to_run+=("systemctl enable gdm.service")
+    install_pacman_packages gdm
+    commands_to_run=("systemctl enable gdm.service")
     live_command_output "" "" "Installing selected GUI DM: GDM" "${commands_to_run[@]}"
 }
 
 install_lightdm() {
-    commands_to_run+=("pacman --noconfirm -S lightdm")
-    commands_to_run+=("systemctl enable lightdm.service")
+    install_pacman_packages lightdm
+    commands_to_run=("systemctl enable lightdm.service")
     live_command_output "" "" "Installing selected GUI DM: LightDM" "${commands_to_run[@]}"
 }
 
 install_sddm() {
-    commands_to_run+=("pacman --noconfirm -S sddm")
-    commands_to_run+=("systemctl enable sddm.service")
+    install_pacman_packages sddm
+    commands_to_run=("systemctl enable sddm.service")
     live_command_output "" "" "Installing selected GUI DM: SDDM" "${commands_to_run[@]}"
 }
 
 install_greetd() {
-    commands_to_run+=("pacman --noconfirm -S greetd")
-    commands_to_run+=("systemctl enable greetd.service")
+    install_pacman_packages greetd
+    commands_to_run=("systemctl enable greetd.service")
     live_command_output "" "" "Installing selected GUI DM: Greetd" "${commands_to_run[@]}"
 }
 
@@ -76,68 +97,55 @@ install_greetd() {
 ################################################################################
 
 install_budgie() {
-    commands_to_run+=("pacman --noconfirm -S budgie lightdm-gtk-greeter budgie-desktop-view budgie-backgrounds network-manager-applet arc-gtk-theme papirus-icon-theme")
-    live_command_output "" "" "installing selected Desktop Environment: Budgie" "${commands_to_run[@]}"
+    install_pacman_packages budgie lightdm-gtk-greeter budgie-desktop-view budgie-backgrounds network-manager-applet arc-gtk-theme papirus-icon-theme
 }
 
 install_cinnamon() {
-    commands_to_run+=("pacman --noconfirm -S cinnamon xed xreader metacity gnome-shell gnome-keyring")
-    live_command_output "" "" "installing selected Desktop Environment: Cinnamon" "${commands_to_run[@]}"
+    install_pacman_packages cinnamon xed xreader metacity gnome-shell gnome-keyring
 }
 
 install_cosmic() {
-    commands_to_run+=("pacman --noconfirm -S cosmic cosmic-text-editor cosmic-files cosmic-terminal cosmic-wallpapers")
-    live_command_output "" "" "installing selected Desktop Environment: Cosmic" "${commands_to_run[@]}"
+    install_pacman_packages cosmic cosmic-text-editor cosmic-files cosmic-terminal cosmic-wallpapers
 }
 
 install_cutefish() {
-    commands_to_run+=("pacman --noconfirm -S cutefish sddm")
-    live_command_output "" "" "installing selected Desktop Environment: Cutefish" "${commands_to_run[@]}"
+    install_pacman_packages cutefish sddm
 }
 
 install_deepin() {
-    commands_to_run+=("pacman --noconfirm -S deepin deepin-kwin deepin-extra")
-    live_command_output "" "" "installing selected Desktop Environment: Deepin" "${commands_to_run[@]}"
+    install_pacman_packages deepin deepin-kwin deepin-extra
 }
 
 install_gnome() {
-    commands_to_run+=("pacman --noconfirm -S gnome gdm")
-    live_command_output "" "" "installing selected Desktop Environment: Gnome" "${commands_to_run[@]}"
+    install_pacman_packages gnome gdm
 }
 
 install_gnome_flashback() {
-    commands_to_run+=("pacman --noconfirm -S gnome-flashback gnome-applets sensors-applet gdm")
-    live_command_output "" "" "installing selected Desktop Environment: Gnome flashback" "${commands_to_run[@]}"
+    install_pacman_packages gnome-flashback gnome-applets sensors-applet gdm
 }
 
 install_kde_plasma() {
-    commands_to_run+=("pacman --noconfirm -S plasma kde-applications-meta sddm")
-    live_command_output "" "" "installing selected Desktop Environment: KDE-Plasma" "${commands_to_run[@]}"
+    install_pacman_packages plasma kde-applications-meta sddm
 }
 
 install_lxde() {
-    commands_to_run+=("echo'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S lxde"'")
-    live_command_output "" "" "installing selected Desktop Environment: LXDE" "${commands_to_run[@]}"
+    continue_script "" 'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S lxde"'
 }
 
 install_lxqt() {
-    commands_to_run+=("echo'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S lxqt"'")
-    live_command_output "" "" "installing selected Desktop Environment: LXQT" "${commands_to_run[@]}"
+    continue_script "" 'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S lxqt"'
 }
 
 install_mate() {
-    commands_to_run+=("pacman --noconfirm -S mate mate-extra lightdm")
-    live_command_output "" "" "installing selected Desktop Environment: Mate" "${commands_to_run[@]}"
+    install_pacman_packages mate mate-extra lightdm
 }
 
 install_pantheon() {
-    commands_to_run+=("pacman --noconfirm -S pantheon lightdm")
-    live_command_output "" "" "installing selected Desktop Environment: Pantheon" "${commands_to_run[@]}"
+    install_pacman_packages pantheon lightdm
 }
 
 install_xfce() {
-    commands_to_run+=("echo'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S xfce"'")
-    live_command_output "" "" "installing selected Desktop Environment: XFCE" "${commands_to_run[@]}"
+    continue_script "" 'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S xfce"'
 }
 
 ################################################################################
@@ -145,18 +153,15 @@ install_xfce() {
 ################################################################################
 
 install_sway() {
-    commands_to_run+=("pacman --noconfirm -S sway kitty brightnessctl")
-    live_command_output "" "" "Installing selected Window Manager: Sway" "${commands_to_run[@]}"
+    install_pacman_packages sway kitty brightnessctl
 }
 
 install_hyprland() {
-    commands_to_run+=("pacman --noconfirm -S brightnessctlhyprland hypridle xdg-desktop-portal-hyprland brightnessctl kitty waybar rofi-wayland rofi-calc")
-    live_command_output "" "" "Installing selected Window Manager: Hyprland" "${commands_to_run[@]}"
+    install_pacman_packages hyprland hypridle xdg-desktop-portal-hyprland brightnessctl kitty waybar rofi-wayland rofi-calc
 }
 
 install_enlightenment() {
-    commands_to_run+=("pacman --noconfirm -S enlightenment ecrire ephoto evisum rage terminology connman brightnessctl")
-    live_command_output "" "" "Installing selected Window Manager: Enlightenment" "${commands_to_run[@]}"
+    install_pacman_packages enlightenment ecrire ephoto evisum rage terminology connman brightnessctl
 }
 
 purge_dm() {
@@ -304,30 +309,6 @@ WM_selector() {
             2)  install_enlightenment;;
             b)  break;;
             *)  continue_script "Not a valid choice!" 'You did not enter a valid selection.'
-        esac
-    done
-}
-
-desktops_menu () {
-    local title="Desktop UI Configuration"
-    local description="Welcome to the system configuration menu. Here you can set up your display manager, choose a desktop environment, or configure your window manager to get your system up and running."
-
-    while true; do
-        local options=(\
-            "Display Manager               (GDM, LY, LIGHTDM)"\
-            "Desktop Environment           (Gnome, Kde, Cosmic, Mate, Cinnamon...)"\
-            "Window Manager                (Sway, Hyprland)"\
-            "Back"
-        )
-        
-        menu_prompt des_choice "$title" "$description" "${options[@]}"
-
-        case $des_choice in
-            0)  DM_selector;;
-            1)  DE_selector;;
-            2)  WM_selector;;
-            b)  break;;
-            *)  continue_script "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
     done
 }
