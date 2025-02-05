@@ -45,6 +45,17 @@ check_folder_exists() {
     fi
 }
 
+check_file_exists() {
+    local file="$1"
+
+    if [[ -f "$file" ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+
 check_command_exists() {
     local comm="$1"
 
