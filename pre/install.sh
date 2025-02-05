@@ -87,9 +87,7 @@ commands_to_run+=("genfstab -U /mnt >> /mnt/etc/fstab")
 live_command_output "" "" "Installing linux to disk" "${commands_to_run[@]}"
 
 networking_setup
-
 locales_setup
-
 user_setup
 
 cp -R --no-preserve=ownership /root/Archsetup /mnt/root/Archsetup
