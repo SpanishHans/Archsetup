@@ -503,6 +503,8 @@ posh_theme_1_shell() {
     live_command_output "$term_username" "" "Configuring Oh my posh for $term_username." "${commands_to_run[@]}"
 }
 
+#https://ohmyposh.dev/docs/themes
+
 oh_my_posh_themes() {
     local term_username="$1"
     local file="$2"
