@@ -16,10 +16,10 @@
 
 source ./commons.sh
 
-source ./pre/root_user_setup.sh
-source ./pre/disk_setup.sh
-source ./pre/networking.sh
-source ./pre/locales.sh
+source ./pre/0_disk/disk_setup.sh
+source ./pre/1_networking/networking.sh
+source ./pre/2_locales/locales.sh
+source ./pre/3_users/users.sh
 
 if [ "$LIVE_ENV" = false ]; then
     pause_script "ERROR" "The install script must be run from the archlinux-YEAR.MONTH.DAY-x86_64.iso image.
@@ -116,7 +116,7 @@ commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
     systemctl enable NetworkManager
 
     echo '#### STARTING 3. #### ->> root_password_setup'
-    useradd -c "Sysadmin" -m sysadmin"
+    useradd -c \"Sysadmin\" -m sysadmin
     echo \"root:\$root_password\" | chpasswd
     echo \"sysadmin:\$sysadmin_password\" | chpasswd
 
@@ -131,11 +131,11 @@ commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
     sed -i 's/^\\(GRUB_CMDLINE_LINUX_DEFAULT=\\)\".*\"/\\1\"quiet splash\"/' /etc/default/grub
     
     echo '#### STARTING 7. #### ->> initramfs'
-    mkinitcpio -P || { echo \"mkinitcpio failed\"; exit 1; }
+    mkinitcpio -P || { echo 'mkinitcpio failed'; exit 1}
     
     echo '#### STARTING 8. #### ->> grub-install'
-    grub-install --target=x86_64-efi --efi-directory=/efi --boot-directory=/boot --bootloader-id=GRUB || { echo \"grub-install failed\"; exit 1; }
-    grub-mkconfig -o /boot/grub/grub.cfg || { echo \"grub-mkconfig failed\"; exit 1; }
+    grub-install --target=x86_64-efi --efi-directory=/efi --boot-directory=/boot --bootloader-id=GRUB || { echo 'grub-install failed'; exit 1}
+    grub-mkconfig -o /boot/grub/grub.cfg || { echo 'grub-mkconfig failed'; exit 1}
 EOF")
 
 live_command_output "" "" "executing arch-chroot tasks" "${commands_to_run[@]}"

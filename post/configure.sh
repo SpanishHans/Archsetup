@@ -16,16 +16,16 @@
 
 source ./commons.sh
 
-source ./post/users.sh
-source ./post/rollback.sh
-source ./post/desktops.sh
-source ./post/terminal.sh
-source ./post/software.sh
-source ./post/tools.sh
-source ./post/virtualization.sh
-source ./post/languages.sh
-source ./post/plymouth.sh
-source ./post/nvidia.sh
+source ./post/0_users/users.sh
+source ./post/1_rollback/rollback.sh
+source ./post/2_desktops/desktops.sh
+source ./post/3_terminals/terminal.sh
+source ./post/4_software/software.sh
+source ./post/5_tools/tools.sh
+source ./post/6_virtualization/virtualization.sh
+source ./post/7_languages/languages.sh
+source ./post/8_plymouth/plymouth.sh
+source ./post/9_nvidia/nvidia.sh
 
 if [ "$LIVE_ENV" = true ]; then
     pause_script "ERROR" "The configure script must be run from a machine with ArchLinux already installed.
