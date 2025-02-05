@@ -67,12 +67,12 @@ change_admin_privs() {
         case $wheel_menu in
             0)  sudo_access="n";break;;
             1)  sudo_access="y";break;;
-            *)  continue_script "Option not valid" "That is not an option, retry.";;
+            *)  continue_script 1 "Option not valid" "That is not an option, retry.";;
         esac
     done
 
     if [[ "$sudo_access" == "y" ]]; then
-        usermod -aG wheel "$username" && continue_script "$username is now admin" "User $username now has admin privileges."
+        usermod -aG wheel "$username" && continue_script 1 "$username is now admin" "User $username now has admin privileges."
     fi
 }
 
@@ -91,15 +91,15 @@ create_user() {
 
     while true; do
         if [ -z "${username}" ]; then
-            pause_script "Empty username" 'Sorry, you need to enter a username.'
+            continue_script 2 "Empty username" 'Sorry, you need to enter a username.'
         elif [[ " ${prohibited_usernames[*]} " =~ " ${username} " ]]; then
-            pause_script "Prohibited username" 'Sorry, this username is prohibited. Please choose a different username.'
+            continue_script 2 "Prohibited username" 'Sorry, this username is prohibited. Please choose a different username.'
         elif [[ ! "${username}" =~ ${username_pattern} ]]; then
-            pause_script "Invalid characters" 'Sorry, the username can only contain letters, numbers, dots, underscores, or dashes.'
+            continue_script 2 "Invalid characters" 'Sorry, the username can only contain letters, numbers, dots, underscores, or dashes.'
         elif (( ${#username} < min_length )); then
-            pause_script "Username too short" "Sorry, the username must be at least ${min_length} characters long."
+            continue_script 2 1se_script "Username too short" "Sorry, the username must be at least ${min_length} characters long."
         elif (( ${#username} > max_length )); then
-            pause_script "Username too long" "Sorry, the username must be no more than ${max_length} characters long."
+            continue_script 2 "Username too long" "Sorry, the username must be no more than ${max_length} characters long."
         else
             break
         fi
@@ -145,7 +145,7 @@ modify_user() {
                 break;;
             1)  change_admin_privs "$username";break;;
             b)  break;;
-            *)  continue_script "Option not valid" "That is not an option, retry.";;
+            *)  continue_script 1 "Option not valid" "That is not an option, retry.";;
         esac
     done
 }
@@ -163,9 +163,9 @@ delete_user() {
     local menu_items=()
 
     if id "$username" &>/dev/null; then
-        userdel -r "$username" && pause_script "$username deleted" "User $username and their files deleted."
+        userdel -r "$username" && continue_script 2 "$username deleted" "User $username and their files deleted."
     else
-        continue_script "User doesn't exist" "User $username does not exist."
+        continue_script 1 "User doesn't exist" "User $username does not exist."
     fi
 }
 
@@ -175,7 +175,7 @@ list_users() {
     local max_admin_len=3
     local menu_items=()
 
-    pause_script "Existing users" "List of Existing Users:\n\n$userlist"
+    continue_script 2 "Existing users" "List of Existing Users:\n\n$userlist"
 }
 
 select_build_user() {
@@ -201,7 +201,7 @@ users_menu() {
             2)  delete_user;;
             3)  list_users;;
             b)  break;;
-            *)  continue_script "Option not valid" "That is not an option, returning to start menu.";exit;;
+            *)  continue_script 1 "Option not valid" "That is not an option, returning to start menu.";exit;;
         esac
     done
 }

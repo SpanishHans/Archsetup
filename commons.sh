@@ -112,8 +112,9 @@ pause_script() {
 
 
 continue_script() {
-    local msg_title="${1:-Default}"
-    local msg_text="${2:-Default}"
+    local time_sleep="$1"
+    local msg_title="${2:-Default}"
+    local msg_text="${3:-Default}"
     local title=$(echo -e "$msg_title")
     local message=$(echo -e "$msg_text")
 
@@ -123,7 +124,7 @@ continue_script() {
         --infobox "$message" \
         $half_height $half_width 2>&1 >/dev/tty
     exit_code=$?
-    sleep 2
+    sleep "$time_sleep"
     case $exit_code in
         0)  return;;
         1)  exit;;

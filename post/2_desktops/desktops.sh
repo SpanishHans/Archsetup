@@ -35,7 +35,7 @@ desktops_menu () {
             1)  DE_selector;;
             2)  WM_selector;;
             b)  break;;
-            *)  continue_script "Not a valid choice!" "Invalid choice, please try again." ;;
+            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
     done
 }
@@ -51,11 +51,11 @@ install_ly() {
 }
 
 install_tbsm() {
-    continue_script "" 'Not yet implemented, but shall "snp paru -S tbsm"'
+    continue_script 1 "Not implemented" 'Not yet implemented, but shall "snp paru -S tbsm"'
 }
 
 install_emptty() {
-    continue_script "" 'Not yet implemented, but shall "pacman --noconfirm -S emptty"'
+    continue_script 1 "Not implemented" 'Not yet implemented, but shall "pacman --noconfirm -S emptty"'
 }
 
 install_lemurs() {
@@ -129,11 +129,11 @@ install_kde_plasma() {
 }
 
 install_lxde() {
-    continue_script "" 'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S lxde"'
+    continue_script 1 "Not implemented" 'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S lxde"'
 }
 
 install_lxqt() {
-    continue_script "" 'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S lxqt"'
+    continue_script 1 "Not implemented" 'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S lxqt"'
 }
 
 install_mate() {
@@ -145,7 +145,7 @@ install_pantheon() {
 }
 
 install_xfce() {
-    continue_script "" 'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S xfce"'
+    continue_script "Not implemented" 'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S xfce"'
 }
 
 ################################################################################
@@ -187,7 +187,7 @@ DM_selector() {
             0)  DM_console;;
             1)  DM_graphical;;
             b)  break;;
-            *)  continue_script "Not a valid choice!" 'You did not enter a valid selection.'
+            *)  continue_script 1 "Not a valid choice!" 'You did not enter a valid selection.'
         esac
     done
 }
@@ -213,7 +213,7 @@ DM_console() {
             2)  purge_dm;install_emptty;;
             3)  purge_dm;install_lemurs;;
             b)  break;;
-            *)  continue_script "Not a valid choice!" 'You did not enter a valid selection.'
+            *)  continue_script 1 "Not a valid choice!" 'You did not enter a valid selection.'
         esac
     done
 }
@@ -284,7 +284,7 @@ DE_selector() {
             11) install_pantheon;;
             12) install_xfce;;
             b)  break;;
-            *)  continue_script "Not a valid choice!" 'You did not enter a valid selection.'
+            *)  continue_script 1 "Not a valid choice!" 'You did not enter a valid selection.'
         esac
     done
 }
@@ -308,7 +308,7 @@ WM_selector() {
             1)  install_hyprland;;
             2)  install_enlightenment;;
             b)  break;;
-            *)  continue_script "Not a valid choice!" 'You did not enter a valid selection.'
+            *)  continue_script 1 "Not a valid choice!" 'You did not enter a valid selection.'
         esac
     done
 }
