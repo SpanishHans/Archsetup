@@ -68,6 +68,8 @@ configure_asdf() {
         continue_script 2 "asdf folder exists" "asdf repository already exists at $build_path. Skipping clone."
     fi
 
+    pause_script "" "$shell_path"
+
     case "$shell_path" in
         "/bin/bash | /usr/bin/bash")
             commands_to_run=()
