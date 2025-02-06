@@ -24,7 +24,7 @@ mount_ext4() {
     mount -o ssd,noatime,compress=zstd "${ROOT_PART}" /mnt
     mount -o nodev,nosuid,noexec "${ESP_PART}" /mnt/efi
 
-    pause_script "EXT4 Mounting" "Finished mouting EXT4"
+    continue_script 2 "EXT4 Mounting" "Finished mouting EXT4"
 }
 
 run_ext4_setup() {

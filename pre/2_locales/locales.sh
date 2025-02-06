@@ -29,7 +29,7 @@ EOF
     echo "LANG=$locale.UTF-8" > /mnt/etc/locale.conf
     echo "KEYMAP=$kblayout" > /mnt/etc/vconsole.conf
 
-    pause_script 'Locales' "Your /mnt/etc/locale.gen looks like this:    
+    continue_script 2 'Locales' "Your /mnt/etc/locale.gen looks like this:    
 $(<'/mnt/etc/locale.gen')
 
 Your /mnt/etc/locale.conf looks like this:    

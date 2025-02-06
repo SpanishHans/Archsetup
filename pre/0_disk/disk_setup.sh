@@ -64,7 +64,7 @@ full_default_route() {
     local description="The following menu shall help you select a disk for full wipe and automatic partitioning. ALL DATA ON IT SHALL BE DELETED."
 
     if [ ${#disks[@]} -eq 0 ]; then
-            pause_script "No disks found" "No valid storage devices found. Exiting."
+            continue_script 2 "No disks found" "No valid storage devices found. Exiting."
             exit
     fi
 
@@ -115,7 +115,7 @@ custom_default_route() {
 full_custom_route() {
     format_and_partition_disks
     set_filesystem_for_partitions
-    pause_script "Full custom not ready!" "The rest of the full custom logic for mounting whatever you want is not ready yet, sorry."
+    continue_script 2 "Full custom not ready!" "The rest of the full custom logic for mounting whatever you want is not ready yet, sorry."
 }
 
 format_and_partition_disks() {
@@ -128,7 +128,7 @@ format_and_partition_disks() {
 Simply select a disk, format and come back here. When done, select option 'c' to continue script execution."
 
     if [ ${#disks[@]} -eq 0 ]; then
-            pause_script "No disks found" "No valid storage devices found. Exiting."
+            continue_script 2 "No disks found" "No valid storage devices found. Exiting."
             exit
     fi
 
@@ -156,7 +156,7 @@ set_filesystem_for_partitions() {
 Simply select a partition, format it on the menu that opens up and then come back here. When done, select option 1 to continue script execution."
 
     if [ ${#partitions[@]} -eq 0 ]; then
-            pause_script "No partitions found" "No valid partitions found. Exiting."
+            continue_script 2 "No partitions found" "No valid partitions found. Exiting."
             exit
     fi
 
@@ -254,12 +254,12 @@ select_efi_partition() {
     format_for_efi "$EFI_PART"
 
     if [[ "$EFI_FORM" != "vfat" ]]; then
-        pause_script "" "Error: The selected partition ($EFI_PART) is not formatted as EFI.
+        continue_script 2 "Not EFI" "Error: The selected partition ($EFI_PART) is not formatted as EFI.
 Please go back and format the partition as EFI Partition."
         export EFI_PART EFI_FORM
         exit
     else
-        pause_script "" "The partition ($EFI_PART) is correctly formatted as EFI."
+        continue_script "Formatted as EFI" "The partition ($EFI_PART) is correctly formatted as EFI."
     fi
     
 }
@@ -305,12 +305,12 @@ select_root_partition() {
     ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
     format_as_btrfs "$ROOT_PART"
     if [[ "$ROOT_FORM" != "btrfs" ]]; then
-        pause_script "" "Error: The selected partition ($ROOT_PART) is not formatted as BTRFS.
+        continue_script 2 "Not BTRFS" "Error: The selected partition ($ROOT_PART) is not formatted as BTRFS.
 Please go back and format the partition as BTRFS Partition."
         export ROOT_PART ROOT_FORM
         exit
     else
-        pause_script "" "The partition ($ROOT_PART) is correctly formatted as BTRFS."
+        continue_script 2 "Is BTRFS" "The partition ($ROOT_PART) is correctly formatted as BTRFS."
     fi
 }
 

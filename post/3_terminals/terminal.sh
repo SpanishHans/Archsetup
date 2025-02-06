@@ -58,7 +58,7 @@ install_fonts() {
     done
 
     live_command_output "" "" "Configuring selected fonts" "${local commands_to_run[@]}"
-    pause_script "Finished configuring fonts" "Finished installing all selected fonts.
+    continue_script 2 "Finished configuring fonts" "Finished installing all selected fonts.
 
 Installed:    
 $(printf "%s\n" "${options[@]}")"

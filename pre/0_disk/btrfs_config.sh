@@ -83,7 +83,7 @@ mount_btrfs() {
 
     commands_to_run+=("mkdir -p /mnt/efi")
     commands_to_run+=("mount -o nodev,nosuid,noexec \"${EFI_PART}\" /mnt/efi")
-    pause_script "Finished BTRFS setup" "Finished mouting BTRFS and all of its required structure.
+    continue_script 2 "Finished BTRFS setup" "Finished mouting BTRFS and all of its required structure.
 
     @ has /
     @home has /home
