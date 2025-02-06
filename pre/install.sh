@@ -103,41 +103,67 @@ this automatically:
     7. Creates initramfs with mkinitcpio -P
     8. Installs grub for the system with btrfs and snapper-rollback support"
     
-continue_script 2 'Chroot description' "$description"
-commands_to_run=("")
+continue_script 5 'Chroot description' "$description"
+commands_to_run=()
 commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
-
     echo '#### STARTING 1. #### ->> time and locales'
     ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
     hwclock --systohc
     locale-gen
+EOF")
+live_command_output "" "" "yes" "executing arch-chroot step 1" "${commands_to_run[@]}"
 
+commands_to_run=()
+commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
     echo '#### STARTING 2. #### ->> Enabling NetworkManager'
     systemctl enable NetworkManager
+EOF")
+live_command_output "" "" "yes" "executing arch-chroot step 2" "${commands_to_run[@]}"
 
+commands_to_run=()
+commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
     echo '#### STARTING 3. #### ->> root_password_setup'
     useradd -c \"Sysadmin\" -m sysadmin
     echo \"root:\$root_password\" | chpasswd
     echo \"sysadmin:\$sysadmin_password\" | chpasswd
+EOF")
+live_command_output "" "" "yes" "executing arch-chroot step 3" "${commands_to_run[@]}"
 
+commands_to_run=()
+commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
     echo '#### STARTING 4. #### ->> configure pacman color'
     sed -i 's/^#Color/Color/' /etc/pacman.conf
+EOF")
+live_command_output "" "" "yes" "executing arch-chroot step 4" "${commands_to_run[@]}"
 
+commands_to_run=()
+commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
     echo '#### STARTING 5. #### ->> configure sudoers'
     sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /etc/sudoers
+EOF")
+live_command_output "" "" "yes" "executing arch-chroot step 5" "${commands_to_run[@]}"
 
+commands_to_run=()
+commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
     echo '#### STARTING 6. #### ->> no timeout grub and quiet splash'
     sed -i 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/' /etc/default/grub
     sed -i 's/^\\(GRUB_CMDLINE_LINUX_DEFAULT=\\)\".*\"/\\1\"quiet splash\"/' /etc/default/grub
-    
+EOF")
+live_command_output "" "" "yes" "executing arch-chroot step 6" "${commands_to_run[@]}"
+
+commands_to_run=()
+commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF    
     echo '#### STARTING 7. #### ->> initramfs'
     mkinitcpio -P || { echo 'mkinitcpio failed'; exit 1}
-    
+EOF")
+live_command_output "" "" "yes" "executing arch-chroot step 7" "${commands_to_run[@]}"
+
+commands_to_run=()
+commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF    
     echo '#### STARTING 8. #### ->> grub-install'
     grub-install --target=x86_64-efi --efi-directory=/efi --boot-directory=/boot --bootloader-id=GRUB || { echo 'grub-install failed'; exit 1}
     grub-mkconfig -o /boot/grub/grub.cfg || { echo 'grub-mkconfig failed'; exit 1}
 EOF")
-
-live_command_output "" "" "yes" "executing arch-chroot tasks" "${commands_to_run[@]}"
+live_command_output "" "" "yes" "executing arch-chroot step 8" "${commands_to_run[@]}"
 
 pause_script 'Finished' 'Done, you may now wish to reboot (further changes can be done by chrooting into /mnt).'
