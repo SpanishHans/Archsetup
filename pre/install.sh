@@ -148,7 +148,7 @@ EOF")
 
 commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF    
     echo '#### STARTING 8. #### ->> grub-install'
-    grub-install --target=x86_64-efi --efi-directory=/efi --boot-directory=/boot --bootloader-id=GRUB || { echo 'grub-install failed'; exit 1}
+    grub-install --target=x86_64-efi --efi-directory=/efi --boot-directory=/boot --bootloader-id=GRUB || { echo 'grub-install failed'; exit 1; }
     grub-mkconfig -o /boot/grub/grub.cfg || { echo 'grub-mkconfig failed'; exit 1; }
 EOF")
 live_command_output "" "" "yes" "executing arch-chroot steps" "${commands_to_run[@]}"
