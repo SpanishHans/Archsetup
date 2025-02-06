@@ -73,7 +73,7 @@ configure_asdf() {
     pause_script "" "$(getent passwd usurper | cut -d: -f7)"
 
     case "$shell_path" in
-        "/bin/bash | /usr/bin/bash")
+        "/bin/bash" | "/usr/bin/bash")
             commands_to_run=()
             commands_to_run+=(
                 "if ! grep -Fxq 'export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"' /home/$asdf_username/.bash_profile; then
@@ -83,7 +83,7 @@ configure_asdf() {
                 fi"
             )
             ;;
-        "/bin/zsh | /usr/bin/zsh")
+        "/bin/zsh" | "/usr/bin/zsh")
             commands_to_run=()
             commands_to_run+=(
                 "if ! grep -Fxq 'export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"' /home/$asdf_username/.zshrc; then
@@ -93,7 +93,7 @@ configure_asdf() {
                 fi"
             )
             ;;
-        "/bin/fish | /usr/bin/fish")
+        "/bin/fish" | "/usr/bin/fish")
             commands_to_run=()
             commands_to_run+=(
                 "if ! grep -Fxq '# ASDF configuration code' /home/$asdf_username/.config/fish/config.fish; then
@@ -116,7 +116,7 @@ configure_asdf() {
                 fi"
             )
             ;;
-        "/bin/elvish | /usr/bin/elvish")
+        "/bin/elvish" | "/usr/bin/elvish")
             commands_to_run=()
             commands_to_run+=(
                 "if ! grep -Fxq 'var asdf_data_dir = ~\"/.asdf\"' /home/$asdf_username/.config/elvish/rc.elv; then
@@ -134,7 +134,7 @@ configure_asdf() {
                 fi"
             )
             ;;
-        "/bin/tcsh | /usr/bin/tcsh")
+        "/bin/tcsh" | "/usr/bin/tcsh")
             commands_to_run=()
             commands_to_run+=(
                 "if ! grep -Fxq '. \"\$HOME/.asdf/asdf.sh\"' /home/$asdf_username/.zshrc; then
