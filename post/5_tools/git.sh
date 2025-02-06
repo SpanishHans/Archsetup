@@ -28,6 +28,9 @@ configure_git() {
         "User account"\
         "Please enter the user whose git shall be configured\n\n$userlist"\
         "What user to configure git for?: "
+    input_pass\
+        pass\
+        "$git_user"
     input_text\
         gitusername\
         "Github user of '$git_user'"\
@@ -38,6 +41,7 @@ configure_git() {
         "Github email of '$git_user'"\
         "Please enter the email in github for '$git_user'"\
         "Enter Git email: "
+    continue_script 2 "ssh key password" "Please create a secure password for the ssh key that $git_user will have."
     input_pass\
         sshpass\
         "$git_user"
@@ -76,8 +80,16 @@ configure_git() {
         commands_to_run+=("sudo -u $git_user bash -c \"eval \\\"\$(ssh-agent -s)\\\" && ssh-add '$ssh_key_path'\"")
 
     fi
-    commands_to_run+=("cat \"${ssh_key_path}.pub\"")
-    
     live_command_output "" "" "yes" "Installing git" "${commands_to_run[@]}"
+
+    commands_to_run=()
+    commands_to_run+=("eval \\\"\$(ssh-agent -s)\\\"")
+    commands_to_run+=("ssh-add '$ssh_key_path'")
+    live_command_output "$git_user" "$pass" "yes" "Installing git" "${commands_to_run[@]}"
+
+    commands_to_run=()
+    commands_to_run+=("cat \"${ssh_key_path}.pub\"")
+    live_command_output "" "" "yes" "Installing git" "${commands_to_run[@]}"
+
     continue_script 1 "Git" "Git Setup complete!"
 }
