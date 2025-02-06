@@ -39,8 +39,8 @@ tools_menu () {
         )
         menu_prompt tools_menu_choice "$title" "$description" "${options[@]}"
         case $tools_menu_choice in
-            0)  configure_git;;
-            3)  chezmoi_mode;;
+            0)  git_menu;;
+            3)  chezmoi_menu;;
             4)  configure_clipboard;;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
