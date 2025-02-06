@@ -61,7 +61,7 @@ configure_asdf() {
     if ! check_folder_exists "$build_path"; then
         commands_to_run=()
         commands_to_run+=("mkdir -p $build_path")
-        commands_to_run+=("git clone $url $build_path")
+        commands_to_run+=("git clone https://github.com/asdf-vm/asdf.git $build_path")
         commands_to_run+=("chown -R $asdf_username:$asdf_username $build_path")
         live_command_output "" "" "yes" "Cloning asdf" "${commands_to_run[@]}"
     else
