@@ -43,7 +43,7 @@ fi
 
 configure_menu () {
     continue_script \
-        4 \
+        2 \
         "Credentials for admin user" \
         "Builds can not be done with root, therefore we shall user sysadmin. 
 
