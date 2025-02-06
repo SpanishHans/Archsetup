@@ -147,7 +147,7 @@ starship_theme_pure_prompt() {
 
     local commands_to_run=()
     local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
-    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${local commands_to_run[@]}"
+    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
 }
 
 starship_theme_pastel_powerline() {
@@ -155,7 +155,7 @@ starship_theme_pastel_powerline() {
 
     local commands_to_run=()
     local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
-    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${local commands_to_run[@]}"
+    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
 }
 
 starship_theme_tokyo_night() {
@@ -163,7 +163,7 @@ starship_theme_tokyo_night() {
 
     local commands_to_run=()
     local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
-    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${local commands_to_run[@]}"
+    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
 }
 
 starship_theme_gruvbox_rainbow() {
@@ -171,7 +171,7 @@ starship_theme_gruvbox_rainbow() {
 
     local commands_to_run=()
     local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
-    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${local commands_to_run[@]}"
+    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
 }
 
 starship_theme_jetpack() {
@@ -179,7 +179,7 @@ starship_theme_jetpack() {
 
     local commands_to_run=()
     local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
-    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${local commands_to_run[@]}"
+    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
 }
 
 ################################################################################
