@@ -214,9 +214,10 @@ live_command_output() {
         # If all commands succeeded, add the "Done" message
         if [ $exit_code -eq 0 ]; then
             terminal_title "Done, press enter" >> "$combined_log"
+            sleep 2  # Give time for message to be seen
+            killall dialog  # Closes the dialog box
         fi
-        sleep 2
-    }
+    } &
 
     tail -f "$combined_log" | dialog \
         --backtitle "$script_name on live viewer" \
