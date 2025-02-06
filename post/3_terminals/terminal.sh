@@ -167,7 +167,7 @@ configure_bash_it() {
         commands_to_run+=("git clone --depth=1 https://github.com/Bash-it/bash-it.git /home/$term_user/.bash_it && /home/$term_user/.bash_it/install.sh")
         live_command_output "$term_user" "$term_pass" "Installing Bash-it" "${commands_to_run[@]}"
     else
-        continue_script "Bash-it is already installed."
+        continue_script 2 "Already installed" "Bash-it is already installed."
     fi
 }
 
@@ -180,7 +180,7 @@ configure_oh_my_zsh() {
         local commands_to_run+=("curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | bash")
         live_command_output "$term_user" "$term_pass" "Installing ohmyzsh" "${commands_to_run[@]}"
     else
-        continue_script "Ohmyzsh is already installed."
+        continue_script 2 "Already installed" "Ohmyzsh is already installed."
     fi
 }
 
@@ -193,7 +193,7 @@ configure_fisher() {
         commands_to_run+=("fish -c 'curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher'")
         live_command_output "$term_user" "$term_pass" "Installing Fisher for Fish" "${commands_to_run[@]}"
     else
-        continue_script "Fisher is already installed."
+        continue_script 2 "Already installed" "Fisher is already installed."
     fi
 }
 
@@ -456,7 +456,7 @@ configure_starship (){
         local commands_to_run=("mkdir -p $starship_config_path && touch $starship_config_path/starship.toml")
         live_command_output "" "" "Creating config file" "${commands_to_run[@]}"
     else
-        continue_script "" "Config file already exists at $starship_config_path. Skipping."
+        continue_script 2 "Folder exists" "Config file already exists at $starship_config_path. Skipping."
     fi
 
     case "$shell_path" in
@@ -486,7 +486,7 @@ configure_starship (){
             starship_themes "$term_username"
             ;;
         *)
-            continue_script "Starship not available" "Starship is not supported for this shell"
+            continue_script 2 "Starship not available" "Starship is not supported for this shell"
             return
             ;;
     esac
@@ -560,7 +560,7 @@ configure_oh_my_posh () {
         local commands_to_run=("mkdir -p $posh_config_path")
         live_command_output "" "" "Creating config file" "${commands_to_run[@]}"
     else
-        continue_script "" "Config file already exists at $posh_config_path. Skipping."
+        continue_script 2 "Folder exists" "Config file already exists at $posh_config_path. Skipping."
     fi
 
     case "$shell_path" in
@@ -590,7 +590,7 @@ configure_oh_my_posh () {
             oh_my_posh_themes "$term_username" "$config_file" "$init_command"
             ;;
         *)
-            continue_script "Oh my posh not available" "Oh my posh is not supported for this shell"
+            continue_script 2 "Oh my posh not available" "Oh my posh is not supported for this shell"
             return
             ;;
     esac

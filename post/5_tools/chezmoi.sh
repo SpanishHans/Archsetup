@@ -35,7 +35,7 @@ chezmoi_menu() {
             0)  configure_chezmoi_default;;
             1)  configure_chezmoi_no_default;;
             b)  break;;
-            *)  continue_script "Not a valid choice!" "Invalid choice, please try again." ;;
+            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
     done
 }
@@ -51,7 +51,7 @@ configure_chezmoi_default() {
     commands_to_run+=("mv /home/$chezmoi_username/.local/share/chezmoi/* /home/$chezmoi_username/.config/")
     live_command_output "$chezmoi_username" "" "Configuring chezmoi" "${commands_to_run[@]}"
 
-    pause_script "Chezmoi" "Chezmoi Setup complete for user $chezmoi_username!"
+    continue_script 2 "Chezmoi" "Chezmoi Setup complete for user $chezmoi_username!"
 }
 
 configure_chezmoi_no_default() {
@@ -66,5 +66,5 @@ configure_chezmoi_no_default() {
     commands_to_run+=("mv /home/$chezmoi_username/.local/share/chezmoi/* /home/$chezmoi_username/.config/")
     live_command_output "$chezmoi_username" "" "Configuring chezmoi" "${commands_to_run[@]}"
 
-    pause_script "Chezmoi" "Chezmoi Setup complete for user $chezmoi_username!"
+    continue_script 2 "Chezmoi" "Chezmoi Setup complete for user $chezmoi_username!"
 }

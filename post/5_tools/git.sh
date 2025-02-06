@@ -78,5 +78,5 @@ configure_git() {
     commands_to_run+=("cat \"${ssh_key_path}.pub\"")
     
     live_command_output "" "" "Installing git" "${commands_to_run[@]}"
-    pause_script "Git" "Git Setup complete!"
+    continue_script 1 "Git" "Git Setup complete!"
 }

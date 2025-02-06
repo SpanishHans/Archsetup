@@ -51,11 +51,11 @@ install_ly() {
 }
 
 install_tbsm() {
-    continue_script 1 "Not implemented" 'Not yet implemented, but shall "snp paru -S tbsm"'
+    continue_script 2 "Not implemented" 'Not yet implemented, but shall "snp paru -S tbsm"'
 }
 
 install_emptty() {
-    continue_script 1 "Not implemented" 'Not yet implemented, but shall "pacman --noconfirm -S emptty"'
+    continue_script 2 "Not implemented" 'Not yet implemented, but shall "pacman --noconfirm -S emptty"'
 }
 
 install_lemurs() {
@@ -129,11 +129,11 @@ install_kde_plasma() {
 }
 
 install_lxde() {
-    continue_script 1 "Not implemented" 'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S lxde"'
+    continue_script 2 "Not implemented" 'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S lxde"'
 }
 
 install_lxqt() {
-    continue_script 1 "Not implemented" 'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S lxqt"'
+    continue_script 2 "Not implemented" 'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S lxqt"'
 }
 
 install_mate() {
@@ -145,7 +145,7 @@ install_pantheon() {
 }
 
 install_xfce() {
-    continue_script "Not implemented" 'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S xfce"'
+    continue_script 2 "Not implemented" 'Not yet implemented because its x11 only for now, but shall "pacman --noconfirm -S xfce"'
 }
 
 ################################################################################
@@ -239,7 +239,7 @@ DM_graphical() {
             2)  purge_dm;install_sddm;;
             3)  purge_dm;install_greetd;;
             b)  break;;
-            *)  continue_script "Not a valid choice!" 'You did not enter a valid selection.'
+            *)  continue_script 1 "Not a valid choice!" 'You did not enter a valid selection.'
         esac
     done
 }

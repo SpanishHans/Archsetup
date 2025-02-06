@@ -17,6 +17,41 @@
 source ./commons.sh
 source ./post/users.sh
 
+language_menu () {
+    local title='Programming Language Installation with ASDF'
+    local description="This script helps you easily install and manage programming languages using the ASDF version manager."
+
+    get_users userlist
+    input_text\
+        langs_username\
+        "User to installa asdf and programming language installation and support."\
+        "Please enter the user who shall get asdf and programming language installation and support.\n\n$userlist"\
+        'What user to add asdf and programming language installation and support for?: '
+    configure_asdf "$langs_username"
+
+    while true; do
+        local options=(\
+            'Python                     (Installs Python and its dependencies)'\
+            'Node                       (Installs Node.js and npm for JavaScript development)'\
+            'Java                       (Installs the Java Development Kit (JDK) for Java development)'\
+            'Rust                       (Installs the Rust programming language and cargo)'\
+            'C                          (Installs GCC and necessary tools for C development)'\
+            "Back"
+        )
+
+        menu_prompt virt_menu_choice "$title" "$description" "${options[@]}"
+        case $virt_menu_choice in
+            0)  configure_python;;
+            1)  configure_node;;
+            2)  configure_java;;
+            3)  configure_rust;;
+            4)  configure_c;;
+            b)  break;;
+            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
+        esac
+    done
+}
+
 configure_asdf() {
     local asdf_username="$1"
     local build_path="/home/$asdf_username/.asdf"
@@ -28,7 +63,7 @@ configure_asdf() {
         commands_to_run+=("chown -R $asdf_username:$asdf_username $build_path")
         live_command_output "" "" "Cloning asdf" "${commands_to_run[@]}"
     else
-        continue_script "" "asdf repository already exists at $build_path. Skipping clone."
+        continue_script 2 "asdf folder exists" "asdf repository already exists at $build_path. Skipping clone."
     fi
 
     # THIS HAS TO BE CHANGED LATER FOR MORE SHELLS. HERE SHELL HECKINg MUST BE DONE.
@@ -68,56 +103,21 @@ configure_node() {
     commands_to_run+=("sudo -u $node_user asdf install node latest")
 
     live_command_output "" "" "Configuring Node from ASDF" "${commands_to_run[@]}"
-    continue_script "Node" "Node Setup complete!"
+    continue_script 2 "Node" "Node Setup complete!"
 }
 
 configure_java() {
     local java_user="$1"
 
-    continue_script "Java" "Java Setup complete!"
+    continue_script 2 "Java" "Java Setup complete!"
 }
 
 configure_rust() {
     local rust_user="$1"
-    continue_script "Rust" "Rust Setup complete!"
+    continue_script 2 "Rust" "Rust Setup complete!"
 }
 
 configure_c() {
     local c_user="$1"
-    continue_script "C" "C Setup complete!"
-}
-
-language_menu () {
-    local title='Programming Language Installation with ASDF'
-    local description="This script helps you easily install and manage programming languages using the ASDF version manager."
-
-    get_users userlist
-    input_text\
-        langs_username\
-        "User to installa asdf and programming language installation and support."\
-        "Please enter the user who shall get asdf and programming language installation and support.\n\n$userlist"\
-        'What user to add asdf and programming language installation and support for?: '
-    configure_asdf "$langs_username"
-
-    while true; do
-        local options=(\
-            'Python                     (Installs Python and its dependencies)'\
-            'Node                       (Installs Node.js and npm for JavaScript development)'\
-            'Java                       (Installs the Java Development Kit (JDK) for Java development)'\
-            'Rust                       (Installs the Rust programming language and cargo)'\
-            'C                          (Installs GCC and necessary tools for C development)'\
-            "Back"
-        )
-
-        menu_prompt virt_menu_choice "$title" "$description" "${options[@]}"
-        case $virt_menu_choice in
-            0)  configure_python;;
-            1)  configure_node;;
-            2)  configure_java;;
-            3)  configure_rust;;
-            4)  configure_c;;
-            b)  break;;
-            *)  continue_script "Not a valid choice!" "Invalid choice, please try again." ;;
-        esac
-    done
+    continue_script 2 "C" "C Setup complete!"
 }

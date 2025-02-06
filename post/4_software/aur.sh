@@ -35,7 +35,7 @@ aur_menu() {
             0)  configure_paru "$user" "$pass";;
             1)  configure_aur_rofi_power_menu "$user" "$pass";;
             b)  break;;
-            *)  continue_script "Not a valid choice!" "Invalid choice, please try again.";;
+            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again.";;
         esac
     done
 }
@@ -56,7 +56,7 @@ install_with_paru () {
     commands_to_run=()
     commands_to_run+=("paru -S --noconfirm --needed .")
     live_command_output "$bui_user" "$bui_pass" "Building and installing $package_name" "${commands_to_run[@]}"
-    continue_script "$package_name" "$package_name install complete!"
+    continue_script 2 "$package_name installed" "$package_name install complete!"
 }
 
 install_without_paru() {
@@ -73,7 +73,7 @@ install_without_paru() {
         commands_to_run+=("chown -R $bui_user:$bui_user $build_path")
         live_command_output "" "" "Cloning $package_name" "${commands_to_run[@]}"
     else
-        continue_script "" "$package_name repository already exists at $build_path. Skipping clone."
+        continue_script 2 "repo exists for $package_name" "$package_name repository already exists at $build_path. Skipping clone."
     fi
 
     if ! ls $build_path/*.pkg.tar.zst &>/dev/null; then
@@ -89,7 +89,7 @@ install_without_paru() {
     commands_to_run+=("cd $build_path && pacman --noconfirm -U *.pkg.tar.zst")
     live_command_output "" "" "Installing $package_name" "${commands_to_run[@]}"
 
-    continue_script "$package_name" "$package_name install complete!"
+    continue_script 2 "$package_name installed" "$package_name install complete!"
 }
 
 
@@ -101,7 +101,7 @@ configure_paru() {
     if ! check_command_exists "paru"; then
         install_aur_package "$user" "$pass" "https://aur.archlinux.org/paru.git"
     else
-        continue_script "Paru is already installed."
+        continue_script 2 "Paru installed" "Paru is already installed."
     fi
 }
 
@@ -112,6 +112,6 @@ configure_aur_rofi_power_menu() {
     if ! check_command_exists "rofi-power-menu"; then
         install_aur_package "$user" "$pass" "https://aur.archlinux.org/rofi-power-menu.git"
     else
-        continue_script "rofi-power-menu is already installed."
+        continue_script 2 "Rofi power menu installed" "rofi-power-menu is already installed."
     fi
 }

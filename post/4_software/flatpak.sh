@@ -44,7 +44,7 @@ flatpak_menu() {
             4)  install_flatpak_discord "$user" "$pass";;
             5)  install_all_flatpaks "$user" "$pass";;
             b)  break;;
-            *)  continue_script "Not a valid choice!" "Invalid choice, please try again.";;
+            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again.";;
         esac
     done
 }
@@ -64,7 +64,7 @@ install_flatpak_zen() {
     local pass="$2"
     local app_id="app.zen_browser.zen"
     if check_flatpak_installed "$app_id"; then
-        continue_script "Zen Browser already installed" "Zen Browser is already installed."
+        continue_script 2 "Zen Browser already installed" "Zen Browser is already installed."
     else
         commands_to_run=()
         commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
@@ -77,7 +77,7 @@ install_flatpak_zed () {
     local pass="$2"
     local app_id="dev.zed.Zed"
     if check_flatpak_installed "$app_id"; then
-        continue_script "Zed editor already installed" "Zed editor is already installed."
+        continue_script 2 "Zed editor already installed" "Zed editor is already installed."
     else
         commands_to_run=()
         commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
@@ -90,7 +90,7 @@ install_flatpak_vscode () {
     local pass="$2"
     local app_id="com.visualstudio.code"
     if check_flatpak_installed "$app_id"; then
-        continue_script "Visual Studio Code already installed" "Visual Studio Code is already installed."
+        continue_script 2 "Visual Studio Code already installed" "Visual Studio Code is already installed."
     else
         commands_to_run=()
         commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
@@ -103,7 +103,7 @@ install_flatpak_spotify () {
     local pass="$2"
     local app_id="com.spotify.Client"
     if check_flatpak_installed "$app_id"; then
-        continue_script "Spotify already installed" "Spotify is already installed."
+        continue_script 2 "Spotify already installed" "Spotify is already installed."
     else
         commands_to_run=()
         commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
@@ -116,7 +116,7 @@ install_flatpak_discord () {
     local pass="$2"
     local app_id="com.discordapp.Discord"
     if check_flatpak_installed "$app_id"; then
-        continue_script "Discord already installed" "Discord is already installed."
+        continue_script 2 "Discord already installed" "Discord is already installed."
     else
         commands_to_run=()
         commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")

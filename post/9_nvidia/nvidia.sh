@@ -16,6 +16,25 @@
 
 source ./commons.sh
 
+nvidia_menu () {
+    
+    local title="Nvidia Driver Installation"
+    local description="This script simplifies the installation of Nvidia drivers for your system."
+    
+    while true; do
+        local options=(\
+            'nvidia-open-dkms           (Driver with dynamic kernel support, therefore no pacman hook required.)'\
+            "Back"
+        )
+        menu_prompt nvidia_menu_choice "$title" "$description" "${options[@]}"
+        case $nvidia_menu_choice in
+            0)  dkms_driver;;
+            b)  break;;
+            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
+        esac
+    done    
+}
+
 dkms_driver () {
     commands_to_run=()
     commands_to_run+=("pacman --noconfirm -S base-devel linux-headers nvidia-open-dkms nvidia-utils nvidia-settings")
@@ -72,24 +91,5 @@ dkms_driver () {
     ')
 
     live_command_output "" "" "Installing DKMS driver" "${commands_to_run[@]}"
-    pause_script "Nvidia DKMS" "Nvidia DKMS Setup complete!"
-}
-
-nvidia_menu () {
-    
-    local title="Nvidia Driver Installation"
-    local description="This script simplifies the installation of Nvidia drivers for your system."
-    
-    while true; do
-        local options=(\
-            'nvidia-open-dkms           (Driver with dynamic kernel support, therefore no pacman hook required.)'\
-            "Back"
-        )
-        menu_prompt nvidia_menu_choice "$title" "$description" "${options[@]}"
-        case $nvidia_menu_choice in
-            0)  dkms_driver;;
-            b)  break;;
-            *)  continue_script "Not a valid choice!" "Invalid choice, please try again." ;;
-        esac
-    done    
+    continue_script 2 "Nvidia DKMS" "Nvidia DKMS Setup complete!"
 }

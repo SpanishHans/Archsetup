@@ -24,13 +24,13 @@ install_pacman_packages() {
         if ! check_command_exists "$package"; then
             packages_to_install+=("$package")
         else
-            continue_script "$package is already installed."
+            continue_script 2 "Package $package exists" "$package is already installed."
         fi
     done
 
     if [ "${#packages_to_install[@]}" -gt 0 ]; then
         live_command_output "" "" "yes" "Installing packages" "pacman -S --noconfirm ${packages_to_install[*]}"
     else
-        continue_script "All packages are already installed."
+        continue_script 2 "Packages exist" "All packages are already installed."
     fi
 }

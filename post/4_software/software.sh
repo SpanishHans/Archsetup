@@ -33,7 +33,7 @@ software_menu() {
             0)  install_from_flatpak;;
             1)  install_from_aur;;
             b)  break;;
-            *)  continue_script "Not a valid choice!" "Invalid choice, please try again.";;
+            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again.";;
         esac
     done
 }

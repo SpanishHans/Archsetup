@@ -39,7 +39,7 @@ plymouth_menu () {
             3)  theme_red_loader "sysadmin";;
             3)  regen_cpio;;
             b)  break;;
-            *)  continue_script "Not a valid choice!" "Invalid choice, please try again." ;;
+            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
     done
 }
@@ -68,7 +68,7 @@ theme_connect() {
     commands_to_run=("plymouth-set-default-theme -R connect")
 
     live_command_output "" "" "Installing selected plymouth theme: connect""${commands_to_run[@]}"
-    pause_script "Plymouth theme connect installed" "The Plymouth theme connect has been installed!"
+    continue_script 2 "Plymouth theme connect installed" "The Plymouth theme connect has been installed!"
 }
 
 theme_deus_ex() {
@@ -77,7 +77,7 @@ theme_deus_ex() {
     commands_to_run+=("plymouth-set-default-theme -R deus_ex")
 
     live_command_output "" "" "Installing selected plymouth theme: deus ex""${commands_to_run[@]}"
-    pause_script "Plymouth theme deus ex installed" "The Plymouth theme deus ex has been installed!"
+    continue_script 2 "Plymouth theme deus ex installed" "The Plymouth theme deus ex has been installed!"
 }
 
 theme_lone() {
@@ -86,7 +86,7 @@ theme_lone() {
     commands_to_run+=("plymouth-set-default-theme -R lone")
 
     live_command_output "" "" "Installing selected plymouth theme: lone""${commands_to_run[@]}"
-    pause_script "Plymouth theme lone installed" "The Plymouth theme lone has been installed!"
+    continue_script 2 "Plymouth theme lone installed" "The Plymouth theme lone has been installed!"
 }
 
 theme_red_loader() {
@@ -95,5 +95,5 @@ theme_red_loader() {
     commands_to_run+=("plymouth-set-default-theme -R red_loader")
 
     live_command_output "" "" "Installing selected plymouth theme: red loader""${commands_to_run[@]}"
-    pause_script "Plymouth theme red loader installed" "The Plymouth theme red loader has been installed!"
+    continue_script 2 "Plymouth theme red loader installed" "The Plymouth theme red loader has been installed!"
 }

@@ -20,11 +20,8 @@ source ./post/users.sh
 
 
 configure_clipboard() {
-    commands_to_run=()
-    commands_to_run+=("pacman --noconfirm -S wl-clipboard cliphist grim slurp")
-
-    live_command_output "" "" "Configuring clipboard" "${commands_to_run[@]}"
-    pause_script "Clipboard" "Clipboard Setup complete!"
+    install_pacman_packages wl-clipboard cliphist grim slurp
+    continue_script 2 "Clipboard" "Clipboard Setup complete!"
 }
 
 tools_menu () {
@@ -45,7 +42,7 @@ tools_menu () {
             3)  chezmoi_mode;;
             4)  configure_clipboard;;
             b)  break;;
-            *)  continue_script "Not a valid choice!" "Invalid choice, please try again." ;;
+            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
     done
 }
