@@ -104,66 +104,62 @@ this automatically:
     8. Installs grub for the system with btrfs and snapper-rollback support"
     
 continue_script 5 'Chroot description' "$description"
-commands_to_run=()
-commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
-    echo '#### STARTING 1. #### ->> time and locales'
+
+step_1_locales(){
+    echo '#### STARTING 1. #### ->> Time and locales'
     ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
     hwclock --systohc
     locale-gen
-EOF")
-live_command_output "" "" "yes" "executing arch-chroot step 1" "${commands_to_run[@]}"
+}
 
-commands_to_run=()
-commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
+step_2_network(){
     echo '#### STARTING 2. #### ->> Enabling NetworkManager'
     systemctl enable NetworkManager
-EOF")
-live_command_output "" "" "yes" "executing arch-chroot step 2" "${commands_to_run[@]}"
+}
 
-commands_to_run=()
-commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
-    echo '#### STARTING 3. #### ->> root_password_setup'
-    useradd -c \"Sysadmin\" -m sysadmin
-    echo \"root:\$root_password\" | chpasswd
-    echo \"sysadmin:\$sysadmin_password\" | chpasswd
-EOF")
-live_command_output "" "" "yes" "executing arch-chroot step 3" "${commands_to_run[@]}"
+step_3_passwords(){
+    echo '#### STARTING 3. #### ->> Users and passwords'
+    useradd -c "Sysadmin" -m sysadmin
+    echo "root:$root_password" | chpasswd
+    echo "sysadmin:$sysadmin_password" | chpasswd
+}
 
-commands_to_run=()
-commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
-    echo '#### STARTING 4. #### ->> configure pacman color'
+step_4_pacman_color(){
+    echo '#### STARTING 4. #### ->> Configure pacman color'
     sed -i 's/^#Color/Color/' /etc/pacman.conf
-EOF")
-live_command_output "" "" "yes" "executing arch-chroot step 4" "${commands_to_run[@]}"
+}
 
-commands_to_run=()
-commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
-    echo '#### STARTING 5. #### ->> configure sudoers'
+step_5_sudoers(){
+    echo '#### STARTING 5. #### ->> Configure sudoers'
     sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /etc/sudoers
-EOF")
-live_command_output "" "" "yes" "executing arch-chroot step 5" "${commands_to_run[@]}"
+}
 
-commands_to_run=()
-commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
-    echo '#### STARTING 6. #### ->> no timeout grub and quiet splash'
+step_6_quiet_splash(){
+    echo '#### STARTING 6. #### ->> No timeout grub and quiet splash'
     sed -i 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/' /etc/default/grub
     sed -i 's/^\\(GRUB_CMDLINE_LINUX_DEFAULT=\\)\".*\"/\\1\"quiet splash\"/' /etc/default/grub
-EOF")
-live_command_output "" "" "yes" "executing arch-chroot step 6" "${commands_to_run[@]}"
+}
 
-commands_to_run=()
-commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF    
-    echo '#### STARTING 7. #### ->> initramfs'
-    mkinitcpio -P || { echo 'mkinitcpio failed'; exit 1}
-EOF")
-live_command_output "" "" "yes" "executing arch-chroot step 7" "${commands_to_run[@]}"
+step_7_initramfs(){
+    echo '#### STARTING 7. #### ->> Initramfs'
+    mkinitcpio -P || {echo 'mkinitcpio failed'; exit;}
+}
 
-commands_to_run=()
-commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF    
+step_8_grub(){
     echo '#### STARTING 8. #### ->> grub-install'
-    grub-install --target=x86_64-efi --efi-directory=/efi --boot-directory=/boot --bootloader-id=GRUB || { echo 'grub-install failed'; exit 1}
-    grub-mkconfig -o /boot/grub/grub.cfg || { echo 'grub-mkconfig failed'; exit 1}
-EOF")
-live_command_output "" "" "yes" "executing arch-chroot step 8" "${commands_to_run[@]}"
+    grub-install --target=x86_64-efi --efi-directory=/efi --boot-directory=/boot --bootloader-id=GRUB || {echo 'grub-install failed'; exit 1;}
+    grub-mkconfig -o /boot/grub/grub.cfg || { echo 'grub-mkconfig failed'; exit 1;}
+}
+
+commands_to_run=()
+commands_to_run+=("step_1_locales")
+commands_to_run+=("step_2_network")
+commands_to_run+=("step_3_passwords")
+commands_to_run+=("step_4_pacman_color")
+commands_to_run+=("step_5_sudoers")
+commands_to_run+=("step_6_quiet_splash")
+commands_to_run+=("step_7_initramfs")
+commands_to_run+=("step_8_grub")
+live_command_output "" "" "yes" "executing arch-chroot steps" "${commands_to_run[@]}"
 
 pause_script 'Finished' 'Done, you may now wish to reboot (further changes can be done by chrooting into /mnt).'
