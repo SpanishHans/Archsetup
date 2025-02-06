@@ -25,7 +25,7 @@ source ./post/5_tools/tools.sh
 source ./post/6_virtualization/virtualization.sh
 source ./post/7_languages/languages.sh
 source ./post/8_plymouth/plymouth.sh
-source ./post/9_nvidia/nvidia.sh
+# source ./post/9_nvidia/nvidia.sh
 
 if [ "$LIVE_ENV" = true ]; then
     pause_script "ERROR" "The configure script must be run from a machine with ArchLinux already installed.
