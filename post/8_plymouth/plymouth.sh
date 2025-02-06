@@ -22,8 +22,8 @@ plymouth_menu () {
     install_pacman_packages plymouth
     local title='Plymouth Theme Installation'
     local description="This script helps you install and set up Plymouth themes for a stylish startup animation."
-    local user=USER_WITH_SUDO_USER
-    local pass=USER_WITH_SUDO_PASS
+    local user="$USER_WITH_SUDO_USER"
+    local pass="$USER_WITH_SUDO_PASS"
 
     while true; do
         local options=(\

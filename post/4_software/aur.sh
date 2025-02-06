@@ -22,8 +22,8 @@ aur_menu() {
 
     local title="Install extra software from the AUR"
     local description="Welcome to the AUR software installation menu. Select the software to install."
-    local user=USER_WITH_SUDO_USER
-    local pass=USER_WITH_SUDO_PASS
+    local user="$USER_WITH_SUDO_USER"
+    local pass="$USER_WITH_SUDO_PASS"
 
     while true; do
         local options=(\

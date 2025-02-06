@@ -21,8 +21,8 @@ source ./post/4_software/pacman.sh
 rollback_menu() {
     local title="BTRFS Rollback Configurator"
     local description="This script simplifies the process of setting up rollback support with BTRFS. It requires BTRFS for managing snapshots and rollback functionality. Select an option to proceed."
-    local user=USER_WITH_SUDO_USER
-    local pass=USER_WITH_SUDO_PASS
+    local user="$USER_WITH_SUDO_USER"
+    local pass="$USER_WITH_SUDO_PASS"
 
     while true; do
         local options=(\
