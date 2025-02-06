@@ -144,7 +144,7 @@ configure_asdf() {
             )
             ;;
         *)
-            continue_script 2 "Starship not available" "Starship is not supported for this shell"
+            continue_script 2 "asdf not available" "asdf is not supported for this shell"
             return
             ;;
     esac
