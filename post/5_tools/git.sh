@@ -19,7 +19,7 @@ source ./post/0_users/users.sh
 source ./post/4_software/pacman.sh
 
 configure_git() {
-    install_pacman_packages git
+    install_pacman_packages git openssh
     commands_to_run=()
 
     get_users userlist
@@ -82,7 +82,7 @@ configure_git() {
     live_command_output "" "" "yes" "Installing git" "${commands_to_run[@]}"
 
     commands_to_run=()
-    commands_to_run+=("eval \\\"\$(ssh-agent -s)\\\"")
+    commands_to_run+=("ssh-agent -s")
     commands_to_run+=("ssh-add '$ssh_key_path'")
     live_command_output "$git_user" "$pass" "yes" "Installing git" "${commands_to_run[@]}"
 
