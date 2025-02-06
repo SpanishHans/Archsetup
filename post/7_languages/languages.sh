@@ -68,10 +68,6 @@ configure_asdf() {
         continue_script 2 "asdf folder exists" "asdf repository already exists at $build_path. Skipping clone."
     fi
 
-    pause_script "" "$shell_path"
-
-    pause_script "" "$(getent passwd usurper | cut -d: -f7)"
-
     case "$shell_path" in
         "/bin/bash | /usr/bin/bash")
             commands_to_run=()
