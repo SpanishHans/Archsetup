@@ -153,4 +153,6 @@ commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
 EOF")
 live_command_output "" "" "yes" "executing arch-chroot steps" "${commands_to_run[@]}"
 
+umount -R /mnt
+
 pause_script 'Finished' 'Done, you may now wish to reboot (further changes can be done by chrooting into /mnt).'
