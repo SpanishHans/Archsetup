@@ -93,8 +93,6 @@ install_without_paru() {
     continue_script 2 "$package_name installed" "$package_name install complete!"
 }
 
-
-
 configure_paru() {
     local user="$1"
     local pass="$2"

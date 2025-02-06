@@ -30,8 +30,8 @@ software_menu() {
         )
         menu_prompt source_choice "$title" "$description" "${options[@]}"
         case $source_choice in
-            0)  install_from_flatpak;;
-            1)  install_from_aur;;
+            0)  flatpak_menu;;
+            1)  aur_menu;;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again.";;
         esac
