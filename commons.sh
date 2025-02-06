@@ -183,7 +183,7 @@ live_command_output() {
     shift 4
     local commands=("$@")
     local script_name=$(basename "$(realpath "$0")")
-    local combined_log="/tmp/${script_name}_$(date +%Y%m%d%H%M%S).log"
+    local combined_log="/tmp/${script_name}_$(date +%Y_%m_%d_%H_%M_%S).log"
     local exit_code=0
 
     cleanup() {
