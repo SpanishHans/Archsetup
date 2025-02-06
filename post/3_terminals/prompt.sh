@@ -50,7 +50,7 @@ starship_theme_pure_prompt() {
 
     local commands_to_run=()
     local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
-    live_command_output "" "" "Configuring theme for starship for $term_username" "${local commands_to_run[@]}"
+    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${local commands_to_run[@]}"
 }
 
 starship_theme_pastel_powerline() {
@@ -58,7 +58,7 @@ starship_theme_pastel_powerline() {
 
     local commands_to_run=()
     local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
-    live_command_output "" "" "Configuring theme for starship for $term_username" "${local commands_to_run[@]}"
+    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${local commands_to_run[@]}"
 }
 
 starship_theme_tokyo_night() {
@@ -66,7 +66,7 @@ starship_theme_tokyo_night() {
 
     local commands_to_run=()
     local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
-    live_command_output "" "" "Configuring theme for starship for $term_username" "${local commands_to_run[@]}"
+    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${local commands_to_run[@]}"
 }
 
 starship_theme_gruvbox_rainbow() {
@@ -74,7 +74,7 @@ starship_theme_gruvbox_rainbow() {
 
     local commands_to_run=()
     local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
-    live_command_output "" "" "Configuring theme for starship for $term_username" "${local commands_to_run[@]}"
+    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${local commands_to_run[@]}"
 }
 
 starship_theme_jetpack() {
@@ -82,7 +82,7 @@ starship_theme_jetpack() {
 
     local commands_to_run=()
     local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
-    live_command_output "" "" "Configuring theme for starship for $term_username" "${local commands_to_run[@]}"
+    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${local commands_to_run[@]}"
 }
 
 starship_themes() {
@@ -118,11 +118,11 @@ configure_starship (){
     local shell_path="$(getent passwd "$term_username" | cut -d: -f7)"
 
     commands_to_run=("curl -sS https://starship.rs/install.sh | sh")
-    live_command_output "$term_username" "" "Configuring Starship for $term_username." "${commands_to_run[@]}"
+    live_command_output "$term_username" "" "yes" "Configuring Starship for $term_username." "${commands_to_run[@]}"
 
     if ! check_file_exists "$starship_config_path/starship.toml"; then
         local commands_to_run=("mkdir -p $starship_config_path && touch $starship_config_path/starship.toml")
-        live_command_output "" "" "Creating config file" "${commands_to_run[@]}"
+        live_command_output "" "" "yes" "Creating config file" "${commands_to_run[@]}"
     else
         continue_script 2 "Folder exists" "Config file already exists at $starship_config_path. Skipping."
     fi
@@ -167,7 +167,7 @@ configure_starship (){
             echo 'Starship initialization already present in $config_file'
         fi"
     )
-    live_command_output "$term_username" "" "Configuring Starship for $term_username." "${commands_to_run[@]}"
+    live_command_output "$term_username" "" "yes" "Configuring Starship for $term_username." "${commands_to_run[@]}"
     continue_script 2 "Starship installed" "Starship installed correctly"
 }
 
@@ -191,7 +191,7 @@ posh_theme_1_shell() {
             echo 'init_command added to $config_file'
         fi"
     )
-    live_command_output "$term_username" "" "Configuring Oh my posh for $term_username." "${commands_to_run[@]}"
+    live_command_output "$term_username" "" "yes" "Configuring Oh my posh for $term_username." "${commands_to_run[@]}"
 }
 
 #https://ohmyposh.dev/docs/themes
@@ -223,11 +223,11 @@ configure_oh_my_posh () {
     local shell_path="$(getent passwd "$term_username" | cut -d: -f7)"
 
     commands_to_run=("curl -sS https://starship.rs/install.sh | sh")
-    live_command_output "$term_username" "" "Configuring Starship for $term_username." "${commands_to_run[@]}"
+    live_command_output "$term_username" "" "yes" "Configuring Starship for $term_username." "${commands_to_run[@]}"
 
     if ! check_folder_exists "$posh_config_path"; then
         local commands_to_run=("mkdir -p $posh_config_path")
-        live_command_output "" "" "Creating config file" "${commands_to_run[@]}"
+        live_command_output "" "" "yes" "Creating config file" "${commands_to_run[@]}"
     else
         continue_script 2 "Folder exists" "Config file already exists at $posh_config_path. Skipping."
     fi
@@ -272,6 +272,6 @@ configure_oh_my_posh () {
             echo 'Oh my posh initialization already present in $config_file'
         fi"
     )
-    live_command_output "$term_username" "" "Configuring Oh my posh for $term_username." "${commands_to_run[@]}"
+    live_command_output "$term_username" "" "yes" "Configuring Oh my posh for $term_username." "${commands_to_run[@]}"
     continue_script 2 "Oh my posh installed" "Oh my posh installed correctly"
 }

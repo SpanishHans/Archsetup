@@ -56,7 +56,7 @@ install_with_paru () {
 
     commands_to_run=()
     commands_to_run+=("paru -S --noconfirm --needed .")
-    live_command_output "$bui_user" "$bui_pass" "Building and installing $package_name" "${commands_to_run[@]}"
+    live_command_output "$bui_user" "$bui_pass" "yes" "Building and installing $package_name" "${commands_to_run[@]}"
     continue_script 2 "$package_name installed" "$package_name install complete!"
 }
 
@@ -72,7 +72,7 @@ install_without_paru() {
         commands_to_run+=("mkdir -p $build_path")
         commands_to_run+=("git clone $url $build_path")
         commands_to_run+=("chown -R $bui_user:$bui_user $build_path")
-        live_command_output "" "" "Cloning $package_name" "${commands_to_run[@]}"
+        live_command_output "" "" "yes" "Cloning $package_name" "${commands_to_run[@]}"
     else
         continue_script 2 "repo exists for $package_name" "$package_name repository already exists at $build_path. Skipping clone."
     fi
@@ -81,14 +81,14 @@ install_without_paru() {
         commands_to_run=()
         scroll_window_output "$build_path/PKGBUILD"
         commands_to_run+=("cd $build_path && makepkg -s -r -c --noconfirm")
-        live_command_output "$bui_user" "$bui_pass" "Building and installing $package_name" "${commands_to_run[@]}"
+        live_command_output "$bui_user" "$bui_pass" "yes" "Building and installing $package_name" "${commands_to_run[@]}"
     else
         echo "$package_name package already built. Skipping build."
     fi
 
     commands_to_run=()
     commands_to_run+=("cd $build_path && pacman --noconfirm -U *.pkg.tar.zst")
-    live_command_output "" "" "Installing $package_name" "${commands_to_run[@]}"
+    live_command_output "" "" "yes" "Installing $package_name" "${commands_to_run[@]}"
 
     continue_script 2 "$package_name installed" "$package_name install complete!"
 }

@@ -50,7 +50,7 @@ configure_snapper() {
     commands_to_run+=("mount -a")
     commands_to_run+=("systemctl daemon-reload")
     
-    live_command_output "" "" "Configuring Snapper for rollbacks" "${commands_to_run[@]}"
+    live_command_output "" "" "yes" "Configuring Snapper for rollbacks" "${commands_to_run[@]}"
     continue_script 2 "Snapper" "Snapper setup complete!"
 }
 
@@ -72,7 +72,7 @@ configure_snapper_rollback() {
         else
             echo \"mountpoint entry not found in /etc/snapper-rollback.conf\"
         fi")
-    live_command_output "" "" "Configuring snapper-rollback" "${commands_to_run[@]}"
+    live_command_output "" "" "yes" "Configuring snapper-rollback" "${commands_to_run[@]}"
     continue_script 2 "Snapper-rollback complete" "Snapper-rollback setup complete!"
 }
 

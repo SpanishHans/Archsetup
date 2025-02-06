@@ -49,7 +49,8 @@ desktops_menu () {
 install_ly() {
     install_pacman_packages ly
     commands_to_run=("systemctl enable ly.service")
-    live_command_output "" "" "Installing selected TTY DM: Ly" "${commands_to_run[@]}"
+    live_command_output "" "" "yes" "Installing selected TTY DM: Ly" "${commands_to_run[@]}"
+    continue_script 2 "Installed ly DM" "Installed the ly DM."
 }
 
 install_tbsm() {
@@ -63,7 +64,8 @@ install_emptty() {
 install_lemurs() {
     install_pacman_packages lemurs
     commands_to_run=("systemctl enable lemurs.service")
-    live_command_output "" "" "Installing selected TTY DM: Lemurs" "${commands_to_run[@]}"
+    live_command_output "" "" "yes" "Installing selected TTY DM: Lemurs" "${commands_to_run[@]}"
+    continue_script 2 "Installed lemurs DM" "Installed the lemurs DM."
 }
 
 ################################################################################
@@ -73,25 +75,29 @@ install_lemurs() {
 install_gdm() {
     install_pacman_packages gdm
     commands_to_run=("systemctl enable gdm.service")
-    live_command_output "" "" "Installing selected GUI DM: GDM" "${commands_to_run[@]}"
+    live_command_output "" "" "yes" "Installing selected GUI DM: GDM" "${commands_to_run[@]}"
+    continue_script 2 "Installed gdm DM" "Installed the gdm DM."
 }
 
 install_lightdm() {
     install_pacman_packages lightdm
     commands_to_run=("systemctl enable lightdm.service")
-    live_command_output "" "" "Installing selected GUI DM: LightDM" "${commands_to_run[@]}"
+    live_command_output "" "" "yes" "Installing selected GUI DM: LightDM" "${commands_to_run[@]}"
+    continue_script 2 "Installed lightdm DM" "Installed the lightdm DM."
 }
 
 install_sddm() {
     install_pacman_packages sddm
     commands_to_run=("systemctl enable sddm.service")
-    live_command_output "" "" "Installing selected GUI DM: SDDM" "${commands_to_run[@]}"
+    live_command_output "" "" "yes" "Installing selected GUI DM: SDDM" "${commands_to_run[@]}"
+    continue_script 2 "Installed sddm DM" "Installed the sddm DM."
 }
 
 install_greetd() {
     install_pacman_packages greetd
     commands_to_run=("systemctl enable greetd.service")
-    live_command_output "" "" "Installing selected GUI DM: Greetd" "${commands_to_run[@]}"
+    live_command_output "" "" "yes" "Installing selected GUI DM: Greetd" "${commands_to_run[@]}"
+    continue_script 2 "Installed greetd DM" "Installed the greetd DM."
 }
 
 ################################################################################
@@ -100,34 +106,42 @@ install_greetd() {
 
 install_budgie() {
     install_pacman_packages budgie lightdm-gtk-greeter budgie-desktop-view budgie-backgrounds network-manager-applet arc-gtk-theme papirus-icon-theme
+    continue_script 2 "Installed budgie" "Installed the budgie DE."
 }
 
 install_cinnamon() {
     install_pacman_packages cinnamon xed xreader metacity gnome-shell gnome-keyring
+    continue_script 2 "Installed v  " "Installed the cinnamon DE."
 }
 
 install_cosmic() {
     install_pacman_packages cosmic cosmic-text-editor cosmic-files cosmic-terminal cosmic-wallpapers
+    continue_script 2 "Installed cosmic" "Installed the cosmic DE."
 }
 
 install_cutefish() {
     install_pacman_packages cutefish sddm
+    continue_script 2 "Installed cutefish" "Installed the cutefish DE."
 }
 
 install_deepin() {
     install_pacman_packages deepin deepin-kwin deepin-extra
+    continue_script 2 "Installed deepin" "Installed the deepin DE."
 }
 
 install_gnome() {
     install_pacman_packages gnome gdm
+    continue_script 2 "Installed gnome" "Installed the gnome DE."
 }
 
 install_gnome_flashback() {
     install_pacman_packages gnome-flashback gnome-applets sensors-applet gdm
+    continue_script 2 "Installed gnome flashback" "Installed the gnome flashback DE."
 }
 
 install_kde_plasma() {
     install_pacman_packages plasma kde-applications-meta sddm
+    continue_script 2 "Installed kde plasma" "Installed the kde plasma DE."
 }
 
 install_lxde() {
@@ -140,10 +154,12 @@ install_lxqt() {
 
 install_mate() {
     install_pacman_packages mate mate-extra lightdm
+    continue_script 2 "Installed mate" "Installed the mate DE."
 }
 
 install_pantheon() {
     install_pacman_packages pantheon lightdm
+    continue_script 2 "Installed pantheon" "Installed the pantheon DE."
 }
 
 install_xfce() {

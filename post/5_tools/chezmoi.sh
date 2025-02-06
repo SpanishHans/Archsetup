@@ -44,12 +44,12 @@ configure_chezmoi_default() {
     input_text chezmoi_username "Chezmoi User to setup" "Please enter the user whose chezmoi shall be configured" 'What user to configure chezmoi for?: '
 
     # commands_to_run+=("sudo -u \"$chezmoi_username\" bash -c \"chezmoi init https://github.com/SpanishHans/Archsetup\"")
-    live_command_output "" "" "Configuring chezmoi" "${commands_to_run[@]}"
+    live_command_output "" "" "yes" "Configuring chezmoi" "${commands_to_run[@]}"
 
     commands_to_run=()
     commands_to_run+=("chezmoi init https://github.com/SpanishHans/Archsetup")
     commands_to_run+=("mv /home/$chezmoi_username/.local/share/chezmoi/* /home/$chezmoi_username/.config/")
-    live_command_output "$chezmoi_username" "" "Configuring chezmoi" "${commands_to_run[@]}"
+    live_command_output "$chezmoi_username" "" "yes" "Configuring chezmoi" "${commands_to_run[@]}"
 
     continue_script 2 "Chezmoi" "Chezmoi Setup complete for user $chezmoi_username!"
 }
@@ -59,12 +59,12 @@ configure_chezmoi_no_default() {
     input_text chezmoi_repo "Chezmoi repo to setup" "Please enter the repo to sync from/to." "Provide the Git repository URL for ChezMoi: "
 
     # commands_to_run+=("sudo -u \"$chezmoi_username\" bash -c \"chezmoi init https://github.com/SpanishHans/Archsetup\"")
-    live_command_output "" "" "Configuring chezmoi" "${commands_to_run[@]}"
+    live_command_output "" "" "yes" "Configuring chezmoi" "${commands_to_run[@]}"
 
     commands_to_run=()
     commands_to_run+=("chezmoi init https://github.com/SpanishHans/Archsetup")
     commands_to_run+=("mv /home/$chezmoi_username/.local/share/chezmoi/* /home/$chezmoi_username/.config/")
-    live_command_output "$chezmoi_username" "" "Configuring chezmoi" "${commands_to_run[@]}"
+    live_command_output "$chezmoi_username" "" "yes" "Configuring chezmoi" "${commands_to_run[@]}"
 
     continue_script 2 "Chezmoi" "Chezmoi Setup complete for user $chezmoi_username!"
 }

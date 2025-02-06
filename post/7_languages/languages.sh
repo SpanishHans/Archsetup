@@ -62,7 +62,7 @@ configure_asdf() {
         commands_to_run+=("mkdir -p $build_path")
         commands_to_run+=("git clone $url $build_path")
         commands_to_run+=("chown -R $asdf_username:$asdf_username $build_path")
-        live_command_output "" "" "Cloning asdf" "${commands_to_run[@]}"
+        live_command_output "" "" "yes" "Cloning asdf" "${commands_to_run[@]}"
     else
         continue_script 2 "asdf folder exists" "asdf repository already exists at $build_path. Skipping clone."
     fi
@@ -81,7 +81,7 @@ configure_asdf() {
     #     fi"
     # )
     
-    # live_command_output "" "" "Configuring ASDF" "${commands_to_run[@]}"
+    # live_command_output "" "" "yes" "Configuring ASDF" "${commands_to_run[@]}"
     continue_script "ASDF" "ASDF Setup complete!"
 }
 
@@ -92,7 +92,7 @@ configure_python() {
     commands_to_run+=("sudo -u $python_user asdf plugin add python")
     commands_to_run+=("sudo -u $python_user asdf install python 3.12.3")
 
-    live_command_output "" "" "Configuring python from ASDF" "${commands_to_run[@]}"
+    live_command_output "" "" "yes" "Configuring python from ASDF" "${commands_to_run[@]}"
     continue_script "Python" "Python Setup complete!"
 }
 
@@ -103,7 +103,7 @@ configure_node() {
     commands_to_run+=("sudo -u $node_user asdf plugin add nodejs")
     commands_to_run+=("sudo -u $node_user asdf install node latest")
 
-    live_command_output "" "" "Configuring Node from ASDF" "${commands_to_run[@]}"
+    live_command_output "" "" "yes" "Configuring Node from ASDF" "${commands_to_run[@]}"
     continue_script 2 "Node" "Node Setup complete!"
 }
 

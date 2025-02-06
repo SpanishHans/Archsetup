@@ -70,7 +70,7 @@ install_fonts() {
         local options+=("$pac_name")
     done
 
-    live_command_output "" "" "Configuring selected fonts" "${local commands_to_run[@]}"
+    live_command_output "" "" "yes" "Configuring selected fonts" "${local commands_to_run[@]}"
     continue_script 2 "Installed fonts" "Finished installing all selected fonts.
 
 Installed:    
