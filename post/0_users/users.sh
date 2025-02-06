@@ -36,7 +36,7 @@ get_users() {
         if id "$user" | grep -q 'wheel'; then
             userlist+="$counter. $(printf "%-${max_user_len}s" "$user") has sudo: yes\n"
         else
-            userlist+="$counter. $(printf "%-${max_user_len}s" "$user") has sudohas sudo: no\n"
+            userlist+="$counter. $(printf "%-${max_user_len}s" "$user") has sudo: no\n"
         fi
         ((counter++))
     done
