@@ -32,7 +32,7 @@ shadow_color = (WHITE,BLUE,OFF)
 # Main Window
 ###################################################################################
 dialog_color = (BLACK,WHITE,ON)
-title_color = dialog_color
+title_color = tag_key_color
 border_color = dialog_color
 border2_color = dialog_color
 
