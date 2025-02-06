@@ -28,6 +28,7 @@ configure_git() {
         "User account"\
         "Please enter the user whose git shall be configured\n\n$userlist"\
         "What user to configure git for?: "
+    continue_script 2 "$git_user password" "Please provide that users password for running commands on his behalf."
     input_pass\
         pass\
         "$git_user"
@@ -77,8 +78,6 @@ configure_git() {
         commands_to_run+=("mkdir -p $home_path/.ssh")
         commands_to_run+=("ssh-keygen -t ed25519 -C '$gitemail' -f '$ssh_key_path' -P '$sshpass' -N '$sshpass'")
         commands_to_run+=("chown -R $git_user:$git_user $home_path/.ssh")
-        commands_to_run+=("sudo -u $git_user bash -c \"eval \\\"\$(ssh-agent -s)\\\" && ssh-add '$ssh_key_path'\"")
-
     fi
     live_command_output "" "" "yes" "Installing git" "${commands_to_run[@]}"
 
