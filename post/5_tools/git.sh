@@ -82,8 +82,7 @@ configure_git() {
     live_command_output "" "" "yes" "Installing git" "${commands_to_run[@]}"
 
     commands_to_run=()
-    commands_to_run+=("ssh-agent -s")
-    commands_to_run+=("ssh-add '$ssh_key_path'")
+    commands_to_run+=("ssh-agent -s && ssh-add '$ssh_key_path'")
     live_command_output "$git_user" "$pass" "yes" "Installing git" "${commands_to_run[@]}"
 
     commands_to_run=()
