@@ -42,7 +42,12 @@ Exiting!!!"
 fi
 
 configure_menu () {
-    continue_script 4 "Credentials for admin user" "Builds can not be done with root, therefore we shall user sysadmin. Provide its password."
+    continue_script \
+        4 \
+        "Credentials for admin user" \
+        "Builds can not be done with root, therefore we shall user sysadmin. 
+
+Provide its password."
     input_pass\
         sysadmin_password\
         "sysadmin"
