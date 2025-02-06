@@ -109,7 +109,7 @@ configure_bash() {
     install_pacman_packages bash
     local commands_to_run=()
     if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/bash" ]; then
-        local commands_to_run+=("chsh -s /bin/bash $term_user")
+        local commands_to_run+=("chsh -s /usr/bin/bash $term_user")
     fi
     live_command_output "" "" "yes" "Configuring bash terminal" "${local commands_to_run[@]}"
 
@@ -137,7 +137,7 @@ configure_zsh() {
     install_pacman_packages zsh
     local commands_to_run=()
     if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/zsh" ]; then
-        local commands_to_run+=("chsh -s /bin/zsh $term_user")
+        local commands_to_run+=("chsh -s /usr/bin/zsh $term_user")
     fi
     live_command_output "" "" "yes" "Configuring zsh terminal" "${local commands_to_run[@]}"
 
@@ -165,7 +165,7 @@ configure_fish() {
     install_pacman_packages fish
     local commands_to_run=()
     if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/fish" ]; then
-        local commands_to_run+=("chsh -s /bin/fish $term_user")
+        local commands_to_run+=("chsh -s /usr/bin/fish $term_user")
     fi
     live_command_output "" "" "yes" "Configuring fish terminal" "${local commands_to_run[@]}"
 
@@ -193,7 +193,7 @@ configure_elvish() {
     install_pacman_packages elvish
     local commands_to_run=()
     if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/elvish" ]; then
-        local commands_to_run+=("chsh -s /bin/elvish $term_user")
+        local commands_to_run+=("chsh -s /usr/bin/elvish $term_user")
     fi
     live_command_output "" "" "yes" "Configuring elvish terminal" "${local commands_to_run[@]}"
     continue_script 2 "Elvish installed" "Elvish installed correctly"
@@ -206,7 +206,7 @@ configure_tcsh() {
     install_pacman_packages tcsh
     local commands_to_run=()
     if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/tcsh" ]; then
-        local commands_to_run+=("chsh -s /bin/tcsh $term_user")
+        local commands_to_run+=("chsh -s /usr/bin/tcsh $term_user")
     fi
     live_command_output "" "" "yes" "Configuring tcsh terminal" "${local commands_to_run[@]}"
     continue_script 2 "Tcsh installed" "Tcsh installed correctly"
@@ -219,7 +219,7 @@ configure_nushell() {
     install_pacman_packages nushell
     local commands_to_run=()
     if [ "$(getent passwd "$term_user" | cut -d: -f7)" != "/bin/nu" ]; then
-        local commands_to_run+=("chsh -s /bin/nu $term_user")
+        local commands_to_run+=("chsh -s /usr/bin/nu $term_user")
     fi
     live_command_output "" "" "yes" "Configuring nu terminal" "${local commands_to_run[@]}"
     continue_script 2 "Nushell installed" "Nushell installed correctly"

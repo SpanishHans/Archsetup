@@ -52,7 +52,7 @@ terminals_menu() {
 
 configure_kitty() {
     install_pacman_packages kitty
-}
+}   
 configure_alacritty() {
     install_pacman_packages alacritty
 }
