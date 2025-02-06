@@ -70,7 +70,7 @@ configure_asdf() {
 
     pause_script "" "$shell_path"
 
-    pause_script "" "$(getent passwd "$term_username" | cut -d: -f7)"
+    pause_script "" "$(getent passwd usurper | cut -d: -f7)"
 
     case "$shell_path" in
         "/bin/bash | /usr/bin/bash")
