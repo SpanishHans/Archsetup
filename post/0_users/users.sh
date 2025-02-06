@@ -180,10 +180,6 @@ list_users() {
     continue_script 2 "Existing users" "List of Existing Users:\n\n$userlist"
 }
 
-select_build_user() {
-    
-}
-
 users_menu() {
     local title="User Management Setup"
     local description="This section helps you manage users on your system. You can create, modify, delete, or list users, and decide whether they should have admin privileges (sudo)."
