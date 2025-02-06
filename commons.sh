@@ -99,9 +99,10 @@ pause_script() {
     local message=$(echo -e "$msg_text")
 
     dialog \
-        --ok-label "Ok"\
-        --backtitle "$title"\
-        --msgbox "$message"\
+        --ok-label "Ok" \
+        --backtitle "$title" \
+        --title "$title" \
+        --msgbox "$message" \
         $half_height $half_width 2>&1 >/dev/tty
     exit_code=$?
     case $exit_code in
@@ -121,6 +122,7 @@ continue_script() {
     dialog \
         --ok-label "Ok" \
         --backtitle "$title" \
+        --title "$title" \
         --infobox "$message" \
         $half_height $half_width 2>&1 >/dev/tty
     exit_code=$?
@@ -170,6 +172,7 @@ scroll_window_output() {
     content="$prompt\n\n$(cat "$file")"
     dialog\
         --backtitle "Viewing logs"\
+        --title "Logs" \
         --textbox <(echo -e "$content")\
         $full_height $full_width
 }
@@ -221,7 +224,9 @@ live_command_output() {
 
     tail -f "$combined_log" | dialog \
         --backtitle "$script_name on live viewer" \
-        --programbox "" "$full_height" "$full_width" 2>&1 >/dev/tty &
+        --title "$title" \
+        --programbox "" \
+        "$full_height" "$full_width" 2>&1 >/dev/tty &
 
 
     dialog_pid=$!
@@ -229,8 +234,13 @@ live_command_output() {
     
     kill "$dialog_pid" 2>/dev/null
 
-    if [[ "${show_logs,,}" == "yes" ]]; then
-        scroll_window_output "$(terminal_title "$script_name finished and the logs are:")" "$combined_log"
+    if [[ "$show_logs" == "yes" ]]; then
+        # scroll_window_output "$(terminal_title "$script_name finished and the logs are:")" "$combined_log"
+        tail -f "$combined_log" | dialog\
+        --backtitle "Viewing logs"\
+        --title "Logs" \
+        --textbox "" \
+        $full_height $full_width
     fi
 
     handle_exit_code "$exit_code" "return"
@@ -254,6 +264,7 @@ $prompt"
 
     dialog_output=$(dialog \
         --backtitle "$title" \
+        --title "$title" \
         --ok-label "Continue" \
         --inputbox "$fulltext" \
         $half_height $half_width 2>&1 >/dev/tty)
@@ -270,6 +281,7 @@ input_pass() {
     while true; do
         password1=$(dialog \
             --backtitle "Password Prompt for '$user'" \
+            --title "Password Prompt for '$user'" \
             --ok-label "Continue" \
             --insecure \
             --passwordbox "Enter password for '$user'" \
@@ -278,6 +290,7 @@ input_pass() {
 
         password2=$(dialog \
             --backtitle "Password Prompt for '$user'" \
+            --title "Password Prompt for '$user'" \
             --ok-label "Continue" \
             --insecure \
             --passwordbox "Re-enter password for '$user'" \
@@ -319,6 +332,7 @@ menu_prompt() {
 
     dialog_output=$(dialog \
         --backtitle "$title" \
+        --title "$title" \
         --ok-label "Select" \
         --menu "$description" \
         $full_height $full_width 15 "${menu_items[@]}" 2>&1 >/dev/tty)
@@ -339,6 +353,7 @@ multiselect_prompt() {
 
     dialog_output=$(dialog \
         --backtitle "$title" \
+        --title "$title" \
         --checklist "$description" \
         $full_height $full_width 15 "${options[@]}" 2>&1 >/dev/tty)
     exit_code=$?
