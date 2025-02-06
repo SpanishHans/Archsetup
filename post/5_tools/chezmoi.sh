@@ -54,7 +54,7 @@ configure_chezmoi_default() {
 
     commands_to_run=()
     commands_to_run+=("chezmoi init https://github.com/SpanishHans/Archsetup")
-    commands_to_run+=("mv /home/$chezmoi_username/.local/share/chezmoi/* /home/$chezmoi_username/.config/")
+    commands_to_run+=("cp -r /home/$chezmoi_username/.local/share/chezmoi/* /home/$chezmoi_username/.config/")
     live_command_output "$chezmoi_username" "" "yes" "Configuring chezmoi" "${commands_to_run[@]}"
 
     continue_script 2 "Chezmoi" "Chezmoi Setup complete for user $chezmoi_username!"
@@ -73,7 +73,7 @@ configure_chezmoi_no_default() {
 
     commands_to_run=()
     commands_to_run+=("chezmoi init \"$chezmoi_repo\"")
-    commands_to_run+=("mv /home/$chezmoi_username/.local/share/chezmoi/* /home/$chezmoi_username/.config/")
+    commands_to_run+=("cp -r /home/$chezmoi_username/.local/share/chezmoi/* /home/$chezmoi_username/.config/")
     live_command_output "$chezmoi_username" "" "yes" "Configuring chezmoi" "${commands_to_run[@]}"
 
     continue_script 2 "Chezmoi" "Chezmoi Setup complete for user $chezmoi_username!"
