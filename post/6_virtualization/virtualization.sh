@@ -15,8 +15,8 @@
 # the License.
 
 source ./commons.sh
-source ./post/0_users/users.sh
-source ./post/4_software/pacman.sh
+source ./post/6_virtualization/containers.sh
+source ./post/6_virtualization/vms.sh
 
 virtualization_menu () {
     local title='Virtualization Technology Installer'
@@ -30,8 +30,8 @@ virtualization_menu () {
         )
         menu_prompt virt_menu_choice "$title" "$description" "${options[@]}"
         case $virt_menu_choice in
-            0)  config_containers;;
-            1)  config_hypervisors;;
+            0)  containers_menu;;
+            1)  hypervisors_menu;;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac

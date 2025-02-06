@@ -18,7 +18,7 @@ source ./commons.sh
 source ./post/0_users/users.sh
 source ./post/4_software/pacman.sh
 
-config_hypervisors() {
+hypervisors_menu() {
     local title='Type 2 hypervisors.'
     local description="This script helps you install hypervisors for VMs. Pick between type 1 and type 2 (Type 1 is is fastest)."
 

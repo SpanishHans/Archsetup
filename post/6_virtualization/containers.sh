@@ -18,7 +18,7 @@ source ./commons.sh
 source ./post/0_users/users.sh
 source ./post/4_software/pacman.sh
 
-config_containers() {
+containers_menu() {
     local title='Type 2 hypervisors.'
     local description="This script helps you install different types of containers."
 
