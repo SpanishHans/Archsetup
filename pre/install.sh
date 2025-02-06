@@ -105,61 +105,52 @@ this automatically:
     
 continue_script 5 'Chroot description' "$description"
 
-step_1_locales(){
-    echo '#### STARTING 1. #### ->> Time and locales'
+commands_to_run=()
+commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
+    echo '#### STARTING 1. #### ->> time and locales'
     ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
     hwclock --systohc
     locale-gen || { echo 'locale-gen failed'; exit 1; }
-}
+EOF")
 
-step_2_network(){
+commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
     echo '#### STARTING 2. #### ->> Enabling NetworkManager'
     systemctl enable NetworkManager || { echo 'NetworkManager enabling failed'; exit 1; }
-}
+EOF")
 
-step_3_passwords(){
-    echo '#### STARTING 3. #### ->> Users and passwords'
-    useradd -c "Sysadmin" -m sysadmin || { echo 'useradd failed'; exit 1; }
-    echo "root:$root_password" | chpasswd || { echo 'root password set failed'; exit 1; }
-    echo "sysadmin:$sysadmin_password" | chpasswd || { echo 'sysadmin password set failed'; exit 1; }
-}
+commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
+    echo '#### STARTING 3. #### ->> root_password_setup'
+    useradd -c \"Sysadmin\" -m sysadmin || { echo 'useradd failed'; exit 1; }
+    echo \"root:\$root_password\" | chpasswd || { echo 'root password set failed'; exit 1; }
+    echo \"sysadmin:\$sysadmin_password\" | chpasswd || { echo 'sysadmin password set failed'; exit 1; }
+EOF")
 
-step_4_pacman_color(){
-    echo '#### STARTING 4. #### ->> Configure pacman color'
+commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
+    echo '#### STARTING 4. #### ->> configure pacman color'
     sed -i 's/^#Color/Color/' /etc/pacman.conf || { echo 'Failed to configure pacman color'; exit 1; }
-}
+EOF")
 
-step_5_sudoers(){
-    echo '#### STARTING 5. #### ->> Configure sudoers'
+commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
+    echo '#### STARTING 5. #### ->> configure sudoers'
     sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /etc/sudoers || { echo 'Failed to configure sudoers'; exit 1; }
-}
+EOF")
 
-step_6_quiet_splash(){
-    echo '#### STARTING 6. #### ->> No timeout grub and quiet splash'
+commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
+    echo '#### STARTING 6. #### ->> no timeout grub and quiet splash'
     sed -i 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/' /etc/default/grub || { echo 'Failed to set GRUB timeout'; exit 1; }
-    sed -i 's/^\(GRUB_CMDLINE_LINUX_DEFAULT=\)\".*\"/\1\"quiet splash\"/' /etc/default/grub || { echo 'Failed to set GRUB quiet splash'; exit 1; }
-}
+    sed -i 's/^\\(GRUB_CMDLINE_LINUX_DEFAULT=\\)\".*\"/\\1\"quiet splash\"/' /etc/default/grub || { echo 'Failed to set GRUB quiet splash'; exit 1; }
+EOF")
 
-step_7_initramfs(){
-    echo '#### STARTING 7. #### ->> Initramfs'
+commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF    
+    echo '#### STARTING 7. #### ->> initramfs'
     mkinitcpio -P || { echo 'mkinitcpio failed during initramfs creation'; exit 1; }
-}
+EOF")
 
-step_8_grub(){
+commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF    
     echo '#### STARTING 8. #### ->> grub-install'
-    grub-install --target=x86_64-efi --efi-directory=/efi --boot-directory=/boot --bootloader-id=GRUB || { echo 'grub-install failed'; exit 1; }
+    grub-install --target=x86_64-efi --efi-directory=/efi --boot-directory=/boot --bootloader-id=GRUB || { echo 'grub-install failed'; exit 1}
     grub-mkconfig -o /boot/grub/grub.cfg || { echo 'grub-mkconfig failed'; exit 1; }
-}
-
-commands_to_run=()
-commands_to_run+=("step_1_locales")
-commands_to_run+=("step_2_network")
-commands_to_run+=("step_3_passwords")
-commands_to_run+=("step_4_pacman_color")
-commands_to_run+=("step_5_sudoers")
-commands_to_run+=("step_6_quiet_splash")
-commands_to_run+=("step_7_initramfs")
-commands_to_run+=("step_8_grub")
+EOF")
 live_command_output "" "" "yes" "executing arch-chroot steps" "${commands_to_run[@]}"
 
 pause_script 'Finished' 'Done, you may now wish to reboot (further changes can be done by chrooting into /mnt).'
