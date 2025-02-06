@@ -68,10 +68,6 @@ configure_asdf() {
         continue_script 2 "asdf folder exists" "asdf repository already exists at $build_path. Skipping clone."
     fi
 
-    pause_script "" "$shell_path"
-
-    pause_script "" "$(getent passwd usurper | cut -d: -f7)"
-
     case "$shell_path" in
         "/bin/bash" | "/usr/bin/bash")
             commands_to_run=()
@@ -154,7 +150,7 @@ configure_asdf() {
     esac
     
     live_command_output "" "" "yes" "Configuring ASDF" "${commands_to_run[@]}"
-    continue_script "ASDF" "ASDF Setup complete!"
+    continue_script 2 "ASDF" "ASDF Setup complete!"
 }
 
 configure_python() {
@@ -165,7 +161,7 @@ configure_python() {
     commands_to_run+=("asdf install python 3.12.3")
 
     live_command_output "" "" "yes" "Configuring python from ASDF" "${commands_to_run[@]}"
-    continue_script "Python" "Python Setup complete!"
+    continue_script 2 "Python" "Python Setup complete!"
 }
 
 configure_node() {
