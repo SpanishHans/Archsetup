@@ -72,27 +72,27 @@ configure_starship (){
     fi
 
     case "$shell_path" in
-        "/bin/bash")
+        "/bin/bash" | "usr/bin/bash")
             config_file="/home/$term_username/.bashrc"
             init_command='eval "$(starship init bash)"'
             starship_themes "$term_username"
             ;;
-        "/bin/zsh")
+        "/bin/zsh" | )
             config_file="/home/$term_username/.zshrc"
             init_command='eval "$(starship init zsh)"'
             starship_themes "$term_username"
             ;;
-        "/bin/fish")
+        "/bin/fish" | "/usr/bin/fish")
             config_file="/home/$term_username/.config/fish/config.fish"
             init_command='starship init fish | source'
             starship_themes "$term_username"
             ;;
-        "/bin/elvish")
+        "/bin/elvish" | "/usr/bin/elvish")
             config_file="/home/$term_username/.elvish/rc.elv"
             init_command='eval (starship init elvish)'
             starship_themes "$term_username"
             ;;
-        "/bin/tcsh")
+        "/bin/tcsh" | "/usr/bin/tcsh")
             config_file="/home/$term_username/.tcshrc"
             init_command='eval `starship init tcsh`'
             starship_themes "$term_username"
@@ -203,27 +203,27 @@ configure_oh_my_posh () {
     fi
 
     case "$shell_path" in
-        "/bin/bash")
+        "/bin/bash" | "usr/bin/bash")
             config_file="/home/$term_username/.bashrc"
             init_command='eval "$(oh-my-posh init bash)"'
             oh_my_posh_themes "$term_username" "$config_file" "$init_command"
             ;;
-        "/bin/zsh")
+        "/bin/zsh" | "usr/bin/zsh")
             config_file="/home/$term_username/.zshrc"
             init_command='eval "$(oh-my-posh init zsh)"'
             oh_my_posh_themes "$term_username" "$config_file" "$init_command"
             ;;
-        "/bin/fish")
+        "/bin/fish" | "usr/bin/fish")
             config_file="/home/$term_username/.config/fish/config.fish"
             init_command='oh-my-posh init fish | source'
             oh_my_posh_themes "$term_username" "$config_file" "$init_command"
             ;;
-        "/bin/elvish")
+        "/bin/elvish" | "usr/bin/elvish")
             config_file="/home/$term_username/.elvish/rc.elv"
             init_command='eval (oh-my-posh init elvish)'
             oh_my_posh_themes "$term_username" "$config_file" "$init_command"
             ;;
-        "/bin/tcsh")
+        "/bin/tcsh" | "usr/bin/tcsh")
             config_file="/home/$term_username/.tcshrc"
             init_command='eval "`oh-my-posh init tcsh`"'
             oh_my_posh_themes "$term_username" "$config_file" "$init_command"
