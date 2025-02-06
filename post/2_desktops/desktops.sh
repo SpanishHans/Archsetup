@@ -111,7 +111,7 @@ install_budgie() {
 
 install_cinnamon() {
     install_pacman_packages cinnamon xed xreader metacity gnome-shell gnome-keyring
-    continue_script 2 "Installed v  " "Installed the cinnamon DE."
+    continue_script 2 "Installed cinnamon" "Installed the cinnamon DE."
 }
 
 install_cosmic() {
@@ -130,7 +130,7 @@ install_deepin() {
 }
 
 install_gnome() {
-    install_pacman_packages gnome gdm
+    install_pacman_packages gnome
     continue_script 2 "Installed gnome" "Installed the gnome DE."
 }
 
