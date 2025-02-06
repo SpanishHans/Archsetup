@@ -91,7 +91,6 @@ terminal_title() {
     echo -e "$border"
 }
 
-
 pause_script() {
     local msg_title="${1:-Default}"
     local msg_text="${2:-Default}"
@@ -110,7 +109,6 @@ pause_script() {
         1)  exit;;
     esac
 }
-
 
 continue_script() {
     local time_sleep="$1"
