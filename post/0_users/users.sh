@@ -34,9 +34,9 @@ get_users() {
 
     for user in "${users[@]}"; do
         if id "$user" | grep -q 'wheel'; then
-            userlist+="$counter. $(printf "%-${max_user_len}s" "$user") is a wheel(sudo) user: yes\n"
+            userlist+="$counter. $(printf "%-${max_user_len}s" "$user") has sudo: yes\n"
         else
-            userlist+="$counter. $(printf "%-${max_user_len}s" "$user") is a wheel(sudo) user: no\n"
+            userlist+="$counter. $(printf "%-${max_user_len}s" "$user") has sudohas sudo: no\n"
         fi
         ((counter++))
     done
