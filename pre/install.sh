@@ -57,7 +57,7 @@ commands_to_run+=("pacstrap /mnt \
   base\
   linux\
   linux-firmware\
-  \"\${microcode}\"\
+  "$microcode"\
   btrfs-progs\
   grub\
   efibootmgr\
