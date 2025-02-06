@@ -56,7 +56,7 @@ language_menu () {
 configure_asdf() {
     local asdf_username="$1"
     local build_path="/home/$asdf_username/.asdf"
-    local shell_path="$(getent passwd "$term_username" | cut -d: -f7)"
+    local shell_path="$(getent passwd "$asdf_username" | cut -d: -f7)"
 
     if ! check_folder_exists "$build_path"; then
         commands_to_run=()
