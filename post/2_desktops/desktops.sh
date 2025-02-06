@@ -80,7 +80,7 @@ install_gdm() {
 }
 
 install_lightdm() {
-    install_pacman_packages lightdm
+    install_pacman_packages lightdm lightdm-gtk-greeter
     commands_to_run=("systemctl enable lightdm.service")
     live_command_output "" "" "yes" "Installing selected GUI DM: LightDM" "${commands_to_run[@]}"
     continue_script 2 "Installed lightdm DM" "Installed the lightdm DM."
@@ -105,12 +105,12 @@ install_greetd() {
 ################################################################################
 
 install_budgie() {
-    install_pacman_packages budgie lightdm-gtk-greeter budgie-desktop-view budgie-backgrounds network-manager-applet arc-gtk-theme papirus-icon-theme
+    install_pacman_packages budgie budgie-desktop-view budgie-backgrounds network-manager-applet arc-gtk-theme papirus-icon-theme
     continue_script 2 "Installed budgie" "Installed the budgie DE."
 }
 
 install_cinnamon() {
-    install_pacman_packages cinnamon xed xreader metacity gnome-shell gnome-keyring
+    install_pacman_packages cinnamon xed xreader metacity gnome-keyring
     continue_script 2 "Installed cinnamon" "Installed the cinnamon DE."
 }
 
@@ -120,7 +120,7 @@ install_cosmic() {
 }
 
 install_cutefish() {
-    install_pacman_packages cutefish sddm
+    install_pacman_packages cutefish
     continue_script 2 "Installed cutefish" "Installed the cutefish DE."
 }
 
@@ -135,12 +135,12 @@ install_gnome() {
 }
 
 install_gnome_flashback() {
-    install_pacman_packages gnome-flashback gnome-applets sensors-applet gdm
+    install_pacman_packages gnome-flashback gnome-applets sensors-applet
     continue_script 2 "Installed gnome flashback" "Installed the gnome flashback DE."
 }
 
 install_kde_plasma() {
-    install_pacman_packages plasma kde-applications-meta sddm
+    install_pacman_packages plasma kde-applications-meta
     continue_script 2 "Installed kde plasma" "Installed the kde plasma DE."
 }
 
@@ -153,12 +153,12 @@ install_lxqt() {
 }
 
 install_mate() {
-    install_pacman_packages mate mate-extra lightdm
+    install_pacman_packages mate mate-extra
     continue_script 2 "Installed mate" "Installed the mate DE."
 }
 
 install_pantheon() {
-    install_pacman_packages pantheon lightdm
+    install_pacman_packages pantheon
     continue_script 2 "Installed pantheon" "Installed the pantheon DE."
 }
 
