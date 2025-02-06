@@ -235,12 +235,12 @@ live_command_output() {
     kill "$dialog_pid" 2>/dev/null
 
     if [[ "$show_logs" == "yes" ]]; then
-        # scroll_window_output "$(terminal_title "$script_name finished and the logs are:")" "$combined_log"
-        tail -f "$combined_log" | dialog\
-        --backtitle "Viewing logs"\
-        --title "Logs" \
-        --textbox "" \
-        $full_height $full_width
+        scroll_window_output "$(terminal_title "$script_name finished and the logs are:")" "$combined_log"
+        # tail -f "$combined_log" | dialog\
+        # --backtitle "Viewing logs"\
+        # --title "Logs" \
+        # --textbox "" \
+        # $full_height $full_width
     fi
 
     handle_exit_code "$exit_code" "return"
