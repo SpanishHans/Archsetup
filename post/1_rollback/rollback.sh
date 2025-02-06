@@ -50,12 +50,12 @@ configure_snapper() {
     commands_to_run+=("systemctl daemon-reload")
     
     live_command_output "" "" "Configuring Snapper for rollbacks" "${commands_to_run[@]}"
-    continue_script 1 "Snapper" "Snapper setup complete!"
+    continue_script 2 "Snapper" "Snapper setup complete!"
 }
 
 configure_snap_pac() {
     install_pacman_packages snap-pac
-    continue_script 1 "Snap-pac" "Snap-pac setup complete!"
+    continue_script 2 "Snap-pac" "Snap-pac setup complete!"
 }
 
 configure_snapper_rollback() {
@@ -72,7 +72,7 @@ configure_snapper_rollback() {
             echo \"mountpoint entry not found in /etc/snapper-rollback.conf\"
         fi")
     live_command_output "" "" "Configuring snapper-rollback" "${commands_to_run[@]}"
-    continue_script 1 "Snapper-rollback complete" "Snapper-rollback setup complete!"
+    continue_script 2 "Snapper-rollback complete" "Snapper-rollback setup complete!"
 }
 
 configure_snp() {

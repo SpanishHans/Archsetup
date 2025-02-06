@@ -72,7 +72,9 @@ change_admin_privs() {
     done
 
     if [[ "$sudo_access" == "y" ]]; then
-        usermod -aG wheel "$username" && continue_script 1 "$username is now admin" "User $username now has admin privileges."
+        usermod -aG wheel "$username" && continue_script 2 "$username is now admin" "User $username now has admin privileges."
+    else
+        continue_script 1 "User not wheel" "User $username is not wheel."
     fi
 }
 
@@ -97,7 +99,7 @@ create_user() {
         elif [[ ! "${username}" =~ ${username_pattern} ]]; then
             continue_script 2 "Invalid characters" 'Sorry, the username can only contain letters, numbers, dots, underscores, or dashes.'
         elif (( ${#username} < min_length )); then
-            continue_script 2 1se_script "Username too short" "Sorry, the username must be at least ${min_length} characters long."
+            continue_script 2 "Username too short" "Sorry, the username must be at least ${min_length} characters long."
         elif (( ${#username} > max_length )); then
             continue_script 2 "Username too long" "Sorry, the username must be no more than ${max_length} characters long."
         else
