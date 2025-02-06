@@ -69,7 +69,7 @@ install_flatpak_zen() {
     else
         commands_to_run=()
         commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
-        live_command_output "$user" "$pass" "yes" "Installing Zen Browser" "${commands_to_run[@]}"
+        live_command_output "" "" "yes" "Installing Zen Browser" "${commands_to_run[@]}"
     fi
 }
 
@@ -82,7 +82,7 @@ install_flatpak_zed () {
     else
         commands_to_run=()
         commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
-        live_command_output "$user" "$pass" "yes" "Installing Zed editor" "${commands_to_run[@]}"
+        live_command_output "" "" "yes" "Installing Zed editor" "${commands_to_run[@]}"
     fi
 }
 
@@ -95,7 +95,7 @@ install_flatpak_vscode () {
     else
         commands_to_run=()
         commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
-        live_command_output "$user" "$pass" "yes" "Installing Visual Studio Code" "${commands_to_run[@]}"
+        live_command_output "" "" "yes" "Installing Visual Studio Code" "${commands_to_run[@]}"
     fi
 }
 
@@ -108,7 +108,7 @@ install_flatpak_spotify () {
     else
         commands_to_run=()
         commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
-        live_command_output "$user" "$pass" "yes" "Installing Spotify" "${commands_to_run[@]}"
+        live_command_output "" "" "yes" "Installing Spotify" "${commands_to_run[@]}"
     fi
 }
 
@@ -121,7 +121,7 @@ install_flatpak_discord () {
     else
         commands_to_run=()
         commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
-        live_command_output "$user" "$pass" "yes" "Installing Discord" "${commands_to_run[@]}"
+        live_command_output "" "" "yes" "Installing Discord" "${commands_to_run[@]}"
     fi
 }
 
