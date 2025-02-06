@@ -15,11 +15,12 @@
 # the License.
 
 source ./commons.sh
-source ./post/users.sh
+source ./post/0_users/users.sh
+source ./post/4_software/pacman.sh
 
 configure_git() {
+    install_pacman_packages git
     commands_to_run=()
-    commands_to_run+=("pacman --noconfirm -S git")
 
     get_users userlist
     input_text\

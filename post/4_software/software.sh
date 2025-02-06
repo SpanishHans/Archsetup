@@ -15,8 +15,8 @@
 # the License.
 
 source ./commons.sh
-source ./post/aur.sh
-source ./post/flatpak.sh
+source ./post/4_software/aur.sh
+source ./post/4_software/flatpak.sh
 
 software_menu() {
     local title="Install extra software"

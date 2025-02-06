@@ -15,6 +15,8 @@
 # the License.
 
 source ./commons.sh
+source ./post/0_users/users.sh
+source ./post/4_software/pacman.sh
 
 nvidia_menu () {
     
@@ -36,10 +38,10 @@ nvidia_menu () {
 }
 
 dkms_driver () {
+    install_pacman_packages base-devel linux-headers nvidia-open-dkms nvidia-utils nvidia-settings
     commands_to_run=()
-    commands_to_run+=("pacman --noconfirm -S base-devel linux-headers nvidia-open-dkms nvidia-utils nvidia-settings")
 
-        commands_to_run+=('
+    commands_to_run+=('
         mkinitcpio_conf="/etc/mkinitcpio.conf"
         nvidia_modules="nvidia nvidia_modeset nvidia_uvm nvidia_drm"
 

@@ -15,7 +15,8 @@
 # the License.
 
 source ./commons.sh
-source ./post/pacman.sh
+source ./post/0_users/users.sh
+source ./post/4_software/pacman.sh
 
 rollback_menu() {
     local title="BTRFS Rollback Configurator"

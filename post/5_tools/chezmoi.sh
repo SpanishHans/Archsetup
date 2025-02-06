@@ -15,8 +15,8 @@
 # the License.
 
 source ./commons.sh
-source ./post/pacman.sh
-source ./post/aur.sh
+source ./post/0_users/users.sh
+source ./post/4_software/pacman.sh
 
 chezmoi_menu() {
     install_pacman_packages chezmoi

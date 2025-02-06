@@ -15,8 +15,9 @@
 # the License.
 
 source ./commons.sh
-source ./post/chezmoi.sh
-source ./post/users.sh
+source ./post/0_users/users.sh
+source ./post/5_tools/chezmoi.sh
+source ./post/5_tools/git.sh
 
 
 configure_clipboard() {

@@ -15,7 +15,8 @@
 # the License.
 
 source ./commons.sh
-source ./post/users.sh
+source ./post/0_users/users.sh
+source ./post/4_software/pacman.sh
 
 language_menu () {
     local title='Programming Language Installation with ASDF'
