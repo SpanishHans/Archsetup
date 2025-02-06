@@ -215,7 +215,8 @@ live_command_output() {
         if [ $exit_code -eq 0 ]; then
             terminal_title "Done, press enter" >> "$combined_log"
         fi
-    } &
+        sleep 2
+    }
 
     tail -f "$combined_log" | dialog \
         --backtitle "$script_name on live viewer" \
