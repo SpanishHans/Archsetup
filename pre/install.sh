@@ -53,7 +53,7 @@ else
 fi
 
 continue_script 'Installing base system' 'Installing the base system (it may take a while).'
-commands_to_run+=("pacstrap /mnt \
+commands_to_run+=("pacstrap /mnt\
   base\
   linux\
   linux-firmware\

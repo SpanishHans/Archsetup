@@ -16,8 +16,8 @@
 
 source ./commons.sh
 
-source ./pre/ext4_config.sh
-source ./pre/btrfs_config.sh
+source ./pre/0_disk/ext4_config.sh
+source ./pre/0_disk/btrfs_config.sh
 
 choose_custom_or_default_layout() {
     local title="Entered disk setup!" 
