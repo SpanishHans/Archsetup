@@ -21,6 +21,8 @@ source ./post/4_software/pacman.sh
 rollback_menu() {
     local title="BTRFS Rollback Configurator"
     local description="This script simplifies the process of setting up rollback support with BTRFS. It requires BTRFS for managing snapshots and rollback functionality. Select an option to proceed."
+    local user=USER_WITH_SUDO_USER
+    local pass=USER_WITH_SUDO_PASS
 
     while true; do
         local options=(\
@@ -34,8 +36,8 @@ rollback_menu() {
         case $build_choice in
             0)  configure_snapper;;
             1)  configure_snap_pac;;
-            3)  configure_snapper_rollback "sysadmin";;
-            2)  configure_snp "sysadmin";;
+            3)  configure_snapper_rollback "$user" "$pass";;
+            2)  configure_snp "$user" "$pass";;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again.";;
         esac
@@ -61,7 +63,8 @@ configure_snap_pac() {
 
 configure_snapper_rollback() {
     local user="$1"
-    install_aur_package "$user" "https://aur.archlinux.org/snapper-rollback.git"
+    local pass="$2"
+    install_aur_package "$user" "$pass" "https://aur.archlinux.org/snapper-rollback.git"
 
 
     commands_to_run=()
@@ -78,5 +81,6 @@ configure_snapper_rollback() {
 
 configure_snp() {
     local user="$1"
-    install_aur_package "$user" "https://aur.archlinux.org/snp.git"
+    local pass="$2"
+    install_aur_package "$user" "$pass" "https://aur.archlinux.org/snp.git"
 }

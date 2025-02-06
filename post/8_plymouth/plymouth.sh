@@ -22,6 +22,8 @@ plymouth_menu () {
     install_pacman_packages plymouth
     local title='Plymouth Theme Installation'
     local description="This script helps you install and set up Plymouth themes for a stylish startup animation."
+    local user=USER_WITH_SUDO_USER
+    local pass=USER_WITH_SUDO_PASS
 
     while true; do
         local options=(\
@@ -34,10 +36,10 @@ plymouth_menu () {
         )
         menu_prompt plymouth_menu_choice "$title" "$description" "${options[@]}"
         case $plymouth_menu_choice in
-            0)  theme_connect "sysadmin";;
-            1)  theme_deus_ex "sysadmin";;
-            2)  theme_lone "sysadmin";;
-            3)  theme_red_loader "sysadmin";;
+            0)  theme_connect "$user" "$pass";;
+            1)  theme_deus_ex "$user" "$pass";;
+            2)  theme_lone "$user" "$pass";;
+            3)  theme_red_loader "$user" "$pass";;
             3)  regen_cpio;;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
@@ -65,7 +67,8 @@ regen_cpio() {
 
 theme_connect() {
     local user="$1"
-    install_aur_package "$user" "https://aur.archlinux.org/plymouth-themes-adi1090x-pack1-git.git"
+    local pass="$2"
+    install_aur_package "$user" "$pass" "https://aur.archlinux.org/plymouth-themes-adi1090x-pack1-git.git"
     commands_to_run=("plymouth-set-default-theme -R connect")
 
     live_command_output "" "" "yes" "Installing selected plymouth theme: connect""${commands_to_run[@]}"
@@ -74,7 +77,8 @@ theme_connect() {
 
 theme_deus_ex() {
     local user="$1"
-    install_aur_package "$user" "https://aur.archlinux.org/plymouth-themes-adi1090x-pack2-git.git"
+    local pass="$2"
+    install_aur_package "$user" "$pass" "https://aur.archlinux.org/plymouth-themes-adi1090x-pack2-git.git"
     commands_to_run+=("plymouth-set-default-theme -R deus_ex")
 
     live_command_output "" "" "yes" "Installing selected plymouth theme: deus ex""${commands_to_run[@]}"
@@ -83,7 +87,8 @@ theme_deus_ex() {
 
 theme_lone() {
     local user="$1"
-    install_aur_package "$user" "https://aur.archlinux.org/plymouth-themes-adi1090x-pack3-git.git"
+    local pass="$2"
+    install_aur_package "$user" "$pass" "https://aur.archlinux.org/plymouth-themes-adi1090x-pack3-git.git"
     commands_to_run+=("plymouth-set-default-theme -R lone")
 
     live_command_output "" "" "yes" "Installing selected plymouth theme: lone""${commands_to_run[@]}"
@@ -92,7 +97,8 @@ theme_lone() {
 
 theme_red_loader() {
     local user="$1"
-    install_aur_package "$user" "https://aur.archlinux.org/plymouth-themes-adi1090x-pack4-git.git"
+    local pass="$2"
+    install_aur_package "$user" "$pass" "https://aur.archlinux.org/plymouth-themes-adi1090x-pack4-git.git"
     commands_to_run+=("plymouth-set-default-theme -R red_loader")
 
     live_command_output "" "" "yes" "Installing selected plymouth theme: red loader""${commands_to_run[@]}"

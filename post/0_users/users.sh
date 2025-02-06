@@ -109,7 +109,7 @@ create_user() {
         input_text\
             username\
             "New user"\
-            "Menu for creating a new user.\n\n$(get_users)"\
+            "Menu for creating a new user.\n\n$userlist"\
             "Enter the username for the new user: "
     done
     fullname="$(tr '[:lower:]' '[:upper:]' <<< "${username:0:1}")${username:1}"

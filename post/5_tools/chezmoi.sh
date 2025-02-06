@@ -20,6 +20,12 @@ source ./post/4_software/pacman.sh
 
 chezmoi_menu() {
     install_pacman_packages chezmoi
+    get_users userlist
+    input_text \
+        chezmoi_username \
+        "Chezmoi User to setup" \
+        "Please enter the user whose chezmoi shall be configured\n\n$userlist" \
+        'What user to configure chezmoi for?: '
     local title="Chezmoi Installer"
     local description="This script provides an easy way to install Chezmoi for your system. Select a mode to install Chezmoi with."
 
@@ -32,8 +38,8 @@ chezmoi_menu() {
         )
         menu_prompt tools_menu_choice "$title" "$description" "${options[@]}"
         case $tools_menu_choice in
-            0)  configure_chezmoi_default;;
-            1)  configure_chezmoi_no_default;;
+            0)  configure_chezmoi_default "$chezmoi_username";;
+            1)  configure_chezmoi_no_default "$chezmoi_username";;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
@@ -41,8 +47,8 @@ chezmoi_menu() {
 }
 
 configure_chezmoi_default() {
-    input_text chezmoi_username "Chezmoi User to setup" "Please enter the user whose chezmoi shall be configured" 'What user to configure chezmoi for?: '
-
+    local chezmoi_username="$1"
+    
     # commands_to_run+=("sudo -u \"$chezmoi_username\" bash -c \"chezmoi init https://github.com/SpanishHans/Archsetup\"")
     live_command_output "" "" "yes" "Configuring chezmoi" "${commands_to_run[@]}"
 
@@ -55,14 +61,18 @@ configure_chezmoi_default() {
 }
 
 configure_chezmoi_no_default() {
-    input_text chezmoi_username "Chezmoi User to setup" "Please enter the user whose chezmoi shall be configured" 'What user to configure chezmoi for?: '
-    input_text chezmoi_repo "Chezmoi repo to setup" "Please enter the repo to sync from/to." "Provide the Git repository URL for ChezMoi: "
+    local chezmoi_username="$1"
+    input_text \
+        chezmoi_repo \
+        "Chezmoi repo to setup" \
+        "Please enter the repo to sync from/to." \
+        "Provide the Git repository URL for ChezMoi: "
 
     # commands_to_run+=("sudo -u \"$chezmoi_username\" bash -c \"chezmoi init https://github.com/SpanishHans/Archsetup\"")
     live_command_output "" "" "yes" "Configuring chezmoi" "${commands_to_run[@]}"
 
     commands_to_run=()
-    commands_to_run+=("chezmoi init https://github.com/SpanishHans/Archsetup")
+    commands_to_run+=("chezmoi init \"$chezmoi_repo\"")
     commands_to_run+=("mv /home/$chezmoi_username/.local/share/chezmoi/* /home/$chezmoi_username/.config/")
     live_command_output "$chezmoi_username" "" "yes" "Configuring chezmoi" "${commands_to_run[@]}"
 

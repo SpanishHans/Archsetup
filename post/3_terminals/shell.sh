@@ -67,15 +67,14 @@ configure_fisher() {
 
 shells_menu() {
     get_users userlist
-
     input_text\
-        term_username\
+        shell_username\
         "User to change shell for."\
         "Select shells for a given user. Please select the user whose shell shall be configured.\n\n$userlist"\
-        "What user to configure terminal for?: "
+        "What user to configure shell for?: "
     input_pass\
-        term_pass\
-        "$term_username"
+        shell_pass\
+        "$shell_username"
 
     title="Shell configurator: pick shell"
     description="Please select a shell from the menu below."
@@ -91,12 +90,12 @@ shells_menu() {
         )
         menu_prompt shell_choice "$title" "$description" "${options[@]}"
         case $shell_choice in
-            0)  configure_bash;;
-            1)  configure_zsh;;
-            2)  configure_fish;;
-            3)  configure_elvish;;
-            4)  configure_tcsh;;
-            5)  configure_nushell;;
+            0)  configure_bash "$shell_username" "$shell_pass";;
+            1)  configure_zsh "$shell_username" "$shell_pass";;
+            2)  configure_fish "$shell_username" "$shell_pass";;
+            3)  configure_elvish "$shell_username" "$shell_pass";;
+            4)  configure_tcsh "$shell_username" "$shell_pass";;
+            5)  configure_nushell "$shell_username" "$shell_pass";;
             b)  break;;
             *)  echo "Invalid option. Please try again.";;
         esac
@@ -105,6 +104,7 @@ shells_menu() {
 
 configure_bash() {
     local term_user="$1"
+    local term_pass="$2"
 
     install_pacman_packages bash
     local commands_to_run=()
@@ -132,6 +132,7 @@ configure_bash() {
 
 configure_zsh() {
     local term_user="$1"
+    local term_pass="$2"
 
     install_pacman_packages zsh
     local commands_to_run=()
@@ -159,6 +160,7 @@ configure_zsh() {
 
 configure_fish() {
     local term_user="$1"
+    local term_pass="$2"
 
     install_pacman_packages fish
     local commands_to_run=()
@@ -186,6 +188,7 @@ configure_fish() {
 
 configure_elvish() {
     local term_user="$1"
+    local term_pass="$2"
 
     install_pacman_packages elvish
     local commands_to_run=()
@@ -198,6 +201,7 @@ configure_elvish() {
 
 configure_tcsh() {
     local term_user="$1"
+    local term_pass="$2"
 
     install_pacman_packages tcsh
     local commands_to_run=()
@@ -210,6 +214,7 @@ configure_tcsh() {
 
 configure_nushell() {
     local term_user="$1"
+    local term_pass="$2"
 
     install_pacman_packages nushell
     local commands_to_run=()

@@ -42,6 +42,12 @@ Exiting!!!"
 fi
 
 configure_menu () {
+    input_pass\
+        sysadmin_password\
+        "sysadmin"
+    export USER_WITH_SUDO_USER="sysadmin"
+    export USER_WITH_SUDO_PASS="$sysadmin_password"
+
     local title="Configure your PC after install"
     local description="Welcome to the menu for setting things up after install. Here you can find a lot of utilities to make the process of setting your pc as easy as possible."
 

@@ -45,7 +45,7 @@ install_aur_package () {
     local user="$1"
     local pass="$2"
     local url="$3"
-    install_without_paru \"$user\" \"$pass\" \"$url\"
+    install_without_paru "$user" "$pass" "$url"
 }
 
 install_with_paru () {
