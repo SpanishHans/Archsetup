@@ -34,10 +34,10 @@ sysadmin_password_prompt () {
 
 user_setup () {
     clear
-    continue_script 2 "Entered root user setup!" "The following section will help you configure the password for the root user."
+    continue_script 1 "Entered root user setup!" "The following section will help you configure the password for the root user."
     root_password_prompt root_password
 
-    continue_script 2 "Entered sysadmin user setup!" "The following section will help you configure the password for the sysadmin user."
+    continue_script 1 "Entered sysadmin user setup!" "The following section will help you configure the password for the sysadmin user."
     sysadmin_password_prompt sysadmin_password
 
     masked_root_password="${root_password:0:1}*******${root_password: -1}"
@@ -45,7 +45,7 @@ user_setup () {
     export root_password
     export masked_sysadmin_password
 
-    continue_script 2 'Root user confirmation' "Username:    root
+    continue_script 4 'Root user confirmation' "Username:    root
 Root     Password:    $masked_root_password
 Sysadmin Password:    $masked_sysadmin_password"
 }

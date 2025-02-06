@@ -39,7 +39,7 @@ networking_setup() {
 EOF
 
     export hostname
-    continue_script 2 'Hostname' "Hostname:    $(</mnt/etc/hostname)
+    continue_script 4 'Hostname' "Hostname:    $(</mnt/etc/hostname)
 Hosts:
 
 $(</mnt/etc/hosts)"

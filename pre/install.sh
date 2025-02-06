@@ -109,46 +109,46 @@ step_1_locales(){
     echo '#### STARTING 1. #### ->> Time and locales'
     ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
     hwclock --systohc
-    locale-gen
+    locale-gen || { echo 'locale-gen failed'; exit 1; }
 }
 
 step_2_network(){
     echo '#### STARTING 2. #### ->> Enabling NetworkManager'
-    systemctl enable NetworkManager
+    systemctl enable NetworkManager || { echo 'NetworkManager enabling failed'; exit 1; }
 }
 
 step_3_passwords(){
     echo '#### STARTING 3. #### ->> Users and passwords'
-    useradd -c "Sysadmin" -m sysadmin
-    echo "root:$root_password" | chpasswd
-    echo "sysadmin:$sysadmin_password" | chpasswd
+    useradd -c "Sysadmin" -m sysadmin || { echo 'useradd failed'; exit 1; }
+    echo "root:$root_password" | chpasswd || { echo 'root password set failed'; exit 1; }
+    echo "sysadmin:$sysadmin_password" | chpasswd || { echo 'sysadmin password set failed'; exit 1; }
 }
 
 step_4_pacman_color(){
     echo '#### STARTING 4. #### ->> Configure pacman color'
-    sed -i 's/^#Color/Color/' /etc/pacman.conf
+    sed -i 's/^#Color/Color/' /etc/pacman.conf || { echo 'Failed to configure pacman color'; exit 1; }
 }
 
 step_5_sudoers(){
     echo '#### STARTING 5. #### ->> Configure sudoers'
-    sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /etc/sudoers
+    sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /etc/sudoers || { echo 'Failed to configure sudoers'; exit 1; }
 }
 
 step_6_quiet_splash(){
     echo '#### STARTING 6. #### ->> No timeout grub and quiet splash'
-    sed -i 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/' /etc/default/grub
-    sed -i 's/^\\(GRUB_CMDLINE_LINUX_DEFAULT=\\)\".*\"/\\1\"quiet splash\"/' /etc/default/grub
+    sed -i 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/' /etc/default/grub || { echo 'Failed to set GRUB timeout'; exit 1; }
+    sed -i 's/^\(GRUB_CMDLINE_LINUX_DEFAULT=\)\".*\"/\1\"quiet splash\"/' /etc/default/grub || { echo 'Failed to set GRUB quiet splash'; exit 1; }
 }
 
 step_7_initramfs(){
     echo '#### STARTING 7. #### ->> Initramfs'
-    mkinitcpio -P || {echo 'mkinitcpio failed'; exit;}
+    mkinitcpio -P || { echo 'mkinitcpio failed during initramfs creation'; exit 1; }
 }
 
 step_8_grub(){
     echo '#### STARTING 8. #### ->> grub-install'
-    grub-install --target=x86_64-efi --efi-directory=/efi --boot-directory=/boot --bootloader-id=GRUB || {echo 'grub-install failed'; exit 1;}
-    grub-mkconfig -o /boot/grub/grub.cfg || { echo 'grub-mkconfig failed'; exit 1;}
+    grub-install --target=x86_64-efi --efi-directory=/efi --boot-directory=/boot --bootloader-id=GRUB || { echo 'grub-install failed'; exit 1; }
+    grub-mkconfig -o /boot/grub/grub.cfg || { echo 'grub-mkconfig failed'; exit 1; }
 }
 
 commands_to_run=()
