@@ -64,7 +64,7 @@ Provide its password."
             "Desktop Environments            (Desktop UI / Window managers)" \
             "Customize terminal              (Customize terminal framework and style)" \
             "Install software                (Install common software from Flatpak or AUR.)" \
-            "Extra tools and utils           (Git, terminal, flatpak, fonts)" \
+            "Extra tools and utils           (Git, chezmoi, multi clipboard)" \
             "Virtualization                  (Docker, Virtualbox, virt-manager, LXC)" \
             "Programming languages           (Python, Javascript, Java, C, Rust)" \
             "Plymouth                        (Startup animation)" \
