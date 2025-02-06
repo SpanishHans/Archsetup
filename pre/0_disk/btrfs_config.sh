@@ -85,14 +85,14 @@ mount_btrfs() {
     commands_to_run+=("mount -o nodev,nosuid,noexec \"${EFI_PART}\" /mnt/efi")
     continue_script 5 "Finished BTRFS setup" "Finished mouting BTRFS and all of its required structure.
 
-    @ has /
-    @home has /home
-    @snapshots has /.snapshots
-    subvolid 5 has /.btrfsroot
+@ has /
+@home has /home
+@snapshots has /.snapshots
+subvolid 5 has /.btrfsroot
 
-    Additionally:
-    
-    $(printf "%s\n" "${options[@]}")"
+Additionally:
+
+$(printf "%s\n" "${options[@]}")"
 }
 
 run_btrfs_setup() {
