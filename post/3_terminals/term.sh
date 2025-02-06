@@ -52,25 +52,19 @@ terminals_menu() {
 
 configure_kitty() {
     install_pacman_packages kitty
-    continue_script 2 "Kitty installed" "Kitty installed correctly"
 }
 configure_alacritty() {
     install_pacman_packages alacritty
-    continue_script 2 "Alacritty installed" "Alacritty installed correctly"
 }
 configure_terminator() {
     install_pacman_packages terminator
-    continue_script 2 "Terminator installed" "Terminator installed correctly"
 }
 configure_tilix() {
     install_pacman_packages tilix
-    continue_script 2 "Tilix installed" "Tilix installed correctly"
 }
 configure_gnome_terminal() {
     install_pacman_packages gnome-terminal
-    continue_script 2 "Gnome-terminal installed" "Gnome-terminal installed correctly"
 }
 configure_konsole() {
     install_pacman_packages konsole
-    continue_script 2 "Konsole installed" "Konsole installed correctly"
 }
