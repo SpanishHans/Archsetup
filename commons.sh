@@ -217,10 +217,10 @@ live_command_output() {
         fi
     } &
 
-    dialog \
+    tail -f "$combined_log" | dialog \
         --backtitle "$script_name on live viewer" \
-        --programbox "tail -f $combined_log" \
-        "$full_height" "$full_width" 2>&1 >/dev/tty &
+        --programbox "" "$full_height" "$full_width" 2>&1 >/dev/tty &
+
 
     dialog_pid=$!
     wait
