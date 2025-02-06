@@ -78,11 +78,10 @@ mount_btrfs() {
         local options+=("$key has $path")
     done
 
-    
-    live_command_output "" "" "yes" "Configuring BTRFS volumes on $ROOT_PART" "${commands_to_run[@]}"
-
     commands_to_run+=("mkdir -p /mnt/efi")
     commands_to_run+=("mount -o nodev,nosuid,noexec \"${EFI_PART}\" /mnt/efi")
+    live_command_output "" "" "yes" "Configuring BTRFS volumes on $ROOT_PART" "${commands_to_run[@]}"
+    
     continue_script 5 "Finished BTRFS setup" "Finished mouting BTRFS and all of its required structure.
 
 @          has /
