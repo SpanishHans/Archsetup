@@ -24,7 +24,7 @@ install_pacman_packages() {
         if ! check_command_exists "$package"; then
             packages_to_install+=("$package")
         else
-            continue_script 1 "No" "No exists."
+            continue_script 1 "Package $package exists" "$package is already installed."
         fi
     done
 
