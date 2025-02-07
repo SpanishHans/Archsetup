@@ -59,6 +59,7 @@ check_command_exists() {
     local comm="$1"
 
     if command -v "$1" >/dev/null 2>&1; then
+        continue_script 1 "$comm exists" "$comm is already on system."
         return 0
     else
         return 1
