@@ -125,6 +125,71 @@ install_flatpak_discord () {
     fi
 }
 
+install_flatpak_gimp () {
+    local user="$1"
+    local pass="$2"
+    local app_id="org.gimp.GIMP"
+    if check_flatpak_installed "$app_id"; then
+        continue_script 2 "Gimp already installed" "Gimp is already installed."
+    else
+        commands_to_run=()
+        commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
+        live_command_output "" "" "yes" "Installing Discord" "${commands_to_run[@]}"
+    fi
+}
+
+install_flatpak_inkscape () {
+    local user="$1"
+    local pass="$2"
+    local app_id="org.inkscape.Inkscape"
+    if check_flatpak_installed "$app_id"; then
+        continue_script 2 "Inkscape already installed" "Inkscape is already installed."
+    else
+        commands_to_run=()
+        commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
+        live_command_output "" "" "yes" "Installing Discord" "${commands_to_run[@]}"
+    fi
+}
+
+install_flatpak_blender () {
+    local user="$1"
+    local pass="$2"
+    local app_id="org.blender.Blender"
+    if check_flatpak_installed "$app_id"; then
+        continue_script 2 "Blender already installed" "Blender is already installed."
+    else
+        commands_to_run=()
+        commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
+        live_command_output "" "" "yes" "Installing Discord" "${commands_to_run[@]}"
+    fi
+}
+
+install_flatpak_rnote () {
+    local user="$1"
+    local pass="$2"
+    local app_id="com.github.flxzt.rnote"
+    if check_flatpak_installed "$app_id"; then
+        continue_script 2 "Rnote already installed" "Rnote is already installed."
+    else
+        commands_to_run=()
+        commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
+        live_command_output "" "" "yes" "Installing Discord" "${commands_to_run[@]}"
+    fi
+}
+
+install_flatpak_kden_live () {
+    local user="$1"
+    local pass="$2"
+    local app_id="org.kde.kdenlive"
+    if check_flatpak_installed "$app_id"; then
+        continue_script 2 "Kden Live already installed" "Kden Live is already installed."
+    else
+        commands_to_run=()
+        commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
+        live_command_output "" "" "yes" "Installing Discord" "${commands_to_run[@]}"
+    fi
+}
+
 install_all_flatpaks () {
     local user="$1"
     local pass="$2"
@@ -132,5 +197,9 @@ install_all_flatpaks () {
     install_flatpak_zed "$user" "$pass"
     install_flatpak_vscode "$user" "$pass"
     install_flatpak_spotify "$user" "$pass"
-    install_flatpak_discord "$user" "$pass"
+    install_flatpak_gimp "$user" "$pass"
+    install_flatpak_inkscape "$user" "$pass"
+    install_flatpak_blender "$user" "$pass"
+    install_flatpak_rnote "$user" "$pass"
+    install_flatpak_kden_live "$user" "$pass"
 }
