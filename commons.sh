@@ -63,6 +63,7 @@ check_command_exists() {
         return 0
     else
         return 1
+        pause_script "" "$comm does not exists"
     fi
 }
 
