@@ -21,7 +21,7 @@ install_pacman_packages() {
     local packages_to_install=()
 
     for package in "${packages[@]}"; do
-        if check_command_exists "$package"; then
+        if ! check_command_exists "$package"; then
             packages_to_install+=("$package")
         else
             continue_script 1 "No" "No exists."
