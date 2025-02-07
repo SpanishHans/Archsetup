@@ -58,10 +58,14 @@ check_file_exists() {
 check_command_exists() {
     local comm="$1"
 
-    if command -v "$comm" >/dev/null 2>&1; then
-        return 0
+    if command -v "$comm" >/dev/null; then
+        if pacman -Qqo "$(command -v "$comm")" >/dev/null 2>&1; then
+            return 0  # Installed via pacman
+        else
+            return 2  # Exists, but not installed via pacman
+        fi
     else
-        return 1
+        return 1  # Not installed
     fi
 }
 
