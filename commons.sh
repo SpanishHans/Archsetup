@@ -56,14 +56,11 @@ check_file_exists() {
 }
 
 check_command_exists() {
-    local comm="$1"
-
-    if command -v "$comm" &>/dev/null; then
-        return 0
-    else
-        return 1
-    fi
+    command -v "$1" &>/dev/null && return 0
+    pacman -Qqo "$1" &>/dev/null && return 0
+    return 1
 }
+
 
 check_live_env
 check_dialog
