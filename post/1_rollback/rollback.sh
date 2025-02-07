@@ -36,8 +36,8 @@ rollback_menu() {
         case $build_choice in
             0)  configure_snapper;;
             1)  configure_snap_pac;;
-            3)  configure_snapper_rollback "$user" "$pass";;
-            2)  configure_snp "$user" "$pass";;
+            2)  configure_snapper_rollback "$user" "$pass";;
+            3)  configure_snp "$user" "$pass";;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again.";;
         esac

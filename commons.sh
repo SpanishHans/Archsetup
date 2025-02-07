@@ -59,11 +59,9 @@ check_command_exists() {
     local comm="$1"
 
     if command -v "$comm" &>/dev/null; then
-        pause_script "" "$comm exists"
         return 0
     else
         return 1
-        pause_script "" "$comm does not exists"
     fi
 }
 
