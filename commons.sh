@@ -62,6 +62,7 @@ check_command_exists() {
         continue_script 1 "$comm exists" "$comm is already on system."
         return 0
     else
+        continue_script 1 "$comm exists" "not on system."
         return 1
     fi
 }
