@@ -30,6 +30,7 @@ rollback_menu() {
             "Install snap-pac                    (Snaps for pacman commands)"\
             "Install snapper-rollback            (tool for autorollback from snaps)"\
             "Install snp                         (Snaps whenever user wants)"\
+            "Clean fstab                         (Clean fstab from comments)"\
             "Back"
         )
         menu_prompt build_choice "$title" "$description" "${options[@]}"
@@ -38,10 +39,15 @@ rollback_menu() {
             1)  configure_snap_pac;;
             2)  configure_snapper_rollback "$user" "$pass";;
             3)  configure_snp "$user" "$pass";;
+            4)  clean_fstab;;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again.";;
         esac
     done
+}
+
+clean_fstab() {
+    sed -i '/^#.*\/dev\//d' /etc/fstab && sed -i '/^[[:space:]]*$/d' /etc/fstab
 }
 
 configure_snapper() {
