@@ -47,7 +47,6 @@ rollback_menu() {
 configure_snapper() {
     install_pacman_packages snapper
     commands_to_run=()
-    commands_to_run+=("sed -i '/^#.*\\/dev\\//d' /etc/fstab && sed -i '/^[[:space:]]*$/d' /etc/fstab")
     commands_to_run+=("umount /.snapshots && rm -rf /.snapshots && snapper -c root create-config /")
     commands_to_run+=("mount -a")
     commands_to_run+=("systemctl daemon-reload")
