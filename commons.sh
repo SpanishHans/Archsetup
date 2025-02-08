@@ -236,9 +236,7 @@ live_command_output() {
 
 
     dialog_pid=$!
-    wait
-    
-    kill "$dialog_pid" 2>/dev/null
+    wait "$dialog_pid"
 
     if [[ "$show_logs" == "yes" ]]; then
         scroll_window_output "$(terminal_title "$script_name finished and the logs are:")" "$combined_log"
