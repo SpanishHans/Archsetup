@@ -19,7 +19,7 @@ source ./commons.sh
 mount_ext4() {
     
 
-    continue_script "Mounting $ROOT_PART on /mnt" "Mounting $ROOT_PART on /mnt in order to create subvolumes."
+    continue_script "Mounting $ROOT_PART on /mnt" "Mounting $ROOT_PART on /mnt."
 
     mount -o ssd,noatime,compress=zstd "${ROOT_PART}" /mnt
     mount -o nodev,nosuid,noexec "${ESP_PART}" /mnt/efi

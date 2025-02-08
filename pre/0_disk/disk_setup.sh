@@ -321,7 +321,7 @@ start_disk_setup() {
     clear
     choose_custom_or_default_layout
     if [ $? -ne 0 ]; then
-        echo "Failed to choose layout."
+        continue_script 2 "Failed" "Failed to choose layout."
         return 1
     fi
 
