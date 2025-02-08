@@ -169,14 +169,16 @@ Failed Command: $wrapped_cmd\n\
 
 scroll_window_output() {
     local prompt="$1"
-    local file="$1"
-    content="$prompt\n\n$(cat "$file")"
-    echo "$content" | dialog\
-        --backtitle "Viewing logs"\
+    local file="$2"
+    local content="$prompt\n\n$(cat "$file")"
+
+    echo -e "$content" | dialog \
+        --backtitle "Viewing logs" \
         --title "Logs" \
-        --textbox "" \
-        $full_height $full_width
+        --textbox /dev/stdin \
+        "${full_height:-20}" "${full_width:-70}"
 }
+
 
 live_command_output() {
     local user="${1:-root}"
