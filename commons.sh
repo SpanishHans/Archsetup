@@ -219,10 +219,11 @@ live_command_output() {
     {
         for cmd in "${commands[@]}"; do
             execute_command "$cmd" || { 
-            exit_code=$?
-            sleep 2
-            killall dialog
-            break
+                scroll_window_output "$(terminal_title "$script_name Error, the logs are:")" "$combined_log"
+                exit_code=$?
+                sleep 2
+                killall dialog
+                break
         }
         done
 
@@ -241,10 +242,6 @@ live_command_output() {
 
     dialog_pid=$!
     wait "$dialog_pid"
-
-    if [[ "$show_logs" == "yes" ]]; then
-        scroll_window_output "$(terminal_title "$script_name finished and the logs are:")" "$combined_log"
-    fi
 
     handle_exit_code "$exit_code" "return"
 }
