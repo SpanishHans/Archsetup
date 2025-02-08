@@ -33,6 +33,11 @@ flatpak_menu() {
             "Visual Studio Code            (classic code editor)"\
             "Spotify                       (Spotify client)"\
             "Discord                       (Discord client)"\
+            "Gimp                          (Photoshop)"\
+            "Inkscape                      (Illustrator)"\
+            "Blender                       (3D modelling)"\
+            "Rnote                         (Whiteboard)"\
+            "Kden Live                     (Video editor)"\
             "All apps                      (Install all the above)"\
             "Back"
         )
@@ -43,7 +48,12 @@ flatpak_menu() {
             2)  install_flatpak_vscode "$user" "$pass";;
             3)  install_flatpak_spotify "$user" "$pass";;
             4)  install_flatpak_discord "$user" "$pass";;
-            5)  install_all_flatpaks "$user" "$pass";;
+            5)  install_flatpak_gimp "$user" "$pass";;
+            6)  install_flatpak_inkscape "$user" "$pass";;
+            7)  install_flatpak_blender "$user" "$pass";;
+            8)  install_flatpak_rnote "$user" "$pass";;
+            9)  install_flatpak_kden_live "$user" "$pass";;
+            10)  install_all_flatpaks "$user" "$pass";;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again.";;
         esac
