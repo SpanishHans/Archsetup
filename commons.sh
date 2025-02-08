@@ -220,17 +220,16 @@ live_command_output() {
         for cmd in "${commands[@]}"; do
             execute_command "$cmd" || { 
             exit_code=$?
-            sleep 2  # Wait for 2 seconds before killing the dialog
-            kill "$dialog_pid"  # Kill the dialog process
+            sleep 2
+            killall dialog
             break
         }
         done
 
-        # If all commands succeeded, add the "Done" message
         if [ $exit_code -eq 0 ]; then
             terminal_title "Done, continuing to next step!" >> "$combined_log"
-            sleep 2  # Give time for message to be seen
-            killall dialog  # Closes the dialog box
+            sleep 2
+            killall dialog
         fi
     } &
 
@@ -239,7 +238,6 @@ live_command_output() {
         --title "$title" \
         --programbox "" \
         "$full_height" "$full_width" 2>&1 >/dev/tty &
-
 
     dialog_pid=$!
     wait "$dialog_pid"
