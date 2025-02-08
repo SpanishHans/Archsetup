@@ -53,7 +53,7 @@ configure_chezmoi_default() {
     live_command_output "" "" "yes" "Configuring chezmoi" "${commands_to_run[@]}"
 
     commands_to_run=()
-    commands_to_run+=("chezmoi init https://github.com/SpanishHans/Archsetup")
+    commands_to_run+=("chezmoi init https://github.com/SpanishHans/dotfiles")
     commands_to_run+=("cp -r /home/$chezmoi_username/.local/share/chezmoi/* /home/$chezmoi_username/.config/")
     live_command_output "$chezmoi_username" "" "yes" "Configuring chezmoi" "${commands_to_run[@]}"
 
