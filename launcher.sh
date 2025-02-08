@@ -34,7 +34,7 @@ if [ "$USE_DIALOG" = false ]; then
     fi
 fi
 
-mv .dialogrc /root/.dialogrc
+cp -f .dialogrc /root/.dialogrc
 
 launcher_menu () 
 {
