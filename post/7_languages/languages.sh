@@ -130,16 +130,20 @@ configure_asdf() {
                 fi"
             )
             ;;
-        "/bin/tcsh" | "/usr/bin/tcsh")
+        "/bin/nu" | "/usr/bin/nu")
             commands_to_run=()
             commands_to_run+=(
-                "if ! grep -Fxq '. \"\$HOME/.asdf/asdf.sh\"' /home/$asdf_username/.zshrc; then
-                    echo '' >> /home/$asdf_username/.zshrc
-                    echo '. \"\$HOME/.asdf/asdf.sh\"' >> /home/$asdf_username/.zshrc
-                    echo 'fpath=(\${ASDF_DIR}/completions \$fpath)' >> /home/$asdf_username/.zshrc
-                    echo 'autoload -Uz compinit && compinit' >> /home/$asdf_username/.zshrc
+                "if ! grep -Fxq 'let shims_dir = (' /home/$asdf_username/.config/nushell/config.nu; then
+                    echo 'let shims_dir = (' >> /home/$asdf_username/.config/nushell/config.nu
+                    echo '  if ( $env | get --ignore-errors ASDF_DATA_DIR | is-empty ) {' >> /home/$asdf_username/.config/nushell/config.nu
+                    echo '    $env.HOME | path join '.asdf'' >> /home/$asdf_username/.config/nushell/config.nu
+                    echo '  } else {' >> /home/$asdf_username/.config/nushell/config.nu
+                    echo '    $env.ASDF_DATA_DIR' >> /home/$asdf_username/.config/nushell/config.nu
+                    echo '  } | path join 'shims'' >> /home/$asdf_username/.config/nushell/config.nu
+                    echo ')' >> /home/$asdf_username/.config/nushell/config.nu
+                    echo '$env.PATH = ( $env.PATH | split row (char esep) | where { |p| $p != $shims_dir } | prepend $shims_dir )' >> /home/$asdf_username/.config/nushell/config.nu
                 else
-                    echo \"asdf initialization already present in .zshrc\"
+                    echo \"asdf initialization already present in config.nu\"
                 fi"
             )
             ;;
