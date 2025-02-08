@@ -186,14 +186,11 @@ purge_dm() {
     local commands_to_run=()
     all_dms=("ly.service" "lemurs.service" "gdm.service" "lightdm.service" "sddm.service" "greetd.service" "cosmic-greeter.service")
 
-    # Loop to build the disable commands for each display manager
     for dm in "${all_dms[@]}"; do
         commands_to_run+=("systemctl disable $dm")
     done
 
-    # Run the commands with the live_command_output function
     live_command_output "" "" "yes" "Configuring Snapper for rollbacks" "${commands_to_run[@]}"
-
 }
 
 DM_selector() {
