@@ -187,7 +187,8 @@ purge_dm() {
     all_dms=("ly.service" "lemurs.service" "gdm.service" "lightdm.service" "sddm.service" "greetd.service cosmic-greeter.service")
 
     for dm in "${all_dms[@]}"; do
-        systemctl disable "$dm"
+        commands_to_run=(systemctl disable "$dm")
+        live_command_output "" "" "yes" "Configuring Snapper for rollbacks" "${commands_to_run[@]}"
     done
 }
 
