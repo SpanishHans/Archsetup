@@ -30,7 +30,11 @@ nvidia_menu () {
         )
         menu_prompt nvidia_menu_choice "$title" "$description" "${options[@]}"
         case $nvidia_menu_choice in
-            0)  scroll_window_output "System Logs" /var/log/syslog;;
+            0)  scroll_window_output "System Logs" "janvjanvladv
+            addagadg
+            daadgdaga
+            a
+            sdgadga";;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
