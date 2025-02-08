@@ -42,9 +42,9 @@ configure_oh_my_zsh() {
 
     if ! check_folder_exists "$/home/$term_user/.oh-my-zsh"; then
         local commands_to_run=()
-        local commands_to_run+=("git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git /home/$term_user/.oh-my-zsh")
-        local commands_to_run+=("cp /home/$term_user/.zshrc /home/$term_user/.zshrc.orig")
-        local commands_to_run+=("cp /home/$term_user/.oh-my-zsh/templates/zshrc.zsh-template /home/$term_user/.zshrc")
+        commands_to_run+=("git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git /home/$term_user/.oh-my-zsh")
+        commands_to_run+=("cp -f /home/$term_user/.zshrc /home/$term_user/.zshrc.orig")
+        commands_to_run+=("cp -f /home/$term_user/.oh-my-zsh/templates/zshrc.zsh-template /home/$term_user/.zshrc")
         commands_to_run+=("chown -R $bui_user:$bui_user /home/$term_user/.oh-my-zsh")
         commands_to_run+=("chown -R $bui_user:$bui_user /home/$term_user/.zshrc")
         live_command_output "$term_user" "$term_pass" "yes" "Installing ohmyzsh" "${commands_to_run[@]}"
