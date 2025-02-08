@@ -46,8 +46,14 @@ rollback_menu() {
 
 configure_snapper() {
     install_pacman_packages snapper
-    commands_to_run=()
-    commands_to_run+=("umount /.snapshots && rm -rf /.snapshots && snapper -c root create-config /")
+    local commands_to_run=()
+
+    if check_folder_exists "/.snapshots"; then
+        commands_to_run+=("rm -rf /.snapshots")
+    fi
+    commands_to_run+=("mkdir -p /.snapshots")
+    commands_to_run+=("umount /.snapshots && rm -rf /.snapshots")
+    commands_to_run+=("snapper -c root create-config /")
     commands_to_run+=("mount -a")
     commands_to_run+=("systemctl daemon-reload")
     

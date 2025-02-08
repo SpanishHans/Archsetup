@@ -29,7 +29,6 @@ chezmoi_menu() {
     local title="Chezmoi Installer"
     local description="This script provides an easy way to install Chezmoi for your system. Select a mode to install Chezmoi with."
 
-
     while true; do
         local options=(\
             "Chezmoi with default configs              (SpanishHans dotfiles repo)" \
@@ -48,11 +47,13 @@ chezmoi_menu() {
 
 configure_chezmoi_default() {
     local chezmoi_username="$1"
-    
-    # commands_to_run+=("sudo -u \"$chezmoi_username\" bash -c \"chezmoi init https://github.com/SpanishHans/Archsetup\"")
-    live_command_output "" "" "yes" "Configuring chezmoi" "${commands_to_run[@]}"
 
-    commands_to_run=()
+    local commands_to_run=()
+
+    if check_folder_exists "/home/$chezmoi_username/.local/share/chezmoi"; then
+        commands_to_run+=("rm -rf /home/$chezmoi_username/.local/share/chezmoi")
+    fi
+
     commands_to_run+=("chezmoi init https://github.com/SpanishHans/dotfiles")
     commands_to_run+=("cp -rf /home/$chezmoi_username/.local/share/chezmoi/private_dot_config /home/$chezmoi_username/.config/")
     live_command_output "$chezmoi_username" "" "yes" "Configuring chezmoi" "${commands_to_run[@]}"
@@ -68,12 +69,14 @@ configure_chezmoi_no_default() {
         "Please enter the repo to sync from/to." \
         "Provide the Git repository URL for ChezMoi: "
 
-    # commands_to_run+=("sudo -u \"$chezmoi_username\" bash -c \"chezmoi init https://github.com/SpanishHans/Archsetup\"")
-    live_command_output "" "" "yes" "Configuring chezmoi" "${commands_to_run[@]}"
+    local commands_to_run=()
 
-    commands_to_run=()
+    if check_folder_exists "/home/$chezmoi_username/.local/share/chezmoi"; then
+        commands_to_run+=("rm -rf /home/$chezmoi_username/.local/share/chezmoi")
+    fi
+
     commands_to_run+=("chezmoi init \"$chezmoi_repo\"")
-    commands_to_run+=("cp -r /home/$chezmoi_username/.local/share/chezmoi/* /home/$chezmoi_username/.config/")
+    commands_to_run+=("cp -rf /home/$chezmoi_username/.local/share/chezmoi/private_dot_config /home/$chezmoi_username/.config/")
     live_command_output "$chezmoi_username" "" "yes" "Configuring chezmoi" "${commands_to_run[@]}"
 
     continue_script 2 "Chezmoi" "Chezmoi Setup complete for user $chezmoi_username!"

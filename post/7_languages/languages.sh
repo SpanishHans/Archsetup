@@ -57,16 +57,16 @@ configure_asdf() {
     local asdf_username="$1"
     local build_path="/home/$asdf_username/.asdf"
     local shell_path="$(getent passwd "$asdf_username" | cut -d: -f7)"
+    local commands_to_run=()
 
-    if ! check_folder_exists "$build_path"; then
-        commands_to_run=()
-        commands_to_run+=("mkdir -p $build_path")
-        commands_to_run+=("git clone https://github.com/asdf-vm/asdf.git $build_path")
-        commands_to_run+=("chown -R $asdf_username:$asdf_username $build_path")
-        live_command_output "" "" "yes" "Cloning asdf" "${commands_to_run[@]}"
-    else
+    if check_folder_exists "$build_path"; then
+        commands_to_run+=("rm -rf $build_path")
         continue_script 2 "asdf folder exists" "asdf repository already exists at $build_path. Skipping clone."
     fi
+
+    commands_to_run+=("git clone https://github.com/asdf-vm/asdf.git $build_path")
+    commands_to_run+=("chown -R $asdf_username:$asdf_username $build_path")
+    live_command_output "" "" "yes" "Cloning asdf" "${commands_to_run[@]}"
 
     case "$shell_path" in
         "/bin/bash" | "/usr/bin/bash")

@@ -24,57 +24,51 @@ source ./post/4_software/pacman.sh
 
 configure_bash_it() {
     local term_user="$1"
+    local commands_to_run=()
 
-    if ! check_folder_exists "/home/$term_user/.bash_it"; then
-        local commands_to_run=()
-        commands_to_run+=("git clone --depth=1 https://github.com/Bash-it/bash-it.git /home/$term_user/.bash_it && /home/$term_user/.bash_it/install.sh")
-        commands_to_run+=("chown -R $term_user:$term_user /home/$term_user/.bash_it")
-        live_command_output "$term_user" "" "yes" "Installing Bash-it" "${commands_to_run[@]}"
-    else
-        continue_script 2 "Already installed" "Bash-it is already installed."
+    if check_folder_exists "/home/$term_user/.bash_it"; then
+        commands_to_run+=("rm -rf /home/$term_user/.bash_it")
     fi
+    commands_to_run+=("git clone --depth=1 https://github.com/Bash-it/bash-it.git /home/$term_user/.bash_it && /home/$term_user/.bash_it/install.sh")
+    commands_to_run+=("chown -R $term_user:$term_user /home/$term_user/.bash_it")
+    live_command_output "" "" "yes" "Installing Bash-it" "${commands_to_run[@]}"
 }
 
 configure_oh_my_zsh() {
     local term_user="$1"
+    local commands_to_run=()
 
-    if ! check_folder_exists "$/home/$term_user/.oh-my-zsh"; then
-        local commands_to_run=()
-        commands_to_run+=("git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git /home/$term_user/.oh-my-zsh")
-        commands_to_run+=("cp -f /home/$term_user/.zshrc /home/$term_user/.zshrc.orig")
-        commands_to_run+=("cp -f /home/$term_user/.oh-my-zsh/templates/zshrc.zsh-template /home/$term_user/.zshrc")
-        commands_to_run+=("chown -R $term_user:$term_user /home/$term_user/.oh-my-zsh")
-        commands_to_run+=("chown -R $term_user:$term_user /home/$term_user/.zshrc")
-        live_command_output "$term_user" "" "yes" "Installing ohmyzsh" "${commands_to_run[@]}"
-    else
-        continue_script 2 "Already installed" "Ohmyzsh is already installed."
+    if check_folder_exists "$/home/$term_user/.oh-my-zsh"; then
+        commands_to_run+=("rm -rf /home/$term_user/.oh-my-zsh")
     fi
 
     if ! check_file_exists "$/home/$term_user/.zshrc"; then
-        local commands_to_run=()
         commands_to_run+=("touch /home/$term_user/.zshrc")
-        live_command_output "$term_user" "" "yes" "Installing ohmyzsh" "${commands_to_run[@]}"
-    else
-        local commands_to_run=()
-        commands_to_run+=("cp -f /home/$term_user/.zshrc /home/$term_user/.zshrc.orig")
-        commands_to_run+=("cp -f /home/$term_user/.oh-my-zsh/templates/zshrc.zsh-template /home/$term_user/.zshrc")
-        commands_to_run+=("chown -R $term_user:$term_user /home/$term_user/.oh-my-zsh")
-        commands_to_run+=("chown -R $term_user:$term_user /home/$term_user/.zshrc")
-        live_command_output "$term_user" "" "yes" "Installing ohmyzsh" "${commands_to_run[@]}"
     fi
+
+    commands_to_run+=("git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git /home/$term_user/.oh-my-zsh")
+    commands_to_run+=("chown -R $term_user:$term_user /home/$term_user/.oh-my-zsh")
+    commands_to_run+=("chown -R $term_user:$term_user /home/$term_user/.zshrc")
+    
+    commands_to_run+=("cp -f /home/$term_user/.zshrc /home/$term_user/.zshrc.orig")
+    commands_to_run+=("cp -f /home/$term_user/.oh-my-zsh/templates/zshrc.zsh-template /home/$term_user/.zshrc")
+        
+    commands_to_run+=("chown -R $term_user:$term_user /home/$term_user/.oh-my-zsh")
+    commands_to_run+=("chown -R $term_user:$term_user /home/$term_user/.zshrc")
+
+    live_command_output "" "" "yes" "Installing ohmyzsh" "${commands_to_run[@]}"
 }
 
 configure_fisher() {
     local term_user="$1"
+    local commands_to_run=()
 
-    if ! check_folder_exists "/home/$term_user/.config/fish/functions/fisher.fish"; then
-        local commands_to_run=()
+    if ! check_file_exists "/home/$term_user/.config/fish/functions/fisher.fish" || ! check_command_exists "fisher"; then
         commands_to_run+=("fish -c 'curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher'")
-        commands_to_run+=("chown -R $term_user:$term_user /home/$term_user/.config/fish")
-        live_command_output "$term_user" "" "yes" "Installing Fisher for Fish" "${commands_to_run[@]}"
-    else
-        continue_script 2 "Already" "Fisher is already installed."
     fi
+
+    live_command_output "" "" "yes" "Installing Fisher for Fish" "${commands_to_run[@]}"
+
 }
 
 ################################################################################

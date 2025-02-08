@@ -50,6 +50,12 @@ git_menu() {
     home_path="/home/$git_user"
     gitconfig_path="$home_path/.gitconfig"
 
+    if check_file_exists "$gitconfig_path"; then
+        commands_to_run+=("rm -rf $gitconfig_path")
+    else
+        commands_to_run+=("touch $gitconfig_path")
+    fi
+
     commands_to_run+=(
         "cat > $gitconfig_path <<EOF
         [init]
@@ -71,11 +77,9 @@ git_menu() {
     commands_to_run+=("chown $git_user:$git_user $gitconfig_path")
 
     ssh_key_path="$home_path/.ssh/id_ed25519"
-    if [ -f "$ssh_key_path" ]; then
-        commands_to_run+=("echo 'SSH key already exists at $ssh_key_path.'")
+    if check_file_exists "$ssh_key_path"; then
+        commands_to_run+=("rm -rf ssh_key_path")
     else
-        commands_to_run+=("echo 'Generating SSH key at $ssh_key_path...'")
-        commands_to_run+=("mkdir -p $home_path/.ssh")
         commands_to_run+=("ssh-keygen -t ed25519 -C '$gitemail' -f '$ssh_key_path' -P '$sshpass' -N '$sshpass'")
         commands_to_run+=("chown -R $git_user:$git_user $home_path/.ssh")
     fi

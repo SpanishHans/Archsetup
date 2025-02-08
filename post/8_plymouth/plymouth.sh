@@ -48,7 +48,7 @@ plymouth_menu () {
 }
 
 regen_cpio() {
-    commands_to_run+=()
+    local commands_to_run=()
     commands_to_run+=('
         if grep -q "^HOOKS=" "/etc/mkinitcpio.conf"; then
             # Remove any existing "plymouth" from the HOOKS array if it exists
@@ -59,9 +59,7 @@ regen_cpio() {
             echo "No HOOKS line found in /etc/mkinitcpio.conf."
         fi
     ')
-
     commands_to_run+=("grub-mkconfig -o /boot/grub/grub.cfg")
-
     live_command_output "" "" "yes" "Regenerating cpio""${commands_to_run[@]}"
 }
 

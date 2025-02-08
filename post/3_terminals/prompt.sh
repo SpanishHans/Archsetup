@@ -64,12 +64,12 @@ configure_starship (){
     commands_to_run=("curl -sS https://starship.rs/install.sh | sh")
     live_command_output "$term_username" "$term_pass" "yes" "Configuring Starship for $term_username." "${commands_to_run[@]}"
 
-    if ! check_file_exists "$starship_config_path/starship.toml"; then
-        local commands_to_run=("mkdir -p $starship_config_path && touch $starship_config_path/starship.toml")
-        live_command_output "" "" "yes" "Creating config file" "${commands_to_run[@]}"
-    else
-        continue_script 2 "Folder exists" "Config file already exists at $starship_config_path. Skipping."
+    local commands_to_run=()
+    if check_file_exists "$starship_config_path/starship.toml"; then
+        commands_to_run+=("rm -rf $starship_config_path")
     fi
+    commands_to_run+=("mkdir -p $starship_config_path && touch $starship_config_path/starship.toml")
+    live_command_output "" "" "yes" "Creating config file" "${commands_to_run[@]}"
 
     case "$shell_path" in
         "/bin/bash" | "usr/bin/bash")
@@ -195,12 +195,12 @@ configure_oh_my_posh () {
     commands_to_run=("curl -sS https://starship.rs/install.sh | bash")
     live_command_output "$term_username" "$term_pass" "yes" "Configuring Starship for $term_username." "${commands_to_run[@]}"
 
-    if ! check_folder_exists "$posh_config_path"; then
-        local commands_to_run=("mkdir -p $posh_config_path")
-        live_command_output "" "" "yes" "Creating config file" "${commands_to_run[@]}"
-    else
-        continue_script 2 "Folder exists" "Config file already exists at $posh_config_path. Skipping."
+    local commands_to_run=()
+    if check_folder_exists "$posh_config_path"; then
+        commands_to_run+=("rm -rf $posh_config_path")
     fi
+    commands_to_run+=("mkdir -p $posh_config_path")
+    live_command_output "" "" "Creating $posh_config_path" "Creating config file on $posh_config_path" "${commands_to_run[@]}"
 
     case "$shell_path" in
         "/bin/bash" | "usr/bin/bash")
