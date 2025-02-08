@@ -29,7 +29,7 @@ configure_bash_it() {
     if ! check_folder_exists "/home/$term_user/.bash_it"; then
         local commands_to_run=()
         commands_to_run+=("git clone --depth=1 https://github.com/Bash-it/bash-it.git /home/$term_user/.bash_it && /home/$term_user/.bash_it/install.sh | bash")
-        live_command_output "" "" "yes" "Installing Bash-it" "${commands_to_run[@]}"
+        live_command_output "$term_user" "$term_pass" "yes" "Installing Bash-it" "${commands_to_run[@]}"
     else
         continue_script 2 "Already installed" "Bash-it is already installed."
     fi
@@ -119,7 +119,7 @@ configure_bash() {
         )
         menu_prompt bash_choice "$title" "$description" "${options[@]}"
         case $bash_choice in
-            0)  configure_bash_it;break;;
+            0)  configure_bash_it "$term_user";break;;
             b)  break;;
             *)  echo "Invalid option. Please try again.";;
         esac
@@ -147,7 +147,7 @@ configure_zsh() {
         )
         menu_prompt zsh_choice "$title" "$description" "${options[@]}"
         case $zsh_choice in
-            0)  configure_oh_my_zsh;break;;
+            0)  configure_oh_my_zsh "$term_user";break;;
             b)  break;;
             *)  echo "Invalid option. Please try again.";;
         esac
@@ -175,7 +175,7 @@ configure_fish() {
         )
         menu_prompt fish_choice "$title" "$description" "${options[@]}"
         case $fish_choice in
-            0)  configure_fisher;break;;
+            0)  configure_fisher "$term_user";break;;
             b)  break;;
             *)  echo "Invalid option. Please try again.";;
         esac
