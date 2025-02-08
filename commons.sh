@@ -229,7 +229,7 @@ live_command_output() {
 
         if [ $exit_code -eq 0 ]; then
             terminal_title "Done, continuing to next step!" >> "$combined_log"
-            terminal_title "\n\nread the logs for this operation on $combined_log" >> "$combined_log"
+            terminal_title "read the logs for this operation on $combined_log" >> "$combined_log"
             sleep 2
             killall dialog
         fi
