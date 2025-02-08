@@ -171,10 +171,10 @@ scroll_window_output() {
     local prompt="$1"
     local file="$1"
     content="$prompt\n\n$(cat "$file")"
-    dialog\
+    echo "$content" | dialog\
         --backtitle "Viewing logs"\
         --title "Logs" \
-        --textbox <(echo -e "$content")\
+        --textbox "" \
         $full_height $full_width
 }
 
