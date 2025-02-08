@@ -119,7 +119,7 @@ configure_bash() {
         )
         menu_prompt bash_choice "$title" "$description" "${options[@]}"
         case $bash_choice in
-            1)  configure_bash_it;break;;
+            0)  configure_bash_it;break;;
             b)  break;;
             *)  echo "Invalid option. Please try again.";;
         esac
@@ -147,7 +147,7 @@ configure_zsh() {
         )
         menu_prompt zsh_choice "$title" "$description" "${options[@]}"
         case $zsh_choice in
-            1)  configure_oh_my_zsh;break;;
+            0)  configure_oh_my_zsh;break;;
             b)  break;;
             *)  echo "Invalid option. Please try again.";;
         esac
@@ -175,7 +175,7 @@ configure_fish() {
         )
         menu_prompt fish_choice "$title" "$description" "${options[@]}"
         case $fish_choice in
-            1)  configure_fisher;break;;
+            0)  configure_fisher;break;;
             b)  break;;
             *)  echo "Invalid option. Please try again.";;
         esac
