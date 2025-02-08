@@ -170,15 +170,19 @@ Failed Command: $wrapped_cmd\n\
 scroll_window_output() {
     local prompt="$1"
     local file="$2"
-    local content="$prompt\n\n$(cat "$file")"
+    local temp_file
 
-    echo -e "$content" | dialog \
-        --backtitle "Viewing logs" \
+    temp_file=$(mktemp) || { echo "Failed to create temp file"; return 1; }
+
+    echo -e "$prompt\n\n$(cat "$file")" > "$temp_file"
+
+    dialog --backtitle "Viewing logs" \
         --title "Logs" \
-        --textbox /dev/stdin \
+        --textbox "$temp_file" \
         "${full_height:-20}" "${full_width:-70}"
-}
 
+    rm -f "$temp_file"
+}
 
 live_command_output() {
     local user="${1:-root}"
@@ -242,11 +246,6 @@ live_command_output() {
 
     if [[ "$show_logs" == "yes" ]]; then
         scroll_window_output "$(terminal_title "$script_name finished and the logs are:")" "$combined_log"
-        # tail -f "$combined_log" | dialog\
-        # --backtitle "Viewing logs"\
-        # --title "Logs" \
-        # --textbox "" \
-        # $full_height $full_width
     fi
 
     handle_exit_code "$exit_code" "return"
