@@ -77,7 +77,7 @@ configure_starship (){
             init_command='eval "$(starship init bash)"'
             starship_themes "$term_username"
             ;;
-        "/bin/zsh" | )
+        "/bin/zsh" | "usr/bin/zsh")
             config_file="/home/$term_username/.zshrc"
             init_command='eval "$(starship init zsh)"'
             starship_themes "$term_username"
