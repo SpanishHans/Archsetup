@@ -171,11 +171,11 @@ install_xfce() {
 ################################################################################
 
 install_sway() {
-    install_pacman_packages sway kitty brightnessctl
+    install_pacman_packages sway kitty brightnessctl swaync
 }
 
 install_hyprland() {
-    install_pacman_packages hyprland hypridle xdg-desktop-portal-hyprland brightnessctl kitty waybar rofi-wayland rofi-calc
+    install_pacman_packages hyprland hypridle xdg-desktop-portal-hyprland brightnessctl kitty waybar rofi-wayland rofi-calc swaync
 }
 
 install_enlightenment() {
