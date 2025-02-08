@@ -52,6 +52,7 @@ terminals_menu() {
 
 configure_kitty() {
     install_pacman_packages kitty
+    # kitty +list-fonts
 }   
 configure_alacritty() {
     install_pacman_packages alacritty
