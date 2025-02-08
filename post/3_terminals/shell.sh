@@ -28,7 +28,7 @@ configure_bash_it() {
 
     if ! check_folder_exists "/home/$term_user/.bash_it"; then
         local commands_to_run=()
-        commands_to_run+=("git clone --depth=1 https://github.com/Bash-it/bash-it.git /home/$term_user/.bash_it && /home/$term_user/.bash_it/install.sh")
+        commands_to_run+=("git clone --depth=1 https://github.com/Bash-it/bash-it.git /home/$term_user/.bash_it && /home/$term_user/.bash_it/install.sh | bash")
         live_command_output "" "" "yes" "Installing Bash-it" "${commands_to_run[@]}"
     else
         continue_script 2 "Already installed" "Bash-it is already installed."
