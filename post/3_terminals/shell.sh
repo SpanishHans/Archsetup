@@ -49,6 +49,19 @@ configure_oh_my_zsh() {
     else
         continue_script 2 "Already installed" "Ohmyzsh is already installed."
     fi
+
+    if ! check_fi "$/home/$term_user/.zshrc"; then
+        local commands_to_run=()
+        commands_to_run+=("touch /home/$term_user/.zshrc")
+        live_command_output "$term_user" "" "yes" "Installing ohmyzsh" "${commands_to_run[@]}"
+    else
+        local commands_to_run=()
+        commands_to_run+=("cp -f /home/$term_user/.zshrc /home/$term_user/.zshrc.orig")
+        commands_to_run+=("cp -f /home/$term_user/.oh-my-zsh/templates/zshrc.zsh-template /home/$term_user/.zshrc")
+        commands_to_run+=("chown -R $term_user:$term_user /home/$term_user/.oh-my-zsh")
+        commands_to_run+=("chown -R $term_user:$term_user /home/$term_user/.zshrc")
+        live_command_output "$term_user" "" "yes" "Installing ohmyzsh" "${commands_to_run[@]}"
+    fi
 }
 
 configure_fisher() {
