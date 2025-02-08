@@ -41,7 +41,7 @@ configure_oh_my_zsh() {
 
     if ! check_folder_exists "$/home/$term_user/.oh-my-zsh"; then
         local commands_to_run=()
-        local commands_to_run+=("curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | bash")
+        local commands_to_run+=("curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh")
         live_command_output "$term_user" "$term_pass" "yes" "Installing ohmyzsh" "${commands_to_run[@]}"
     else
         continue_script 2 "Already installed" "Ohmyzsh is already installed."
