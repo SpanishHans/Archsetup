@@ -27,6 +27,7 @@ terminal_menu() {
             "configure terminals"\
             "configure shells"\
             "configure prompts"\
+            "configure fonts"\
             "Back"
         )
         menu_prompt term_choice "$title" "$description" "${options[@]}"
@@ -34,6 +35,7 @@ terminal_menu() {
             0)  terminals_menu;;
             1)  shells_menu;;
             2)  prompts_menu;;
+            3)  fonts_menu;;
             b)  break;;
             *)  echo "Invalid option. Please try again.";;
         esac
