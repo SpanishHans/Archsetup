@@ -212,7 +212,12 @@ live_command_output() {
 
     {
         for cmd in "${commands[@]}"; do
-            execute_command "$cmd" || { exit_code=$?; break; }
+            execute_command "$cmd" || { 
+            exit_code=$?
+            sleep 2  # Wait for 2 seconds before killing the dialog
+            kill "$dialog_pid"  # Kill the dialog process
+            break
+        }
         done
 
         # If all commands succeeded, add the "Done" message
@@ -230,10 +235,10 @@ live_command_output() {
         "$full_height" "$full_width" 2>&1 >/dev/tty &
 
 
-    dialog_pid=$!
-    wait
+    # dialog_pid=$!
+    # wait
     
-    kill "$dialog_pid" 2>/dev/null
+    # kill "$dialog_pid" 2>/dev/null
 
     if [[ "$show_logs" == "yes" ]]; then
         scroll_window_output "$(terminal_title "$script_name finished and the logs are:")" "$combined_log"
