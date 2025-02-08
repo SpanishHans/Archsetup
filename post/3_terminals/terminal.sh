@@ -18,6 +18,7 @@ source ./commons.sh
 source ./post/3_terminals/term.sh
 source ./post/3_terminals/shell.sh
 source ./post/3_terminals/prompt.sh
+source ./post/3_terminals/fonts.sh
 
 terminal_menu() {
     local title="Terminal global configurator."
