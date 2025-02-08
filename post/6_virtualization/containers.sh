@@ -17,6 +17,7 @@
 source ./commons.sh
 source ./post/0_users/users.sh
 source ./post/4_software/pacman.sh
+source ./post/6_virtualization/libvirt.sh
 
 containers_menu() {
     local title='Type 2 hypervisors.'

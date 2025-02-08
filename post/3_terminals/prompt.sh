@@ -61,7 +61,7 @@ configure_starship (){
     local starship_config_path="/home/$term_username/.config"
     local shell_path="$(getent passwd "$term_username" | cut -d: -f7)"
 
-    commands_to_run=("curl -sS https://starship.rs/install.sh | bash")
+    commands_to_run=("curl -sS https://starship.rs/install.sh | sh")
     live_command_output "$term_username" "$term_pass" "yes" "Configuring Starship for $term_username." "${commands_to_run[@]}"
 
     if ! check_file_exists "$starship_config_path/starship.toml"; then
