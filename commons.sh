@@ -176,8 +176,8 @@ scroll_window_output() {
 
     echo -e "$prompt\n\n$(cat "$file")" > "$temp_file"
 
-    dialog --backtitle "Viewing logs" \
-        --title "Logs" \
+    dialog --backtitle "Viewing $file" \
+        --title "$file on logs viewer" \
         --textbox "$temp_file" \
         "${full_height:-20}" "${full_width:-70}"
 
