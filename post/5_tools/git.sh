@@ -20,7 +20,7 @@ source ./post/4_software/pacman.sh
 
 git_menu() {
     install_pacman_packages git openssh
-    commands_to_run=()
+    local commands_to_run=()
 
     get_users userlist
     input_text\
@@ -85,11 +85,11 @@ git_menu() {
     fi
     live_command_output "" "" "yes" "Installing git" "${commands_to_run[@]}"
 
-    commands_to_run=()
+    local commands_to_run=()
     commands_to_run+=("ssh-agent -s && ssh-add '$ssh_key_path'")
     live_command_output "$git_user" "$pass" "yes" "Installing git" "${commands_to_run[@]}"
 
-    commands_to_run=()
+    local commands_to_run=()
     commands_to_run+=("cat \"${ssh_key_path}.pub\"")
     live_command_output "" "" "yes" "Installing git" "${commands_to_run[@]}"
 

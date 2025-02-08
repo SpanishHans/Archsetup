@@ -54,7 +54,7 @@ install_with_paru () {
     local url="$3"
     local package_name=$(basename "$url" .git)
 
-    commands_to_run=()
+    local commands_to_run=()
     commands_to_run+=("paru -S --noconfirm --needed .")
     live_command_output "$bui_user" "$bui_pass" "yes" "Building and installing $package_name" "${commands_to_run[@]}"
     continue_script 2 "$package_name installed" "$package_name install complete!"
@@ -68,7 +68,7 @@ install_without_paru() {
     local build_path="/home/$bui_user/builds/$package_name"
 
     if ! check_folder_exists "$build_path"; then
-        commands_to_run=()
+        local commands_to_run=()
         commands_to_run+=("mkdir -p $build_path")
         commands_to_run+=("git clone $url $build_path")
         commands_to_run+=("chown -R $bui_user:$bui_user $build_path")
@@ -78,7 +78,7 @@ install_without_paru() {
     fi
 
     if ! ls $build_path/*.pkg.tar.zst &>/dev/null; then
-        commands_to_run=()
+        local commands_to_run=()
         scroll_window_output "Viewing PKGBUILD for $package_name" "$build_path/PKGBUILD"
         commands_to_run+=("cd $build_path && makepkg -s -r -c --noconfirm")
         live_command_output "$bui_user" "$bui_pass" "yes" "Building and installing $package_name" "${commands_to_run[@]}"
@@ -86,7 +86,7 @@ install_without_paru() {
         echo "$package_name package already built. Skipping build."
     fi
 
-    commands_to_run=()
+    local commands_to_run=()
     commands_to_run+=("cd $build_path && pacman --noconfirm -U *.pkg.tar.zst")
     live_command_output "" "" "yes" "Installing $package_name" "${commands_to_run[@]}"
 

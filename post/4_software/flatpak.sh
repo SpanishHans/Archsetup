@@ -77,7 +77,7 @@ install_flatpak_zen() {
     if check_flatpak_installed "$app_id"; then
         continue_script 2 "Zen Browser already installed" "Zen Browser is already installed."
     else
-        commands_to_run=()
+        local commands_to_run=()
         commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
         live_command_output "" "" "yes" "Installing Zen Browser" "${commands_to_run[@]}"
     fi
@@ -90,7 +90,7 @@ install_flatpak_zed () {
     if check_flatpak_installed "$app_id"; then
         continue_script 2 "Zed editor already installed" "Zed editor is already installed."
     else
-        commands_to_run=()
+        local commands_to_run=()
         commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
         live_command_output "" "" "yes" "Installing Zed editor" "${commands_to_run[@]}"
     fi
@@ -103,7 +103,7 @@ install_flatpak_vscode () {
     if check_flatpak_installed "$app_id"; then
         continue_script 2 "Visual Studio Code already installed" "Visual Studio Code is already installed."
     else
-        commands_to_run=()
+        local commands_to_run=()
         commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
         live_command_output "" "" "yes" "Installing Visual Studio Code" "${commands_to_run[@]}"
     fi
@@ -116,7 +116,7 @@ install_flatpak_spotify () {
     if check_flatpak_installed "$app_id"; then
         continue_script 2 "Spotify already installed" "Spotify is already installed."
     else
-        commands_to_run=()
+        local commands_to_run=()
         commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
         live_command_output "" "" "yes" "Installing Spotify" "${commands_to_run[@]}"
     fi
@@ -129,7 +129,7 @@ install_flatpak_discord () {
     if check_flatpak_installed "$app_id"; then
         continue_script 2 "Discord already installed" "Discord is already installed."
     else
-        commands_to_run=()
+        local commands_to_run=()
         commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
         live_command_output "" "" "yes" "Installing Discord" "${commands_to_run[@]}"
     fi
@@ -142,7 +142,7 @@ install_flatpak_gimp () {
     if check_flatpak_installed "$app_id"; then
         continue_script 2 "Gimp already installed" "Gimp is already installed."
     else
-        commands_to_run=()
+        local commands_to_run=()
         commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
         live_command_output "" "" "yes" "Installing Discord" "${commands_to_run[@]}"
     fi
@@ -155,7 +155,7 @@ install_flatpak_inkscape () {
     if check_flatpak_installed "$app_id"; then
         continue_script 2 "Inkscape already installed" "Inkscape is already installed."
     else
-        commands_to_run=()
+        local commands_to_run=()
         commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
         live_command_output "" "" "yes" "Installing Discord" "${commands_to_run[@]}"
     fi
@@ -168,7 +168,7 @@ install_flatpak_blender () {
     if check_flatpak_installed "$app_id"; then
         continue_script 2 "Blender already installed" "Blender is already installed."
     else
-        commands_to_run=()
+        local commands_to_run=()
         commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
         live_command_output "" "" "yes" "Installing Discord" "${commands_to_run[@]}"
     fi
@@ -181,7 +181,7 @@ install_flatpak_rnote () {
     if check_flatpak_installed "$app_id"; then
         continue_script 2 "Rnote already installed" "Rnote is already installed."
     else
-        commands_to_run=()
+        local commands_to_run=()
         commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
         live_command_output "" "" "yes" "Installing Discord" "${commands_to_run[@]}"
     fi
@@ -194,7 +194,7 @@ install_flatpak_kden_live () {
     if check_flatpak_installed "$app_id"; then
         continue_script 2 "Kden Live already installed" "Kden Live is already installed."
     else
-        commands_to_run=()
+        local commands_to_run=()
         commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
         live_command_output "" "" "yes" "Installing Discord" "${commands_to_run[@]}"
     fi

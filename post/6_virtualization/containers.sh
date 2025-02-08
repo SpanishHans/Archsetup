@@ -70,7 +70,7 @@ configure_docker() {
         "Please enter the user who shall be added to docker group\n\n$userlist"\
         "What user to add to docker group?: "
 
-    commands_to_run=() 
+    local commands_to_run=()
     commands_to_run+=("usermod -aG docker $docker_user")
     commands_to_run+=("systemctl enable docker")
     commands_to_run+=("systemctl start --now docker")

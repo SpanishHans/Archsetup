@@ -183,13 +183,17 @@ install_enlightenment() {
 }
 
 purge_dm() {
-    commands_to_run=()
-    all_dms=("ly.service" "lemurs.service" "gdm.service" "lightdm.service" "sddm.service" "greetd.service cosmic-greeter.service")
+    local commands_to_run=()
+    all_dms=("ly.service" "lemurs.service" "gdm.service" "lightdm.service" "sddm.service" "greetd.service" "cosmic-greeter.service")
 
+    # Loop to build the disable commands for each display manager
     for dm in "${all_dms[@]}"; do
-        commands_to_run+=(systemctl disable "$dm")
+        commands_to_run+=("systemctl disable $dm")
     done
+
+    # Run the commands with the live_command_output function
     live_command_output "" "" "yes" "Configuring Snapper for rollbacks" "${commands_to_run[@]}"
+
 }
 
 DM_selector() {
@@ -212,8 +216,6 @@ DM_selector() {
 }
 
 DM_console() {
-    commands_to_run=()
-
     local title="Display manager selection"
     local description="Display managers are basically the login screen. This ones are terminal based, so no fancy icons."
 
@@ -238,8 +240,6 @@ DM_console() {
 }
 
 DM_graphical() {
-    commands_to_run=()
-
     local title="Display manager selection"
     local description="Display managers are basically the login screen. This ones are not terminal based, but have actual GUIs"
 
@@ -265,8 +265,6 @@ DM_graphical() {
 
 
 DE_selector() {
-    commands_to_run=()
-
     local title="Desktop environment selection"
     local description="This menu help you install any of the desktop environments supported by arch!"
 
@@ -309,8 +307,6 @@ DE_selector() {
 }
 
 WM_selector() {
-    commands_to_run=()
-
     local title="Window manager selection"
     local description="This menu help you install any of 2 very popular Window Managers. Sway and Hyprland. No configs are provided. Sync some with chezmoi if you want later!"
 

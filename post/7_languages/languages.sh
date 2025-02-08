@@ -70,7 +70,7 @@ configure_asdf() {
 
     case "$shell_path" in
         "/bin/bash" | "/usr/bin/bash")
-            commands_to_run=()
+            local commands_to_run=()
             commands_to_run+=(
                 "if ! grep -Fxq 'export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"' /home/$asdf_username/.bash_profile; then
                     echo 'export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"' >> /home/$asdf_username/.bash_profile
@@ -80,7 +80,7 @@ configure_asdf() {
             )
             ;;
         "/bin/zsh" | "/usr/bin/zsh")
-            commands_to_run=()
+            local commands_to_run=()
             commands_to_run+=(
                 "if ! grep -Fxq 'export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"' /home/$asdf_username/.zshrc; then
                     echo 'export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"' >> /home/$asdf_username/.zshrc
@@ -90,7 +90,7 @@ configure_asdf() {
             )
             ;;
         "/bin/fish" | "/usr/bin/fish")
-            commands_to_run=()
+            local commands_to_run=()
             commands_to_run+=(
                 "if ! grep -Fxq '# ASDF configuration code' /home/$asdf_username/.config/fish/config.fish; then
                     echo '' >> /home/$asdf_username/.config/fish/config.fish
@@ -113,7 +113,7 @@ configure_asdf() {
             )
             ;;
         "/bin/elvish" | "/usr/bin/elvish")
-            commands_to_run=()
+            local commands_to_run=()
             commands_to_run+=(
                 "if ! grep -Fxq 'var asdf_data_dir = ~\"/.asdf\"' /home/$asdf_username/.config/elvish/rc.elv; then
                     echo '' >> /home/$asdf_username/.config/elvish/rc.elv
@@ -131,7 +131,7 @@ configure_asdf() {
             )
             ;;
         "/bin/nu" | "/usr/bin/nu")
-            commands_to_run=()
+            local commands_to_run=()
             commands_to_run+=(
                 "if ! grep -Fxq 'let shims_dir = (' /home/$asdf_username/.config/nushell/config.nu; then
                     echo 'let shims_dir = (' >> /home/$asdf_username/.config/nushell/config.nu
@@ -160,7 +160,7 @@ configure_asdf() {
 configure_python() {
     local python_user="$1"
 
-    commands_to_run=()
+    local commands_to_run=()
     commands_to_run+=("asdf plugin add python")
     commands_to_run+=("asdf install python 3.12.3")
 
@@ -171,7 +171,7 @@ configure_python() {
 configure_node() {
     local node_user="$1"
 
-    commands_to_run=()
+    local commands_to_run=()
     commands_to_run+=("asdf plugin add nodejs")
     commands_to_run+=("asdf install node latest")
 

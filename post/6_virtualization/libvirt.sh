@@ -53,7 +53,7 @@ configure_libvirt() {
         "Please enter the user who shall be added to libvirt group:\n\n$userlist"\
         "What user to add to libvirt group?"
 
-    commands_to_run=()
+    local commands_to_run=()
     commands_to_run+=("usermod -aG libvirt $libvirt_user")
 
     commands_to_run+=("echo \"unix_sock_group = 'libvirt'\" | tee -a /etc/libvirt/libvirtd.conf")

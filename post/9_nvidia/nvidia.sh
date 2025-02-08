@@ -39,7 +39,7 @@ nvidia_menu () {
 
 # dkms_driver () {
 #     install_pacman_packages base-devel linux-headers nvidia-open-dkms nvidia-utils nvidia-settings
-#     commands_to_run=()
+#     local commands_to_run=()
 
 #     commands_to_run+=('
 #         mkinitcpio_conf="/etc/mkinitcpio.conf"

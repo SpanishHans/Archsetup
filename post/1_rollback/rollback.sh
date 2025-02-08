@@ -77,7 +77,7 @@ configure_snapper_rollback() {
     install_aur_package "$user" "$pass" "https://aur.archlinux.org/snapper-rollback.git"
 
 
-    commands_to_run=()
+    local commands_to_run=()
     commands_to_run+=("
         if grep -qE '^[#]*mountpoint[[:space:]]*=[[:space:]]*/btrfsroot' /etc/snapper-rollback.conf; then
             sed -i 's|^[#]*mountpoint[[:space:]]*=[[:space:]]*/btrfsroot|mountpoint = /.btrfsroot|' /etc/snapper-rollback.conf

@@ -49,7 +49,7 @@ hyper_type_1() {
         "Please enter the user who shall be added to QEMU confs:\n\n$userlist"\
         "What user to add to QEMU confs?"
 
-    commands_to_run=()
+    local commands_to_run=()
     commands_to_run+=("sed -i \"s/^#user = .*/user = '$qemu_user'/\" /etc/libvirt/qemu.conf")
     commands_to_run+=("sed -i \"s/^#group = .*/group = '$qemu_user'/\" /etc/libvirt/qemu.conf")    
 

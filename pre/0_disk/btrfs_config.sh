@@ -18,7 +18,7 @@ source ./commons.sh
 
 mount_btrfs() {
     local -n given_array="$1"
-    commands_to_run=()
+    local commands_to_run=()
     
     commands_to_run+=("mount \"${ROOT_PART}\" /mnt")
     commands_to_run+=("btrfs su cr /mnt/@")
