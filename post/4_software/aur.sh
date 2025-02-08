@@ -79,7 +79,7 @@ install_without_paru() {
 
     if ! ls $build_path/*.pkg.tar.zst &>/dev/null; then
         commands_to_run=()
-        scroll_window_output "$build_path/PKGBUILD"
+        scroll_window_output "Viewing PKGBUILD for $package_name" "$build_path/PKGBUILD"
         commands_to_run+=("cd $build_path && makepkg -s -r -c --noconfirm")
         live_command_output "$bui_user" "$bui_pass" "yes" "Building and installing $package_name" "${commands_to_run[@]}"
     else
