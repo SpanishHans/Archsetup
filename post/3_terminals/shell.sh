@@ -50,7 +50,7 @@ configure_oh_my_zsh() {
         continue_script 2 "Already installed" "Ohmyzsh is already installed."
     fi
 
-    if ! check_fi "$/home/$term_user/.zshrc"; then
+    if ! check_file_exists "$/home/$term_user/.zshrc"; then
         local commands_to_run=()
         commands_to_run+=("touch /home/$term_user/.zshrc")
         live_command_output "$term_user" "" "yes" "Installing ohmyzsh" "${commands_to_run[@]}"
