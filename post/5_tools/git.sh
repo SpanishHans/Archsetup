@@ -75,17 +75,16 @@ git_menu() {
         EOF"
     )
     commands_to_run+=("chown $git_user:$git_user $gitconfig_path")
+    live_command_output "" "" "yes" "Installing git" "${commands_to_run[@]}"
 
     ssh_key_path="$home_path/.ssh/id_ed25519"
     if check_file_exists "$ssh_key_path"; then
         commands_to_run+=("rm -rf ssh_key_path")
-    else
-        commands_to_run+=("ssh-keygen -t ed25519 -C '$gitemail' -f '$ssh_key_path' -P '$sshpass' -N '$sshpass'")
-        commands_to_run+=("chown -R $git_user:$git_user $home_path/.ssh")
     fi
-    live_command_output "" "" "yes" "Installing git" "${commands_to_run[@]}"
 
     local commands_to_run=()
+    commands_to_run+=("ssh-keygen -t ed25519 -C '$gitemail' -f '$ssh_key_path' -P '$sshpass' -N '$sshpass'")
+    commands_to_run+=("chown -R $git_user:$git_user $home_path/.ssh")
     commands_to_run+=("ssh-agent -s && ssh-add '$ssh_key_path'")
     live_command_output "$git_user" "$pass" "yes" "Installing git" "${commands_to_run[@]}"
 
