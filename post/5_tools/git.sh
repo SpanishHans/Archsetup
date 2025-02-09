@@ -52,9 +52,8 @@ git_menu() {
 
     if check_file_exists "$gitconfig_path"; then
         commands_to_run+=("rm -rf $gitconfig_path")
-    else
-        commands_to_run+=("touch $gitconfig_path")
     fi
+    commands_to_run+=("touch $gitconfig_path")
 
     commands_to_run+=(
         "cat > $gitconfig_path <<EOF
