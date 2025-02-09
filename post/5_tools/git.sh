@@ -83,8 +83,11 @@ git_menu() {
 
     commands_to_run+=("ssh-keygen -t ed25519 -C '$gitemail' -f '$ssh_key_path' -P '$sshpass' -N '$sshpass'")
     commands_to_run+=("chown -R $git_user:$git_user $home_path/.ssh")
-    # commands_to_run+=("ssh-agent -s && ssh-add '$ssh_key_path'")
-    commands_to_run+=("eval \"$(ssh-agent -s)\" && export SSH_AUTH_SOCK")
+    # commands_to_run+=("eval \"$(ssh-agent -s)\" && export SSH_AUTH_SOCK")
+    # commands_to_run+=("ssh-add '$ssh_key_path'")
+    commands_to_run+=("eval \"\$(ssh-agent -s)\" > /tmp/ssh_agent_env")
+    commands_to_run+=("source /tmp/ssh_agent_env")
+
     commands_to_run+=("ssh-add '$ssh_key_path'")
     
     live_command_output "$git_user" "$pass" "yes" "Installing git" "${commands_to_run[@]}"
