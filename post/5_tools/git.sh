@@ -78,7 +78,7 @@ git_menu() {
     local commands_to_run=()
     ssh_key_path="$home_path/.ssh/id_ed25519"
     if check_file_exists "$ssh_key_path"; then
-        commands_to_run+=("rm -rf ssh_key_path")
+        commands_to_run+=("rm -rf $ssh_key_path")
     fi
 
     commands_to_run+=("ssh-keygen -t ed25519 -C '$gitemail' -f '$ssh_key_path' -P '$sshpass' -N '$sshpass'")
