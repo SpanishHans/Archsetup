@@ -85,8 +85,11 @@ git_menu() {
     commands_to_run+=("chown -R $git_user:$git_user $home_path/.ssh")
     # commands_to_run+=("eval \"$(ssh-agent -s)\" && export SSH_AUTH_SOCK")
     # commands_to_run+=("ssh-add '$ssh_key_path'")
-    commands_to_run+=("eval \"\$(ssh-agent -s)\" > /tmp/ssh_agent_env")
-    commands_to_run+=("source /tmp/ssh_agent_env")
+    commands_to_run+=("eval \"\$(ssh-agent -s)\" && echo \"SSH_AUTH_SOCK=\$SSH_AUTH_SOCK; export SSH_AUTH_SOCK;\" > $home_path/.ssh-agent-env")
+    commands_to_run+=("chown $git_user:$git_user $home_path/.ssh-agent-env")
+
+    # Ensure the user can source the agent environment
+    commands_to_run+=("source $home_path/.ssh-agent-env")
 
     commands_to_run+=("ssh-add '$ssh_key_path'")
     
