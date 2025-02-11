@@ -81,15 +81,24 @@ git_menu() {
         commands_to_run+=("rm -rf $ssh_key_path")
     fi
 
-    commands_to_run+=("ssh-keygen -t ed25519 -C '$gitemail' -f '$ssh_key_path' -P '$sshpass' -N '$sshpass'")
+    commands_to_run+=("ssh-keygen -t ed25519 -C \"$gitemail\" -f \"$ssh_key_path\" -N \"$sshpass\"")
     commands_to_run+=("chown -R $git_user:$git_user $home_path/.ssh")
     live_command_output "$git_user" "$pass" "yes" "Installing git" "${commands_to_run[@]}"
 
-    pause_script "" "Done creating ssh key. "
 
-    local commands_to_run=()
-    commands_to_run+=("cat \"${ssh_key_path}.pub\"")
-    live_command_output "" "" "yes" "Installing git" "${commands_to_run[@]}"
+    pause_script "" "Done creating SSH key.
 
+Now run the following commands:
+
+1. Start the SSH agent:
+   ssh-agent -s
+
+2. Add your new key to the agent:
+   ssh-add \"$ssh_key_path\"
+
+Please add the following text to your GitHub account to gain push access and access to private repos:
+
+$(cat \"${ssh_key_path}.pub\")
+"
     continue_script 1 "Git" "Git Setup complete!"
 }
