@@ -60,8 +60,8 @@ asdf_menu () {
             7)  configure_dotnet "$langs_username";;
             8)  configure_neovim "$langs_username";;
             9)  configure_chezmoi "$langs_username";;
-            10)  configure_starship "$langs_username";;
-            11)  configure_glow "$langs_username";;
+            10) configure_starship "$langs_username";;
+            11) configure_glow "$langs_username";;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
