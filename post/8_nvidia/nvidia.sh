@@ -19,10 +19,10 @@ source ./post/0_users/users.sh
 source ./post/4_software/pacman.sh
 
 nvidia_menu () {
-    
+
     local title="Nvidia Driver Installation"
     local description="This script simplifies the installation of Nvidia drivers for your system."
-    
+
     while true; do
         local options=(\
             'nvidia-open-dkms           (Driver with dynamic kernel support, therefore no pacman hook required.)'\
@@ -30,68 +30,73 @@ nvidia_menu () {
         )
         menu_prompt nvidia_menu_choice "$title" "$description" "${options[@]}"
         case $nvidia_menu_choice in
-            0)  scroll_window_output "System Logs" "/root/Archsetup/.dialogrc";;
+            0)  dkms_driver;;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
-    done    
+    done
 }
 
-# dkms_driver () {
-#     install_pacman_packages base-devel linux-headers nvidia-open-dkms nvidia-utils nvidia-settings
-#     local commands_to_run=()
+dkms_driver() {
+    install_pacman_packages base-devel linux-headers nvidia-open-dkms nvidia-utils nvidia-settings
+    local commands_to_run=()
+    commands_to_run+=('
+    CONFIG_FILE="/etc/mkinitcpio.conf"
+    NVIDIA_MODULES=("nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm")
+    if grep -q "^MODULES=" "$CONFIG_FILE"; then
+        current_modules=$(grep "^MODULES=" "$CONFIG_FILE" | sed -E "s/^MODULES=\\((.*)\\)/\\1/")
+        for module in "${NVIDIA_MODULES[@]}"; do
+            current_modules=$(echo "$current_modules" | sed -E "s/\\b$module\\b//g")
+        done
+        current_modules=$(echo "$current_modules" | xargs)
+        for module in "${NVIDIA_MODULES[@]}"; do
+            if ! grep -qw "$module" <<< "$current_modules"; then
+                current_modules+=" $module"
+            fi
+        done
+        sed -i "s|^MODULES=.*|MODULES=($current_modules)|" "$CONFIG_FILE"
+        echo "Updated MODULES line: MODULES=($current_modules)"
+    else
+        echo "MODULES= line not found in $CONFIG_FILE"
+    fi
+    ')
 
-#     commands_to_run+=('
-#         mkinitcpio_conf="/etc/mkinitcpio.conf"
-#         nvidia_modules="nvidia nvidia_modeset nvidia_uvm nvidia_drm"
+    commands_to_run+=('
+    CONFIG_FILE="/etc/mkinitcpio.conf"
+    if grep -qE "^[[:space:]]*HOOKS=" "$CONFIG_FILE"; then
+        sed -i "/^[[:space:]]*HOOKS=/ s/\<kms\>//g" "$CONFIG_FILE"
+        echo "Removed '\''kms'\'' from the HOOKS array in $CONFIG_FILE."
+    else
+        echo "No active HOOKS line found in $CONFIG_FILE."
+    fi
+    ')
 
-#         if grep -q "^MODULES=" "$mkinitcpio_conf"; then
-#             # Remove any existing NVIDIA modules to avoid duplicates
-#             sed -i "/^MODULES=/ s/ nvidia[[:alnum:]_]*//g" "$mkinitcpio_conf"
+    commands_to_run+=('
+        kernel_version=$(uname -r | cut -d "." -f 1,2)
+        required_kernel="6.11"
 
-#             # Add the appropriate NVIDIA modules to the MODULES line
-#             sed -i "/^MODULES=/ s/\)/ $nvidia_modules)/" "$mkinitcpio_conf"
-#             echo "Added NVIDIA modules: $nvidia_modules"
-#         else
-#             # If MODULES line doesn't exist, create one with the NVIDIA modules
-#             echo "MODULES=($nvidia_modules)" >> "$mkinitcpio_conf"
-#             echo "Created MODULES line with NVIDIA modules: $nvidia_modules"
-#         fi
-#     ')
+        if [[ $(printf "%s\n%s" "$required_kernel" "$kernel_version" | sort -V | head -n1) == "$required_kernel" ]]; then
+            nvidia_options="nvidia-drm.modeset=1 nvidia-drm.fbdev=1 vt.global_cursor_default=0"
+        else
+            nvidia_options="nvidia-drm.modeset=1 vt.global_cursor_default=0"
+        fi
 
-#     commands_to_run+=('
-#         if grep -q "^HOOKS=" /etc/mkinitcpio.conf; then
-#             sed -i "/^HOOKS=/ s/\<kms\>//g" /etc/mkinitcpio.conf
-#             echo "Removed 'kms' from the HOOKS array in /etc/mkinitcpio.conf."
-#         else
-#             echo "No HOOKS line found in /etc/mkinitcpio.conf."
-#         fi
-#     ')
+        grub_file="/etc/default/grub"
 
-#     commands_to_run+=('mkinitcpio -P')
+        if grep -q "^GRUB_CMDLINE_LINUX_DEFAULT=" "$grub_file"; then
+            existing_line=$(grep "^GRUB_CMDLINE_LINUX_DEFAULT=" "$grub_file")
+            for option in $nvidia_options; do
+                if ! echo "$existing_line" | grep -q "$option"; then
+                    sed -i "/^GRUB_CMDLINE_LINUX_DEFAULT=/ s/\"$/ $option\"/" "$grub_file"
+                fi
+            done
+        else
+            echo "GRUB_CMDLINE_LINUX_DEFAULT=\"quiet splash $nvidia_options\"" >> "$grub_file"
+        fi
 
-#     commands_to_run+=('
-#         kernel_version=$(uname -r | cut -d "." -f 1,2)
-#         required_kernel="6.11"
+        grub-mkconfig -o /boot/grub/grub.cfg
+    ')
 
-#         if [[ $(echo "$kernel_version >= $required_kernel" | bc -l) -eq 1 ]]; then
-#             nvidia_options="nvidia-drm.modeset=1 nvidia-drm.fbdev=1 vt.global_cursor_default=0"
-#         else
-#             nvidia_options="nvidia-drm.modeset=1 vt.global_cursor_default=0"
-#         fi
-
-#         grub_file="/etc/default/grub"
-#         existing_line=$(grep "^GRUB_CMDLINE_LINUX_DEFAULT=" "$grub_file")
-
-#         for option in $nvidia_options; do
-#             if ! echo "$existing_line" | grep -q "$option"; then
-#                 sed -i "/^GRUB_CMDLINE_LINUX_DEFAULT=/ s/\"$/ $option\"/" "$grub_file"
-#             fi
-#         done
-
-#         grub-mkconfig -o /boot/grub/grub.cfg
-#     ')
-
-#     live_command_output "" "" "yes" "Installing DKMS driver" "${commands_to_run[@]}"
-#     continue_script 2 "Nvidia DKMS" "Nvidia DKMS Setup complete!"
-# }
+    live_command_output "" "" "yes" "Installing DKMS driver" "${commands_to_run[@]}"
+    continue_script 2 "Nvidia DKMS" "Nvidia DKMS Setup complete!"
+}
