@@ -17,6 +17,7 @@
 source ./commons.sh
 source ./post/0_users/users.sh
 source ./post/4_software/pacman.sh
+source ./post/4_software/aur.sh
 
 rollback_menu() {
     local title="BTRFS Rollback Configurator"
@@ -61,7 +62,7 @@ configure_snapper() {
     commands_to_run+=("snapper -c root create-config /")
     commands_to_run+=("mount -a")
     commands_to_run+=("systemctl daemon-reload")
-    
+
     live_command_output "" "" "yes" "Configuring Snapper for rollbacks" "${commands_to_run[@]}"
     continue_script 2 "Snapper" "Snapper setup complete!"
 }

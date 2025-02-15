@@ -23,9 +23,8 @@ source ./post/3_terminals/terminal.sh
 source ./post/4_software/software.sh
 source ./post/5_tools/tools.sh
 source ./post/6_virtualization/virtualization.sh
-source ./post/7_languages/languages.sh
-source ./post/8_plymouth/plymouth.sh
-source ./post/9_nvidia/nvidia.sh
+source ./post/7_plymouth/plymouth.sh
+source ./post/8_nvidia/nvidia.sh
 
 if [ "$LIVE_ENV" = true ]; then
     pause_script "ERROR" "The configure script must be run from a machine with ArchLinux already installed.
@@ -45,7 +44,7 @@ configure_menu () {
     continue_script \
         1 \
         "Credentials for admin user" \
-        "Builds can not be done with root, therefore we shall user sysadmin. 
+        "Builds can not be done with root, therefore we shall user sysadmin.
 
 Provide its password."
     input_pass\
@@ -80,9 +79,8 @@ Provide its password."
             4)  software_menu;;
             5)  tools_menu;;
             6)  virtualization_menu;;
-            7)  language_menu;;
-            8)  plymouth_menu;;
-            9)  nvidia_menu;;
+            7)  plymouth_menu;;
+            8)  nvidia_menu;;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again.";;
         esac

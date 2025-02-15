@@ -17,6 +17,7 @@
 source ./commons.sh
 source ./post/0_users/users.sh
 source ./post/4_software/pacman.sh
+source ./post/4_software/aur.sh
 source ./post/6_virtualization/libvirt.sh
 
 hypervisors_menu() {
@@ -51,7 +52,7 @@ hyper_type_1() {
 
     local commands_to_run=()
     commands_to_run+=("sed -i \"s/^#user = .*/user = '$qemu_user'/\" /etc/libvirt/qemu.conf")
-    commands_to_run+=("sed -i \"s/^#group = .*/group = '$qemu_user'/\" /etc/libvirt/qemu.conf")    
+    commands_to_run+=("sed -i \"s/^#group = .*/group = '$qemu_user'/\" /etc/libvirt/qemu.conf")
 
     title='What qemu packages to install?'
     description="This script aids the installation of type 1 hypervisors for the fastest possible VMs."
@@ -81,9 +82,8 @@ hyper_type_1() {
 }
 
 hyper_type_2() {
-    input_pass\
-        sysadmin_password\
-        "sysadmin"
+    local user="$USER_WITH_SUDO_USER"
+    local pass="$USER_WITH_SUDO_PASS"
     local title='Type 2 hypervisors.'
     local description="This script helps you install type 2 hypervisors like Virtualbox and its extensions. Slower."
 
@@ -96,7 +96,7 @@ hyper_type_2() {
         menu_prompt ht2_menu_choice "$title" "$description" "${options[@]}"
         case $ht2_menu_choice in
             0)  configure_virtualbox;;
-            1)  configure_vbox_ext "sysadmin" "$sysadmin_password";;
+            1)  configure_vbox_ext "$user" "$pass";;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
@@ -110,6 +110,7 @@ configure_virtualbox() {
 
 configure_vbox_ext() {
     local user="$1"
+    local pass="$2"
     configure_virtualbox
     install_aur_package "$user" "$pass" "https://aur.archlinux.org/virtualbox-ext-oracle.git"
     continue_script 2 "Virtualbox Extensions" "Virtualbox extensions setup complete!"

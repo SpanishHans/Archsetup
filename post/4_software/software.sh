@@ -17,6 +17,7 @@
 source ./commons.sh
 source ./post/4_software/aur.sh
 source ./post/4_software/flatpak.sh
+source ./post/4_software/asdf.sh
 
 software_menu() {
     local title="Install extra software"
@@ -26,12 +27,14 @@ software_menu() {
         local options=(\
             "Install from Flatpak"\
             "Install from AUR"\
+            "Install from ASDF"\
             "Back"
         )
         menu_prompt source_choice "$title" "$description" "${options[@]}"
         case $source_choice in
             0)  flatpak_menu;;
             1)  aur_menu;;
+            2)  asdf_menu;;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again.";;
         esac

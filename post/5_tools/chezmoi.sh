@@ -16,16 +16,16 @@
 
 source ./commons.sh
 source ./post/0_users/users.sh
-source ./post/4_software/pacman.sh
+source ./post/4_software/asdf.sh
 
 chezmoi_menu() {
-    install_pacman_packages chezmoi
     get_users userlist
     input_text \
         chezmoi_username \
         "Chezmoi User to setup" \
         "Please enter the user whose chezmoi shall be configured\n\n$userlist" \
         'What user to configure chezmoi for?: '
+    configure_chezmoi "$chezmoi_username"
     local title="Chezmoi Installer"
     local description="This script provides an easy way to install Chezmoi for your system. Select a mode to install Chezmoi with."
 

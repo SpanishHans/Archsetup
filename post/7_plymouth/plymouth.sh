@@ -17,6 +17,7 @@
 source ./commons.sh
 source ./post/0_users/users.sh
 source ./post/4_software/pacman.sh
+source ./post/4_software/aur.sh
 
 plymouth_menu () {
     install_pacman_packages plymouth
@@ -40,7 +41,7 @@ plymouth_menu () {
             1)  theme_deus_ex "$user" "$pass";;
             2)  theme_lone "$user" "$pass";;
             3)  theme_red_loader "$user" "$pass";;
-            3)  regen_cpio;;
+            4)  regen_cpio;;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
