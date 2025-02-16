@@ -54,33 +54,38 @@ else
 fi
 
 continue_script 'Installing base system' 'Installing the base system (it may take a while).'
-commands_to_run+=("pacstrap /mnt \
-  base \
-  linux \
-  linux-firmware \
-  ${microcode[@]} \
-  btrfs-progs \
-  grub \
-  efibootmgr \
-  sudo \
-  polkit \
-  networkmanager \
-  firewalld \
-  openssh \
-  nano \
-  tree \
-  less \
-  wayland \
-  pipewire \
-  wireplumber \
-  pipewire-alsa \
-  pipewire-pulse \
-  pipewire-jack \
-  git \
-  dialog \
-  usbutils \
-  debugedit \
-  fakeroot")
+
+base_packages=(
+  base 
+  linux 
+  linux-firmware
+  btrfs-progs 
+  grub 
+  efibootmgr
+  sudo 
+  polkit 
+  networkmanager
+  firewalld 
+  openssh 
+  nano
+  tree 
+  less 
+  wayland
+  pipewire 
+  wireplumber
+  pipewire-alsa 
+  pipewire-pulse
+  pipewire-jack 
+  git 
+  dialog
+  usbutils 
+  debugedit 
+  fakeroot
+)
+
+all_packages=("${base_packages[@]}" "${microcode[@]}")
+
+commands_to_run+=("pacstrap /mnt ${all_packages[*]}")
 
 commands_to_run+=("genfstab -U /mnt >> /mnt/etc/fstab")
 
