@@ -41,12 +41,13 @@ commands_to_run=()
 
 continue_script 'Detect CPU vendor' 'Detecting ucode for processor brand'
 CPU=$(grep -m 1 'vendor_id' /proc/cpuinfo)
+
 if [[ "${CPU}" == *"AuthenticAMD"* ]]; then
     continue_script 'AMD detected' 'Installing ucode for AMD'
     microcode=("amd-ucode" "mesa" "vulkan-radeon" "vulkan-tools")
 elif [[ "${CPU}" == *"GenuineIntel"* ]]; then
-    microcode=("intel-ucode" "mesa" "vulkan-intel" "vulkan-tools")
     continue_script 'Intel detected' 'Installing ucode for Intel'
+    microcode=("intel-ucode" "mesa" "vulkan-intel" "vulkan-tools")
 else
     echo "Unknown CPU vendor. Exiting."
     exit 1
