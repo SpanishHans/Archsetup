@@ -47,6 +47,13 @@ rollback_menu() {
     done
 }
 
+do_all() {
+    configure_snapper
+    configure_snap_pac
+    configure_snapper_rollback "$user" "$pass"
+    configure_snp "$user" "$pass"
+}
+
 clean_fstab() {
     sed -i '/^#.*\/dev\//d' /etc/fstab && sed -i '/^[[:space:]]*$/d' /etc/fstab
 }

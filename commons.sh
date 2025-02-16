@@ -23,6 +23,17 @@ check_dialog(){
     export USE_DIALOG
 }
 
+check_internet() {
+    local target="google.com"
+
+    if ping -c 3 -q "$target" > /dev/null 2>&1; then
+        HAS_INTERNET=true
+    else
+        HAS_INTERNET=false
+    fi
+    export HAS_INTERNET
+}
+
 check_live_env(){
     if [ -d /run/archiso ]; then
         LIVE_ENV=true
@@ -71,6 +82,7 @@ check_command_exists() {
 
 check_live_env
 check_dialog
+check_internet
 
 screen_height=$(tput lines)
 screen_width=$(tput cols)
