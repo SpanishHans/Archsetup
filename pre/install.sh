@@ -43,9 +43,9 @@ continue_script 'Detect CPU vendor' 'Detecting ucode for processor brand'
 CPU=$(grep -m 1 'vendor_id' /proc/cpuinfo)
 if [[ "${CPU}" == *"AuthenticAMD"* ]]; then
     continue_script 'AMD detected' 'Installing ucode for AMD'
-    microcode="amd-ucode mesa vulkan-radeon vulkan-tools"
+    microcode=("amd-ucode" "mesa" "vulkan-radeon" "vulkan-tools")
 elif [[ "${CPU}" == *"GenuineIntel"* ]]; then
-    microcode="intel-ucode mesa vulkan-intel vulkan-tools"
+    microcode=("intel-ucode" "mesa" "vulkan-intel" "vulkan-tools")
     continue_script 'Intel detected' 'Installing ucode for Intel'
 else
     echo "Unknown CPU vendor. Exiting."
@@ -53,33 +53,33 @@ else
 fi
 
 continue_script 'Installing base system' 'Installing the base system (it may take a while).'
-commands_to_run+=("pacstrap /mnt\
-  base\
-  linux\
-  linux-firmware\
-  "$microcode"\
-  btrfs-progs\
-  grub\
-  efibootmgr\
-  sudo\
-  polkit\
-  networkmanager\
-  firewalld\
-  openssh\
-  nano\
-  tree\
-  less\
-  wayland\
-  pipewire\
-  wireplumber\
-  pipewire-alsa\
-  pipewire-pulse\
-  pipewire-jack\
-  git\
-  dialog\
-  usbutils\
-  debugedit\
-  fakeroot\
+commands_to_run+=("pacstrap /mnt \
+  base \
+  linux \
+  linux-firmware \
+  ${microcode[@]} \
+  btrfs-progs \
+  grub \
+  efibootmgr \
+  sudo \
+  polkit \
+  networkmanager \
+  firewalld \
+  openssh \
+  nano \
+  tree \
+  less \
+  wayland \
+  pipewire \
+  wireplumber \
+  pipewire-alsa \
+  pipewire-pulse \
+  pipewire-jack \
+  git \
+  dialog \
+  usbutils \
+  debugedit \
+  fakeroot \
   ")
 
 commands_to_run+=("genfstab -U /mnt >> /mnt/etc/fstab")
