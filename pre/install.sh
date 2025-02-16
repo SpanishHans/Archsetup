@@ -39,21 +39,21 @@ start_disk_setup || { pause_script "Error on disk setup" "start_disk failed. Exi
 
 commands_to_run=()
 
-continue_script 'Detect CPU vendor' 'Detecting ucode for processor brand'
+continue_script 4 'Detect CPU vendor' 'Detecting ucode for processor brand'
 CPU=$(grep -m 1 'vendor_id' /proc/cpuinfo)
 
 if [[ "${CPU}" == *"AuthenticAMD"* ]]; then
-    continue_script 'AMD detected' 'Installing ucode for AMD'
+    continue_script 2 'AMD detected' 'Installing ucode for AMD'
     microcode=("amd-ucode" "mesa" "vulkan-radeon" "vulkan-tools")
 elif [[ "${CPU}" == *"GenuineIntel"* ]]; then
-    continue_script 'Intel detected' 'Installing ucode for Intel'
+    continue_script 2 'Intel detected' 'Installing ucode for Intel'
     microcode=("intel-ucode" "mesa" "vulkan-intel" "vulkan-tools")
 else
     echo "Unknown CPU vendor. Exiting."
     exit 1
 fi
 
-continue_script 'Installing base system' 'Installing the base system (it may take a while).'
+continue_script 4 'Installing base system' 'Installing the base system (it may take a while).'
 
 base_packages=(
   base 

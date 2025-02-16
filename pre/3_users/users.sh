@@ -45,7 +45,7 @@ user_setup () {
     export root_password
     export masked_sysadmin_password
 
-    continue_script 4 'Root user confirmation' "Root username:    root
+    continue_script 4 'Admin users password configuration' "Root username:    root
 Admin username:    sysadmin
 Root     Password:    $masked_root_password
 Sysadmin Password:    $masked_sysadmin_password"
