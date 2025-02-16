@@ -80,8 +80,7 @@ commands_to_run+=("pacstrap /mnt \
   dialog \
   usbutils \
   debugedit \
-  fakeroot \
-  ")
+  fakeroot")
 
 commands_to_run+=("genfstab -U /mnt >> /mnt/etc/fstab")
 
