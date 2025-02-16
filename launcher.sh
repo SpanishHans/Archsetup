@@ -38,9 +38,8 @@ if [ "$HAS_INTERNET" = false ]; then
     networks=$(iwctl station wlan0 scan && iwctl station wlan0 get-networks | column -t)
 
     pause_script "No internet" "You dont seem to have internet.
-Please connect to a network with Ethernet or to a wifi network.
+Please connect to a network with Ethernet or to a wifi network. For wifi use 'iwctl station ANTENNA (normally wlan0) connect NETWORK_SSID'
 
-For wifi use 'iwctl station ANTENNA (normally wlan0) connect NETWORK_SSID'
 Available Networks:
 $networks"
     exit 1
