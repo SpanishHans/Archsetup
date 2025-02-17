@@ -41,7 +41,7 @@ get_users() {
         ((counter++))
     done
 
-    eval "$choice='${users[*]}'"
+    eval "$choice=\"$userlist\""
 }
 
 user_password_prompt () {
@@ -178,27 +178,6 @@ list_users() {
     local menu_items=()
 
     continue_script 2 "Existing users" "List of Existing Users:\n\n$userlist"
-}
-
-pick_user(){
-    local user="$1"
-
-    local users=()
-    get_users users
-    users+=("Continue" "Exit")
-    
-    local title="$2"
-    local description="$3"
-
-    while true; do
-        menu_prompt pick_user_menu_choice "$title" "$description" "${users[@]}"
-        case $pick_user_menu_choice in
-            c)  break;;
-            e)  exit;;
-            *)  local USER="${users[$((pick_user_menu_choice))]}";break;;
-        esac
-    done
-    eval "$user=\"$USER\""
 }
 
 users_menu() {
