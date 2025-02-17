@@ -49,9 +49,10 @@ git_menu() {
     home_path="/home/$git_user"
     gitconfig_path="$home_path/.gitconfig"
 
-    if check_file_exists "$gitconfig_path"; then
+    if [[ -f "$gitconfig_path" ]]; then
         commands_to_run+=("rm -rf $gitconfig_path")
     fi
+
     commands_to_run+=("touch $gitconfig_path")
     commands_to_run+=(
         "cat > $gitconfig_path <<EOF
@@ -76,7 +77,7 @@ git_menu() {
 
     local commands_to_run=()
     ssh_key_path="$home_path/.ssh/id_ed25519"
-    if check_file_exists "$ssh_key_path"; then
+    if [[ -f "$ssh_key_path" ]]; then
         commands_to_run+=("rm -rf $ssh_key_path")
     fi
 

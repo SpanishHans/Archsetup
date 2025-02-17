@@ -76,7 +76,7 @@ starship_config (){
     configure_starship "$term_username"
 
     local commands_to_run=()
-    if check_file_exists "$starship_config_path/starship.toml"; then
+    if [[ -f "$starship_config_path/starship.toml" ]]; then
         commands_to_run+=("rm -rf $starship_config_path/starship.toml")
     fi
     commands_to_run+=("touch $starship_config_path/starship.toml")
@@ -214,7 +214,8 @@ oh_my_posh_config () {
     live_command_output "$term_username" "$term_pass" "yes" "Configuring Oh My Posh for $term_username." "${commands_to_run[@]}"
 
     local commands_to_run=()
-    if check_folder_exists "$posh_config_path"; then
+    
+    if [[-d "$posh_config_path" ]]; then
         commands_to_run+=("rm -rf $posh_config_path")
     fi
     commands_to_run+=("mkdir -p $posh_config_path")

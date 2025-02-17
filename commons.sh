@@ -46,26 +46,6 @@ check_live_env(){
     export LIVE_ENV
 }
 
-check_folder_exists() {
-    local path="$1"
-
-    if [[ -d "$path" ]]; then
-        return 0
-    else
-        return 1
-    fi
-}
-
-check_file_exists() {
-    local file="$1"
-
-    if [[ -f "$file" ]]; then
-        return 0
-    else
-        return 1
-    fi
-}
-
 check_command_exists() {
     local comm="$1"
 
