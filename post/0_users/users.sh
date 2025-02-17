@@ -73,7 +73,7 @@ check_pass() {
         return 1 # Failure
     else
         # Check if sudo succeeded without prompting (meaning password was correct)
-        if grep -q "\[sudo] password for $user:" "$temp_file"; then # Check if the password prompt appeared
+        if grep -q "incorrect" "$temp_file"; then # Check if the word "incorrect" appears in the output
           continue_script 2 "Incorrect" "Incorrect password for '$user'."
           rm "$temp_file"
           return 1
@@ -84,6 +84,7 @@ check_pass() {
         fi
     fi
 }
+
 
 user_password_prompt () {
     local user="$1"
