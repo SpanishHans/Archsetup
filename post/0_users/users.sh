@@ -60,12 +60,7 @@ pick_user() {
         case $users_menu_choice in
             c)  break;;  # Continue if 'c' is selected
             e)  exit;;   # Exit if 'e' is selected
-            *)  
-                # Get the username from the selected option (remove the number prefix)
-                if (( users_menu_choice >= 0 && users_menu_choice < ${#users_list[@]} - 1 )); then
-                    user_var=$(echo "${users_list[$users_menu_choice]}" | awk '{print $2}')
-                    return
-                fi
+            *)  local USER="${users_list[$((users_menu_choice))]}";break
                 ;;
         esac
     done
