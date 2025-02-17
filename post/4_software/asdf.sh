@@ -101,8 +101,8 @@ configure_asdf() {
         "/bin/bash" | "/usr/bin/bash")
             local commands_to_run=()
             commands_to_run+=(
-                "if ! grep -Fxq 'export ASDF_DATA_DIR=/opt/asdf' /home/$user/.bashrc; then
-                    echo 'export ASDF_DATA_DIR=/opt/asdf' >> /home/$user/.bashrc
+                "if ! grep -Fxq 'export ASDF_DATA_DIR=/opt/asdf' /home/$user/.bash_profile; then
+                    echo 'export ASDF_DATA_DIR=/opt/asdf' >> /home/$user/.bash_profile
                 fi"
             )
             commands_to_run+=(
