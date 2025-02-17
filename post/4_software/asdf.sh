@@ -106,8 +106,8 @@ configure_asdf() {
                 fi"
             )
             commands_to_run+=(
-                "if ! grep -Fxq 'export PATH="${ASDF_DATA_DIR:-/home/$user/.asdf}/shims:$PATH"' /home/$user/.bash_profile; then
-                    echo 'export PATH="${ASDF_DATA_DIR:-/home/$user/.asdf}/shims:$PATH"' >> /home/$user/.bash_profile
+                "if ! grep -Fxq 'export PATH="\${ASDF_DATA_DIR:-\$HOME/.asdf}/shims:\$PATH"' /home/$user/.bash_profile; then
+                    echo 'export PATH="\${ASDF_DATA_DIR:-\$HOME/.asdf}/shims:\$PATH"' >> /home/$user/.bash_profile
                 fi"
             )
             commands_to_run+=(
@@ -118,20 +118,28 @@ configure_asdf() {
             ;;
         "/bin/zsh" | "/usr/bin/zsh")
             local commands_to_run=()
+            local ASDF_DATA_DIR="\$ASDF_DATA_DIR"
+            local HOME="\$HOME"
+            local PATH="\$PATH"
             commands_to_run+=(
                 "if ! grep -Fxq 'export ASDF_DATA_DIR=/opt/asdf' /home/$user/.zshrc; then
                     echo 'export ASDF_DATA_DIR=/opt/asdf' >> /home/$user/.zshrc
                 fi"
             )
             commands_to_run+=(
-                "mkdir -p \"${ASDF_DATA_DIR:-/home/$user/.asdf}/completions\""
+                "if ! grep -Fxq 'export PATH="\${ASDF_DATA_DIR:-\$HOME/.asdf}/shims:\$PATH"' /home/$user/.zshrc; then
+                    echo 'export PATH="\${ASDF_DATA_DIR:-\$HOME/.asdf}/shims:\$PATH"' >> /home/$user/.zshrc
+                fi"
             )
             commands_to_run+=(
-                "asdf completion zsh > \"${ASDF_DATA_DIR:-/home/$user/.asdf}/completions/_asdf\""
+                "mkdir -p "/opt/asdf/completions""
             )
             commands_to_run+=(
-                "if ! grep -Fxq 'fpath=(${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath)' /home/$user/.zshrc; then
-                    echo 'fpath=(${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath)' >> /home/$user/.zshrc
+                "asdf completion zsh > "/opt/asdf/completions/_asdf""
+            )
+            commands_to_run+=(
+                "if ! grep -Fxq 'fpath=(\${ASDF_DATA_DIR:-\$HOME/.asdf}/completions \$fpath)' /home/$user/.zshrc; then
+                    echo 'fpath=(\${ASDF_DATA_DIR:-\$HOME/.asdf}/completions \$fpath)' >> /home/$user/.zshrc
                     echo 'autoload -Uz compinit && compinit' >> /home/$user/.zshrc
                 fi"
             )
@@ -139,19 +147,19 @@ configure_asdf() {
         "/bin/fish" | "/usr/bin/fish")
             local commands_to_run=()
             commands_to_run+=(
-                "if ! grep -Fxq 'export ASDF_DATA_DIR=/opt/asdf' /home/$user/.config/fish/config.fish; then
-                    echo 'export ASDF_DATA_DIR=/opt/asdf' >> /home/$user/.config/fish/config.fish
+                "if ! grep -Fxq 'set -gx --prepend ASDF_DATA_DIR "/opt/asdf"' /home/$user/.config/fish/config.fish; then
+                    echo 'set -gx --prepend ASDF_DATA_DIR "/opt/asdf"' >> /home/$user/.config/fish/config.fish
                 fi"
             )
             commands_to_run+=(
-                "if ! grep -Fxq 'if test -z $ASDF_DATA_DIR' /home/$user/.config/fish/config.fish; then
-                    echo 'if test -z $ASDF_DATA_DIR' >> /home/$user/.config/fish/config.fish
-                    echo '    set _asdf_shims "$HOME/.asdf/shims"' >> /home/$user/.config/fish/config.fish
+                "if ! grep -Fxq 'if test -z \$ASDF_DATA_DIR' /home/$user/.config/fish/config.fish; then
+                    echo 'if test -z \$ASDF_DATA_DIR' >> /home/$user/.config/fish/config.fish
+                    echo '    set _asdf_shims "\$HOME/.asdf/shims"' >> /home/$user/.config/fish/config.fish
                     echo 'else' >> /home/$user/.config/fish/config.fish
-                    echo '    set _asdf_shims "$ASDF_DATA_DIR/shims"' >> /home/$user/.config/fish/config.fish
+                    echo '    set _asdf_shims "\$ASDF_DATA_DIR/shims"' >> /home/$user/.config/fish/config.fish
                     echo 'end' >> /home/$user/.config/fish/config.fish
-                    echo 'if not contains $_asdf_shims $PATH' >> /home/$user/.config/fish/config.fish
-                    echo '    set -gx --prepend PATH $_asdf_shims' >> /home/$user/.config/fish/config.fish
+                    echo 'if not contains \$_asdf_shims \$PATH' >> /home/$user/.config/fish/config.fish
+                    echo '    set -gx --prepend PATH \$_asdf_shims' >> /home/$user/.config/fish/config.fish
                     echo 'end' >> /home/$user/.config/fish/config.fish
                     echo 'set --erase _asdf_shims' >> /home/$user/.config/fish/config.fish
                 fi"
@@ -163,18 +171,13 @@ configure_asdf() {
         "/bin/elvish" | "/usr/bin/elvish")
             local commands_to_run=()
             commands_to_run+=(
-                "if ! grep -Fxq 'export ASDF_DATA_DIR=/opt/asdf' /home/$user/.config/elvish/rc.elv; then
-                    echo 'export ASDF_DATA_DIR=/opt/asdf' >> /home/$user/.config/elvish/rc.elv
-                fi"
-            )
-            commands_to_run+=(
-                "if ! grep -Fxq 'var asdf_data_dir = ~\"/.asdf\"' /home/$user/.config/elvish/rc.elv; then
+                "if ! grep -Fxq 'var asdf_data_dir = \"/opt/asdf\"' /home/$user/.config/elvish/rc.elv; then
                     echo 'var asdf_data_dir = ~'/.asdf'' >> /home/$user/.config/elvish/rc.elv
-                    echo 'if (and (has-env ASDF_DATA_DIR) (!=s $E:ASDF_DATA_DIR '')) {' >> /home/$user/.config/elvish/rc.elv
-                    echo '  set asdf_data_dir = $E:ASDF_DATA_DIR' >> /home/$user/.config/elvish/rc.elv
+                    echo 'if (and (has-env ASDF_DATA_DIR) (!=s \$E:ASDF_DATA_DIR '')) {' >> /home/$user/.config/elvish/rc.elv
+                    echo '  set asdf_data_dir = \$E:ASDF_DATA_DIR' >> /home/$user/.config/elvish/rc.elv
                     echo '}' >> /home/$user/.config/elvish/rc.elv
-                    echo 'if (not (has-value $paths $asdf_data_dir'/shims')) {' >> /home/$user/.config/elvish/rc.elv
-                    echo '  set paths = [$path $@paths]' >> /home/$user/.config/elvish/rc.elv
+                    echo 'if (not (has-value \$paths \$asdf_data_dir'/shims')) {' >> /home/$user/.config/elvish/rc.elv
+                    echo '  set paths = [\$path $@paths]' >> /home/$user/.config/elvish/rc.elv
                     echo '}' >> /home/$user/.config/elvish/rc.elv
                 fi"
             )
@@ -182,44 +185,44 @@ configure_asdf() {
                 "asdf completion elvish >> /home/$user/.config/elvish/rc.elv"
             )
             commands_to_run+=(
-                "echo "\n"'set edit:completion:arg-completer[asdf] = $_asdf:arg-completer~' >> /home/$user/.config/elvish/rc.elv"
+                "echo "\n"'set edit:completion:arg-completer[asdf] = \$_asdf:arg-completer~' >> /home/$user/.config/elvish/rc.elv"
             )
             ;;
         "/bin/nu" | "/usr/bin/nu")
             local commands_to_run=()
             commands_to_run+=(
-                "if ! grep -Fxq 'export ASDF_DATA_DIR=/opt/asdf' /home/$user/.config/nushell/config.nu; then
-                    echo 'export ASDF_DATA_DIR=/opt/asdf' >> /home/$user/.config/nushell/config.nu
+                "if ! grep -Fxq '\$env.ASDF_DATA_DIR = \"/opt/asdf\"' /home/$user/.config/nushell/config.nu; then
+                    echo '\$env.ASDF_DATA_DIR = \"/opt/asdf\"' >> /home/$user/.config/nushell/config.nu
                 fi"
             )
             commands_to_run+=(
                 "if ! grep -Fxq 'let shims_dir = (' /home/$user/.config/nushell/config.nu; then
                     echo 'let shims_dir = (' >> /home/$user/.config/nushell/config.nu
-                    echo '  if ( $env | get --ignore-errors ASDF_DATA_DIR | is-empty ) {' >> /home/$user/.config/nushell/config.nu
-                    echo '    $env.HOME | path join '.asdf'' >> /home/$user/.config/nushell/config.nu
+                    echo '  if ( \$env | get --ignore-errors ASDF_DATA_DIR | is-empty ) {' >> /home/$user/.config/nushell/config.nu
+                    echo '    \$env.HOME | path join '.asdf'' >> /home/$user/.config/nushell/config.nu
                     echo '  } else {' >> /home/$user/.config/nushell/config.nu
-                    echo '    $env.ASDF_DATA_DIR' >> /home/$user/.config/nushell/config.nu
+                    echo '    \$env.ASDF_DATA_DIR' >> /home/$user/.config/nushell/config.nu
                     echo '  } | path join 'shims'' >> /home/$user/.config/nushell/config.nu
                     echo ')' >> /home/$user/.config/nushell/config.nu
-                    echo '$env.PATH = ( $env.PATH | split row (char esep) | where { |p| $p != $shims_dir } | prepend $shims_dir )' >> /home/$user/.config/nushell/config.nu
+                    echo '\$env.PATH = ( \$env.PATH | split row (char esep) | where { |p| \$p != \$shims_dir } | prepend \$shims_dir )' >> /home/$user/.config/nushell/config.nu
                 fi"
             )
             commands_to_run+=(
-                "mkdir /home/$user/.asdf/completions"
+                "mkdir /opt/asdf/completions"
             )
             commands_to_run+=(
-                "asdf completion nushell | save /home/$user/.asdf/completions/nushell.nu"
+                "asdf completion nushell | save /opt/asdf/completions/nushell.nu"
             )
             commands_to_run+=(
                 "if ! grep -Fxq 'let asdf_data_dir = (' /home/$user/.config/nushell/config.nu; then
                     echo 'let asdf_data_dir = (' >> /home/$user/.config/nushell/config.nu
-                    echo '  if ( $env | get --ignore-errors ASDF_DATA_DIR | is-empty ) {' >> /home/$user/.config/nushell/config.nu
-                    echo '    $env.HOME | path join '.asdf'' >> /home/$user/.config/nushell/config.nu
+                    echo '  if ( \$env | get --ignore-errors ASDF_DATA_DIR | is-empty ) {' >> /home/$user/.config/nushell/config.nu
+                    echo '    \$env.HOME | path join '.asdf'' >> /home/$user/.config/nushell/config.nu
                     echo '  } else {' >> /home/$user/.config/nushell/config.nu
-                    echo '    $env.ASDF_DATA_DIR' >> /home/$user/.config/nushell/config.nu
+                    echo '    \$env.ASDF_DATA_DIR' >> /home/$user/.config/nushell/config.nu
                     echo '  }' >> /home/$user/.config/nushell/config.nu
                     echo ')' >> /home/$user/.config/nushell/config.nu
-                    echo '. "$asdf_data_dir/completions/nushell.nu"' >> /home/$user/.config/nushell/config.nu
+                    echo '. "\$asdf_data_dir/completions/nushell.nu"' >> /home/$user/.config/nushell/config.nu
                 fi"
             )
             ;;
