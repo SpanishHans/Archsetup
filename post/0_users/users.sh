@@ -47,12 +47,12 @@ pick_user() {
 
     local users_list=()
     users_list=($(awk -F: '$3 >= 1000 && $3 < 65534 {print $1}' /etc/passwd))
-    users_list+=("Back")
+    users_list+=("Exit")
 
     while true; do
         menu_prompt users_menu_choice "$title" "$description" "${users_list[@]}"
         case $users_menu_choice in
-            b)  break;;
+            e)  exit;;
             *)  local USER="${users_list[$((users_menu_choice))]}";break
                 ;;
         esac
