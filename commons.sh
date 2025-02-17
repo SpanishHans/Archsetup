@@ -156,8 +156,9 @@ Failed Command: $wrapped_cmd\n\
     }
 
 scroll_window_output() {
-    local prompt="$1"
-    local file="$2"
+    local choice="$1"
+    local prompt="$2"
+    local file="$3"
     local temp_file
 
     temp_file=$(mktemp) || { echo "Failed to create temp file"; return 1; }
@@ -166,8 +167,9 @@ scroll_window_output() {
 
     dialog --backtitle "Viewing $file" \
         --title "$file on logs viewer" \
-        --ok-label "Accept" \
-        --exit-label "No, Cancel" \
+        --extra-button \
+        --extra-label "Ok, Continue" \
+        --exit-label "Cancel" \
         --textbox "$temp_file" \
         "${full_height:-20}" "${full_width:-70}"
 
@@ -209,7 +211,8 @@ live_command_output() {
     {
         for cmd in "${commands[@]}"; do
             execute_command "$cmd" || { 
-                scroll_window_output "$(terminal_title "$script_name Error, the logs are:")" "$combined_log"
+                scroll_window_output return_value "$(terminal_title "$script_name Error, the logs are:")" "$combined_log"
+                pause_script "" "scroll returned $return_value"
                 exit_code=$?
                 sleep 2
                 killall dialog
