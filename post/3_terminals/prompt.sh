@@ -29,10 +29,6 @@ prompts_menu(){
         "User to change prompt for." \
         "Select prompts for a given user. Please select the user whose prompt shall be configured: "
 
-    input_pass\
-        prompt_pass\
-        "$prompt_username"
-
     local title="Prompt picker"
     local description="This allows you to pick a prompt tool for your shell."
     while true; do
@@ -57,7 +53,6 @@ prompts_menu(){
 
 starship_config (){
     local term_username="$1"
-    local term_pass="$2"
     local starship_config_path="/home/$term_username/.config"
     local shell_path="$(getent passwd "$term_username" | cut -d: -f7)"
 
@@ -110,7 +105,7 @@ starship_config (){
             echo 'Starship initialization already present in $config_file'
         fi"
     )
-    live_command_output "$term_username" "$term_pass" "yes" "Configuring Starship for $term_username." "${commands_to_run[@]}"
+    live_command_output "" "" "yes" "Configuring Starship for $term_username." "${commands_to_run[@]}"
     continue_script 2 "Starship installed" "Starship installed correctly"
 }
 
@@ -187,7 +182,6 @@ starship_theme_jetpack() {
 
 oh_my_posh_config () {
     local term_username="$1"
-    local term_pass="$2"
     local posh_config_path="/home/$term_username/bin"
     local shell_path="$(getent passwd "$term_username" | cut -d: -f7)"
 
@@ -241,7 +235,7 @@ oh_my_posh_config () {
             echo 'Oh my posh initialization already present in $config_file'
         fi"
     )
-    live_command_output "$term_username" "$term_pass" "yes" "Configuring Oh my posh for $term_username." "${commands_to_run[@]}"
+    live_command_output "" "" "yes" "Configuring Oh my posh for $term_username." "${commands_to_run[@]}"
     continue_script 2 "Oh my posh installed" "Oh my posh installed correctly"
 }
 
