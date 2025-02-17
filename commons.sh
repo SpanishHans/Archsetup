@@ -302,7 +302,7 @@ $prompt"
         --title "$title" \
         --ok-label "Continue" \
         --insecure \
-        --passwordbox "$prompt" \
+        --passwordbox "$fulltext" \
         $half_height $half_width 2>&1 >/dev/tty)
     exit_code=$?
     eval "$choice=\"$dialog_output\""
