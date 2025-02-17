@@ -49,7 +49,7 @@ pick_user() {
     local description="$4"
 
     local users_list=()
-    get_users users_list "$show_sudo"  # Fetch the list of users
+    users_list=($(awk -F: '$3 >= 1000 && $3 < 65534 {print $1}' /etc/passwd))
 
     users_list+=("Exit")  # Add the exit option
 
