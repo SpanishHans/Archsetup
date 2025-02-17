@@ -64,7 +64,7 @@ configure_fisher() {
     local term_user="$1"
     local commands_to_run=()
 
-    if ! check_file_exists "/home/$term_user/.config/fish/functions/fisher.fish" || ! check_command_exists "fisher"; then
+    if ! [[ ! -f "/home/$term_user/.config/fish/functions/fisher.fish"]] || ! check_command_exists "fisher"; then
         commands_to_run+=("fish -c 'curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher'")
     fi
 
