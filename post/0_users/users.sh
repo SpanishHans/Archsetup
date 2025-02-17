@@ -83,7 +83,7 @@ change_admin_privs() {
 }
 
 create_user() {
-    get_users "yes" userlist
+    get_users user_list "yes"
     input_text\
         username\
         "New user"\
@@ -126,7 +126,7 @@ create_user() {
 }
 
 modify_user() {
-    get_users "yes" userlist
+    get_users user_list "yes"
     input_text\
         username\
         "Edit user"\
@@ -157,7 +157,7 @@ modify_user() {
 }
 
 delete_user() {
-    get_users "yes" userlist
+    get_users user_list "yes"
     input_text\
         username\
         "Delete user"\
@@ -176,7 +176,7 @@ delete_user() {
 }
 
 list_users() {
-    get_users "yes" userlist
+    get_users user_list "yes"
     local max_user_len=0
     local max_admin_len=3
     local menu_items=()
