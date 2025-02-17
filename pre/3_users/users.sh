@@ -18,13 +18,13 @@ source ./commons.sh
 
 root_password_prompt () {
     local pass="$1"
-    ensure_same_pass root_password
+    ensure_same_pass "root" root_password
     eval "$pass='$root_password'"
 }
 
 sysadmin_password_prompt () {
     local pass="$1"
-    ensure_same_pass sysadmin_password
+    ensure_same_pass "sysadmin" sysadmin_password
     eval "$pass='$sysadmin_password'"
 }
 

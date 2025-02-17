@@ -79,7 +79,7 @@ check_pass() {
 user_password_prompt () {
     local user="$1"
     local pass="$2"
-    ensure_same_pass user_password
+    ensure_same_pass "$user" user_password
     eval "$pass='$user_password'"
 }
 
