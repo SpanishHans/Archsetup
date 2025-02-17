@@ -178,6 +178,9 @@ delete_user() {
     local menu_items=()
 
     if id "$username" &>/dev/null; then
+        if [ -e "/var/spool/mail/$username" ]; then
+            rm "/var/spool/mail/$username"
+        fi
         userdel -r "$username" && continue_script 2 "$username deleted" "User $username and their files deleted."
     else
         continue_script 1 "User doesn't exist" "User $username does not exist."
