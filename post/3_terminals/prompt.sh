@@ -146,8 +146,8 @@ starship_theme_pure_prompt() {
     local term_password="$2"
 
     local commands_to_run=()
-    local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
-    live_command_output "$term_username" "$term_password" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
+    local commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/pure.toml /home/$term_username/.config/starship.toml")
+    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
 }
 
 starship_theme_pastel_powerline() {
@@ -155,8 +155,8 @@ starship_theme_pastel_powerline() {
     local term_password="$2"
 
     local commands_to_run=()
-    local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
-    live_command_output "$term_username" "$term_password" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
+    local commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/pastel.toml /home/$term_username/.config/starship.toml")
+    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
 }
 
 starship_theme_tokyo_night() {
@@ -164,8 +164,8 @@ starship_theme_tokyo_night() {
     local term_password="$2"
 
     local commands_to_run=()
-    local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
-    live_command_output "$term_username" "$term_password" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
+    local commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/tokyo.toml /home/$term_username/.config/starship.toml")
+    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
 }
 
 starship_theme_gruvbox_rainbow() {
@@ -173,7 +173,7 @@ starship_theme_gruvbox_rainbow() {
     local term_password="$2"
 
     local commands_to_run=()
-    local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
+    local commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/gruvbox.toml /home/$term_username/.config/starship.toml")
     live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
 }
 
@@ -182,8 +182,8 @@ starship_theme_jetpack() {
     local term_password="$2"
 
     local commands_to_run=()
-    local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
-    live_command_output "$term_username" "$term_password" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
+    local commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/jetpack.toml /home/$term_username/.config/starship.toml")
+    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
 }
 
 ################################################################################
