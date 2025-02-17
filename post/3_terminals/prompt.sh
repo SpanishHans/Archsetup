@@ -29,6 +29,10 @@ prompts_menu(){
         "User to change prompt for." \
         "Select prompts for a given user. Please select the user whose prompt shall be configured: "
 
+    local user="$USER_WITH_SUDO_USER"
+    local pass="$USER_WITH_SUDO_PASS"
+    install_asdf "$user" "$pass"
+
     local title="Prompt picker"
     local description="This allows you to pick a prompt tool for your shell."
     while true; do
