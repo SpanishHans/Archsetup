@@ -70,7 +70,7 @@ check_pass() {
 
     # Check the password with a while loop
     while true; do
-        echo "$pass" | sudo -S -u "$user" whoami > /dev/null 2>&1
+        echo "$pass" | sudo -S -u "$user" whoami > /dev/null
         if [ $? -eq 0 ]; then
             continue_script 2 "Correct" "Password is correct"
             break
