@@ -63,13 +63,26 @@ check_pass() {
     local user="$1"
     local pass="$2"
 
-    output=$(sudo -S -u "$user" <<< "$pass" whoami 2>&1 | tr -d '\n')
+    # Use a temporary file to capture sudo's output
+    local temp_file=$(mktemp)
 
-    if [[ "$output" == "$user" ]]; then
-        continue_script 2 "Correct" "Password for '$user' is correct."
+    # Attempt sudo with the provided password, capturing both stdout and stderr
+    if echo "$pass" | sudo -S -u "$user" whoami > "$temp_file" 2>&1; then
+        # Check if the 'whoami' command succeeded and output matches user
+        output=$(cat "$temp_file" | tr -d '\n')
+        if [[ "$output" == "$user" ]]; then
+            continue_script 2 "Correct" "Password for '$user' is correct."
+            rm "$temp_file"
+            return 0  # Success
+        else
+            continue_script 2 "Incorrect" "Incorrect password for '$user'."
+            rm "$temp_file"
+            return 1 # Failure
+        fi
     else
-        output=""
         continue_script 2 "Incorrect" "Incorrect password for '$user'."
+        rm "$temp_file"
+        return 1 # Failure
     fi
 }
 
