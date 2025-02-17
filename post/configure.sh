@@ -45,8 +45,8 @@ configure_menu () {
 
     input_pass \
         pass \
-        "Input pass for $user" \
-        "Checking if password is correct." \
+        "Root cant build" \
+        "Root cant build packages, therefore we shall use sysadmin to build packages." \
         "Please input the password for $user: "
 
     check_pass \
