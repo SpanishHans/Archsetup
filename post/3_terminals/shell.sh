@@ -43,7 +43,7 @@ configure_oh_my_zsh() {
         commands_to_run+=("rm -rf /home/$term_user/.oh-my-zsh")
     fi
 
-    if [[ ! -f "/home/$term_user/.zshrc"]]; then
+    if [[ ! -f "/home/$term_user/.zshrc" ]]; then
         commands_to_run+=("touch /home/$term_user/.zshrc")
     fi
 
