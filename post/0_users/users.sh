@@ -41,7 +41,7 @@ get_users() {
                 userlist+="$counter. $(printf "%-${max_user_len}s" "$user") has sudo: no\n"
             fi
         else
-            userlist+="$user"
+            userlist+="$user\n"
         fi
         ((counter++))
     done
