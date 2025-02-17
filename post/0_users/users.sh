@@ -64,10 +64,11 @@ check_pass() {
     local pass="$2"
 
     while true; do
-        echo "$pass" | sudo -S -u "$user" whoami
+        # Run the sudo command with password and check the exit status
+        echo "$pass" | sudo -S -u "$user" whoami > /dev/null 2>&1
         if [ $? -eq 0 ]; then
             continue_script 2 "Correct" "Password is correct"
-            continue_script 2 "Checking password for $user" "password from user $user is: $pass"
+            continue_script 2 "Checking password for $user" "Password from user $user is: $pass"
             break
         else
             continue_script 2 "Incorrect" "Incorrect password. Please try again."
