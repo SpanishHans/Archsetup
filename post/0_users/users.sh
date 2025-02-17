@@ -23,22 +23,15 @@ get_users() {
     local menu_items=()
     local max_user_len=0
 
-    for user in "${users[@]}"; do
-        user_len=${#user}
-        if (( user_len > max_user_len )); then
-            max_user_len=$user_len
-        fi
-    done
-
     userlist=""
     local counter=1
 
     for user in "${users[@]}"; do
         if [[ "$show_sudo" == "true" ]]; then
             if id "$user" | grep -q 'wheel'; then
-                userlist+="$counter. $(printf "%-${max_user_len}s" "$user") has sudo: yes\n"
+                userlist+="$counter. $user has sudo: yes\n"
             else
-                userlist+="$counter. $(printf "%-${max_user_len}s" "$user") has sudo: no\n"
+                userlist+="$counter. $user has sudo: no\n"
             fi
         else
             userlist+="$user\n"
