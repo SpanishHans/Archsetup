@@ -60,22 +60,21 @@ git_menu() {
     commands_to_run+=("touch $gitconfig_path")
     commands_to_run+=(
         "cat > $gitconfig_path <<EOF
-        [init]
-            defaultBranch = main
-        [user]
-            name = $gitusername
-            email = $gitemail
-        [core]
-            editor = nano
-        [alias]
-            st = status
-            co = checkout
-            br = branch
-            cm = commit
-        [color]
-            ui = auto
-        EOF"
-    )
+[init]
+    defaultBranch = main
+[user]
+    name = $gitusername
+    email = $gitemail
+[core]
+    editor = nano
+[alias]
+    st = status
+    co = checkout
+    br = branch
+    cm = commit
+[color]
+    ui = auto
+")
     commands_to_run+=("chown $git_user:$git_user $gitconfig_path")
     live_command_output "" "" "yes" "Installing git" "${commands_to_run[@]}"
 
