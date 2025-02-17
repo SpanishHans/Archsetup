@@ -283,11 +283,10 @@ $prompt"
 }
 
 input_pass() {
-    local pass="$1"
-    local user="$2"
+    local user="$1"
+    local pass="$2"
     local title="$3"
     local desc="$4"
-    local password1 password2 exit_code
 
     continue_script 2 "$title" "$desc"
 
