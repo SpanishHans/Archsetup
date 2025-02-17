@@ -90,6 +90,9 @@ configure_asdf() {
 
     commands_to_run+=("mkdir -p /opt/asdf")
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
+    commands_to_run+=("chmod -R a+rx /opt/asdf")
+    commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
+    live_command_output "" "" "yes" "Configuring ASDF on /opt/asdf" "${commands_to_run[@]}"
     
     init_command='export ASDF_DATA_DIR=/opt/asdf'
     case "$shell_path" in
@@ -114,7 +117,7 @@ configure_asdf() {
             ;;
     esac
 
-    local commands_to_run+=(
+    local commands_to_run=(
         "if ! grep -Fxq '$init_command' $config_file; then
             echo '$init_command' >> $config_file
         fi"
