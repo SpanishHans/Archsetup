@@ -26,25 +26,29 @@ git_menu() {
         git_user \
         "Local User to setup git for" \
         "Please enter the user whose git shall be configured: "
-
-    continue_script 2 "$git_user password" "Please provide that users password for running commands on his behalf."
     input_pass\
         pass\
-        "$git_user"
-    input_text\
-        gitusername\
-        "Github user of '$git_user'"\
-        "Please enter the username in github for '$git_user'"\
+        "Password for $git_user" \
+        "Please provide the password for $git_user in order to run commands on their behalf." \
+        "Please input the password for $git_user: "
+
+    input_text \
+        gitusername \
+        "Github user of '$git_user'" \
+        "Please enter the username in github for '$git_user'" \
         "Enter Git username: "
-    input_text\
-        gitemail\
-        "Github email of '$git_user'"\
-        "Please enter the email in github for '$git_user'"\
+
+    input_text \
+        gitemail \
+        "Github email of '$git_user'" \
+        "Please enter the email in github for '$git_user'" \
         "Enter Git email: "
-    continue_script 2 "ssh key password" "Please create a secure password for the ssh key that $git_user will have."
-    input_pass\
-        sshpass\
-        "$git_user"
+
+    input_pass \
+        sshpass \
+        "Password for ssh key" \
+        "Please provide the password for tthe ssh key that shall be used to authenticate on Github." \
+        "Please input the password for the ssh key: "
 
     home_path="/home/$git_user"
     gitconfig_path="$home_path/.gitconfig"
