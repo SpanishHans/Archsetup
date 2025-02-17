@@ -85,18 +85,11 @@ configure_asdf() {
 
     if ! check_folder_exists "/root/.asdf"; then
         commands_to_run+=("mkdir -p /root/.asdf")
-        continue_script 2 "ASDF folder doesn't exist" "ASDF doesn't exist at /opt/asdf. Creating."
     fi
 
-    if check_folder_exists "/opt/asdf"; then
-        commands_to_run+=("rm -rf /opt/asdf")
-        continue_script 2 "ASDF folder exists" "ASDF already exists at /opt/asdf. Removing."
+    if ! check_folder_exists "/opt/asdf"; then
+        commands_to_run+=("mkdir -p /opt/asdf")
     fi
-
-    commands_to_run+=("mkdir -p /opt/asdf")
-    commands_to_run+=("chmod -R a+rx /opt/asdf")
-    commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
-    live_command_output "" "" "yes" "Configuring ASDF on /opt/asdf" "${commands_to_run[@]}"
     
     case "$shell_path" in
         "/bin/bash" | "/usr/bin/bash")
