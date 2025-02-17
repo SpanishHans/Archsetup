@@ -63,18 +63,13 @@ check_pass() {
     local user="$1"
     local pass="$2"
 
-
     echo "$pass" | sudo -S -u "$user" id 2>&1
 
     if [[ $? -eq 0 ]]; then
-        if [[ ! -s "$temp_file" ]]; then
-            continue_script 2 "Correct" "Password $pass is correct for $user"
-            return 0
-        else
-            continue_script 2 "Incorrect" "Incorrect password. Please try again."
-        fi
+        continue_script 2 "Correct" "Password $pass is correct for $user"
     else
         continue_script 2 "Incorrect" "Incorrect password. Please try again."
+        exit 1
     fi
 }
 
