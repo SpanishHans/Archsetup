@@ -59,7 +59,9 @@ pick_user() {
         case $users_menu_choice in
             c)  break;;
             e)  exit;;
-            *)  local USER="${users[$((users_menu_choice))]}";break
+            *)  local selected_user=$(echo "${users[$users_menu_choice]}" | awk '{print $2}')
+                eval "$user_var=\"$selected_user\""
+                return
                 ;;
         esac
     done
