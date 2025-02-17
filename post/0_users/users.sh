@@ -61,9 +61,7 @@ pick_user() {
 
 check_pass() {
     local user="$1"
-    local prompt="$2"
-
-    input_pass pass "$user" "Password check" "Checking password for '$user'."
+    local pass="$2"
 
     continue_script 2 "$user" "pass: $pass"
 
@@ -77,7 +75,6 @@ check_pass() {
         fi
     done
 }
-
 
 user_password_prompt () {
     local user="$1"
