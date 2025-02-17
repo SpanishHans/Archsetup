@@ -251,9 +251,7 @@ configure_python() {
     commands_to_run+=("touch $path")
     commands_to_run+=(
         "cat > $path <<EOF
-        $item $version
-        EOF"
-    )
+$item $version")
     commands_to_run+=("chown $user:$user $path")
     asdf set $item $version
     
@@ -278,9 +276,7 @@ configure_node() {
     commands_to_run+=("touch $path")
     commands_to_run+=(
         "cat > $path <<EOF
-        $item $version
-        EOF"
-    )
+$item $version")
     commands_to_run+=("chown $user:$user $path")
     asdf set $item $version
 
@@ -305,9 +301,7 @@ configure_java() {
     commands_to_run+=("touch $path")
     commands_to_run+=(
         "cat > $path <<EOF
-        $item $version
-        EOF"
-    )
+$item $version")
     commands_to_run+=("chown $user:$user $path")
     asdf set $item $version
 
@@ -332,9 +326,7 @@ configure_rust() {
     commands_to_run+=("touch $path")
     commands_to_run+=(
         "cat > $path <<EOF
-        $item $version
-        EOF"
-    )
+$item $version")
     commands_to_run+=("chown $user:$user $path")
     asdf set $item $version
 
@@ -359,9 +351,7 @@ configure_make() {
     commands_to_run+=("touch $path")
     commands_to_run+=(
         "cat > $path <<EOF
-        $item $version
-        EOF"
-    )
+$item $version")
     commands_to_run+=("chown $user:$user $path")
     asdf set $item $version
 
@@ -386,9 +376,7 @@ configure_cmake() {
     commands_to_run+=("touch $path")
     commands_to_run+=(
         "cat > $path <<EOF
-        $item $version
-        EOF"
-    )
+$item $version")
     commands_to_run+=("chown $user:$user $path")
     asdf set $item $version
 
@@ -413,9 +401,7 @@ configure_ninja() {
     commands_to_run+=("touch $path")
     commands_to_run+=(
         "cat > $path <<EOF
-        $item $version
-        EOF"
-    )
+$item $version")
     commands_to_run+=("chown $user:$user $path")
     asdf set $item $version
     
@@ -440,9 +426,7 @@ configure_dotnet() {
     commands_to_run+=("touch $path")
     commands_to_run+=(
         "cat > $path <<EOF
-        $item $version
-        EOF"
-    )
+$item $version")
     commands_to_run+=("chown $user:$user $path")
     asdf set $item $version
 
@@ -467,9 +451,7 @@ configure_neovim() {
     commands_to_run+=("touch $path")
     commands_to_run+=(
         "cat > $path <<EOF
-        $item $version
-        EOF"
-    )
+$item $version")
     commands_to_run+=("chown $user:$user $path")
     asdf set $item $version
     
@@ -494,9 +476,7 @@ configure_chezmoi() {
     commands_to_run+=("touch $path")
     commands_to_run+=(
         "cat > $path <<EOF
-        $item $version
-        EOF"
-    )
+$item $version")
     commands_to_run+=("chown $user:$user $path")
     asdf set $item $version
 
@@ -521,9 +501,7 @@ configure_starship() {
     commands_to_run+=("touch $path")
     commands_to_run+=(
         "cat > $path <<EOF
-        $item $version
-        EOF"
-    )
+$item $version")
     commands_to_run+=("chown $user:$user $path")
     asdf set $item $version
 
@@ -548,9 +526,7 @@ configure_glow() {
     commands_to_run+=("touch $path")
     commands_to_run+=(
         "cat > $path <<EOF
-        $item $version
-        EOF"
-    )
+$item $version")
     commands_to_run+=("chown $user:$user $path")
     asdf set $item $version
     
