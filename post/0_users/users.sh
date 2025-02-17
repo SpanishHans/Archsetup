@@ -64,10 +64,15 @@ check_pass() {
     local pass="$2"
 
     while true; do
-        echo "$pass" | sudo -S -u "$user" bash -c "whoami"
-        if [ $? -eq 0 ]; then
+        # Capture both stdout and stderr into a variable
+        output=$(echo "$pass" | sudo -S -u "$user" bash -c "whoami" 2>&1)
+        
+        # Print captured output for debugging
+        echo "Output: $output"
+        
+        # Check if the output contains the username
+        if [[ "$output" == "$user" ]]; then
             continue_script 2 "Correct" "Password is correct"
-            continue_script 2 "Checking password for $user" "Password from user $user is: $pass"
             break
         else
             continue_script 2 "Incorrect" "Incorrect password. Please try again."
