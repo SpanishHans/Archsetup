@@ -65,6 +65,10 @@ check_pass() {
 
     output=$(echo "$pass" | sudo -S -u "$user" -v 2>&1)
 
+    if [[ "$output" == *"sorry"* ]]; then
+        output=""
+    fi
+
     if [[ -z "$output" ]]; then
         continue_script 2 "Incorrect" "Incorrect password. Please try again. Output: $output"
         exit  1
