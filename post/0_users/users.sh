@@ -87,9 +87,9 @@ change_admin_privs() {
     done
 
     if [[ "$sudo_access" == "y" ]]; then
-        usermod -aG wheel "$username" && continue_script 2 "$username is now admin" "User $username now has admin privileges."
+        usermod -aG wheel "$username" && continue_script 2 "$username is now admin" "User $username now is an admin (wheel)."
     else
-        continue_script 1 "User not wheel" "User $username is not wheel."
+        continue_script 1 "User not wheel" "User $username now isn't an admin (wheel)."
     fi
 }
 
