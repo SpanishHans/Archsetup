@@ -59,6 +59,17 @@ pick_user() {
     user_var="$USER"
 }
 
+check_pass() {
+    local user="$1"
+    su - $user -c "whoami" > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        echo "Password is correct."
+    else
+        echo "Password is incorrect."
+    fi
+
+}
+
 user_password_prompt () {
     local user="$1"
     local pass="$2"
