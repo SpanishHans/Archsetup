@@ -180,6 +180,27 @@ list_users() {
     continue_script 2 "Existing users" "List of Existing Users:\n\n$userlist"
 }
 
+pick_user(){
+    get_users userlist
+
+    local user="$1"
+    local title="$2"
+    local description="$3"
+
+    local users+=("Continue")
+    local users+=("Exit")
+
+    while true; do
+        menu_prompt pick_user_menu_choice "$title" "$description" "${users[@]}"
+        case $pick_user_menu_choice in
+            c)  break;;
+            e)  exit;;
+            *)  local USER="${users[$((pick_user_menu_choice))]}";break;;
+        esac
+    done
+    eval "$user=\"$USER\""
+}
+
 users_menu() {
     local title="User Management Setup"
     local description="This section helps you manage users on your system. You can create, modify, delete, or list users, and decide whether they should have admin privileges (sudo)."
