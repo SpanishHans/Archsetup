@@ -90,7 +90,9 @@ configure_asdf() {
     if [[ ! -d "/opt/asdf" ]]; then
         commands_to_run+=("mkdir -p /opt/asdf")
     fi
+    live_command_output "" "" "yes" "Configuring ASDF" "${commands_to_run[@]}"
     
+    local commands_to_run=()
     case "$shell_path" in
         "/bin/bash" | "/usr/bin/bash")
             local commands_to_run=()
