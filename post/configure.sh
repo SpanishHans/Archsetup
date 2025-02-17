@@ -46,6 +46,7 @@ configure_menu () {
     input_pass \
         pass \
         "Input pass for $user" \
+        "Checking if password is correct." \
         "Please input the password for $user: "
 
     #ensure_same_pass "$pass"
