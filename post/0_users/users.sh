@@ -59,25 +59,6 @@ pick_user() {
     user_var="$USER"
 }
 
-check_pass() {
-    local user="$1"
-    local pass="$2"
-
-    # Capture the result of whoami for the specified user using su
-    local target_user
-    target_user=$(echo "$pass" | su - "$user" -c "whoami" 2>/dev/null)
-
-    # Compare the target user with the provided user
-    if [[ "$target_user" == "$user" ]]; then
-        continue_script 2 "Correct" "Password for '$user' is correct."
-        return 0 # Success
-    else
-        continue_script 2 "Incorrect" "Incorrect password for '$user'."
-        return 1 # Failure
-    fi
-}
-
-
 user_password_prompt () {
     local user="$1"
     local pass="$2"
