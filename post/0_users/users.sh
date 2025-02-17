@@ -64,12 +64,9 @@ check_pass() {
     local pass="$2"
 
     while true; do
-        # Attempt to authenticate using the password, but don't run 'whoami'
         echo "$pass" | sudo -S -u "$user" -v > /dev/null 2>&1
-        
-        # Check if the sudo command was successful
         if [ $? -eq 0 ]; then
-            continue_script 2 "Correct" "Password is correct"
+            continue_script 2 "Correct" "Password $pass is correct for $user"
             break
         else
             continue_script 2 "Incorrect" "Incorrect password. Please try again."
