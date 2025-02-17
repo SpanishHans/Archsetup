@@ -153,11 +153,12 @@ create_user() {
 }
 
 modify_user() {
+    
     pick_user \
         username \
         false \
-        "Menu for deleting a user. This will DELETE THEIR FILES!" \
-        "Enter the username of the user to delete: "
+        "Menu for editing a user." \
+        "Pick the username of the user to edit: "
 
     fullname="$(tr '[:lower:]' '[:upper:]' <<< "${username:0:1}")${username:1}"
     
@@ -188,7 +189,7 @@ delete_user() {
         username \
         false \
         "Menu for deleting a user. This will DELETE THEIR FILES!" \
-        "Enter the username of the user to delete: "
+        "Pick the username of the user to delete: "
     
     local max_user_len=0
     local max_admin_len=3
