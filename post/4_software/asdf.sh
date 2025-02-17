@@ -271,7 +271,7 @@ configure_java() {
     local commands_to_run=()
     asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
     asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    asdf list $item | grep -q "$version" || commands_to_run+=("asdf set $item $version")
+    asdf set $item $version
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
@@ -287,7 +287,7 @@ configure_rust() {
     local commands_to_run=()
     asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
     asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    asdf list $item | grep -q "$version" || commands_to_run+=("asdf set $item $version")
+    asdf set $item $version
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
@@ -303,7 +303,7 @@ configure_make() {
     local commands_to_run=()
     asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
     asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    asdf list $item | grep -q "$version" || commands_to_run+=("asdf set $item $version")
+    asdf set $item $version
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
@@ -319,7 +319,7 @@ configure_cmake() {
     local commands_to_run=()
     asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
     asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    asdf list $item | grep -q "$version" || commands_to_run+=("asdf set $item $version")
+    asdf set $item $version
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
@@ -335,7 +335,7 @@ configure_ninja() {
     local commands_to_run=()
     asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
     asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    asdf list $item | grep -q "$version" || commands_to_run+=("asdf set $item $version")
+    asdf set $item $version
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
@@ -351,7 +351,7 @@ configure_dotnet() {
     local commands_to_run=()
     asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
     asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    asdf list $item | grep -q "$version" || commands_to_run+=("asdf set $item $version")
+    asdf set $item $version
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
@@ -367,7 +367,7 @@ configure_neovim() {
     local commands_to_run=()
     asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
     asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    asdf list $item | grep -q "$version" || commands_to_run+=("asdf set $item $version")
+    asdf set $item $version
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
@@ -383,7 +383,7 @@ configure_chezmoi() {
     local commands_to_run=()
     asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
     asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    asdf list $item | grep -q "$version" || commands_to_run+=("asdf set $item $version")
+    asdf set $item $version
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
@@ -399,7 +399,7 @@ configure_starship() {
     local commands_to_run=()
     asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
     asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    asdf list $item | grep -q "$version" || commands_to_run+=("asdf set $item $version")
+    asdf set $item $version
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
@@ -415,7 +415,7 @@ configure_glow() {
     local commands_to_run=()
     asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
     asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    asdf list $item | grep -q "$version" || commands_to_run+=("asdf set $item $version")
+    asdf set $item $version
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
