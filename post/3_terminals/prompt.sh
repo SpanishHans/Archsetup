@@ -137,11 +137,11 @@ starship_themes() {
         )
         menu_prompt shell_choice "$title" "$description" "${options[@]}"
         case $shell_choice in
-            0)  starship_theme_pure_prompt "$term_username" "$term_password";;
-            1)  starship_theme_pastel_powerline "$term_username" "$term_password";;
-            2)  starship_theme_tokyo_night "$term_username" "$term_password";;
-            3)  starship_theme_gruvbox_rainbow "$term_username" "$term_password";;
-            4)  starship_theme_jetpack "$term_username" "$term_password";;
+            0)  starship_theme_pure_prompt "$term_username" "$term_password";break;;
+            1)  starship_theme_pastel_powerline "$term_username" "$term_password";break;;
+            2)  starship_theme_tokyo_night "$term_username" "$term_password";break;;
+            3)  starship_theme_gruvbox_rainbow "$term_username" "$term_password";break;;
+            4)  starship_theme_jetpack "$term_username" "$term_password";break;;
             b)  break;;
             *)  echo "Invalid option. Please try again.";;
         esac
@@ -155,6 +155,7 @@ starship_theme_pure_prompt() {
     local commands_to_run=()
     local commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/pure.toml /home/$term_username/.config/starship.toml")
     live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
+    continue_script 2 "Theme configured" "The theme has been set up."
 }
 
 starship_theme_pastel_powerline() {
@@ -164,6 +165,7 @@ starship_theme_pastel_powerline() {
     local commands_to_run=()
     local commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/pastel.toml /home/$term_username/.config/starship.toml")
     live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
+    continue_script 2 "Theme configured" "The theme has been set up."
 }
 
 starship_theme_tokyo_night() {
@@ -173,6 +175,7 @@ starship_theme_tokyo_night() {
     local commands_to_run=()
     local commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/tokyo.toml /home/$term_username/.config/starship.toml")
     live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
+    continue_script 2 "Theme configured" "The theme has been set up."
 }
 
 starship_theme_gruvbox_rainbow() {
@@ -182,6 +185,7 @@ starship_theme_gruvbox_rainbow() {
     local commands_to_run=()
     local commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/gruvbox.toml /home/$term_username/.config/starship.toml")
     live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
+    continue_script 2 "Theme configured" "The theme has been set up."
 }
 
 starship_theme_jetpack() {
@@ -191,6 +195,7 @@ starship_theme_jetpack() {
     local commands_to_run=()
     local commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/jetpack.toml /home/$term_username/.config/starship.toml")
     live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
+    continue_script 2 "Theme configured" "The theme has been set up."
 }
 
 ################################################################################

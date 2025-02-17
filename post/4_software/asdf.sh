@@ -230,7 +230,7 @@ configure_asdf() {
     esac
 
     live_command_output "" "" "yes" "Configuring ASDF" "${commands_to_run[@]}"
-    continue_script 2 "ASDF" "ASDF Setup complete!"
+    continue_script 2 "ASDF Config" "ASDF configuration complete!"
 }
 
 configure_python() {
