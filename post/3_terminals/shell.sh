@@ -123,12 +123,12 @@ configure_bash() {
     while true; do
         local options=(\
             "Bash it"\
-            "Back"
+            "Exit"
         )
         menu_prompt bash_choice "$title" "$description" "${options[@]}"
         case $bash_choice in
             0)  configure_bash_it "$term_user";break;;
-            b)  break;;
+            e)  break;;
             *)  echo "Invalid option. Please try again.";;
         esac
     done
@@ -151,12 +151,12 @@ configure_zsh() {
     while true; do
         local options=(\
             "Oh My Zsh"\
-            "Back"
+            "Exit"
         )
         menu_prompt zsh_choice "$title" "$description" "${options[@]}"
         case $zsh_choice in
             0)  configure_oh_my_zsh "$term_user";break;;
-            b)  break;;
+            e)  break;;
             *)  echo "Invalid option. Please try again.";;
         esac
     done
@@ -179,12 +179,12 @@ configure_fish() {
     while true; do
         local options=(\
             "Fisher"\
-            "Back"
+            "Exit"
         )
         menu_prompt fish_choice "$title" "$description" "${options[@]}"
         case $fish_choice in
             0)  configure_fisher "$term_user";break;;
-            b)  break;;
+            e)  break;;
             *)  echo "Invalid option. Please try again.";;
         esac
     done
