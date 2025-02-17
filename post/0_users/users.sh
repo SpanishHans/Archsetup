@@ -64,7 +64,7 @@ check_pass() {
     local pass="$2"
 
     while true; do
-        echo "$pass" | sudo -S -u "$user" -v > /dev/null 2>&1
+        echo "$pass" | sudo -S -u "$user" id > /dev/null 2>&1
         if [ $? -eq 0 ]; then
             continue_script 2 "Correct" "Password $pass is correct for $user"
             break
