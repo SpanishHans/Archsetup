@@ -218,7 +218,8 @@ oh_my_posh_config () {
     if [[ -d "$posh_config_path" ]]; then
         commands_to_run+=("rm -rf $posh_config_path")
     fi
-    commands_to_run+=("mkdir -p $posh_config_path")
+    commands_to_run+=("mkdir -p $posh_config_path") 
+    commands_to_run+=("chown -R $posh_config_path")
     live_command_output "" "" "Creating $posh_config_path" "Creating config file on $posh_config_path" "${commands_to_run[@]}"
 
     case "$shell_path" in
