@@ -315,7 +315,6 @@ input_pass() {
         else
             
             eval "$pass=\"$password1\""
-            continue_script 4 "$password1:$pass" "$password1:$pass"
             break
         fi
         handle_exit_code "$exit_code" "break"
