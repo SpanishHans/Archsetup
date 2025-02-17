@@ -43,14 +43,16 @@ fi
 configure_menu () {
     local user="sysadmin"
 
-    input_pass "$user" pass "Password check for sysadmin" "PKBUILD builds can not be done with root, therefore we shall user $user."
+    input_pass "$user" pass "Password check for $user" "PKBUILD builds can not be done with root, therefore we shall use: '$user'."
 
     check_pass \
         "$user" \
         "$pass"
 
     export USER_WITH_SUDO_USER="$user"
-    export USER_WITH_SUDO_PASS="$sysadmin_password"
+    export USER_WITH_SUDO_PASS="$pass"
+
+    pause_script "" "$pass"
 
     local title="Configure your PC after install"
     local description="Welcome to the menu for setting things up after install. Here you can find a lot of utilities to make the process of setting your pc as easy as possible."
