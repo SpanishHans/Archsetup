@@ -37,11 +37,13 @@ asdf_menu () {
             'Node           (Installs Node.js, npm, and related JavaScript development tools)'\
             'Java           (Installs the Java Development Kit (JDK) for Java development)'\
             'Rust           (Installs the Rust programming language, Cargo, and related tools)'\
-            'C              (Installs GCC, Make, and other necessary tools for C development)'\
+            'Make           (Installs GCC, Make, and other necessary tools for C development)'\
             'CMake          (Installs CMake, a tool for managing build processes in C/C++)'\
             'Ninja          (Installs Ninja, a fast build system for compiling projects)'\
             '.NET           (Installs .NET SDK for cross-platform application development)'\
             'Neovim         (Installs Neovim, a modern, extensible text editor for developers)'\
+            'Chezmoi        (Installs Chezmoi, a dotmanager based on git)'\
+            'Starship       (Installs Starship, a prompt for many terminals)'\
             'Glow           (Installs Glow, a markdown reader)'\
             'Back           (Return to the previous menu)'\
         )
