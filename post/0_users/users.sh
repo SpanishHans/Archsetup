@@ -66,28 +66,24 @@ check_pass() {
     # Use a temporary file to capture sudo's output
     local temp_file=$(mktemp)
 
-    # Attempt sudo with the provided password, capturing both stdout and stderr
-    if echo "$pass" | sudo -S -u "$user" whoami > "$temp_file" 2>&1; then
-        # Check if the 'whoami' command succeeded and output matches user
-        output=$(cat "$temp_file" | tr -d '\n')
-        if [[ "$output" == "$user" ]]; then
-            continue_script 2 "Correct" "Password for '$user' is correct."
-            rm "$temp_file"
-            return 0  # Success
-        else
-            continue_script 2 "Incorrect" "Incorrect password for '$user'."
-            rm "$temp_file"
-            return 1 # Failure
-        fi
-    else
+    # Attempt sudo with a command that *requires* a password
+    if ! echo "$pass" | sudo -S -u "$user" sh -c 'exit 1' > "$temp_file" 2>&1; then  # Inverted exit status check
         continue_script 2 "Incorrect" "Incorrect password for '$user'."
         rm "$temp_file"
         return 1 # Failure
+    else
+        # Check if sudo succeeded without prompting (meaning password was correct)
+        if grep -q "\[sudo] password for $user:" "$temp_file"; then # Check if the password prompt appeared
+          continue_script 2 "Incorrect" "Incorrect password for '$user'."
+          rm "$temp_file"
+          return 1
+        else
+          continue_script 2 "Correct" "Password for '$user' is correct."
+          rm "$temp_file"
+          return 0  # Success
+        fi
     fi
 }
-
-
-
 
 user_password_prompt () {
     local user="$1"
