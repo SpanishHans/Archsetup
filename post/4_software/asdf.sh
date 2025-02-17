@@ -82,14 +82,14 @@ configure_asdf() {
     local shell_path="$(getent passwd "$user" | cut -d: -f7)"
     local commands_to_run=()
 
+    if ! check_folder_exists "/root/.asdf"; then
+        commands_to_run+=("mkdir -p /root/.asdf")
+        continue_script 2 "ASDF folder doesn't exist" "ASDF doesn't exist at /opt/asdf. Creating."
+    fi
+
     if check_folder_exists "/opt/asdf"; then
         commands_to_run+=("rm -rf /opt/asdf")
         continue_script 2 "ASDF folder exists" "ASDF already exists at /opt/asdf. Removing."
-    fi
-
-    if !check_folder_exists "/root/.asdf"; then
-        commands_to_run+=("mkdir -p /root/.asdf")
-        continue_script 2 "ASDF folder doesn't exist" "ASDF doesn't exist at /opt/asdf. Creating."
     fi
 
     commands_to_run+=("mkdir -p /opt/asdf")
