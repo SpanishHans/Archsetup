@@ -68,7 +68,7 @@ check_pass() {
     input_pass pass "$user"
 
     # Debug: Show the password (only for debugging purposes, remove after)
-    echo "Debug: Password entered is: $pass" 
+    continue_script 2 "" "Debug: Password entered is: $pass" 
 
     # Check password with a while loop
     while true; do
