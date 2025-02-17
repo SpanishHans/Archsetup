@@ -69,9 +69,9 @@ check_pass() {
 $output"
 
     if [[ "$output" == "$user" ]]; then
-        continue_script 2 "Correct" "Password for user '$user' is correct. Output: $output"
+        continue_script 2 "Correct" "Password for '$user' is correct."
     else
-        continue_script 2 "Incorrect" "Incorrect password for user '$user'. Output: $output"
+        continue_script 2 "Incorrect" "Incorrect password for '$user'."
         exit 1
     fi
 }
