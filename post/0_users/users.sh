@@ -63,8 +63,12 @@ check_pass() {
     local user="$1"
     local pass="$2"
 
-    # Use sh -c to execute whoami under sudo for the specified user
-    if echo "$pass" | sudo -S -u "$user" sh -c "whoami" > /dev/null 2>&1; then
+    # Capture the result of whoami for the specified user using su
+    local target_user
+    target_user=$(echo "$pass" | su - "$user" -c "whoami" 2>/dev/null)
+
+    # Compare the target user with the provided user
+    if [[ "$target_user" == "$user" ]]; then
         continue_script 2 "Correct" "Password for '$user' is correct."
         return 0 # Success
     else
@@ -72,7 +76,6 @@ check_pass() {
         return 1 # Failure
     fi
 }
-
 
 
 user_password_prompt () {
