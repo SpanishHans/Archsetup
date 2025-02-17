@@ -29,6 +29,12 @@ prompts_menu(){
     install_asdf "$user" "$pass"
 
     pick_user \
+        langs_username \
+        "User to install ASDF software for" \
+        "Please enter the user who shall get ASDF software installed: "
+    configure_asdf "$langs_username"
+
+    pick_user \
         prompt_username \
         "User to change prompt for." \
         "Select prompts for a given user. Please select the user whose prompt shall be configured: "

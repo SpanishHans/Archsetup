@@ -29,7 +29,6 @@ asdf_menu () {
         langs_username \
         "User to install ASDF software for" \
         "Please enter the user who shall get ASDF software installed: "
-
     configure_asdf "$langs_username"
 
     while true; do
