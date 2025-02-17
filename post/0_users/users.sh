@@ -63,15 +63,16 @@ check_pass() {
     local user="$1"
     local pass="$2"
 
-    # Execute sudo with a simple command that requires authentication
-    if echo "$pass" | sudo -S -u "$user" true > /dev/null 2>&1; then  # Check the exit status
+    output=$(sudo -S -u "$user" <<< "$pass" whoami 2>&1 | tr -d '\n')
+
+    if [[ "$output" == "$user" ]]; then
         continue_script 2 "Correct" "Password for '$user' is correct."
-        return 0 # Success
     else
+        output=""
         continue_script 2 "Incorrect" "Incorrect password for '$user'."
-        return 1 # Failure
     fi
 }
+
 
 
 
