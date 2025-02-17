@@ -165,15 +165,16 @@ scroll_window_output() {
 
     echo -e "$prompt\n\n$(cat "$file")" > "$temp_file"
 
-    dialog_output=$(dialog \
+    dialog \
         --backtitle "Viewing $file" \
         --title "$file on logs viewer" \
         --ok-label "Ok, Continue" \
         --extra-button \
         --extra-label "Cancel" \
         --textbox "$temp_file" \
-        $full_height $full_width 2>&1 >/dev/tty)
-    eval "$choice=\"$dialog_output\""
+        $full_height $full_width
+    local exit_status=$?
+    eval "$choice=\"$exit_status\""
     rm -f "$temp_file"
 }
 
