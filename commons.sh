@@ -310,9 +310,10 @@ $prompt"
 }
 
 ensure_same_pass() {
-    local pass="$1"
+    local user="$1"
+    local pass="$2"
     local pass1 pass2
-    local msg_title="Password Validation"
+    local msg_title="Password Validation for: user"
     
     while true; do
         local msg_text="Please enter your password."

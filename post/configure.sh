@@ -49,16 +49,12 @@ configure_menu () {
         "Checking if password is correct." \
         "Please input the password for $user: "
 
-    #ensure_same_pass "$pass"
-
     check_pass \
         "$user" \
         "$pass"
 
     export USER_WITH_SUDO_USER="$user"
     export USER_WITH_SUDO_PASS="$pass"
-
-    pause_script "" "pass: $pass: $USER_WITH_SUDO_PASS"
 
     local title="Configure your PC after install"
     local description="Welcome to the menu for setting things up after install. Here you can find a lot of utilities to make the process of setting your pc as easy as possible."
