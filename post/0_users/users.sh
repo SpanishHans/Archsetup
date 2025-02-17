@@ -18,9 +18,7 @@ source ./commons.sh
 
 get_users() {
     local choice="$1"
-    # Get all users with UID between 1000 and 65534
     local users=($(awk -F: '$3 >= 1000 && $3 < 65534 {print $1}' /etc/passwd))
-
     local menu_items=()
     local max_user_len=0
 
@@ -31,7 +29,7 @@ get_users() {
         fi
     done
 
-    local userlist=""
+    userlist=""
     local counter=1
 
     for user in "${users[@]}"; do
