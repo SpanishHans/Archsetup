@@ -239,7 +239,7 @@ configure_asdf() {
 
 configure_python() {
     local user="$1"
-    local path="/home/$git_user/.tool-versions"
+    local path="/home/$user/.tool-versions"
     local item="python"
     local version="3.12.3"
     
@@ -255,6 +255,7 @@ configure_python() {
         EOF"
     )
     commands_to_run+=("chown $user:$user $path")
+    asdf set $item $version
     
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
@@ -266,7 +267,7 @@ configure_python() {
 
 configure_node() {
     local user="$1"
-    local path="/home/$git_user/.tool-versions"
+    local path="/home/$user/.tool-versions"
     local item="nodejs"
     local version="22.14.0"
 
@@ -281,6 +282,7 @@ configure_node() {
         EOF"
     )
     commands_to_run+=("chown $user:$user $path")
+    asdf set $item $version
 
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
@@ -292,7 +294,7 @@ configure_node() {
 
 configure_java() {
     local user="$1"
-    local path="/home/$git_user/.tool-versions"
+    local path="/home/$user/.tool-versions"
     local item="java"
     local version="latest:adoptopenjdk-23"
 
@@ -307,6 +309,7 @@ configure_java() {
         EOF"
     )
     commands_to_run+=("chown $user:$user $path")
+    asdf set $item $version
 
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
@@ -318,7 +321,7 @@ configure_java() {
 
 configure_rust() {
     local user="$1"
-    local path="/home/$git_user/.tool-versions"
+    local path="/home/$user/.tool-versions"
     local item="rust"
     local version="1.84.0"
 
@@ -333,6 +336,7 @@ configure_rust() {
         EOF"
     )
     commands_to_run+=("chown $user:$user $path")
+    asdf set $item $version
 
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
@@ -344,7 +348,7 @@ configure_rust() {
 
 configure_make() {
     local user="$1"
-    local path="/home/$git_user/.tool-versions"
+    local path="/home/$user/.tool-versions"
     local item="make"
     local version="4.4.1"
 
@@ -359,6 +363,7 @@ configure_make() {
         EOF"
     )
     commands_to_run+=("chown $user:$user $path")
+    asdf set $item $version
 
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
@@ -370,7 +375,7 @@ configure_make() {
 
 configure_cmake() {
     local user="$1"
-    local path="/home/$git_user/.tool-versions"
+    local path="/home/$user/.tool-versions"
     local item="cmake"
     local version="3.31.4"
 
@@ -385,6 +390,7 @@ configure_cmake() {
         EOF"
     )
     commands_to_run+=("chown $user:$user $path")
+    asdf set $item $version
 
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
@@ -396,7 +402,7 @@ configure_cmake() {
 
 configure_ninja() {
     local user="$1"
-    local path="/home/$git_user/.tool-versions"
+    local path="/home/$user/.tool-versions"
     local item="ninja"
     local version="1.12.0"
 
@@ -411,6 +417,7 @@ configure_ninja() {
         EOF"
     )
     commands_to_run+=("chown $user:$user $path")
+    asdf set $item $version
     
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
@@ -422,7 +429,7 @@ configure_ninja() {
 
 configure_dotnet() {
     local user="$1"
-    local path="/home/$git_user/.tool-versions"
+    local path="/home/$user/.tool-versions"
     local item="dotnet"
     local version="9.0.200"
 
@@ -437,6 +444,7 @@ configure_dotnet() {
         EOF"
     )
     commands_to_run+=("chown $user:$user $path")
+    asdf set $item $version
 
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
@@ -448,7 +456,7 @@ configure_dotnet() {
 
 configure_neovim() {
     local user="$1"
-    local path="/home/$git_user/.tool-versions"
+    local path="/home/$user/.tool-versions"
     local item="neovim"
     local version="stable"
 
@@ -463,6 +471,7 @@ configure_neovim() {
         EOF"
     )
     commands_to_run+=("chown $user:$user $path")
+    asdf set $item $version
     
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
@@ -474,7 +483,7 @@ configure_neovim() {
 
 configure_chezmoi() {
     local user="$1"
-    local path="/home/$git_user/.tool-versions"
+    local path="/home/$user/.tool-versions"
     local item="chezmoi"
     local version="2.59.1"
 
@@ -489,6 +498,7 @@ configure_chezmoi() {
         EOF"
     )
     commands_to_run+=("chown $user:$user $path")
+    asdf set $item $version
 
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
@@ -500,7 +510,7 @@ configure_chezmoi() {
 
 configure_starship() {
     local user="$1"
-    local path="/home/$git_user/.tool-versions"
+    local path="/home/$user/.tool-versions"
     local item="starship"
     local version="1.22.1"
 
@@ -515,6 +525,7 @@ configure_starship() {
         EOF"
     )
     commands_to_run+=("chown $user:$user $path")
+    asdf set $item $version
 
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
@@ -526,7 +537,7 @@ configure_starship() {
 
 configure_glow() {
     local user="$1"
-    local path="/home/$git_user/.tool-versions"
+    local path="/home/$user/.tool-versions"
     local item="glow"
     local version="2.0.0"
 
@@ -541,6 +552,7 @@ configure_glow() {
         EOF"
     )
     commands_to_run+=("chown $user:$user $path")
+    asdf set $item $version
     
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
