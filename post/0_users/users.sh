@@ -17,7 +17,7 @@
 source ./commons.sh
 
 get_users() {
-    local choice="$1"
+    local -n choice="$1"
     local show_sudo="$2"
     local users=($(awk -F: '$3 >= 1000 && $3 < 65534 {print $1}' /etc/passwd))
     local menu_items=()
@@ -43,29 +43,30 @@ get_users() {
 }
 
 pick_user() {
-    local user="$1"
+    local -n user_var="$1"  # Use a nameref to set the caller variable
     local show_sudo="$2"
     local title="$3"
     local description="$4"
 
+    local users_list=()
     get_users users_list "$show_sudo"
 
-    local users=()
-    IFS=$'\n' read -rd '' -a users <<<"$users_list"
-    users+=("Exit")
-    
+    users_list+=("Exit")
+
     while true; do
-        menu_prompt users_menu_choice "$title" "$description" "${users[@]}"
+        menu_prompt users_menu_choice "$title" "$description" "${users_list[@]}"
         case $users_menu_choice in
             c)  break;;
             e)  exit;;
-            *)  local selected_user=$(echo "${users[$users_menu_choice]}" | awk '{print $2}')
-                eval "$user_var=\"$selected_user\""
-                return
+            *)  
+                if (( users_menu_choice >= 0 && users_menu_choice < ${#users_list[@]} - 1 )); then
+                    user_var=$(echo "${users_list[$users_menu_choice]}" | awk '{print $2}')
+                    return
+                fi
                 ;;
         esac
     done
-    eval $user="$USER"
+    user_var="$USER"
 }
 
 user_password_prompt () {
