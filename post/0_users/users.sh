@@ -18,7 +18,6 @@ source ./commons.sh
 
 get_users() {
     local choice="$1"
-    local show_sudo="$2"
     local users=($(awk -F: '$3 >= 1000 && $3 < 65534 {print $1}' /etc/passwd))
     local max_user_len=0
 
@@ -33,15 +32,12 @@ get_users() {
     local counter=1
 
     for user in "${users[@]}"; do
-        if [[ "$show_sudo" == "yes" ]]; then
-            if id "$user" | grep -q 'wheel'; then
-                userlist+="$counter. $(printf "%-${max_user_len}s" "$user") has sudo: yes\n"
-            else
-                userlist+="$counter. $(printf "%-${max_user_len}s" "$user") has sudo: no\n"
-            fi
+        if id "$user" | grep -q 'wheel'; then
+            userlist+="$counter. $(printf "%-${max_user_len}s" "$user") has sudo: yes\n"
         else
-            userlist+="$counter. $(printf "%-${max_user_len}s" "$user")\n"
+            userlist+="$counter. $(printf "%-${max_user_len}s" "$user") has sudo: no\n"
         fi
+
         ((counter++))
     done
 
@@ -83,7 +79,7 @@ change_admin_privs() {
 }
 
 create_user() {
-    get_users user_list "yes"
+    get_users user_list
     input_text\
         username\
         "New user"\
@@ -126,7 +122,7 @@ create_user() {
 }
 
 modify_user() {
-    get_users user_list "yes"
+    get_users user_list
     input_text\
         username\
         "Edit user"\
@@ -157,7 +153,7 @@ modify_user() {
 }
 
 delete_user() {
-    get_users user_list "yes"
+    get_users user_list
     input_text\
         username\
         "Delete user"\
@@ -176,7 +172,7 @@ delete_user() {
 }
 
 list_users() {
-    get_users user_list "yes"
+    get_users user_list
     local max_user_len=0
     local max_admin_len=3
     local menu_items=()
