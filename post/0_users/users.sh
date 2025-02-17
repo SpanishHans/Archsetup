@@ -18,6 +18,7 @@ source ./commons.sh
 
 get_users() {
     local choice="$1"
+    local show_sudo="$2"
     local users=($(awk -F: '$3 >= 1000 && $3 < 65534 {print $1}' /etc/passwd))
     local menu_items=()
     local max_user_len=0
@@ -33,10 +34,14 @@ get_users() {
     local counter=1
 
     for user in "${users[@]}"; do
-        if id "$user" | grep -q 'wheel'; then
-            userlist+="$counter. $(printf "%-${max_user_len}s" "$user") has sudo: yes\n"
+        if [[ "$show_sudo" == "yes" ]]; then
+            if id "$user" | grep -q 'wheel'; then
+                userlist+="$counter. $(printf "%-${max_user_len}s" "$user") has sudo: yes\n"
+            else
+                userlist+="$counter. $(printf "%-${max_user_len}s" "$user") has sudo: no\n"
+            fi
         else
-            userlist+="$counter. $(printf "%-${max_user_len}s" "$user") has sudo: no\n"
+            userlist+="$counter. $(printf "%-${max_user_len}s" "$user")\n"
         fi
         ((counter++))
     done
