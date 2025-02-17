@@ -63,10 +63,9 @@ check_pass() {
     local user="$1"
     local prompt="$2"
 
-    continue_script 2 "Credentials for user $user" "$prompt"
-    input_pass pass "$user"
+    input_pass pass "$user" "Password check" "Checking password for $user."
 
-    continue_script 2 "" "$user: Password entered is: $pass" 
+    continue_script 2 "$user" "Password entered is: $pass" 
 
     while true; do
         echo "$pass" | sudo -S -u "$user" whoami > /dev/null 2>&1

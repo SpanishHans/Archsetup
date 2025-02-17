@@ -285,7 +285,11 @@ $prompt"
 input_pass() {
     local pass="$1"
     local user="$2"
+    local title="$3"
+    local desc="$4"
     local password1 password2 exit_code
+
+    continue_script 2 "$title" "$desc"
 
     while true; do
         password1=$(dialog \
@@ -311,7 +315,6 @@ input_pass() {
             continue_script 4 "Password Error" "Passwords for '$user' do not match. Please try again."
         else
             eval "$pass=\"$password1\""
-            continue_script 4 "test" "Debug: Password successfully assigned to variable '$pass'"
             break
         fi
         handle_exit_code "$exit_code" "break"
