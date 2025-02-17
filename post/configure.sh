@@ -43,7 +43,7 @@ fi
 configure_menu () {
     check_pass \
         "sysadmin" \
-        "PKBUILD builds can not be done with root, therefore we shall user sysadmin. Provide its password: "
+        "PKBUILD builds can not be done with root, therefore we shall user sysadmin."
 
     export USER_WITH_SUDO_USER="sysadmin"
     export USER_WITH_SUDO_PASS="$sysadmin_password"
