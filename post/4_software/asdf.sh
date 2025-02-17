@@ -84,7 +84,7 @@ configure_asdf() {
     local commands_to_run=()
 
     if check_folder_exists "/opt/asdf"; then
-        commands_to_run+=("rm -rf /opt/asdf")
+        commands_to_run+=("rm -rf /opt/asdf $$ mkdir -p /opt/asdf")
         commands_to_run+=("cp -rf /home/sysadmin/.asdf /opt/asdf")
         continue_script 2 "ASDF folder exists" "ASDF already exists at /opt/asdf. Removing."
     fi
