@@ -25,12 +25,11 @@ asdf_menu () {
     local pass="$USER_WITH_SUDO_PASS"
     install_asdf "$user" "$pass"
 
-    get_users userlist
-    input_text\
-        langs_username\
-        "User to installa asdf and programming language installation and support."\
-        "Please enter the user who shall get asdf and programming language installation and support.\n\n$userlist"\
-        'What user to add asdf and programming language installation and support for?: '
+    pick_user \
+        langs_username \
+        "User to install ASDF software for" \
+        "Please enter the user who shall get ASDF software installed: "
+
     configure_asdf "$langs_username"
 
     while true; do

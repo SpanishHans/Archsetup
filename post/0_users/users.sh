@@ -41,9 +41,8 @@ get_users() {
 
 pick_user() {
     local -n user_var="$1"
-    local show_sudo="$2"
-    local title="$3"
-    local description="$4"
+    local title="$2"
+    local description="$3"
 
     local users_list=()
     users_list=($(awk -F: '$3 >= 1000 && $3 < 65534 {print $1}' /etc/passwd))
@@ -141,7 +140,6 @@ modify_user() {
     
     pick_user \
         username \
-        true \
         "Menu for editing a user." \
         "Pick the username of the user to edit: "
 
@@ -172,7 +170,6 @@ delete_user() {
 
     pick_user \
         username \
-        true \
         "Menu for deleting a user." \
         "This will DELETE THEIR FILES! Pick the username of the user to delete: "
     

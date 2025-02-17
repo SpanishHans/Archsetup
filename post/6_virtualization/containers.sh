@@ -63,12 +63,10 @@ configure_classic_containers() {
 
 configure_docker() {
     install_pacman_packages docker docker-compose
-    get_users userlist
-    input_text\
-        docker_user\
-        "Docker user"\
-        "Please enter the user who shall be added to docker group\n\n$userlist"\
-        "What user to add to docker group?: "
+    pick_user \
+        docker_user \
+        "Docker user" \
+        "Please enter the user who shall be added to docker group: "
 
     local commands_to_run=()
     commands_to_run+=("usermod -aG docker $docker_user")

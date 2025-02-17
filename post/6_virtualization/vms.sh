@@ -43,12 +43,10 @@ hypervisors_menu() {
 hyper_type_1() {
     configure_libvirt
 
-    get_users userlist
-    input_text\
+    pick_user \
         qemu_user\
         "QEMU user"\
-        "Please enter the user who shall be added to QEMU confs:\n\n$userlist"\
-        "What user to add to QEMU confs?"
+        "Please enter the user who shall be added to QEMU confs: "
 
     local commands_to_run=()
     commands_to_run+=("sed -i \"s/^#user = .*/user = '$qemu_user'/\" /etc/libvirt/qemu.conf")

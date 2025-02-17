@@ -46,12 +46,10 @@ configure_libvirt() {
     install_pacman_packages libvirt dnsmasq virt-manager
 
     check_kvm
-    get_users userlist
-    input_text\
-        libvirt_user\
-        "Libvirt user"\
-        "Please enter the user who shall be added to libvirt group:\n\n$userlist"\
-        "What user to add to libvirt group?"
+    pick_user \
+        libvirt_user \
+        "Libvirt user" \
+        "Please enter the user who shall be added to libvirt group: "
 
     local commands_to_run=()
     commands_to_run+=("usermod -aG libvirt $libvirt_user")

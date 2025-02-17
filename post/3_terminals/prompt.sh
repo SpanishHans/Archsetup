@@ -23,12 +23,11 @@ source ./post/4_software/asdf.sh
 ################################################################################
 
 prompts_menu(){
-    get_users userlist
-    input_text\
-        prompt_username\
-        "User to change prompt for."\
-        "Select shells for a given user. Please select the user whose prompt shall be configured.\n\n$userlist"\
-        "What user to configure prompt for?: "
+    pick_user \
+        prompt_username \
+        "User to change prompt for." \
+        "Select prompts for a given user. Please select the user whose prompt shall be configured: "
+
     input_pass\
         prompt_pass\
         "$prompt_username"

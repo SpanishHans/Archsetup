@@ -22,12 +22,11 @@ git_menu() {
     install_pacman_packages git openssh
     local commands_to_run=()
 
-    get_users userlist
-    input_text\
-        git_user\
-        "User account"\
-        "Please enter the user whose git shall be configured\n\n$userlist"\
-        "What user to configure git for?: "
+    pick_user \
+        git_user \
+        "Local User to setup git for" \
+        "Please enter the user whose git shall be configured: "
+
     continue_script 2 "$git_user password" "Please provide that users password for running commands on his behalf."
     input_pass\
         pass\
