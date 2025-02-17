@@ -63,7 +63,7 @@ check_pass() {
     local user="$1"
     local pass="$2"
 
-    continue_script 2 "Checking password for $user" "pass is: $pass"
+    continue_script 2 "Checking password for $user" "password from user $user is: $pass"
 
     while true; do
         echo "$pass" | sudo -S -u "$user" whoami > /dev/null 2>&1
