@@ -27,15 +27,12 @@ get_users() {
     local counter=1
 
     for user in "${users[@]}"; do
-        if [[ "$show_sudo" == "true" ]]; then
-            if id "$user" | grep -q 'wheel'; then
-                userlist+="$counter. $user has sudo: yes\n"
-            else
-                userlist+="$counter. $user has sudo: no\n"
-            fi
+        if id "$user" | grep -q 'wheel'; then
+            userlist+="$counter. $user has sudo: yes\n"
         else
-            userlist+="$user\n"
+            userlist+="$counter. $user has sudo: no\n"
         fi
+
         ((counter++))
     done
 
@@ -43,28 +40,24 @@ get_users() {
 }
 
 pick_user() {
-    local -n user_var="$1"  # Use a nameref to set the caller variable
+    local -n user_var="$1"
     local show_sudo="$2"
     local title="$3"
     local description="$4"
 
     local users_list=()
     users_list=($(awk -F: '$3 >= 1000 && $3 < 65534 {print $1}' /etc/passwd))
-
-    users_list+=("Exit")  # Add the exit option
+    users_list+=("Back")
 
     while true; do
-        # Call menu_prompt to display the list of users
         menu_prompt users_menu_choice "$title" "$description" "${users_list[@]}"
-        
         case $users_menu_choice in
-            c)  break;;  # Continue if 'c' is selected
-            e)  exit;;   # Exit if 'e' is selected
+            b)  break;;
             *)  local USER="${users_list[$((users_menu_choice))]}";break
                 ;;
         esac
     done
-    user_var="$USER"  # Fallback to current user if nothing is selected
+    user_var="$USER"
 }
 
 user_password_prompt () {
@@ -102,7 +95,7 @@ change_admin_privs() {
 }
 
 create_user() {
-    get_users userlist true
+    get_users userlist
     input_text\
         username\
         "New user"\
@@ -195,7 +188,7 @@ delete_user() {
 }
 
 list_users() {
-    get_users userlist true
+    get_users userlist
     local max_user_len=0
     local max_admin_len=3
     local menu_items=()
