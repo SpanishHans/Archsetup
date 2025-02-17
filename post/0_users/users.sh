@@ -65,6 +65,8 @@ check_pass() {
 
     output=$(echo "$pass" | sudo -S -u "$user" -v 2>&1)
 
+    continue_script 2 "$output" "$output"
+
     if [[ -z "$output" ]]; then
         continue_script 2 "Correct" "Password for $user is correct. $output"
     else
