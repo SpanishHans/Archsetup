@@ -76,7 +76,7 @@ configure_fisher() {
 ################################################################################
 
 shells_menu() {
-    pick_user shell_username "User to change shell for." "Select shells for a given user. Please select the user whose shell shall be configured."
+    pick_user shell_username false "User to change shell for." "Select shells for a given user. Please select the user whose shell shall be configured."
 
     title="Shell configurator: pick shell"
     description="Please select a shell from the menu below."
