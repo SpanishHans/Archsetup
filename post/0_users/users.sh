@@ -44,6 +44,24 @@ get_users() {
     eval "$choice=\"$userlist\""
 }
 
+pick_user() {
+    get_users users
+    local users+=("Continue")
+    local users+=("Exit")
+    local title="Starting disk partitioner"
+    local description="The following menu shall help you select a disk for full wipe and automatic partitioning. ALL DATA ON IT SHALL BE DELETED."
+
+    while true; do
+        menu_prompt users_menu_choice "$title" "$description" "${users[@]}"
+        case $users_menu_choice in
+            c)  break;;
+            e)  exit;;
+            *)  local USER="${users[$((users_menu_choice))]}";break
+                ;;
+        esac
+    done
+}
+
 user_password_prompt () {
     local user="$1"
     local pass="$2"
