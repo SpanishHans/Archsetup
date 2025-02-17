@@ -166,7 +166,8 @@ scroll_window_output() {
 
     dialog --backtitle "Viewing $file" \
         --title "$file on logs viewer" \
-        --exit-label "Ok, Continue" \
+        --ok-label "Accept" \
+        --exit-label "No, Cancel" \
         --textbox "$temp_file" \
         "${full_height:-20}" "${full_width:-70}"
 
