@@ -74,6 +74,7 @@ check_pass() {
         # Check if the 'id' command succeeded (indicated by empty output)
         if [[ -s "$temp_file" ]]; then  # Check if the file is NOT empty
             continue_script 2 "Incorrect" "Incorrect password. Please try again."
+            exit
         else
             continue_script 2 "Correct" "Password $pass is correct for $user"
             rm "$temp_file" # Clean up
