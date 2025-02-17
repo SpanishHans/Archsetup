@@ -45,12 +45,15 @@ get_users() {
 }
 
 pick_user() {
-    get_users users
-    local users+=("Continue")
-    local users+=("Exit")
-    local title="Starting disk partitioner"
-    local description="The following menu shall help you select a disk for full wipe and automatic partitioning. ALL DATA ON IT SHALL BE DELETED."
+    local user="$1"
+    local title="$2"
+    local description="$3"
 
+    local users=()
+    IFS=$'\n' read -rd '' -a users <<<"$users_list"
+    users+=("Continue")
+    users+=("Exit")
+    
     while true; do
         menu_prompt users_menu_choice "$title" "$description" "${users[@]}"
         case $users_menu_choice in
@@ -60,6 +63,7 @@ pick_user() {
                 ;;
         esac
     done
+    eval $user="$USER"
 }
 
 user_password_prompt () {
