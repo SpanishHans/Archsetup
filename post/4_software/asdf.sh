@@ -84,11 +84,12 @@ configure_asdf() {
     local commands_to_run=()
 
     if check_folder_exists "/opt/asdf"; then
-        commands_to_run+=("rm -rf /opt/asdf"
+        commands_to_run+=("rm -rf /opt/asdf")
+        commands_to_run+=("mkdir -p /opt/asdf")
+        commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
         continue_script 2 "ASDF folder exists" "ASDF already exists at /opt/asdf. Removing."
     fi
-
-    mkdir -p /opt/asdf
+    
     init_command='export ASDF_DATA_DIR=/opt/asdf'
     case "$shell_path" in
         "/bin/bash" | "/usr/bin/bash")
