@@ -49,7 +49,7 @@ configure_menu () {
 
     check_pass \
         "$user" \
-        "$pass"
+        pass
 
     export USER_WITH_SUDO_USER="$user"
     export USER_WITH_SUDO_PASS="$pass"
