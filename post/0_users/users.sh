@@ -51,10 +51,11 @@ get_users() {
 
 pick_user() {
     local user="$1"
-    local title="$2"
-    local description="$3"
+    local show_sudo="$2"
+    local title="$3"
+    local description="$4"
 
-    get_users users_list "no"
+    get_users users_list "$show_sudo"
 
     local users=()
     IFS=$'\n' read -rd '' -a users <<<"$users_list"
