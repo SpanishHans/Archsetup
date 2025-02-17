@@ -42,8 +42,8 @@ prompts_menu(){
         )
         menu_prompt term_choice "$title" "$description" "${options[@]}"
         case $term_choice in
-            0)  configure_starship "$prompt_username" "$prompt_pass";;
-            1)  configure_oh_my_posh "$prompt_username" "$prompt_pass";;
+            0)  starship_config "$prompt_username" "$prompt_pass";;
+            1)  oh_my_posh_config "$prompt_username" "$prompt_pass";;
             b)  break;;
             *)  echo "Invalid option. Please try again.";;
         esac
@@ -54,7 +54,7 @@ prompts_menu(){
 # Starship
 ################################################################################
 
-configure_starship (){
+starship_config (){
     local term_username="$1"
     local term_pass="$2"
     local starship_config_path="/home/$term_username/.config"
@@ -184,14 +184,14 @@ starship_theme_jetpack() {
 # Oh my posh
 ################################################################################
 
-configure_oh_my_posh () {
+oh_my_posh_config () {
     local term_username="$1"
     local term_pass="$2"
     local posh_config_path="/home/$term_username/bin"
     local shell_path="$(getent passwd "$term_username" | cut -d: -f7)"
 
     commands_to_run=("curl -sS https://starship.rs/install.sh | bash")
-    live_command_output "$term_username" "$term_pass" "yes" "Configuring Starship for $term_username." "${commands_to_run[@]}"
+    live_command_output "$term_username" "$term_pass" "yes" "Configuring Oh My Posh for $term_username." "${commands_to_run[@]}"
 
     local commands_to_run=()
     if check_folder_exists "$posh_config_path"; then
