@@ -16,6 +16,10 @@
 
 source ./commons.sh
 
+check_live_env
+check_dialog
+check_internet
+
 if [ "$USE_DIALOG" = false ]; then
     clear
     terminal_title "Command dialog not available."

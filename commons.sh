@@ -80,10 +80,6 @@ check_command_exists() {
     fi
 }
 
-check_live_env
-check_dialog
-check_internet
-
 screen_height=$(tput lines)
 screen_width=$(tput cols)
 half_height=$((screen_height * 50 / 100))
