@@ -83,11 +83,11 @@ configure_asdf() {
     local shell_path="$(getent passwd "$user" | cut -d: -f7)"
     local commands_to_run=()
 
-    if ! check_folder_exists "/root/.asdf"; then
+    if [[ ! -d "/root/.asdf" ]]; then
         commands_to_run+=("mkdir -p /root/.asdf")
     fi
 
-    if ! check_folder_exists "/opt/asdf"; then
+    if [[ ! -d "/opt/asdf" ]]; then
         commands_to_run+=("mkdir -p /opt/asdf")
     fi
     

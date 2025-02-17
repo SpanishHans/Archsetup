@@ -66,9 +66,10 @@ configure_snapper() {
     install_pacman_packages snapper
     local commands_to_run=()
 
-    if ! check_folder_exists "/.snapshots"; then
+    if [[ ! -d "/.snapshots" ]]; then
         commands_to_run+=("mkdir -p /.snapshots")
     fi
+
     commands_to_run+=("umount /.snapshots && rm -rf /.snapshots")
     commands_to_run+=("snapper -c root create-config /")
     commands_to_run+=("mount -a")

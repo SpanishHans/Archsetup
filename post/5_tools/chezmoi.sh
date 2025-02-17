@@ -49,7 +49,7 @@ configure_chezmoi_default() {
 
     local commands_to_run=()
 
-    if check_folder_exists "/home/$chezmoi_username/.local/share/chezmoi"; then
+    if [[ -d "/home/$chezmoi_username/.local/share/chezmoi" ]]; then
         commands_to_run+=("rm -rf /home/$chezmoi_username/.local/share/chezmoi")
     fi
 
@@ -70,7 +70,7 @@ configure_chezmoi_no_default() {
 
     local commands_to_run=()
 
-    if check_folder_exists "/home/$chezmoi_username/.local/share/chezmoi"; then
+    if [[ -d "/home/$chezmoi_username/.local/share/chezmoi" ]]; then
         commands_to_run+=("rm -rf /home/$chezmoi_username/.local/share/chezmoi")
     fi
 

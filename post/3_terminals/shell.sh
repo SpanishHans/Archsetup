@@ -26,9 +26,10 @@ configure_bash_it() {
     local term_user="$1"
     local commands_to_run=()
 
-    if check_folder_exists "/home/$term_user/.bash_it"; then
+    if [[ -d "/home/$term_user/.bash_it" ]]; then
         commands_to_run+=("rm -rf /home/$term_user/.bash_it")
     fi
+
     commands_to_run+=("git clone --depth=1 https://github.com/Bash-it/bash-it.git /home/$term_user/.bash_it && /home/$term_user/.bash_it/install.sh")
     commands_to_run+=("chown -R $term_user:$term_user /home/$term_user/.bash_it")
     live_command_output "" "" "yes" "Installing Bash-it" "${commands_to_run[@]}"
@@ -38,11 +39,11 @@ configure_oh_my_zsh() {
     local term_user="$1"
     local commands_to_run=()
 
-    if check_folder_exists "$/home/$term_user/.oh-my-zsh"; then
+    if [[ -d "/home/$term_user/.oh-my-zsh" ]]; then
         commands_to_run+=("rm -rf /home/$term_user/.oh-my-zsh")
     fi
 
-    if ! check_file_exists "$/home/$term_user/.zshrc"; then
+    if [[ ! -f "/home/$term_user/.zshrc"]]; then
         commands_to_run+=("touch /home/$term_user/.zshrc")
     fi
 
