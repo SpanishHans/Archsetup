@@ -216,6 +216,7 @@ live_command_output() {
                 scroll_window_output return_value "$(terminal_title "$script_name Error, the logs are:")" "$combined_log"
                 if [ $return_value -eq 3 ]; then
                     continue_script 5 "You decided to exit" "Script exited execution. Bye."
+                    exit 1
                 fi
                 exit_code=$?
                 sleep 2
