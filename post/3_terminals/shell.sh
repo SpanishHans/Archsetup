@@ -82,7 +82,7 @@ shells_menu() {
     #     "User to change shell for."\
     #     "Select shells for a given user. Please select the user whose shell shall be configured.\n\n$userlist"\
     #     "What user to configure shell for?: "
-    pick_user shell_username "User to change shell for." "Select shells for a given user. Please select the user whose shell shall be configured.\n\n$userlist"
+    pick_user shell_username "User to change shell for." "Select shells for a given user. Please select the user whose shell shall be configured."
 
     title="Shell configurator: pick shell"
     description="Please select a shell from the menu below."
