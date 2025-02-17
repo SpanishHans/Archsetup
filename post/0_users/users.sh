@@ -63,12 +63,13 @@ check_pass() {
     local user="$1"
     local pass="$2"
 
-    continue_script 2 "Checking password for $user" "password from user $user is: $pass"
+    
 
     while true; do
         echo "$pass" | sudo -S -u "$user" whoami
         if [ $? -eq 0 ]; then
             continue_script 2 "Correct" "Password is correct"
+            continue_script 2 "Checking password for $user" "password from user $user is: $pass"
             break
         else
             continue_script 2 "Incorrect" "Incorrect password. Please try again."
