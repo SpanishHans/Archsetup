@@ -43,9 +43,15 @@ fi
 configure_menu () {
     local user="sysadmin"
 
-    input_pass "$user" "pass" "Password check for $user" "PKBUILD builds can not be done with root, therefore we shall use the user: 
+#     input_pass "$user" pass "Password check for $user" "PKBUILD builds can not be done with root, therefore we shall use the user: 
 
-- $user"
+# - $user"
+
+    input_text\
+        pass\
+        "New user"\
+        "Menu for creating a new user.\n\n$userlist"\
+        "Enter the username for the new user: "
 
     check_pass \
         "$user" \
