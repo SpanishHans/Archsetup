@@ -63,11 +63,9 @@ check_pass() {
     local user="$1"
     local pass="$2"
 
-    # Use sudo to check if the password is correct for the given user
     output=$(echo "$pass" | sudo -S -u "$user" -v 2>&1)
 
-    # Check exit status
-    if [[ $? -eq 0 ]]; then
+    if [[ -z "$output" ]]; then
         continue_script 2 "Correct" "Password for $user is correct. $output"
     else
         continue_script 2 "Incorrect" "Incorrect password. Please try again. Output: $output"
