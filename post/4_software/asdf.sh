@@ -109,7 +109,7 @@ configure_asdf() {
             config_file="/home/$term_username/.tcshrc"
             ;;
         *)
-            continue_script 2 "Starship not available" "Starship is not supported for this shell"
+            continue_script 2 "ASDF not available" "ASDF is not supported for this shell"
             return
             ;;
     esac
@@ -119,7 +119,7 @@ configure_asdf() {
             echo '$init_command' >> $config_file
         fi"
     )
-    live_command_output "" "" "yes" "Configuring Starship for $term_username." "${commands_to_run[@]}"
+    live_command_output "" "" "yes" "Configuring ASDF for $term_username." "${commands_to_run[@]}"
 
     case "$shell_path" in
         "/bin/bash" | "/usr/bin/bash")
