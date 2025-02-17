@@ -49,8 +49,6 @@ configure_menu () {
         "Root cant build packages, therefore we shall use sysadmin to build packages." \
         "Please input the password for $user: "
 
-    continue_script 2 "$user:$pass" "$user:$pass"
-
     export USER_WITH_SUDO_USER="$user"
     export USER_WITH_SUDO_PASS="$pass"
 
