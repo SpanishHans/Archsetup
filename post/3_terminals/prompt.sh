@@ -111,9 +111,6 @@ starship_config (){
     local commands_to_run=(
         "if ! grep -Fxq '$init_command' $config_file; then
             echo '$init_command' >> $config_file
-            echo 'Starship initialization added to $config_file'
-        else
-            echo 'Starship initialization already present in $config_file'
         fi"
     )
     live_command_output "" "" "yes" "Configuring Starship for $term_username." "${commands_to_run[@]}"
