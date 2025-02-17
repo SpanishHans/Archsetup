@@ -59,6 +59,29 @@ pick_user() {
     user_var="$USER"
 }
 
+check_pass() {
+    local user="$1"
+    local pass
+    local prompt="$2"
+
+    # Request password for the user
+    continue_script 2 "Credentials for user $user" "$prompt"
+    input_pass pass "$user"
+
+    # Check the password with a while loop
+    while true; do
+        echo "$pass" | sudo -S -u "$user" whoami > /dev/null 2>&1
+        if [ $? -eq 0 ]; then
+            echo "Password is correct."
+            break
+        else
+            echo "Incorrect password. Please try again."
+            input_pass pass "$user"
+        fi
+    done
+}
+
+
 user_password_prompt () {
     local user="$1"
     local pass="$2"
