@@ -49,16 +49,19 @@ pick_user() {
     local description="$4"
 
     local users_list=()
-    get_users users_list "$show_sudo"
+    get_users users_list "$show_sudo"  # Fetch the list of users
 
-    users_list+=("Exit")
+    users_list+=("Exit")  # Add the exit option
 
     while true; do
+        # Call menu_prompt to display the list of users
         menu_prompt users_menu_choice "$title" "$description" "${users_list[@]}"
+        
         case $users_menu_choice in
-            c)  break;;
-            e)  exit;;
+            c)  break;;  # Continue if 'c' is selected
+            e)  exit;;   # Exit if 'e' is selected
             *)  
+                # Get the username from the selected option (remove the number prefix)
                 if (( users_menu_choice >= 0 && users_menu_choice < ${#users_list[@]} - 1 )); then
                     user_var=$(echo "${users_list[$users_menu_choice]}" | awk '{print $2}')
                     return
@@ -66,7 +69,7 @@ pick_user() {
                 ;;
         esac
     done
-    user_var="$USER"
+    user_var="$USER"  # Fallback to current user if nothing is selected
 }
 
 user_password_prompt () {
