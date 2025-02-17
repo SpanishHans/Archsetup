@@ -150,7 +150,7 @@ modify_user() {
     
     pick_user \
         username \
-        false \
+        true \
         "Menu for editing a user." \
         "Pick the username of the user to edit: "
 
@@ -181,7 +181,7 @@ delete_user() {
 
     pick_user \
         username \
-        false \
+        true \
         "Menu for deleting a user. This will DELETE THEIR FILES!" \
         "Pick the username of the user to delete: "
     
