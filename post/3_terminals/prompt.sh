@@ -17,6 +17,7 @@
 source ./commons.sh
 source ./post/0_users/users.sh
 source ./post/4_software/asdf.sh
+source ./post/4_software/pacman.sh
 
 ################################################################################
 # Prompts
@@ -82,6 +83,8 @@ starship_config (){
     commands_to_run+=("touch $starship_config_path/starship.toml")
     commands_to_run+=("chown -R $term_username:$term_username $starship_config_path/starship.toml")
     live_command_output "" "" "yes" "Creating config file" "${commands_to_run[@]}"
+
+    install_pacman_packages bash-completion
 
     case "$shell_path" in
         "/bin/bash" | "/usr/bin/bash")
