@@ -63,7 +63,7 @@ check_pass() {
     local user="$1"
     local prompt="$2"
 
-    input_pass pass "$user" "Password check" "Checking password for '$user'."
+    input_pass pass "sysadmin" "Password check" "Checking password for '$user'."
 
     continue_script 2 "$user" "Password entered is: $pass"
 
