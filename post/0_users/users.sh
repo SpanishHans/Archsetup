@@ -63,8 +63,6 @@ check_pass() {
     local user="$1"
     local pass="$2"
 
-    
-
     while true; do
         echo "$pass" | sudo -S -u "$user" whoami
         if [ $? -eq 0 ]; then
