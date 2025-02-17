@@ -24,7 +24,6 @@ asdf_menu () {
     local user="$USER_WITH_SUDO_USER"
     local pass="$USER_WITH_SUDO_PASS"
     install_asdf "$user" "$pass"
-
     pick_user \
         langs_username \
         "User to set up ASDF for" \
@@ -50,18 +49,18 @@ asdf_menu () {
 
         menu_prompt virt_menu_choice "$title" "$description" "${options[@]}"
         case $virt_menu_choice in
-            0)  configure_python "$langs_username";;
-            1)  configure_node "$langs_username";;
-            2)  configure_java "$langs_username";;
-            3)  configure_rust "$langs_username";;
-            4)  configure_make "$langs_username";;
-            5)  configure_cmake "$langs_username";;
-            6)  configure_ninja "$langs_username";;
-            7)  configure_dotnet "$langs_username";;
-            8)  configure_neovim "$langs_username";;
-            9)  configure_chezmoi "$langs_username";;
-            10) configure_starship "$langs_username";;
-            11) configure_glow "$langs_username";;
+            0)  configure_python;;
+            1)  configure_node;;
+            2)  configure_java;;
+            3)  configure_rust;;
+            4)  configure_make;;
+            5)  configure_cmake;;
+            6)  configure_ninja;;
+            7)  configure_dotnet;;
+            8)  configure_neovim;;
+            9)  configure_chezmoi;;
+            10) configure_starship;;
+            11) configure_glow;;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
@@ -239,7 +238,6 @@ configure_asdf() {
 }
 
 configure_python() {
-    local user="$1"
     local item="python"
     local version="3.12.3"
 
@@ -256,7 +254,6 @@ configure_python() {
 }
 
 configure_node() {
-    local user="$1"
     local item="nodejs"
     local version="22.14.0"
 
@@ -273,7 +270,6 @@ configure_node() {
 }
 
 configure_java() {
-    local user="$1"
     local item="java"
     local version="latest:adoptopenjdk-23"
 
@@ -290,7 +286,6 @@ configure_java() {
 }
 
 configure_rust() {
-    local user="$1"
     local item="rust"
     local version="1.84.0"
 
@@ -307,7 +302,6 @@ configure_rust() {
 }
 
 configure_make() {
-    local user="$1"
     local item="make"
     local version="4.4.1"
 
@@ -324,7 +318,6 @@ configure_make() {
 }
 
 configure_cmake() {
-    local user="$1"
     local item="cmake"
     local version="3.31.4"
 
@@ -341,7 +334,6 @@ configure_cmake() {
 }
 
 configure_ninja() {
-    local user="$1"
     local item="ninja"
     local version="1.12.0"
 
@@ -358,7 +350,6 @@ configure_ninja() {
 }
 
 configure_dotnet() {
-    local user="$1"
     local item="dotnet"
     local version="9.0.200"
 
@@ -375,7 +366,6 @@ configure_dotnet() {
 }
 
 configure_neovim() {
-    local user="$1"
     local item="neovim"
     local version="stable"
 
@@ -392,7 +382,6 @@ configure_neovim() {
 }
 
 configure_chezmoi() {
-    local user="$1"
     local item="chezmoi"
     local version="2.59.1"
 
@@ -409,7 +398,6 @@ configure_chezmoi() {
 }
 
 configure_starship() {
-    local user="$1"
     local item="starship"
     local version="1.22.1"
 
@@ -426,7 +414,6 @@ configure_starship() {
 }
 
 configure_glow() {
-    local user="$1"
     local item="glow"
     local version="2.0.0"
 
