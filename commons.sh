@@ -312,6 +312,7 @@ input_pass() {
         else
             continue_script 2 "" "Debug: Password entered is: $password1"
             eval "$pass=\"$password1\""
+            continue_script 2 "" "Debug: Password entered is: $pass"
             break
         fi
         handle_exit_code "$exit_code" "break"
