@@ -63,15 +63,13 @@ check_pass() {
     local user="$1"
     local pass="$2"
 
-    # Capture the output of the command
-    output=$(echo "$pass" | sudo -S -u "$user" id 2>&1)
+    output=$(echo "$pass" | sudo -kS -u "$user" id 2>&1)
 
-    # Check exit status
     if [[ $? -eq 0 ]]; then
         continue_script 2 "Correct" "Password $pass is correct for $user"
     else
         continue_script 2 "Incorrect" "Incorrect password. Please try again. Output: $output"
-        return 1  # Just return from the function instead of exiting the whole script
+        exit 1
     fi
 }
 
