@@ -76,6 +76,8 @@ starship_config (){
     commands_to_run+=("mkdir -p $starship_config_path && touch $starship_config_path/starship.toml")
     live_command_output "" "" "yes" "Creating config file" "${commands_to_run[@]}"
 
+    pause_script "shell_path" "shell: $shell_path"
+
     case "$shell_path" in
         "/bin/bash" | "usr/bin/bash")
             config_file="/home/$term_username/.bashrc"
