@@ -49,6 +49,8 @@ pick_user() {
     local title="$2"
     local description="$3"
 
+    get_users users_list
+
     local users=()
     IFS=$'\n' read -rd '' -a users <<<"$users_list"
     users+=("Continue")
