@@ -283,42 +283,54 @@ $prompt"
 }
 
 input_pass() {
-    local user="$1"
-    local pass="$2"
-    local title="$3"
-    local desc="$4"
+    local choice="$1"
+    local msg_title="${2:-Default}"
+    local msg_text="${3:-Default}"
+    local msg_prompt="${4:-Default}"
+    local title=$(echo -e "$msg_title")
+    local message=$(echo -e "$msg_text")
+    local prompt=$(echo -e "$msg_prompt")
+    local dialog_output
+    local console_output
+    local exit_code=0
+    local fulltext="$message
+    
+$prompt"
 
-    continue_script 2 "$title" "$desc"
+    dialog_output=$(dialog \
+        --backtitle "$title" \
+        --title "$title" \
+        --ok-label "Continue" \
+        --insecure \
+        --passwordbox "$prompt" \
+        $half_height $half_width 2>&1 >/dev/tty)
+    exit_code=$?
+    eval "$choice=\"$dialog_output\""
+    handle_exit_code "$exit_code" "return"
+}
 
+ensure_same_pass() {
+    local pass="$1"
+    local pass1 pass2
+    local msg_title="Password Validation"
+    
     while true; do
-        password1=$(dialog \
-            --backtitle "Password Prompt for '$user'" \
-            --title "Password Prompt for '$user'" \
-            --ok-label "Continue" \
-            --insecure \
-            --passwordbox "Enter password for '$user'" \
-            $half_height $half_width 2>&1 >/dev/tty)
-        exit_code=$?
-
-        password2=$(dialog \
-            --backtitle "Password Prompt for '$user'" \
-            --title "Password Prompt for '$user'" \
-            --ok-label "Continue" \
-            --insecure \
-            --passwordbox "Re-enter password for '$user'" \
-            $half_height $half_width 2>&1 >/dev/tty)
-        exit_code=$?
-
+        local msg_text="Please enter your password."
+        local msg_prompt="Enter your password"
+        input_pass pass1 "$msg_title" "$msg_text" "$msg_prompt"
         
-        if [ "$password1" != "$password2" ]; then
-            continue_script 4 "Password Error" "Passwords for '$user' do not match. Please try again."
+        local msg_text="Please confirm your password."
+        local msg_prompt="Confirm your password"
+        input_pass pass2 "$msg_title" "$msg_text" "$msg_prompt"
+        
+        if [ "$pass1" != "$pass2" ]; then
+            continue_script 2 "Passwords don't match" "Passwords do not match. Please try again."
         else
-            
-            eval "$pass=\"$password1\""
             break
         fi
-        handle_exit_code "$exit_code" "break"
     done
+    eval "$pass=\"$pass1\""
+    return 0
 }
 
 menu_prompt() {
