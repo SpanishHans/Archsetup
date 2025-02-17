@@ -63,18 +63,21 @@ check_pass() {
     local user="$1"
     local pass="$2"
 
-    output=$(echo "$pass" | sudo -S -u "$user" whoami 2>&1)
-    continue_script 1 "$user:$pass" "$user:$pass
-    
-$output"
+    # Try running a harmless command as the specified user (e.g., 'ls') to check the password
+    output=$(echo "$pass" | sudo -S -u "$user" ls / 2>&1)
 
-    if [[ "$output" == "$user" ]]; then
-        continue_script 2 "Correct" "Password for '$user' is correct."
+    # Log the output for debugging purposes
+    continue_script 1 "$user:$pass" "$user:$pass\n$output"
+
+    # If the output doesn't contain an error, the password is correct
+    if [[ "$output" != *"sorry"* && "$output" != *"Authentication failure"* ]]; then
+        continue_script 2 "Correct" "Password for user '$user' is correct. Output: $output"
     else
-        continue_script 2 "Incorrect" "Incorrect password for '$user'."
+        continue_script 2 "Incorrect" "Incorrect password for user '$user'. Output: $output"
         exit 1
     fi
 }
+
 
 
 user_password_prompt () {
