@@ -24,14 +24,20 @@ source ./post/4_software/asdf.sh
 
 prompts_menu(){
 
+    local user="$USER_WITH_SUDO_USER"
+    local pass="$USER_WITH_SUDO_PASS"
+    install_asdf "$user" "$pass"
+
     pick_user \
         prompt_username \
         "User to change prompt for." \
         "Select prompts for a given user. Please select the user whose prompt shall be configured: "
 
-    local user="$USER_WITH_SUDO_USER"
-    local pass="$USER_WITH_SUDO_PASS"
-    install_asdf "$user" "$pass"
+    input_pass \
+        prompt_pass \
+        "Enter the password" \
+        "Please provide the password for $prompt_username in order to execute commands on their name." \
+        "Please input the password for $prompt_username: "
 
     local title="Prompt picker"
     local description="This allows you to pick a prompt tool for your shell."
@@ -57,6 +63,7 @@ prompts_menu(){
 
 starship_config (){
     local term_username="$1"
+    local term_password="$2"
     local starship_config_path="/home/$term_username/.config"
     local shell_path="$(getent passwd "$term_username" | cut -d: -f7)"
 
@@ -73,27 +80,27 @@ starship_config (){
         "/bin/bash" | "usr/bin/bash")
             config_file="/home/$term_username/.bashrc"
             init_command='eval "$(starship init bash)"'
-            starship_themes "$term_username"
+            starship_themes "$term_username" "$term_password"
             ;;
         "/bin/zsh" | "usr/bin/zsh")
             config_file="/home/$term_username/.zshrc"
             init_command='eval "$(starship init zsh)"'
-            starship_themes "$term_username"
+            starship_themes "$term_username" "$term_password"
             ;;
         "/bin/fish" | "/usr/bin/fish")
             config_file="/home/$term_username/.config/fish/config.fish"
             init_command='starship init fish | source'
-            starship_themes "$term_username"
+            starship_themes "$term_username" "$term_password"
             ;;
         "/bin/elvish" | "/usr/bin/elvish")
             config_file="/home/$term_username/.elvish/rc.elv"
             init_command='eval (starship init elvish)'
-            starship_themes "$term_username"
+            starship_themes "$term_username" "$term_password"
             ;;
         "/bin/tcsh" | "/usr/bin/tcsh")
             config_file="/home/$term_username/.tcshrc"
             init_command='eval `starship init tcsh`'
-            starship_themes "$term_username"
+            starship_themes "$term_username" "$term_password"
             ;;
         *)
             continue_script 2 "Starship not available" "Starship is not supported for this shell"
@@ -115,6 +122,7 @@ starship_config (){
 
 starship_themes() {
     local term_username="$1"
+    local term_password="$2"
 
     title="Starship configurator: pick a theme"
     description="Please select a theme for Starship from the menu below."
@@ -129,11 +137,11 @@ starship_themes() {
         )
         menu_prompt shell_choice "$title" "$description" "${options[@]}"
         case $shell_choice in
-            0)  starship_theme_pure_prompt "$term_username";;
-            1)  starship_theme_pastel_powerline "$term_username";;
-            2)  starship_theme_tokyo_night "$term_username";;
-            3)  starship_theme_gruvbox_rainbow "$term_username";;
-            4)  starship_theme_jetpack "$term_username";;
+            0)  starship_theme_pure_prompt "$term_username" "$term_password";;
+            1)  starship_theme_pastel_powerline "$term_username" "$term_password";;
+            2)  starship_theme_tokyo_night "$term_username" "$term_password";;
+            3)  starship_theme_gruvbox_rainbow "$term_username" "$term_password";;
+            4)  starship_theme_jetpack "$term_username" "$term_password";;
             b)  break;;
             *)  echo "Invalid option. Please try again.";;
         esac
@@ -142,42 +150,47 @@ starship_themes() {
 
 starship_theme_pure_prompt() {
     local term_username="$1"
+    local term_password="$2"
 
     local commands_to_run=()
     local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
-    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
+    live_command_output "$term_username" "$term_password" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
 }
 
 starship_theme_pastel_powerline() {
     local term_username="$1"
+    local term_password="$2"
 
     local commands_to_run=()
     local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
-    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
+    live_command_output "$term_username" "$term_password" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
 }
 
 starship_theme_tokyo_night() {
     local term_username="$1"
+    local term_password="$2"
 
     local commands_to_run=()
     local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
-    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
+    live_command_output "$term_username" "$term_password" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
 }
 
 starship_theme_gruvbox_rainbow() {
     local term_username="$1"
+    local term_password="$2"
 
     local commands_to_run=()
     local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
-    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
+    live_command_output "$term_username" "$term_password" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
 }
 
 starship_theme_jetpack() {
     local term_username="$1"
+    local term_password="$2"
 
     local commands_to_run=()
     local commands_to_run+=("starship preset gruvbox-rainbow -o /home/$term_username/.config/starship.toml")
-    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
+    live_command_output "$term_username" "$term_password" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
 }
 
 ################################################################################
@@ -186,6 +199,7 @@ starship_theme_jetpack() {
 
 oh_my_posh_config () {
     local term_username="$1"
+    local term_password="$2"
     local posh_config_path="/home/$term_username/bin"
     local shell_path="$(getent passwd "$term_username" | cut -d: -f7)"
 
@@ -203,27 +217,27 @@ oh_my_posh_config () {
         "/bin/bash" | "usr/bin/bash")
             config_file="/home/$term_username/.bashrc"
             init_command='eval "$(oh-my-posh init bash)"'
-            oh_my_posh_themes "$term_username" "$config_file" "$init_command"
+            oh_my_posh_themes "$term_username" "$term_password" "$config_file" "$init_command"
             ;;
         "/bin/zsh" | "usr/bin/zsh")
             config_file="/home/$term_username/.zshrc"
             init_command='eval "$(oh-my-posh init zsh)"'
-            oh_my_posh_themes "$term_username" "$config_file" "$init_command"
+            oh_my_posh_themes "$term_username" "$term_password" "$config_file" "$init_command"
             ;;
         "/bin/fish" | "usr/bin/fish")
             config_file="/home/$term_username/.config/fish/config.fish"
             init_command='oh-my-posh init fish | source'
-            oh_my_posh_themes "$term_username" "$config_file" "$init_command"
+            oh_my_posh_themes "$term_username" "$term_password" "$config_file" "$init_command"
             ;;
         "/bin/elvish" | "usr/bin/elvish")
             config_file="/home/$term_username/.elvish/rc.elv"
             init_command='eval (oh-my-posh init elvish)'
-            oh_my_posh_themes "$term_username" "$config_file" "$init_command"
+            oh_my_posh_themes "$term_username" "$term_password" "$config_file" "$init_command"
             ;;
         "/bin/tcsh" | "usr/bin/tcsh")
             config_file="/home/$term_username/.tcshrc"
             init_command='eval "`oh-my-posh init tcsh`"'
-            oh_my_posh_themes "$term_username" "$config_file" "$init_command"
+            oh_my_posh_themes "$term_username" "$term_password" "$config_file" "$init_command"
             ;;
         *)
             continue_script 2 "Oh my posh not available" "Oh my posh is not supported for this shell"
@@ -245,8 +259,9 @@ oh_my_posh_config () {
 
 oh_my_posh_themes() {
     local term_username="$1"
-    local file="$2"
-    local comm="$3"
+    local term_password="$2"
+    local file="$4"
+    local comm="$5"
 
     title="posh configurator: pick a theme"
     description="Please select a theme for posh from the menu below."
@@ -257,7 +272,7 @@ oh_my_posh_themes() {
         )
         menu_prompt shell_choice "$title" "$description" "${options[@]}"
         case $shell_choice in
-            0)  posh_theme_1_shell "$term_username" "$file" "$comm";;
+            0)  posh_theme_1_shell "$term_username" "$term_password" "$term_username" "$file" "$comm";;
             b)  break;;
             *)  echo "Invalid option. Please try again.";;
         esac
@@ -266,8 +281,9 @@ oh_my_posh_themes() {
 
 posh_theme_1_shell() {
     local term_username="$1"
-    local config_file="$2"
-    local init_command="$3"
+    local term_password="$2"
+    local config_file="$3"
+    local init_command="$4"
     local extra_flags="https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/1_shell.omp.json"
     local full_command="$init_command $extra_flags"
 
@@ -280,7 +296,7 @@ posh_theme_1_shell() {
             echo 'init_command added to $config_file'
         fi"
     )
-    live_command_output "$term_username" "" "yes" "Configuring Oh my posh for $term_username." "${commands_to_run[@]}"
+    live_command_output "$term_username" "$term_password" "yes" "Configuring Oh my posh for $term_username." "${commands_to_run[@]}"
 }
 
 #https://ohmyposh.dev/docs/themes
