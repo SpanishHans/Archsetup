@@ -63,12 +63,19 @@ check_pass() {
     local user="$1"
     local prompt="$2"
 
+    # Request password for the user
     continue_script 2 "Credentials for user $user" "$prompt"
     input_pass pass "$user"
 
+    # Debug: Show the password (only for debugging purposes, remove after)
+    echo "Debug: Password entered is: $pass" 
+
+    # Check password with a while loop
     while true; do
+        # Check password using sudo -S for authentication
         echo "$pass" | sudo -S -u "$user" whoami > /dev/null 2>&1
         
+        # Capture the exit status
         if [ $? -eq 0 ]; then
             continue_script 2 "Correct" "Password is correct"
             break
@@ -78,6 +85,7 @@ check_pass() {
         fi
     done
 }
+
 
 user_password_prompt () {
     local user="$1"
