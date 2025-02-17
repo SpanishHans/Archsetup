@@ -214,7 +214,9 @@ live_command_output() {
         for cmd in "${commands[@]}"; do
             execute_command "$cmd" || { 
                 scroll_window_output return_value "$(terminal_title "$script_name Error, the logs are:")" "$combined_log"
-                pause_script "$return_value" "scroll returned $return_value"
+                if [ $return_value -eq 3 ]; then
+                    continue_script 5 "You decided to exit" "Script exited execution. Bye."
+                fi
                 exit_code=$?
                 sleep 2
                 killall dialog

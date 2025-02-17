@@ -78,7 +78,9 @@ install_without_paru() {
     if ! ls $build_path/*.pkg.tar.zst &>/dev/null; then
         local commands_to_run=()
         scroll_window_output return_value "Viewing PKGBUILD for $package_name" "$build_path/PKGBUILD"
-        pause_script "$return_value" "scroll returned $return_value"
+        if [ $return_value -eq 3 ]; then
+            continue_script 5 "You decided to cancel install" "You did not agree with the the PKBUILD commands and setup. Exiting."
+        fi
         local commands_to_run+=("cd $build_path && makepkg -s -r -c --noconfirm")
         live_command_output "$bui_user" "$bui_pass" "yes" "Building and installing $package_name" "${commands_to_run[@]}"
     fi
