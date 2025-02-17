@@ -206,11 +206,13 @@ configure_asdf() {
 
 configure_python() {
     local user="$1"
+    local item="python"
+    local version="3.12.3"
+
     local commands_to_run=()
-    commands_to_run+=("asdf plugin add python")
-    commands_to_run+=("asdf list all python | column")
-    commands_to_run+=("asdf install python 3.12.3")
-    commands_to_run+=("asdf set python 3.12.3")
+    asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
+    asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
+    commands_to_run+=("asdf set $item $version")
 
     live_command_output "" "" "yes" "Configuring Python from ASDF" "${commands_to_run[@]}"
     continue_script 2 "Python" "Python Setup complete!"
@@ -218,11 +220,13 @@ configure_python() {
 
 configure_node() {
     local user="$1"
+    local item="nodejs"
+    local version="22.14.0"
+
     local commands_to_run=()
-    commands_to_run+=("asdf plugin add nodejs")
-    commands_to_run+=("asdf list all nodejs | column")
-    commands_to_run+=("asdf install nodejs 22.14.0")
-    commands_to_run+=("asdf set nodejs 22.14.0")
+    asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
+    asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
+    commands_to_run+=("asdf set $item $version")
 
     live_command_output "" "" "yes" "Configuring Node from ASDF" "${commands_to_run[@]}"
     continue_script 2 "Node" "Node Setup complete!"
@@ -230,11 +234,13 @@ configure_node() {
 
 configure_java() {
     local user="$1"
+    local item="java"
+    local version="latest:adoptopenjdk-23"
+
     local commands_to_run=()
-    commands_to_run+=("asdf plugin add java")
-    commands_to_run+=("asdf list all java | column")
-    commands_to_run+=("asdf install java latest:adoptopenjdk-23")
-    commands_to_run+=("asdf set java latest:adoptopenjdk-23")
+    asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
+    asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
+    commands_to_run+=("asdf set $item $version")
 
     live_command_output "" "" "yes" "Configuring Java from ASDF" "${commands_to_run[@]}"
     continue_script 2 "Java" "Java Setup complete!"
@@ -242,11 +248,13 @@ configure_java() {
 
 configure_rust() {
     local user="$1"
+    local item="rust"
+    local version="1.84.0"
+
     local commands_to_run=()
-    commands_to_run+=("asdf plugin add rust")
-    commands_to_run+=("asdf list all rust | column")
-    commands_to_run+=("asdf install rust 1.84.0")
-    commands_to_run+=("asdf set rust 1.84.0")
+    asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
+    asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
+    commands_to_run+=("asdf set $item $version")
 
     live_command_output "" "" "yes" "Configuring Rust from ASDF" "${commands_to_run[@]}"
     continue_script 2 "Rust" "Rust Setup complete!"
@@ -254,11 +262,13 @@ configure_rust() {
 
 configure_make() {
     local user="$1"
+    local item="make"
+    local version="4.4.1"
+
     local commands_to_run=()
-    commands_to_run+=("asdf plugin add make")
-    commands_to_run+=("asdf list all make | column")
-    commands_to_run+=("asdf install make 4.4.1")
-    commands_to_run+=("asdf set make 4.4.1")
+    asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
+    asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
+    commands_to_run+=("asdf set $item $version")
 
     live_command_output "" "" "yes" "Configuring Make from ASDF" "${commands_to_run[@]}"
     continue_script 2 "Make" "Make Setup complete!"
@@ -266,11 +276,13 @@ configure_make() {
 
 configure_cmake() {
     local user="$1"
+    local item="cmake"
+    local version="3.31.4"
+
     local commands_to_run=()
-    commands_to_run+=("asdf plugin add cmake")
-    commands_to_run+=("asdf list all cmake | column")
-    commands_to_run+=("asdf install cmake 3.31.4")
-    commands_to_run+=("asdf set cmake 3.31.4")
+    asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
+    asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
+    commands_to_run+=("asdf set $item $version")
 
     live_command_output "" "" "yes" "Configuring Cmake from ASDF" "${commands_to_run[@]}"
     continue_script 2 "Cmake" "Cmake Setup complete!"
@@ -278,11 +290,13 @@ configure_cmake() {
 
 configure_ninja() {
     local user="$1"
+    local item="ninja"
+    local version="1.12.0"
+
     local commands_to_run=()
-    commands_to_run+=("asdf plugin add ninja")
-    commands_to_run+=("asdf list all ninja | column")
-    commands_to_run+=("asdf install ninja 1.12.0")
-    commands_to_run+=("asdf set ninja 1.12.0")
+    asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
+    asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
+    commands_to_run+=("asdf set $item $version")
 
     live_command_output "" "" "yes" "Configuring Ninja from ASDF" "${commands_to_run[@]}"
     continue_script 2 "Ninja" "Ninja Setup complete!"
@@ -290,11 +304,13 @@ configure_ninja() {
 
 configure_dotnet() {
     local user="$1"
+    local item="dotnet"
+    local version="9.0.200"
+
     local commands_to_run=()
-    commands_to_run+=("asdf plugin add dotnet")
-    commands_to_run+=("asdf list all dotnet | column")
-    commands_to_run+=("asdf install dotnet 9.0.200")
-    commands_to_run+=("asdf set dotnet 9.0.200")
+    asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
+    asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
+    commands_to_run+=("asdf set $item $version")
 
     live_command_output "" "" "yes" "Configuring Dotnet from ASDF" "${commands_to_run[@]}"
     continue_script 2 "Dotnet" "Dotnet Setup complete!"
@@ -302,11 +318,13 @@ configure_dotnet() {
 
 configure_neovim() {
     local user="$1"
+    local item="neovim"
+    local version="stable"
+
     local commands_to_run=()
-    commands_to_run+=("asdf plugin add neovim")
-    commands_to_run+=("asdf list all neovim | column")
-    commands_to_run+=("asdf install neovim stable")
-    commands_to_run+=("asdf set neovim stable")
+    asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
+    asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
+    commands_to_run+=("asdf set $item $version")
 
     live_command_output "" "" "yes" "Configuring Neovim from ASDF" "${commands_to_run[@]}"
     continue_script 2 "Neovim" "Neovim Setup complete!"
@@ -314,11 +332,13 @@ configure_neovim() {
 
 configure_chezmoi() {
     local user="$1"
+    local item="chezmoi"
+    local version="2.59.1"
+
     local commands_to_run=()
-    commands_to_run+=("asdf plugin add chezmoi")
-    commands_to_run+=("asdf list all chezmoi | column")
-    commands_to_run+=("asdf install chezmoi 2.59.1")
-    commands_to_run+=("asdf set chezmoi 2.59.1")
+    asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
+    asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
+    commands_to_run+=("asdf set $item $version")
 
     live_command_output "" "" "yes" "Configuring Chezmoi from ASDF" "${commands_to_run[@]}"
     continue_script 2 "Chezmoi" "Chezmoi Setup complete!"
@@ -326,11 +346,13 @@ configure_chezmoi() {
 
 configure_starship() {
     local user="$1"
+    local item="starship"
+    local version="1.22.1"
+
     local commands_to_run=()
-    commands_to_run+=("asdf plugin add starship")
-    commands_to_run+=("asdf list all starship | column")
-    commands_to_run+=("asdf install starship 1.22.1")
-    commands_to_run+=("asdf set starship 1.22.1")
+    asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
+    asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
+    commands_to_run+=("asdf set $item $version")
 
     live_command_output "" "" "yes" "Configuring Starship from ASDF" "${commands_to_run[@]}"
     continue_script 2 "Starship" "Starship Setup complete!"
@@ -338,11 +360,13 @@ configure_starship() {
 
 configure_glow() {
     local user="$1"
+    local item="glow"
+    local version="2.0.0"
+
     local commands_to_run=()
-    commands_to_run+=("asdf plugin add glow")
-    commands_to_run+=("asdf list all glow | column")
-    commands_to_run+=("asdf install glow 2.0.0")
-    commands_to_run+=("asdf set glow 2.0.0")
+    asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
+    asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
+    commands_to_run+=("asdf set $item $version")
 
     live_command_output "" "" "yes" "Configuring Glow from ASDF" "${commands_to_run[@]}"
     continue_script 2 "Glow" "Glow Setup complete!"
