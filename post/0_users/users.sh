@@ -59,7 +59,7 @@ pick_user() {
 
     local users=()
     IFS=$'\n' read -rd '' -a users <<<"$users_list"
-    users+=("Back")
+    users+=("Exit")
     
     while true; do
         menu_prompt users_menu_choice "$title" "$description" "${users[@]}"
