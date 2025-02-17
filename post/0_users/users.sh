@@ -181,14 +181,14 @@ list_users() {
 }
 
 pick_user(){
-    get_users userlist
-
     local user="$1"
+
+    local users=()
+    get_users users
+    users+=("Continue" "Exit")
+    
     local title="$2"
     local description="$3"
-
-    local users+=("Continue")
-    local users+=("Exit")
 
     while true; do
         menu_prompt pick_user_menu_choice "$title" "$description" "${users[@]}"
