@@ -225,10 +225,10 @@ DM_console() {
         )
         menu_prompt console_choice "$title" "$description" "${options[@]}"
         case $console_choice in
-            0)  purge_dm;install_ly;;
-            1)  purge_dm;install_tbsm;;
-            2)  purge_dm;install_emptty;;
-            3)  purge_dm;install_lemurs;;
+            0)  purge_dm;install_ly;break;;
+            1)  purge_dm;install_tbsm;break;;
+            2)  purge_dm;install_emptty;break;;
+            3)  purge_dm;install_lemurs;break;;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" 'You did not enter a valid selection.'
         esac
@@ -249,10 +249,10 @@ DM_graphical() {
         )
         menu_prompt graphical_choice "$title" "$description" "${options[@]}"
         case $graphical_choice in
-            0)  purge_dm;install_gdm;;
-            1)  purge_dm;install_lightdm;;
-            2)  purge_dm;install_sddm;;
-            3)  purge_dm;install_greetd;;
+            0)  purge_dm;install_gdm;break;;
+            1)  purge_dm;install_lightdm;break;;
+            2)  purge_dm;install_sddm;break;;
+            3)  purge_dm;install_greetd;break;;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" 'You did not enter a valid selection.'
         esac
@@ -283,19 +283,19 @@ DE_selector() {
         )
         menu_prompt DE_choice "$title" "$description" "${options[@]}"
         case $DE_choice in
-            0)  install_budgie;;
-            1)  install_cinnamon;;
-            2)  install_cosmic;;
-            3)  install_cutefish;;
-            4)  install_deepin;;
-            5)  install_gnome;;
-            6)  install_gnome_flashback;;
-            7)  install_kde_plasma;;
-            8)  install_lxde;;
-            9)  install_lxqt;;
-            10) install_mate;;
-            11) install_pantheon;;
-            12) install_xfce;;
+            0)  install_budgie;break;;
+            1)  install_cinnamon;break;;
+            2)  install_cosmic;break;;
+            3)  install_cutefish;break;;
+            4)  install_deepin;break;;
+            5)  install_gnome;break;;
+            6)  install_gnome_flashback;break;;
+            7)  install_kde_plasma;break;;
+            8)  install_lxde;break;;
+            9)  install_lxqt;break;;
+            10) install_mate;break;;
+            11) install_pantheon;break;;
+            12) install_xfce;break;;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" 'You did not enter a valid selection.'
         esac
@@ -315,9 +315,9 @@ WM_selector() {
         )
         menu_prompt WM_choice "$title" "$description" "${options[@]}"
         case $WM_choice in
-            0)  install_sway;;
-            1)  install_hyprland;;
-            2)  install_enlightenment;;
+            0)  install_sway;break;;
+            1)  install_hyprland;break;;
+            2)  install_enlightenment;break;;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" 'You did not enter a valid selection.'
         esac
