@@ -167,6 +167,7 @@ scroll_window_output() {
     dialog --backtitle "Viewing $file" \
         --title "$file on logs viewer" \
         --textbox "$temp_file" \
+        --ok-label "Ok, Continue" \
         "${full_height:-20}" "${full_width:-70}"
 
     rm -f "$temp_file"
