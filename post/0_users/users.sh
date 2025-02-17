@@ -110,7 +110,7 @@ change_admin_privs() {
 }
 
 create_user() {
-    get_users userlist
+    get_users userlist true
     input_text\
         username\
         "New user"\
@@ -153,12 +153,11 @@ create_user() {
 }
 
 modify_user() {
-    get_users userlist
-    input_text\
-        username\
-        "Edit user"\
-        "Menu for editing a user.\n\n$userlist"\
-        "Enter the username of the user to edit: "
+    pick_user \
+        username \
+        false \
+        "Menu for deleting a user. This will DELETE THEIR FILES!" \
+        "Enter the username of the user to delete: "
 
     fullname="$(tr '[:lower:]' '[:upper:]' <<< "${username:0:1}")${username:1}"
     
@@ -184,11 +183,11 @@ modify_user() {
 }
 
 delete_user() {
-    get_users userlist
-    input_text\
-        username\
-        "Delete user"\
-        "Menu for deleting a user. This will DELETE THEIR FILES! \n\n$userlist"\
+
+    pick_user \
+        username \
+        false \
+        "Menu for deleting a user. This will DELETE THEIR FILES!" \
         "Enter the username of the user to delete: "
     
     local max_user_len=0
@@ -203,7 +202,7 @@ delete_user() {
 }
 
 list_users() {
-    get_users userlist
+    get_users userlist true
     local max_user_len=0
     local max_admin_len=3
     local menu_items=()
