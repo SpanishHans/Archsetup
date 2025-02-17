@@ -211,11 +211,11 @@ oh_my_posh_config () {
     local shell_path="$(getent passwd "$term_username" | cut -d: -f7)"
 
     commands_to_run=("curl -sS https://starship.rs/install.sh | bash")
-    live_command_output "$term_username" "$term_pass" "yes" "Configuring Oh My Posh for $term_username." "${commands_to_run[@]}"
+    live_command_output "" "" "yes" "Configuring Oh My Posh for $term_username." "${commands_to_run[@]}"
 
     local commands_to_run=()
     
-    if [[-d "$posh_config_path" ]]; then
+    if [[ -d "$posh_config_path" ]]; then
         commands_to_run+=("rm -rf $posh_config_path")
     fi
     commands_to_run+=("mkdir -p $posh_config_path")
@@ -304,7 +304,7 @@ posh_theme_1_shell() {
             echo 'init_command added to $config_file'
         fi"
     )
-    live_command_output "$term_username" "$term_password" "yes" "Configuring Oh my posh for $term_username." "${commands_to_run[@]}"
+    live_command_output "" "" "yes" "Configuring Oh my posh for $term_username." "${commands_to_run[@]}"
 }
 
 #https://ohmyposh.dev/docs/themes

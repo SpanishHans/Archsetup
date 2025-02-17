@@ -48,18 +48,6 @@ install_aur_package () {
     install_without_paru "$user" "$pass" "$url"
 }
 
-install_with_paru () {
-    local bui_user="$1"
-    local bui_pass="$2"
-    local url="$3"
-    local package_name=$(basename "$url" .git)
-
-    local commands_to_run=()
-    commands_to_run+=("paru -S --noconfirm --needed .")
-    live_command_output "$bui_user" "$bui_pass" "yes" "Building and installing $package_name" "${commands_to_run[@]}"
-    continue_script 2 "$package_name installed" "$package_name install complete!"
-}
-
 install_without_paru() {
     local bui_user="$1"
     local bui_pass="$2"
