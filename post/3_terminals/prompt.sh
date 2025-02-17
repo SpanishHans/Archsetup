@@ -82,27 +82,22 @@ starship_config (){
         "/bin/bash" | "/usr/bin/bash")
             config_file="/home/$term_username/.bashrc"
             init_command='eval "$(starship init bash)"'
-            starship_themes "$term_username" "$term_password"
             ;;
         "/bin/zsh" | "/usr/bin/zsh")
             config_file="/home/$term_username/.zshrc"
             init_command='eval "$(starship init zsh)"'
-            starship_themes "$term_username" "$term_password"
             ;;
         "/bin/fish" | "/usr/bin/fish")
             config_file="/home/$term_username/.config/fish/config.fish"
             init_command='starship init fish | source'
-            starship_themes "$term_username" "$term_password"
             ;;
         "/bin/elvish" | "/usr/bin/elvish")
             config_file="/home/$term_username/.elvish/rc.elv"
             init_command='eval (starship init elvish)'
-            starship_themes "$term_username" "$term_password"
             ;;
         "/bin/tcsh" | "/usr/bin/tcsh")
             config_file="/home/$term_username/.tcshrc"
             init_command='eval `starship init tcsh`'
-            starship_themes "$term_username" "$term_password"
             ;;
         *)
             continue_script 2 "Starship not available" "Starship is not supported for this shell"
@@ -116,6 +111,7 @@ starship_config (){
         fi"
     )
     live_command_output "" "" "yes" "Configuring Starship for $term_username." "${commands_to_run[@]}"
+    starship_themes "$term_username" "$term_password"
     continue_script 2 "Starship installed" "Starship installed correctly"
 }
 
