@@ -32,6 +32,7 @@ rollback_menu() {
             "Install snapper-rollback            (tool for autorollback from snaps)"\
             "Install snp                         (Snaps whenever user wants)"\
             "Clean fstab                         (Clean fstab from comments)"\
+            "Do everything                       (Do all the steps above)"\
             "Back"
         )
         menu_prompt build_choice "$title" "$description" "${options[@]}"
@@ -41,6 +42,7 @@ rollback_menu() {
             2)  configure_snapper_rollback "$user" "$pass";;
             3)  configure_snp "$user" "$pass";;
             4)  clean_fstab;;
+            5)  do_all "$user" "$pass";;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again.";;
         esac
@@ -48,6 +50,8 @@ rollback_menu() {
 }
 
 do_all() {
+    local user="$1"
+    local pass="$2"
     configure_snapper
     configure_snap_pac
     configure_snapper_rollback "$user" "$pass"
