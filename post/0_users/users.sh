@@ -185,8 +185,8 @@ delete_user() {
     pick_user \
         username \
         true \
-        "Menu for deleting a user. This will DELETE THEIR FILES!" \
-        "Pick the username of the user to delete: "
+        "Menu for deleting a user." \
+        "This will DELETE THEIR FILES! Pick the username of the user to delete: "
     
     local max_user_len=0
     local max_admin_len=3
