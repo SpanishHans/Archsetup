@@ -87,6 +87,11 @@ configure_asdf() {
         continue_script 2 "ASDF folder exists" "ASDF already exists at /opt/asdf. Removing."
     fi
 
+    if !check_folder_exists "/root/.asdf"; then
+        commands_to_run+=("mkdir -p /root/.asdf")
+        continue_script 2 "ASDF folder doesn't exist" "ASDF doesn't exist at /opt/asdf. Creating."
+    fi
+
     commands_to_run+=("mkdir -p /opt/asdf")
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
