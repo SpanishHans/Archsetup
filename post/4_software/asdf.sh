@@ -45,7 +45,7 @@ asdf_menu () {
             'Chezmoi        (Installs Chezmoi, a dotmanager based on git)'\
             'Starship       (Installs Starship, a prompt for many terminals)'\
             'Glow           (Installs Glow, a markdown reader)'\
-            'Back           (Return to the previous menu)'\
+            'Back'\
         )
 
         menu_prompt virt_menu_choice "$title" "$description" "${options[@]}"
