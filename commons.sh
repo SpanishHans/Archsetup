@@ -213,7 +213,7 @@ live_command_output() {
         for cmd in "${commands[@]}"; do
             execute_command "$cmd" || { 
                 scroll_window_output return_value "$(terminal_title "$script_name Error, the logs are:")" "$combined_log"
-                pause_script "" "scroll returned $return_value"
+                pause_script "$return_value" "scroll returned $return_value"
                 exit_code=$?
                 sleep 2
                 killall dialog
