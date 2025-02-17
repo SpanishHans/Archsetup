@@ -30,6 +30,11 @@ asdf_menu () {
         "Please enter the user who shall get ASDF: "
     configure_asdf "$langs_username"
 
+    pick_user \
+        prompt_username \
+        "User to setp ASDF program for" \
+        "Install ASDF software for a given user. Please select the user who shall receive software: "
+
     while true; do
         local options=(\
             'Python         (Installs Python and its dependencies, including pip and virtualenv)'\
@@ -49,18 +54,18 @@ asdf_menu () {
 
         menu_prompt virt_menu_choice "$title" "$description" "${options[@]}"
         case $virt_menu_choice in
-            0)  configure_python;;
-            1)  configure_node;;
-            2)  configure_java;;
-            3)  configure_rust;;
-            4)  configure_make;;
-            5)  configure_cmake;;
-            6)  configure_ninja;;
-            7)  configure_dotnet;;
-            8)  configure_neovim;;
-            9)  configure_chezmoi;;
-            10) configure_starship;;
-            11) configure_glow;;
+            0)  configure_python "$prompt_username";;
+            1)  configure_node "$prompt_username";;
+            2)  configure_java "$prompt_username";;
+            3)  configure_rust "$prompt_username";;
+            4)  configure_make "$prompt_username";;
+            5)  configure_cmake "$prompt_username";;
+            6)  configure_ninja "$prompt_username";;
+            7)  configure_dotnet "$prompt_username";;
+            8)  configure_neovim "$prompt_username";;
+            9)  configure_chezmoi "$prompt_username";;
+            10) configure_starship "$prompt_username";;
+            11) configure_glow "$prompt_username";;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
@@ -233,13 +238,24 @@ configure_asdf() {
 }
 
 configure_python() {
+    local user="$1"
+    local path="/home/$git_user/.tool-versions"
     local item="python"
     local version="3.12.3"
+    
 
     local commands_to_run=()
     asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
     asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    asdf list $item | grep -q "$version" || commands_to_run+=("asdf set $item $version")
+    
+    commands_to_run+=("touch $path")
+    commands_to_run+=(
+        "cat > $path <<EOF
+        $item $version
+        EOF"
+    )
+    commands_to_run+=("chown $user:$user $path")
+    
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
@@ -249,13 +265,23 @@ configure_python() {
 }
 
 configure_node() {
+    local user="$1"
+    local path="/home/$git_user/.tool-versions"
     local item="nodejs"
     local version="22.14.0"
 
     local commands_to_run=()
     asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
     asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    asdf list $item | grep -q "$version" || commands_to_run+=("asdf set $item $version")
+    
+    commands_to_run+=("touch $path")
+    commands_to_run+=(
+        "cat > $path <<EOF
+        $item $version
+        EOF"
+    )
+    commands_to_run+=("chown $user:$user $path")
+
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
@@ -265,13 +291,23 @@ configure_node() {
 }
 
 configure_java() {
+    local user="$1"
+    local path="/home/$git_user/.tool-versions"
     local item="java"
     local version="latest:adoptopenjdk-23"
 
     local commands_to_run=()
     asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
     asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    asdf set $item $version
+    
+    commands_to_run+=("touch $path")
+    commands_to_run+=(
+        "cat > $path <<EOF
+        $item $version
+        EOF"
+    )
+    commands_to_run+=("chown $user:$user $path")
+
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
@@ -281,13 +317,23 @@ configure_java() {
 }
 
 configure_rust() {
+    local user="$1"
+    local path="/home/$git_user/.tool-versions"
     local item="rust"
     local version="1.84.0"
 
     local commands_to_run=()
     asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
     asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    asdf set $item $version
+    
+    commands_to_run+=("touch $path")
+    commands_to_run+=(
+        "cat > $path <<EOF
+        $item $version
+        EOF"
+    )
+    commands_to_run+=("chown $user:$user $path")
+
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
@@ -297,13 +343,23 @@ configure_rust() {
 }
 
 configure_make() {
+    local user="$1"
+    local path="/home/$git_user/.tool-versions"
     local item="make"
     local version="4.4.1"
 
     local commands_to_run=()
     asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
     asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    asdf set $item $version
+    
+    commands_to_run+=("touch $path")
+    commands_to_run+=(
+        "cat > $path <<EOF
+        $item $version
+        EOF"
+    )
+    commands_to_run+=("chown $user:$user $path")
+
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
@@ -313,13 +369,23 @@ configure_make() {
 }
 
 configure_cmake() {
+    local user="$1"
+    local path="/home/$git_user/.tool-versions"
     local item="cmake"
     local version="3.31.4"
 
     local commands_to_run=()
     asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
     asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    asdf set $item $version
+    
+    commands_to_run+=("touch $path")
+    commands_to_run+=(
+        "cat > $path <<EOF
+        $item $version
+        EOF"
+    )
+    commands_to_run+=("chown $user:$user $path")
+
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
@@ -329,13 +395,23 @@ configure_cmake() {
 }
 
 configure_ninja() {
+    local user="$1"
+    local path="/home/$git_user/.tool-versions"
     local item="ninja"
     local version="1.12.0"
 
     local commands_to_run=()
     asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
     asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    asdf set $item $version
+    
+    commands_to_run+=("touch $path")
+    commands_to_run+=(
+        "cat > $path <<EOF
+        $item $version
+        EOF"
+    )
+    commands_to_run+=("chown $user:$user $path")
+    
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
@@ -345,13 +421,23 @@ configure_ninja() {
 }
 
 configure_dotnet() {
+    local user="$1"
+    local path="/home/$git_user/.tool-versions"
     local item="dotnet"
     local version="9.0.200"
 
     local commands_to_run=()
     asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
     asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    asdf set $item $version
+    
+    commands_to_run+=("touch $path")
+    commands_to_run+=(
+        "cat > $path <<EOF
+        $item $version
+        EOF"
+    )
+    commands_to_run+=("chown $user:$user $path")
+
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
@@ -361,13 +447,23 @@ configure_dotnet() {
 }
 
 configure_neovim() {
+    local user="$1"
+    local path="/home/$git_user/.tool-versions"
     local item="neovim"
     local version="stable"
 
     local commands_to_run=()
     asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
     asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    asdf set $item $version
+    
+    commands_to_run+=("touch $path")
+    commands_to_run+=(
+        "cat > $path <<EOF
+        $item $version
+        EOF"
+    )
+    commands_to_run+=("chown $user:$user $path")
+    
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
@@ -377,13 +473,23 @@ configure_neovim() {
 }
 
 configure_chezmoi() {
+    local user="$1"
+    local path="/home/$git_user/.tool-versions"
     local item="chezmoi"
     local version="2.59.1"
 
     local commands_to_run=()
     asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
     asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    asdf set $item $version
+    
+    commands_to_run+=("touch $path")
+    commands_to_run+=(
+        "cat > $path <<EOF
+        $item $version
+        EOF"
+    )
+    commands_to_run+=("chown $user:$user $path")
+
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
@@ -393,13 +499,23 @@ configure_chezmoi() {
 }
 
 configure_starship() {
+    local user="$1"
+    local path="/home/$git_user/.tool-versions"
     local item="starship"
     local version="1.22.1"
 
     local commands_to_run=()
     asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
     asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    asdf set $item $version
+    
+    commands_to_run+=("touch $path")
+    commands_to_run+=(
+        "cat > $path <<EOF
+        $item $version
+        EOF"
+    )
+    commands_to_run+=("chown $user:$user $path")
+
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
@@ -409,13 +525,23 @@ configure_starship() {
 }
 
 configure_glow() {
+    local user="$1"
+    local path="/home/$git_user/.tool-versions"
     local item="glow"
     local version="2.0.0"
 
     local commands_to_run=()
     asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
     asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    asdf set $item $version
+    
+    commands_to_run+=("touch $path")
+    commands_to_run+=(
+        "cat > $path <<EOF
+        $item $version
+        EOF"
+    )
+    commands_to_run+=("chown $user:$user $path")
+    
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
