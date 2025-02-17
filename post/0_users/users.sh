@@ -65,17 +65,15 @@ check_pass() {
 
     input_pass pass "$user" "Password check" "Checking password for '$user'."
 
-    continue_script 2 "$user" "$pass"
+    continue_script 2 "$user" "pass: $pass"
 
     while true; do
         echo "$pass" | sudo -S -u "$user" whoami > /dev/null 2>&1
-        
         if [ $? -eq 0 ]; then
             continue_script 2 "Correct" "Password is correct"
             break
         else
             continue_script 2 "Incorrect" "Incorrect password. Please try again."
-            input_pass pass "$user"
         fi
     done
 }
