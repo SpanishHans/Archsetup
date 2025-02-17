@@ -310,9 +310,7 @@ input_pass() {
         if [ "$password1" != "$password2" ]; then
             pause_script "Password Error" "Passwords for '$user' do not match. Please try again."
         else
-            continue_script 2 "" "Debug: Password entered is: $password1"
             eval "$pass=\"$password1\""
-            continue_script 2 "" "Debug: Password entered is: $pass"
             break
         fi
         handle_exit_code "$exit_code" "break"
