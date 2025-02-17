@@ -68,7 +68,7 @@ check_pass() {
         output=$(echo "$pass" | sudo -S -u "$user" bash -c "whoami" 2>&1)
         
         # Print captured output for debugging
-        echo "Output: $output"
+        pause_script "$output" "Output: $output"
         
         # Check if the output contains the username
         if [[ "$output" == "$user" ]]; then
