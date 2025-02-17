@@ -79,7 +79,7 @@ install_without_paru() {
         local commands_to_run=()
         scroll_window_output return_value "Viewing PKGBUILD for $package_name" "$build_path/PKGBUILD"
         if [ $return_value -eq 3 ]; then
-            continue_script 5 "You decided to cancel install" "You did not agree with the the PKBUILD commands and setup. Exiting."
+            continue_script 3 "You decided to cancel install" "You did not agree with the the PKBUILD commands and setup. Exiting."
             exit 1
         fi
         local commands_to_run+=("cd $build_path && makepkg -s -r -c --noconfirm")
