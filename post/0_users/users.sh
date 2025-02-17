@@ -63,15 +63,28 @@ check_pass() {
     local user="$1"
     local pass="$2"
 
-    while true; do
-        echo "$pass" | sudo -S -u "$user" id > /dev/null 2>&1
-        if [ $? -eq 0 ]; then
-            continue_script 2 "Correct" "Password $pass is correct for $user"
-            break
-        else
+    # Use a temporary file to capture sudo's output
+    local temp_file=$(mktemp)
+
+    # Attempt sudo with the provided password, capturing both stdout and stderr
+    echo "$pass" | sudo -S -u "$user" id > "$temp_file" 2>&1
+
+    # Check the exit status of the entire command, including sudo
+    if [[ $? -eq 0 ]]; then
+        # Check if the 'id' command succeeded (indicated by empty output)
+        if [[ -s "$temp_file" ]]; then  # Check if the file is NOT empty
             continue_script 2 "Incorrect" "Incorrect password. Please try again."
+        else
+            continue_script 2 "Correct" "Password $pass is correct for $user"
+            rm "$temp_file" # Clean up
+            return 0  # Indicate success
         fi
-    done
+    else
+        continue_script 2 "Incorrect" "Incorrect password. Please try again."
+    fi
+
+    rm "$temp_file" # Clean up (important even if sudo fails)
+    return 1 # Indicate failure
 }
 
 user_password_prompt () {
