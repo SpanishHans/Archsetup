@@ -71,7 +71,7 @@ starship_config (){
 
     local commands_to_run=()
     if check_file_exists "$starship_config_path/starship.toml"; then
-        commands_to_run+=("rm -rf $starship_config_path")
+        commands_to_run+=("rm -rf $starship_config_path/starship.toml")
     fi
     commands_to_run+=("mkdir -p $starship_config_path && touch $starship_config_path/starship.toml")
     live_command_output "" "" "yes" "Creating config file" "${commands_to_run[@]}"
