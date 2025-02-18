@@ -97,6 +97,7 @@ install_all_flatpaks () {
     install_flatpak_blender
     install_flatpak_rnote
     install_flatpak_kden_live
+    continue_script 2 "Everything" "Everything setup complete!"
 }
 
 install_flatpak_zen() {

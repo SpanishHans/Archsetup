@@ -42,7 +42,7 @@ install_aur_package () {
     local url="$1"
     local package=$(basename "$url" .git)
 
-    if ! check_command_exists "$package"; then
+    if ! check_pacman_package "$package"; then
         install_without_paru "$url"
     else
         continue_script 2 "$package installed" "$package is already installed."
