@@ -188,7 +188,8 @@ live_command_output() {
             if [ "$user" = "root" ]; then
                 eval "$cmd" >> "$combined_log" 2>&1
             else
-                #echo "$pass" | sudo -u "$user" -S bash -c "$cmd" >> "$combined_log" 2>&1
+                echo "$pass" | sudo -u "$user" -S -v
+                echo "$pass" | sudo -u "$user" -S bash -c "$cmd" >> "$combined_log" 2>&1
                 sudo -A -u "$user" bash -c "$cmd" >> "$combined_log" 2>&1
             fi
             exit_code=$?
