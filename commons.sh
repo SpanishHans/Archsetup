@@ -184,11 +184,12 @@ live_command_output() {
         local cmd="$1"
         {
             terminal_title "Running: $cmd" >> "$combined_log"
+            export SUDO_ASKPASS="./askpass.sh"
             if [ "$user" = "root" ]; then
                 eval "$cmd" >> "$combined_log" 2>&1
             else
-                echo "$pass" | sudo -u "$user" -S bash -c "$cmd" >> "$combined_log" 2>&1
-
+                #echo "$pass" | sudo -u "$user" -S bash -c "$cmd" >> "$combined_log" 2>&1
+                sudo -A -u "$user" bash -c "$cmd" >> "$combined_log" 2>&1
             fi
             exit_code=$?
             output_error "$cmd" "$exit_code"
