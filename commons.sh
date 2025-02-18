@@ -165,7 +165,6 @@ scroll_window_output() {
 }
 
 check_nobody() {
-    # Check if 'nobody' user exists
     if ! id nobody &>/dev/null; then
         return 1
     fi
