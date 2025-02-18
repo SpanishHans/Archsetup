@@ -209,7 +209,7 @@ live_command_output() {
                 sleep 2
                 killall dialog
                 break
-        }
+            }
         done
 
         if [ $exit_code -eq 0 ]; then
