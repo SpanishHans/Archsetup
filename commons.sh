@@ -181,16 +181,17 @@ live_command_output() {
     trap cleanup EXIT
 
     enable_nobody_pacman() {
-        if ! sudo grep -q "^nobody ALL=.*NOPASSWD: /usr/bin/pacman" /etc/sudoers; then
-            echo "nobody ALL=(ALL) NOPASSWD: /usr/bin/pacman" | sudo EDITOR='tee -a' visudo >/dev/null
+        if ! sudo grep -q "^nobody ALL=(ALL) NOPASSWD: /usr/bin/pacman" /etc/sudoers; then
+            echo "nobody ALL=(ALL) NOPASSWD: /usr/bin/pacman" | sudo EDITOR='tee -a' visudo
         fi
-        scroll_window_output return_value "$(terminal_title "Deactivated nobody on pacman")" "/etc/sudoers"
+        scroll_window_output return_value "$(terminal_title "Activated nobody on pacman")" "/etc/sudoers"
     }
 
     disable_nobody_pacman() {
-        sudo sed -i '/^nobody ALL=(ALL) NOPASSWD: \/usr\/bin\/pacman/d' /etc/sudoers
+        sudo sed -i '/^nobody ALL=(ALL) NOPASSWD: \/usr\/bin\/pacman$/d' /etc/sudoers
         scroll_window_output return_value "$(terminal_title "Deactivated nobody on pacman")" "/etc/sudoers"
     }
+
 
     execute_command() {
         local cmd="$1"
