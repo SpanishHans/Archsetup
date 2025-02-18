@@ -212,7 +212,7 @@ live_command_output() {
         local cmd="$1"
         local run_user="$user"
         if [[ "$cmd" == *"makepkg"* ]]; then
-            run_user="sysadmin"
+            run_user="nobody"
             check_nobody
             enable_nobody_pacman
         fi
