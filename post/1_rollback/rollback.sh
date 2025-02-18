@@ -56,6 +56,7 @@ do_all() {
     configure_snap_pac
     configure_snapper_rollback "$user" "$pass"
     configure_snp "$user" "$pass"
+    continue_script 2 "Everything" "Everything setup complete!"
 }
 
 clean_fstab() {
@@ -106,4 +107,5 @@ configure_snp() {
     local user="$1"
     local pass="$2"
     install_aur_package "$user" "$pass" "https://aur.archlinux.org/snp.git"
+    continue_script 2 "Snp complete" "Snp setup complete!"
 }
