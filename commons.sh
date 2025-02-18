@@ -182,18 +182,22 @@ live_command_output() {
 
     execute_command() {
         local cmd="$1"
+        local run_user="$user"
+        if [[ "$cmd" == *"makepkg"* ]]; then
+            run_user="nobody"
+        fi
         {
             terminal_title "Running: $cmd" >> "$combined_log"
-            export SUDO_ASKPASS="./askpass.sh"
-            if [ "$user" = "root" ]; then
+            if [ "$run_user" = "root" ]; then
                 eval "$cmd" >> "$combined_log" 2>&1
             else
-                echo "$pass" | sudo -u "$user" -S -v
-                echo "$pass" | sudo -u "$user" -S bash -c "$cmd" >> "$combined_log" 2>&1
+                echo "$pass" | su - "$run_user" -c "$cmd" >> "$combined_log" 2>&1
             fi
+
             exit_code=$?
             output_error "$cmd" "$exit_code"
         }
+
         return $exit_code
     }
 
