@@ -24,10 +24,7 @@ source ./post/4_software/pacman.sh
 ################################################################################
 
 prompts_menu(){
-
-    local user="$USER_WITH_SUDO_USER"
-    local pass="$USER_WITH_SUDO_PASS"
-    install_asdf "$user" "$pass"
+    install_asdf
     pick_user \
         langs_username \
         "User to set up ASDF for" \

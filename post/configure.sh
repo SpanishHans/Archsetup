@@ -41,16 +41,9 @@ Exiting!!!"
 fi
 
 configure_menu () {
-    local user="sysadmin"
 
-    input_pass \
-        pass \
-        "Root cant build" \
-        "Root cant build packages, therefore we shall use sysadmin to build packages." \
-        "Please input the password for $user: "
-
-    export USER_WITH_SUDO_USER="$user"
-    export USER_WITH_SUDO_PASS="$pass"
+    export USER_WITH_SUDO_USER="sysadmin"
+    export USER_WITH_SUDO_PASS=""
 
     local title="Configure your PC after install"
     local description="Welcome to the menu for setting things up after install. Here you can find a lot of utilities to make the process of setting your pc as easy as possible."

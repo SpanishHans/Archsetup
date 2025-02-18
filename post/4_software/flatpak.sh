@@ -23,8 +23,6 @@ flatpak_menu() {
 
     local title="Installing extra software from Flatpak."
     local description="Welcome to the flatpak software installation menu. Select the software to install."
-    local user="$USER_WITH_SUDO_USER"
-    local pass="$USER_WITH_SUDO_PASS"
 
     while true; do
         local options=(\

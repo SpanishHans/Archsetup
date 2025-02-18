@@ -52,7 +52,6 @@ install_aur_package () {
 install_without_paru() {
     local url="$1"
     local bui_user="$USER_WITH_SUDO_USER"
-    local bui_pass="$USER_WITH_SUDO_PASS"
     local package_name=$(basename "$url" .git)
     local build_path="/home/$bui_user/builds/$package_name"
 
@@ -72,7 +71,7 @@ install_without_paru() {
             exit 1
         fi
         local commands_to_run+=("cd $build_path && makepkg -s -r -c --noconfirm")
-        live_command_output "$bui_user" "$bui_pass" "yes" "Building and installing $package_name" "${commands_to_run[@]}"
+        live_command_output "" "" "yes" "Building and installing $package_name" "${commands_to_run[@]}"
     fi
 
     local commands_to_run=()
