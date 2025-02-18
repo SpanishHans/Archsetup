@@ -180,11 +180,22 @@ live_command_output() {
     }
     trap cleanup EXIT
 
+    enable_nobody_pacman() {
+        if ! sudo grep -q "^nobody ALL=.*NOPASSWD: /usr/bin/pacman" /etc/sudoers; then
+            echo "nobody ALL=(ALL) NOPASSWD: /usr/bin/pacman" | sudo EDITOR='tee -a' visudo
+        fi
+    }
+
+    disable_nobody_pacman() {
+        sudo sed -i '/^nobody ALL=(ALL) NOPASSWD: \/usr\/bin\/pacman/d' /etc/sudoers
+    }
+
     execute_command() {
         local cmd="$1"
         local run_user="$user"
         if [[ "$cmd" == *"makepkg"* ]]; then
             run_user="nobody"
+            enable_nobody_pacman
         fi
         {
             terminal_title "Running: $cmd" >> "$combined_log"
@@ -197,6 +208,10 @@ live_command_output() {
             exit_code=$?
             output_error "$cmd" "$exit_code"
         }
+
+        if [ "$run_user" = "nobody" ]; then
+            disable_nobody_pacman
+        fi
 
         return $exit_code
     }
