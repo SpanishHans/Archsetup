@@ -187,9 +187,11 @@ live_command_output() {
             exit 1
         fi
 
-        sudo visudo -cf /etc/sudoers || exit 1
         sudo sed -i "/^${run_user} ALL=(ALL) NOPASSWD: \/usr\/bin\/pacman$/d" /etc/sudoers
-        echo "${run_user} ALL=(ALL) NOPASSWD: /usr/bin/pacman" | sudo EDITOR='tee -a' visudo
+
+        if ! sudo grep -q "^${run_user} ALL=(ALL) NOPASSWD: /usr/bin/pacman" /etc/sudoers; then
+            echo "${run_user} ALL=(ALL) NOPASSWD: /usr/bin/pacman" | sudo tee -a /etc/sudoers > /dev/null
+        fi
     }
 
     disable_pacman_no_pass() {
@@ -199,7 +201,6 @@ live_command_output() {
             exit 1
         fi
 
-        sudo visudo -cf /etc/sudoers || exit 1 
         sudo sed -i "/^${run_user} ALL=(ALL) NOPASSWD: \/usr\/bin\/pacman$/d" /etc/sudoers
 }
     }
