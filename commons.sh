@@ -202,7 +202,7 @@ live_command_output() {
         fi
 
         sudo sed -i "/^${run_user} ALL=(ALL) NOPASSWD: \/usr\/bin\/pacman$/d" /etc/sudoers
-}
+
     }
 
     execute_command() {
@@ -265,7 +265,6 @@ live_command_output() {
 
     handle_exit_code "$exit_code" "return"
 }
-
 
 input_text() {
     local choice="$1"
