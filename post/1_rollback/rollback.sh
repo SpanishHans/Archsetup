@@ -22,8 +22,6 @@ source ./post/4_software/aur.sh
 rollback_menu() {
     local title="BTRFS Rollback Configurator"
     local description="This script simplifies the process of setting up rollback support with BTRFS. It requires BTRFS for managing snapshots and rollback functionality. Select an option to proceed."
-    local user="$USER_WITH_SUDO_USER"
-    local pass="$USER_WITH_SUDO_PASS"
 
     while true; do
         local options=(\
@@ -39,10 +37,10 @@ rollback_menu() {
         case $build_choice in
             0)  configure_snapper;;
             1)  configure_snap_pac;;
-            2)  configure_snapper_rollback "$user" "$pass";;
-            3)  configure_snp "$user" "$pass";;
+            2)  configure_snapper_rollback;;
+            3)  configure_snp;;
             4)  clean_fstab;;
-            5)  do_all "$user" "$pass";;
+            5)  do_all;;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again.";;
         esac
@@ -50,12 +48,10 @@ rollback_menu() {
 }
 
 do_all() {
-    local user="$1"
-    local pass="$2"
     configure_snapper
     configure_snap_pac
-    configure_snapper_rollback "$user" "$pass"
-    configure_snp "$user" "$pass"
+    configure_snapper_rollback
+    configure_snp
     continue_script 2 "Everything" "Everything setup complete!"
 }
 
@@ -82,14 +78,12 @@ configure_snapper() {
 
 configure_snap_pac() {
     install_pacman_packages snap-pac
-    continue_script 2 "Snap-pac" "Snap-pac setup complete!"
 }
 
 configure_snapper_rollback() {
     local user="$1"
     local pass="$2"
-    install_aur_package "$user" "$pass" "https://aur.archlinux.org/snapper-rollback.git"
-
+    install_aur_package "https://aur.archlinux.org/snapper-rollback.git"
 
     local commands_to_run=()
     commands_to_run+=("
@@ -100,12 +94,8 @@ configure_snapper_rollback() {
             echo \"mountpoint entry not found in /etc/snapper-rollback.conf\"
         fi")
     live_command_output "" "" "yes" "Configuring snapper-rollback" "${commands_to_run[@]}"
-    continue_script 2 "Snapper-rollback complete" "Snapper-rollback setup complete!"
 }
 
 configure_snp() {
-    local user="$1"
-    local pass="$2"
-    install_aur_package "$user" "$pass" "https://aur.archlinux.org/snp.git"
-    continue_script 2 "Snp complete" "Snp setup complete!"
+    install_aur_package "https://aur.archlinux.org/snp.git"
 }

@@ -25,7 +25,7 @@ nvidia_menu () {
 
     while true; do
         local options=(\
-            'nvidia-open-dkms           (Driver with dynamic kernel support, therefore no pacman hook required.)'\
+            'nvidia-open-dkms           (Driver with dynamic kernel support, therefore no pacman hook required.)' \
             "Back"
         )
         menu_prompt nvidia_menu_choice "$title" "$description" "${options[@]}"

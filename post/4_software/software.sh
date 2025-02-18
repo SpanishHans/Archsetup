@@ -40,3 +40,19 @@ software_menu() {
         esac
     done
 }
+
+check_command_exists() {
+    local package="$1"
+
+    # Check if the command exists
+    if command -v "$package" >/dev/null; then
+        # Check if it's managed by pacman
+        if pacman -Q "$package" >/dev/null 2>&1; then
+            return 0  # Exists and tracked by pacman
+        else
+            return 2  # Exists but not via pacman
+        fi
+    else
+        return 1  # Not installed
+    fi
+}

@@ -25,9 +25,9 @@ containers_menu() {
 
     while true; do
         local options=(\
-            'Container technology         (Containers)'\  
-            'Distrobox                    (Containers for running tiny VMs.)'\
-            'LXC Containers               (Containers but closer to baremetal. Fixed resources, think VM.)'\
+            'Container technology         (Containers)' \  
+            'Distrobox                    (Containers for running tiny VMs.)' \
+            'LXC Containers               (Containers but closer to baremetal. Fixed resources, think VM.)' \
             "Back"
         )
         menu_prompt ht2_menu_choice "$title" "$description" "${options[@]}"
@@ -47,8 +47,8 @@ configure_classic_containers() {
 
     while true; do
         local options=(\
-            'Docker              (Classic containers, propietary and daemon based.)'\
-            'Podman              (FLOSS containers, every container is its own process, generally rootless.)'\
+            'Docker              (Classic containers, propietary and daemon based.)' \
+            'Podman              (FLOSS containers, every container is its own process, generally rootless.)' \
             "Back"
         )
         menu_prompt ht1_menu_choice "$title" "$description" "${options[@]}"

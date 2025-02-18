@@ -54,8 +54,8 @@ configure_libvirt() {
     local commands_to_run=()
     commands_to_run+=("usermod -aG libvirt $libvirt_user")
 
-    commands_to_run+=("echo \"unix_sock_group = 'libvirt'\" | tee -a /etc/libvirt/libvirtd.conf")
-    commands_to_run+=("echo \"unix_sock_rw_perms = '0770'\" | tee -a /etc/libvirt/libvirtd.conf")
+    commands_to_run+=("echo \"unix_sock_group = 'libvirt' \" | tee -a /etc/libvirt/libvirtd.conf")
+    commands_to_run+=("echo \"unix_sock_rw_perms = '0770' \" | tee -a /etc/libvirt/libvirtd.conf")
 
     commands_to_run+=("systemctl restart libvirtd")
     live_command_output "" "" "yes" "Installing dependencies" "${commands_to_run[@]}"

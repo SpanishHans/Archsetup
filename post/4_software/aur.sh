@@ -19,11 +19,8 @@ source ./post/0_users/users.sh
 source ./post/4_software/pacman.sh
 
 aur_menu() {
-
     local title="Installing extra software from the AUR"
     local description="Welcome to the AUR software installation menu. Select the software to install."
-    local user="$USER_WITH_SUDO_USER"
-    local pass="$USER_WITH_SUDO_PASS"
 
     while true; do
         local options=(\
@@ -33,8 +30,8 @@ aur_menu() {
         )
         menu_prompt aur_choice "$title" "$description" "${options[@]}"
         case $aur_choice in
-            0)  configure_paru "$user" "$pass";;
-            1)  configure_aur_rofi_power_menu "$user" "$pass";;
+            0)  configure_paru;;
+            1)  configure_aur_rofi_power_menu;;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again.";;
         esac
@@ -42,16 +39,20 @@ aur_menu() {
 }
 
 install_aur_package () {
-    local user="$1"
-    local pass="$2"
-    local url="$3"
-    install_without_paru "$user" "$pass" "$url"
+    local url="$1"
+    local package=$(basename "$url" .git)
+
+    if ! check_command_exists "$package"; then
+        install_without_paru "$url"
+    else
+        continue_script 2 "$package installed" "$package is already installed."
+    fi
 }
 
 install_without_paru() {
-    local bui_user="$1"
-    local bui_pass="$2"
-    local url="$3"
+    local url="$1"
+    local bui_user="$USER_WITH_SUDO_USER"
+    local bui_pass="$USER_WITH_SUDO_PASS"
     local package_name=$(basename "$url" .git)
     local build_path="/home/$bui_user/builds/$package_name"
 
@@ -82,23 +83,9 @@ install_without_paru() {
 }
 
 configure_paru() {
-    local user="$1"
-    local pass="$2"
-
-    if ! check_command_exists "paru"; then
-        install_aur_package "$user" "$pass" "https://aur.archlinux.org/paru.git"
-    else
-        continue_script 2 "Paru installed" "Paru is already installed."
-    fi
+    install_aur_package "https://aur.archlinux.org/paru.git"
 }
 
 configure_aur_rofi_power_menu() {
-    local user="$1"
-    local pass="$2"
-    
-    if ! check_command_exists "rofi-power-menu"; then
-        install_aur_package "$user" "$pass" "https://aur.archlinux.org/rofi-power-menu.git"
-    else
-        continue_script 2 "Rofi power menu installed" "rofi-power-menu is already installed."
-    fi
+    install_aur_package "https://aur.archlinux.org/rofi-power-menu.git"
 }

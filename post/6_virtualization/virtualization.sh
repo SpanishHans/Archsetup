@@ -24,8 +24,8 @@ virtualization_menu () {
 
     while true; do
         local options=(\
-            'Containers         (Containers like Docker, Distrobox or LXC)'\  
-            'VM Hypervisors     (QEMU and Virtualbox)'\
+            'Containers         (Containers like Docker, Distrobox or LXC)' \  
+            'VM Hypervisors     (QEMU and Virtualbox)' \
             "Back"
         )
         menu_prompt virt_menu_choice "$title" "$description" "${options[@]}"

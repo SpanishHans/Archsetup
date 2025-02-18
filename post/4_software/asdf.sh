@@ -21,9 +21,7 @@ source ./post/4_software/aur.sh
 asdf_menu () {
     local title='Programming Language Installation with ASDF'
     local description="This script helps you easily install and manage programming languages using the ASDF version manager."
-    local user="$USER_WITH_SUDO_USER"
-    local pass="$USER_WITH_SUDO_PASS"
-    install_asdf "$user" "$pass"
+    install_asdf
     pick_user \
         langs_username \
         "User to set up ASDF for" \
@@ -37,35 +35,37 @@ asdf_menu () {
 
     while true; do
         local options=(\
-            'Python         (Installs Python and its dependencies, including pip and virtualenv)'\
-            'Node           (Installs Node.js, npm, and related JavaScript development tools)'\
-            'Java           (Installs the Java Development Kit (JDK) for Java development)'\
-            'Rust           (Installs the Rust programming language, Cargo, and related tools)'\
-            'Make           (Installs GCC, Make, and other necessary tools for C development)'\
-            'CMake          (Installs CMake, a tool for managing build processes in C/C++)'\
-            'Ninja          (Installs Ninja, a fast build system for compiling projects)'\
-            '.NET           (Installs .NET SDK for cross-platform application development)'\
-            'Neovim         (Installs Neovim, a modern, extensible text editor for developers)'\
-            'Chezmoi        (Installs Chezmoi, a dotmanager based on git)'\
-            'Starship       (Installs Starship, a prompt for many terminals)'\
-            'Glow           (Installs Glow, a markdown reader)'\
-            'Back'\
+            'Python             (Installs Python and its dependencies, including pip and virtualenv)' \
+            'Node               (Installs Node.js, npm, and related JavaScript development tools)' \
+            'Java               (Installs the Java Development Kit (JDK) for Java development)' \
+            'Rust               (Installs the Rust programming language, Cargo, and related tools)' \
+            'Make               (Installs GCC, Make, and other necessary tools for C development)' \
+            'CMake              (Installs CMake, a tool for managing build processes in C/C++)' \
+            'Ninja              (Installs Ninja, a fast build system for compiling projects)' \
+            '.NET               (Installs .NET SDK for cross-platform application development)' \
+            'Neovim             (Installs Neovim, a modern, extensible text editor for developers)' \
+            'Chezmoi            (Installs Chezmoi, a dotmanager based on git)' \
+            'Starship           (Installs Starship, a prompt for many terminals)' \
+            'Glow               (Installs Glow, a markdown reader)' \
+            'Install all        (Install all the above)' \
+            'Back' \
         )
 
         menu_prompt virt_menu_choice "$title" "$description" "${options[@]}"
         case $virt_menu_choice in
-            0)  configure_python "$prompt_username";;
-            1)  configure_node "$prompt_username";;
-            2)  configure_java "$prompt_username";;
-            3)  configure_rust "$prompt_username";;
-            4)  configure_make "$prompt_username";;
-            5)  configure_cmake "$prompt_username";;
-            6)  configure_ninja "$prompt_username";;
-            7)  configure_dotnet "$prompt_username";;
-            8)  configure_neovim "$prompt_username";;
-            9)  configure_chezmoi "$prompt_username";;
-            10) configure_starship "$prompt_username";;
-            11) configure_glow "$prompt_username";;
+            0)  configure_python;;
+            1)  configure_node;;
+            2)  configure_java;;
+            3)  configure_rust;;
+            4)  configure_make;;
+            5)  configure_cmake;;
+            6)  configure_ninja;;
+            7)  configure_dotnet;;
+            8)  configure_neovim;;
+            9)  configure_chezmoi;;
+            10) configure_starship;;
+            11) configure_glow;;
+            12) install_all_asdf;;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
@@ -73,14 +73,7 @@ asdf_menu () {
 }
 
 install_asdf() {
-    local user="$1"
-    local pass="$2"
-
-    if ! check_command_exists "asdf"; then
-        install_aur_package "$user" "$pass" "https://aur.archlinux.org/asdf-vm.git"
-    else
-        continue_script 2 "ASDF installed" "ASDF is already installed."
-    fi
+    install_aur_package "https://aur.archlinux.org/asdf-vm.git"
 }
 
 configure_asdf() {
@@ -244,17 +237,52 @@ configure_asdf() {
     continue_script 2 "ASDF Config" "ASDF configuration complete!"
 }
 
-configure_python() {
-    local user="$1"
-    local path="/home/$user/.tool-versions"
-    local item="python"
-    local version="3.12.3"
-    
+install_all_asdf () {
+    configure_python
+    configure_node
+    configure_java
+    configure_rust
+    configure_make
+    configure_cmake
+    configure_ninja
+    configure_dotnet
+    configure_neovim
+    configure_chezmoi
+    configure_starship
+    configure_glow
+    continue_script 2 "Everything" "Everything setup complete!"
+}
 
+install_with_asdf() {
+    local user="$1"
+    local item="$2"
+    local version="$3"
+
+    check_flatpak_package "$app" "$app_id"
+}
+
+check_asdf_package() {
+    local user="$1"
+    local item="$2"
+    local version="$3"
+
+    if asdf list "$item" | grep -q "$version"; then
+        continue_script 2 "$item already installed" "$item is already installed."
+    else
+        install_asdf_package "$user" "$item" "$version"
+    fi
+}
+
+install_asdf_package() {
+    local user="$1"
+    local item="$2"
+    local version="$3"
+    local path="/home/$user/.tool-versions"
     local commands_to_run=()
+
     asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
     asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    
+
     commands_to_run+=(
         "if ! grep -Fxq '$item $version' $path; then
             echo '$item $version' >> $path
@@ -264,271 +292,101 @@ configure_python() {
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
+    live_command_output "" "" "yes" "Configuring $item from ASDF" "${commands_to_run[@]}"
+}
 
-    live_command_output "" "" "yes" "Configuring Python from ASDF" "${commands_to_run[@]}"
-    continue_script 2 "Python" "Python Setup complete!"
+configure_python() {
+    local user="$1"
+    local item="python"
+    local version="3.12.3"
+
+    install_with_asdf "$user" "$item" "$version"
 }
 
 configure_node() {
     local user="$1"
-    local path="/home/$user/.tool-versions"
     local item="nodejs"
     local version="22.14.0"
 
-    local commands_to_run=()
-    asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
-    asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    
-    commands_to_run+=(
-        "if ! grep -Fxq '$item $version' $path; then
-            echo '$item $version' >> $path
-        fi")
-    asdf set $item $version
-
-    commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
-    commands_to_run+=("chmod -R a+rx /opt/asdf")
-    commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
-
-    live_command_output "" "" "yes" "Configuring Node from ASDF" "${commands_to_run[@]}"
-    continue_script 2 "Node" "Node Setup complete!"
+    install_with_asdf "$user" "$item" "$version"
 }
 
 configure_java() {
     local user="$1"
-    local path="/home/$user/.tool-versions"
     local item="java"
     local version="latest:adoptopenjdk-23"
 
-    local commands_to_run=()
-    asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
-    asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-
-    commands_to_run+=(
-        "if ! grep -Fxq '$item $version' $path; then
-            echo '$item $version' >> $path
-        fi")
-    asdf set $item $version
-
-    commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
-    commands_to_run+=("chmod -R a+rx /opt/asdf")
-    commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
-
-    live_command_output "" "" "yes" "Configuring Java from ASDF" "${commands_to_run[@]}"
-    continue_script 2 "Java" "Java Setup complete!"
+    install_with_asdf "$user" "$item" "$version"
 }
 
 configure_rust() {
     local user="$1"
-    local path="/home/$user/.tool-versions"
     local item="rust"
     local version="1.84.0"
 
-    local commands_to_run=()
-    asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
-    asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    
-    commands_to_run+=(
-        "if ! grep -Fxq '$item $version' $path; then
-            echo '$item $version' >> $path
-        fi")
-    asdf set $item $version
-
-    commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
-    commands_to_run+=("chmod -R a+rx /opt/asdf")
-    commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
-
-    live_command_output "" "" "yes" "Configuring Rust from ASDF" "${commands_to_run[@]}"
-    continue_script 2 "Rust" "Rust Setup complete!"
+    install_with_asdf "$user" "$item" "$version"
 }
 
 configure_make() {
     local user="$1"
-    local path="/home/$user/.tool-versions"
     local item="make"
     local version="4.4.1"
 
-    local commands_to_run=()
-    asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
-    asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    
-    commands_to_run+=(
-        "if ! grep -Fxq '$item $version' $path; then
-            echo '$item $version' >> $path
-        fi")
-    asdf set $item $version
-
-    commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
-    commands_to_run+=("chmod -R a+rx /opt/asdf")
-    commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
-
-    live_command_output "" "" "yes" "Configuring Make from ASDF" "${commands_to_run[@]}"
-    continue_script 2 "Make" "Make Setup complete!"
+    install_with_asdf "$user" "$item" "$version"
 }
 
 configure_cmake() {
     local user="$1"
-    local path="/home/$user/.tool-versions"
     local item="cmake"
     local version="3.31.4"
 
-    local commands_to_run=()
-    asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
-    asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    
-    commands_to_run+=(
-        "if ! grep -Fxq '$item $version' $path; then
-            echo '$item $version' >> $path
-        fi")
-    asdf set $item $version
-
-    commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
-    commands_to_run+=("chmod -R a+rx /opt/asdf")
-    commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
-
-    live_command_output "" "" "yes" "Configuring Cmake from ASDF" "${commands_to_run[@]}"
-    continue_script 2 "Cmake" "Cmake Setup complete!"
+    install_with_asdf "$user" "$item" "$version"
 }
 
 configure_ninja() {
     local user="$1"
-    local path="/home/$user/.tool-versions"
     local item="ninja"
     local version="1.12.0"
 
-    local commands_to_run=()
-    asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
-    asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    
-    commands_to_run+=(
-        "if ! grep -Fxq '$item $version' $path; then
-            echo '$item $version' >> $path
-        fi")
-    asdf set $item $version
-    
-    commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
-    commands_to_run+=("chmod -R a+rx /opt/asdf")
-    commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
-
-    live_command_output "" "" "yes" "Configuring Ninja from ASDF" "${commands_to_run[@]}"
-    continue_script 2 "Ninja" "Ninja Setup complete!"
+    install_with_asdf "$user" "$item" "$version"
 }
 
 configure_dotnet() {
     local user="$1"
-    local path="/home/$user/.tool-versions"
     local item="dotnet"
     local version="9.0.200"
 
-    local commands_to_run=()
-    asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
-    asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    
-    commands_to_run+=(
-        "if ! grep -Fxq '$item $version' $path; then
-            echo '$item $version' >> $path
-        fi")
-    asdf set $item $version
-
-    commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
-    commands_to_run+=("chmod -R a+rx /opt/asdf")
-    commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
-
-    live_command_output "" "" "yes" "Configuring Dotnet from ASDF" "${commands_to_run[@]}"
-    continue_script 2 "Dotnet" "Dotnet Setup complete!"
+    install_with_asdf "$user" "$item" "$version"
 }
 
 configure_neovim() {
     local user="$1"
-    local path="/home/$user/.tool-versions"
     local item="neovim"
     local version="stable"
 
-    local commands_to_run=()
-    asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
-    asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    
-    commands_to_run+=(
-        "if ! grep -Fxq '$item $version' $path; then
-            echo '$item $version' >> $path
-        fi")
-    asdf set $item $version
-    
-    commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
-    commands_to_run+=("chmod -R a+rx /opt/asdf")
-    commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
-
-    live_command_output "" "" "yes" "Configuring Neovim from ASDF" "${commands_to_run[@]}"
-    continue_script 2 "Neovim" "Neovim Setup complete!"
+    install_with_asdf "$user" "$item" "$version"
 }
 
 configure_chezmoi() {
     local user="$1"
-    local path="/home/$user/.tool-versions"
     local item="chezmoi"
     local version="2.59.1"
 
-    local commands_to_run=()
-    asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
-    asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    
-    commands_to_run+=(
-        "if ! grep -Fxq '$item $version' $path; then
-            echo '$item $version' >> $path
-        fi")
-    asdf set $item $version
-
-    commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
-    commands_to_run+=("chmod -R a+rx /opt/asdf")
-    commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
-
-    live_command_output "" "" "yes" "Configuring Chezmoi from ASDF" "${commands_to_run[@]}"
-    continue_script 2 "Chezmoi" "Chezmoi Setup complete!"
+    install_with_asdf "$user" "$item" "$version"
 }
 
 configure_starship() {
     local user="$1"
-    local path="/home/$user/.tool-versions"
     local item="starship"
     local version="1.22.1"
 
-    local commands_to_run=()
-    asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
-    asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    
-    commands_to_run+=(
-        "if ! grep -Fxq '$item $version' $path; then
-            echo '$item $version' >> $path
-        fi")
-    asdf set $item $version
-
-    commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
-    commands_to_run+=("chmod -R a+rx /opt/asdf")
-    commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
-
-    live_command_output "" "" "yes" "Configuring Starship from ASDF" "${commands_to_run[@]}"
-    continue_script 2 "Starship" "Starship Setup complete!"
+    install_with_asdf "$user" "$item" "$version"
 }
 
 configure_glow() {
     local user="$1"
-    local path="/home/$user/.tool-versions"
     local item="glow"
     local version="2.0.0"
 
-    local commands_to_run=()
-    asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
-    asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
-    
-    commands_to_run+=(
-        "if ! grep -Fxq '$item $version' $path; then
-            echo '$item $version' >> $path
-        fi")
-    asdf set $item $version
-    
-    commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
-    commands_to_run+=("chmod -R a+rx /opt/asdf")
-    commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
-
-    live_command_output "" "" "yes" "Configuring Glow from ASDF" "${commands_to_run[@]}"
-    continue_script 2 "Glow" "Glow Setup complete!"
+    install_with_asdf "$user" "$item" "$version"
 }

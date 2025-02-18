@@ -26,8 +26,8 @@ hypervisors_menu() {
 
     while true; do
         local options=(\
-            'VM Hypervisors type 1        (FASTEST VMs: QEMU for x86, x86_64 and ARM.)'\
-            'VM Hypervisors type 2        (SLOWEST VMs: Virtualbox, very common.)'\
+            'VM Hypervisors type 1        (FASTEST VMs: QEMU for x86, x86_64 and ARM.)' \
+            'VM Hypervisors type 2        (SLOWEST VMs: Virtualbox, very common.)' \
             "Back"
         )
         menu_prompt ht2_menu_choice "$title" "$description" "${options[@]}"
@@ -57,9 +57,9 @@ hyper_type_1() {
 
     while true; do
         options=(\
-            'qemu-desktop             (Full-system emulation x86_64 only)'\
-            'qemu-emulators-full      (Full-system and Usermode emulation both for x86 and ARM)'\
-            'qemu-full                (Everything under the sun)'\
+            'qemu-desktop             (Full-system emulation x86_64 only)' \
+            'qemu-emulators-full      (Full-system and Usermode emulation both for x86 and ARM)' \
+            'qemu-full                (Everything under the sun)' \
             "Back"
         )
         menu_prompt tools_menu_choice "$title" "$description" "${options[@]}"
@@ -80,21 +80,19 @@ hyper_type_1() {
 }
 
 hyper_type_2() {
-    local user="$USER_WITH_SUDO_USER"
-    local pass="$USER_WITH_SUDO_PASS"
     local title='Type 2 hypervisors.'
     local description="This script helps you install type 2 hypervisors like Virtualbox and its extensions. Slower."
 
     while true; do
         local options=(\
-            'Install Virtualbox          (Open source Virtualbox.)'\
-            'Install extensions          (Extension is not open source, therefore separated.)'\
+            'Install Virtualbox          (Open source Virtualbox.)' \
+            'Install extensions          (Extension is not open source, therefore separated.)' \
             "Back"
         )
         menu_prompt ht2_menu_choice "$title" "$description" "${options[@]}"
         case $ht2_menu_choice in
             0)  configure_virtualbox;;
-            1)  configure_vbox_ext "$user" "$pass";;
+            1)  configure_vbox_ext;;
             b)  break;;
             *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
@@ -107,9 +105,7 @@ configure_virtualbox() {
 }
 
 configure_vbox_ext() {
-    local user="$1"
-    local pass="$2"
     configure_virtualbox
-    install_aur_package "$user" "$pass" "https://aur.archlinux.org/virtualbox-ext-oracle.git"
+    install_aur_package "https://aur.archlinux.org/virtualbox-ext-oracle.git"
     continue_script 2 "Virtualbox Extensions" "Virtualbox extensions setup complete!"
 }

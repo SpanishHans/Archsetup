@@ -21,32 +21,27 @@ install_pacman_packages() {
     local packages_to_install=()
 
     for package in "${packages[@]}"; do
-        if ! check_package_version "$package"; then
+        if ! check_pacman_package "$package"; then
             packages_to_install+=("$package")
-        else
-            continue_script 1 "Package $package exists" "$package is already installed and up-to-date."
         fi
     done
 
     if [ "${#packages_to_install[@]}" -gt 0 ]; then
-        live_command_output "" "" "yes" "Installing packages" "pacman -S --noconfirm ${packages_to_install[*]}"
+        cols=$(echo "${packages_to_install[@]}" | column)
+        continue_script 4 "To be installed" "Pacman will install the following packages:\n\n$cols"
+        live_command_output "" "" "yes" "Installing packages $cols" "pacman -S --noconfirm ${packages_to_install[*]}"
+        continue_script 2 "Packages were installed" "The following packages were installed:\n\n$cols"
     else
         continue_script 2 "Packages exist" "All packages are already installed and up-to-date."
     fi
 }
 
-check_package_version() {
-    local package="$1"
-
-    # Check if the command exists
-    if command -v "$package" >/dev/null; then
-        # Check if it's managed by pacman
-        if pacman -Q "$package" >/dev/null 2>&1; then
-            return 0  # Exists and tracked by pacman
-        else
-            return 2  # Exists but not via pacman
-        fi
+check_pacman_package() {
+    local package_name="$1"
+    
+    if pacman -Qq | grep -qw "$package_name"; then
+        return 0  # Package is installed
     else
-        return 1  # Not installed
+        return 1  # Package is not installed
     fi
 }
