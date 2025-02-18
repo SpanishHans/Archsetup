@@ -46,20 +46,6 @@ check_live_env(){
     export LIVE_ENV
 }
 
-check_command_exists() {
-    local comm="$1"
-
-    if command -v "$comm" >/dev/null; then
-        if pacman -Qqo "$(command -v "$comm")" >/dev/null 2>&1; then
-            return 0  # Installed via pacman
-        else
-            return 2  # Exists, but not installed via pacman
-        fi
-    else
-        return 1  # Not installed
-    fi
-}
-
 screen_height=$(tput lines)
 screen_width=$(tput cols)
 half_height=$((screen_height * 50 / 100))
