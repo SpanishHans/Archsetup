@@ -190,7 +190,6 @@ live_command_output() {
             else
                 echo "$pass" | sudo -u "$user" -S -v
                 echo "$pass" | sudo -u "$user" -S bash -c "$cmd" >> "$combined_log" 2>&1
-                sudo -A -u "$user" bash -c "$cmd" >> "$combined_log" 2>&1
             fi
             exit_code=$?
             output_error "$cmd" "$exit_code"
