@@ -187,8 +187,6 @@ live_command_output() {
             exit 1
         fi
 
-        sudo sed -i "/^${run_user} ALL=(ALL) NOPASSWD: \/usr\/bin\/pacman$/d" /etc/sudoers
-
         if ! sudo grep -q "^${run_user} ALL=(ALL) NOPASSWD: /usr/bin/pacman" /etc/sudoers; then
             echo "${run_user} ALL=(ALL) NOPASSWD: /usr/bin/pacman" | sudo tee -a /etc/sudoers > /dev/null
         fi
