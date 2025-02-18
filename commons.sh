@@ -208,7 +208,7 @@ live_command_output() {
         local cmd="$1"
         local run_user="$user"
         if [[ "$cmd" == *"makepkg"* ]]; then
-            run_user="sysadmin"
+            run_user="nobody"
             enable_pacman_no_pass "$run_user"
         fi
         {
@@ -223,7 +223,7 @@ live_command_output() {
             output_error "$cmd" "$exit_code"
         }
 
-        if [ "$run_user" = "sysadmin" ]; then
+        if [ "$run_user" = "nobody" ]; then
             disable_pacman_no_pass "$run_user"
         fi
 
