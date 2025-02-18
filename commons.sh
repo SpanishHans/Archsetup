@@ -164,24 +164,6 @@ scroll_window_output() {
     rm -f "$temp_file"
 }
 
-check_nobody() {
-    if ! id nobody &>/dev/null; then
-        return 1
-    fi
-
-    if chage -l nobody | grep -q "account expires" && \
-     chage -l nobody | grep -q "account expires.*[0-9]"; then
-        chage -E -1 nobody
-    fi
-
-    local current_shell=$(getent passwd nobody | cut -d: -f7)
-    if [[ "$current_shell" == "/usr/bin/nologin" || "$current_shell" == "/bin/false" ]]; then
-        chsh -s /bin/bash nobody
-    fi
-
-    return 0
-}
-
 live_command_output() {
     local user="${1:-root}"
     local pass="$2"
@@ -198,22 +180,36 @@ live_command_output() {
     }
     trap cleanup EXIT
 
-    enable_nobody_pacman() {
-        sudo sed -i '/^nobody ALL=(ALL) NOPASSWD: \/usr\/bin\/pacman$/d' /etc/sudoers
-        sudo sed -i '$ a\nobody ALL=(ALL) NOPASSWD: /usr/bin/pacman' /etc/sudoers
+    enable_pacman_no_pass() {
+        local run_user="$1"
+        if [[ -z "$run_user" ]]; then
+            continue_script 2 "no user for visudo" "No visudo user was given, aborting"
+            exit 1
+        fi
+
+        sudo visudo -cf /etc/sudoers || exit 1
+        sudo sed -i "/^${run_user} ALL=(ALL) NOPASSWD: \/usr\/bin\/pacman$/d" /etc/sudoers
+        echo "${run_user} ALL=(ALL) NOPASSWD: /usr/bin/pacman" | sudo EDITOR='tee -a' visudo
     }
 
-    disable_nobody_pacman() {
-        sudo sed -i '/^nobody ALL=(ALL) NOPASSWD: \/usr\/bin\/pacman$/d' /etc/sudoers
+    disable_pacman_no_pass() {
+        local run_user="$1"
+        if [[ -z "$run_user" ]]; then
+            continue_script 2 "no user for visudo" "No visudo user was given, aborting"
+            exit 1
+        fi
+
+        sudo visudo -cf /etc/sudoers || exit 1 
+        sudo sed -i "/^${run_user} ALL=(ALL) NOPASSWD: \/usr\/bin\/pacman$/d" /etc/sudoers
+}
     }
 
     execute_command() {
         local cmd="$1"
         local run_user="$user"
         if [[ "$cmd" == *"makepkg"* ]]; then
-            run_user="nobody"
-            check_nobody
-            enable_nobody_pacman
+            run_user="sysadmin"
+            enable_pacman_no_pass "$run_user"
         fi
         {
             terminal_title "Running: $cmd" >> "$combined_log"
@@ -227,8 +223,8 @@ live_command_output() {
             output_error "$cmd" "$exit_code"
         }
 
-        if [ "$run_user" = "nobody" ]; then
-            disable_nobody_pacman
+        if [ "$run_user" = "sysadmin" ]; then
+            disable_pacman_no_pass "$run_user"
         fi
 
         return $exit_code
