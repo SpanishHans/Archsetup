@@ -237,28 +237,12 @@ configure_asdf() {
     continue_script 2 "ASDF Config" "ASDF configuration complete!"
 }
 
-install_all_asdf () {
-    configure_python
-    configure_node
-    configure_java
-    configure_rust
-    configure_make
-    configure_cmake
-    configure_ninja
-    configure_dotnet
-    configure_neovim
-    configure_chezmoi
-    configure_starship
-    configure_glow
-    continue_script 2 "Everything" "Everything setup complete!"
-}
-
 install_with_asdf() {
     local user="$1"
     local item="$2"
     local version="$3"
 
-    check_flatpak_package "$app" "$app_id"
+    check_asdf_package "$user" "$item" "$version"
 }
 
 check_asdf_package() {
@@ -293,6 +277,22 @@ install_asdf_package() {
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
     live_command_output "" "" "yes" "Configuring $item from ASDF" "${commands_to_run[@]}"
+}
+
+install_all_asdf () {
+    configure_python
+    configure_node
+    configure_java
+    configure_rust
+    configure_make
+    configure_cmake
+    configure_ninja
+    configure_dotnet
+    configure_neovim
+    configure_chezmoi
+    configure_starship
+    configure_glow
+    continue_script 2 "Everything" "Everything setup complete!"
 }
 
 configure_python() {
