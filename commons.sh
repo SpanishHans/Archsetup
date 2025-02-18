@@ -164,6 +164,25 @@ scroll_window_output() {
     rm -f "$temp_file"
 }
 
+check_nobody() {
+    # Check if 'nobody' user exists
+    if ! id nobody &>/dev/null; then
+        return 1
+    fi
+
+    if chage -l nobody | grep -q "account expires" && \
+     chage -l nobody | grep -q "account expires.*[0-9]"; then
+        chage -E -1 nobody
+    fi
+
+    local current_shell=$(getent passwd nobody | cut -d: -f7)
+    if [[ "$current_shell" == "/usr/bin/nologin" || "$current_shell" == "/bin/false" ]]; then
+        chsh -s /bin/bash nobody
+    fi
+
+    return 0
+}
+
 live_command_output() {
     local user="${1:-root}"
     local pass="$2"
@@ -193,7 +212,8 @@ live_command_output() {
         local cmd="$1"
         local run_user="$user"
         if [[ "$cmd" == *"makepkg"* ]]; then
-            run_user="nobody"
+            run_user="sysadmin"
+            check_nobody
             enable_nobody_pacman
         fi
         {
