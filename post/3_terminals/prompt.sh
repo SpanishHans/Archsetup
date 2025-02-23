@@ -71,7 +71,7 @@ starship_config (){
     fi
     commands_to_run+=("touch $starship_config_path/starship.toml")
     commands_to_run+=("chown -R $term_username:$term_username $starship_config_path/starship.toml")
-    live_command_output "" "" "yes" "Creating config file" "${commands_to_run[@]}"
+    live_command_output "" "" "Creating config file" "${commands_to_run[@]}"
 
     install_pacman_packages bash-completion
 
@@ -107,7 +107,7 @@ starship_config (){
             echo '$init_command' >> $config_file
         fi"
     )
-    live_command_output "" "" "yes" "Configuring Starship for $term_username." "${commands_to_run[@]}"
+    live_command_output "" "" "Configuring Starship for $term_username." "${commands_to_run[@]}"
     starship_themes "$term_username"
     continue_script 2 "Starship installed" "Starship installed correctly"
 }
@@ -144,7 +144,7 @@ starship_theme_pure_prompt() {
 
     local commands_to_run=()
     local commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/pure.toml /home/$term_username/.config/starship.toml")
-    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
+    live_command_output "" "" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
     continue_script 2 "Theme configured" "The theme has been set up."
 }
 
@@ -153,7 +153,7 @@ starship_theme_pastel_powerline() {
 
     local commands_to_run=()
     local commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/pastel.toml /home/$term_username/.config/starship.toml")
-    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
+    live_command_output "" "" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
     continue_script 2 "Theme configured" "The theme has been set up."
 }
 
@@ -162,7 +162,7 @@ starship_theme_tokyo_night() {
 
     local commands_to_run=()
     local commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/tokyo.toml /home/$term_username/.config/starship.toml")
-    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
+    live_command_output "" "" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
     continue_script 2 "Theme configured" "The theme has been set up."
 }
 
@@ -171,7 +171,7 @@ starship_theme_gruvbox_rainbow() {
 
     local commands_to_run=()
     local commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/gruvbox.toml /home/$term_username/.config/starship.toml")
-    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
+    live_command_output "" "" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
     continue_script 2 "Theme configured" "The theme has been set up."
 }
 
@@ -180,7 +180,7 @@ starship_theme_jetpack() {
 
     local commands_to_run=()
     local commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/jetpack.toml /home/$term_username/.config/starship.toml")
-    live_command_output "" "" "yes" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
+    live_command_output "" "" "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
     continue_script 2 "Theme configured" "The theme has been set up."
 }
 
@@ -194,7 +194,7 @@ oh_my_posh_config () {
     local shell_path="$(getent passwd "$term_username" | cut -d: -f7)"
 
     commands_to_run=("curl -sS https://starship.rs/install.sh | bash")
-    live_command_output "" "" "yes" "Configuring Oh My Posh for $term_username." "${commands_to_run[@]}"
+    live_command_output "" "" "Configuring Oh My Posh for $term_username." "${commands_to_run[@]}"
 
     local commands_to_run=()
     
@@ -245,7 +245,7 @@ oh_my_posh_config () {
             echo 'Oh my posh initialization already present in $config_file'
         fi"
     )
-    live_command_output "" "" "yes" "Configuring Oh my posh for $term_username." "${commands_to_run[@]}"
+    live_command_output "" "" "Configuring Oh my posh for $term_username." "${commands_to_run[@]}"
     continue_script 2 "Oh my posh installed" "Oh my posh installed correctly"
 }
 
@@ -286,7 +286,7 @@ posh_theme_1_shell() {
             echo 'init_command added to $config_file'
         fi"
     )
-    live_command_output "" "" "yes" "Configuring Oh my posh for $term_username." "${commands_to_run[@]}"
+    live_command_output "" "" "Configuring Oh my posh for $term_username." "${commands_to_run[@]}"
 }
 
 #https://ohmyposh.dev/docs/themes

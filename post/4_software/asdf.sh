@@ -95,7 +95,7 @@ configure_asdf() {
     fi
 
     commands_to_run+=("touch $path")
-    live_command_output "" "" "yes" "Configuring ASDF" "${commands_to_run[@]}"
+    live_command_output "" "" "Configuring ASDF" "${commands_to_run[@]}"
     
     local commands_to_run=()
     case "$shell_path" in
@@ -233,7 +233,7 @@ configure_asdf() {
             ;;
     esac
 
-    live_command_output "" "" "yes" "Configuring ASDF" "${commands_to_run[@]}"
+    live_command_output "" "" "Configuring ASDF" "${commands_to_run[@]}"
     continue_script 2 "ASDF Config" "ASDF configuration complete!"
 }
 
@@ -276,7 +276,7 @@ install_asdf_package() {
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
     commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
-    live_command_output "" "" "yes" "Configuring $item from ASDF" "${commands_to_run[@]}"
+    live_command_output "" "" "Configuring $item from ASDF" "${commands_to_run[@]}"
 }
 
 install_all_asdf () {

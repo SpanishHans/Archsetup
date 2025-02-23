@@ -109,16 +109,6 @@ continue_script() {
 
 }
 
-handle_exit_code() {
-    local code="$1"
-    local mode="${2:-return}"
-    case $code in
-        0) $mode ;;
-        1) exit ;;
-        *) pause_script 'Error' "Unknown exit code: $code" ;;
-    esac
-}
-
 output_error() {
         local cmd="$1"
         local exit_code="$2"
@@ -164,23 +154,15 @@ scroll_window_output() {
     rm -f "$temp_file"
 }
 
-live_command_output() {
-    local user="${1:-root}"
-    local pass="$2"
-    local show_logs="${3:-no}"
-    local context="$4"
-    shift 4
-    local commands=("$@")
-    local script_name=$(basename "$(realpath "$0")")
-    local combined_log="/tmp/${script_name}_$(date +%Y_%m_%d_%H_%M_%S).log"
-    local exit_code=0
+validate_user() {
+    local user="$1"
+    if ! id "$user" &>/dev/null; then
+        echo "Error: Invalid user '$user'." >&2
+        exit 1
+    fi
+}
 
-    cleanup() {
-        rm -f "$combined_log"
-    }
-    trap cleanup EXIT
-
-    enable_pacman_no_pass() {
+enable_pacman_no_pass() {
         local run_user="$1"
         if [[ -z "$run_user" ]]; then
             continue_script 2 "no user for visudo" "No visudo user was given, aborting"
@@ -192,42 +174,59 @@ live_command_output() {
         fi
     }
 
-    disable_pacman_no_pass() {
-        local run_user="$1"
-        if [[ -z "$run_user" ]]; then
-            continue_script 2 "no user for visudo" "No visudo user was given, aborting"
-            exit 1
-        fi
+disable_pacman_no_pass() {
+    local run_user="$1"
+    if [[ -z "$run_user" ]]; then
+        continue_script 2 "no user for visudo" "No visudo user was given, aborting"
+        exit 1
+    fi
 
-        sudo sed -i "/^${run_user} ALL=(ALL) NOPASSWD: \/usr\/bin\/pacman$/d" /etc/sudoers
+    sudo sed -i "/^${run_user} ALL=(ALL) NOPASSWD: \/usr\/bin\/pacman$/d" /etc/sudoers
 
+}
+
+execute_command() {
+    local cmd="$1"
+    local run_user="$user"
+    
+    [[ "$cmd" == *"makepkg"* ]] && {
+        run_user="sysadmin"
+        enable_pacman_no_pass "$run_user"
     }
 
-    execute_command() {
-        local cmd="$1"
-        local run_user="$user"
-        if [[ "$cmd" == *"makepkg"* ]]; then
-            run_user="sysadmin"
-            enable_pacman_no_pass "$run_user"
-        fi
-        {
-            terminal_title "Running: $cmd" >> "$combined_log"
-            if [ "$run_user" = "root" ]; then
-                eval "$cmd" >> "$combined_log" 2>&1
-            else
-                echo "$pass" | su - "$run_user" -c "$cmd" >> "$combined_log" 2>&1
-            fi
-
-            exit_code=$?
-            output_error "$cmd" "$exit_code"
-        }
-
-        if [ "$run_user" = "sysadmin" ]; then
-            disable_pacman_no_pass "$run_user"
+    {
+        terminal_title "Running: $cmd" >> "$combined_log"
+        if [ "$run_user" = "root" ]; then
+            eval "$cmd" >> "$combined_log" 2>&1
+        else
+            echo "$pass" | su - "$run_user" -c "$cmd" >> "$combined_log" 2>&1
         fi
 
-        return $exit_code
+        exit_code=$?
+        output_error "$cmd" "$exit_code"
     }
+
+    [[ "$run_user" == "sysadmin" ]] && disable_pacman_no_pass "$run_user"
+
+    return $exit_code
+}
+
+cleanup() {
+    rm -f "$combined_log"
+}
+
+live_command_output() {
+    local user="${1:-root}"
+    local pass="$2"
+    local show_logs="${3:-no}"
+    local context="$4"
+    shift 4
+    local commands=("$@")
+    local script_name=$(basename "$(realpath "$0")")
+    local combined_log="/tmp/${script_name}_$(date +%Y_%m_%d_%H_%M_%S).log"
+    local exit_code=0
+
+    trap cleanup EXIT INT TERM
 
     {
         for cmd in "${commands[@]}"; do
@@ -261,7 +260,7 @@ live_command_output() {
     dialog_pid=$!
     wait "$dialog_pid"
 
-    handle_exit_code "$exit_code" "return"
+    return $exit_code
 }
 
 input_text() {
@@ -287,7 +286,7 @@ $prompt"
         $half_height $half_width 2>&1 >/dev/tty)
     exit_code=$?
     eval "$choice=\"$dialog_output\""
-    handle_exit_code "$exit_code" "return"
+    return $exit_code
 }
 
 input_pass() {
@@ -314,7 +313,7 @@ $prompt"
         $half_height $half_width 2>&1 >/dev/tty)
     exit_code=$?
     eval "$choice=\"$dialog_output\""
-    handle_exit_code "$exit_code" "return"
+    return $exit_code
 }
 
 ensure_same_pass() {
@@ -373,7 +372,7 @@ menu_prompt() {
     exit_code=$?
     eval "$choice=\"$dialog_output\""
 
-    handle_exit_code "$exit_code" "return"
+    return $exit_code
 
 }
 
@@ -395,6 +394,5 @@ multiselect_prompt() {
     IFS=$' ' read -r -a choices_array <<< "$dialog_output"
         
     eval "$choices=(${choices_array[@]})"
-    handle_exit_code "$exit_code" "return"
-
+    return $exit_code
 }

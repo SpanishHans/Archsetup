@@ -29,7 +29,7 @@ install_pacman_packages() {
     if [ "${#packages_to_install[@]}" -gt 0 ]; then
         cols=$(echo "${packages_to_install[@]}" | column)
         continue_script 4 "To be installed" "Pacman will install the following packages:\n\n$cols"
-        live_command_output "" "" "yes" "Installing packages $cols" "pacman -S --noconfirm ${packages_to_install[*]}"
+        live_command_output "" "" "Installing packages $cols" "pacman -S --noconfirm ${packages_to_install[*]}"
     else
         continue_script 2 "Packages exist" "All packages are already installed and up-to-date."
     fi

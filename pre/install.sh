@@ -89,7 +89,7 @@ commands_to_run+=("pacstrap /mnt ${all_packages[*]}")
 
 commands_to_run+=("genfstab -U /mnt >> /mnt/etc/fstab")
 
-live_command_output "" "" "yes" "Installing linux to disk" "${commands_to_run[@]}"
+live_command_output "" "" "Installing linux to disk" "${commands_to_run[@]}"
 
 networking_setup
 locales_setup
@@ -157,6 +157,6 @@ commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
     grub-install --target=x86_64-efi --efi-directory=/efi --boot-directory=/boot --bootloader-id=GRUB || { echo 'grub-install failed'; exit 1; }
     grub-mkconfig -o /boot/grub/grub.cfg || { echo 'grub-mkconfig failed'; exit 1; }
 EOF")
-live_command_output "" "" "yes" "executing arch-chroot steps" "${commands_to_run[@]}"
+live_command_output "" "" "executing arch-chroot steps" "${commands_to_run[@]}"
 
 pause_script 'Finished' 'Done, you may now wish to reboot (further changes can be done by chrooting into /mnt).'

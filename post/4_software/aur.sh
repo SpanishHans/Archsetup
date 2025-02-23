@@ -60,7 +60,7 @@ install_without_paru() {
         local commands_to_run+=("mkdir -p $build_path")
         local commands_to_run+=("git clone $url $build_path")
         local commands_to_run+=("chown -R $bui_user:$bui_user $build_path")
-        live_command_output "" "" "yes" "Cloning $package_name" "${commands_to_run[@]}"
+        live_command_output "" "" "Cloning $package_name" "${commands_to_run[@]}"
     fi
 
     if ! ls $build_path/*.pkg.tar.zst &>/dev/null; then
@@ -71,12 +71,12 @@ install_without_paru() {
             exit 1
         fi
         local commands_to_run+=("cd $build_path && makepkg -s -r -c --noconfirm")
-        live_command_output "" "" "yes" "Building and installing $package_name" "${commands_to_run[@]}"
+        live_command_output "" "" "Building and installing $package_name" "${commands_to_run[@]}"
     fi
 
     local commands_to_run=()
     local commands_to_run+=("cd $build_path && pacman --noconfirm -U *.pkg.tar.zst")
-    live_command_output "" "" "yes" "Installing $package_name" "${commands_to_run[@]}"
+    live_command_output "" "" "Installing $package_name" "${commands_to_run[@]}"
 
     continue_script 2 "$package_name installed" "$package_name install complete!"
 }

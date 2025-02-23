@@ -103,7 +103,7 @@ full_default_route() {
     commands_to_run+=("udevadm settle")
     commands_to_run+=("partprobe \"${DISK}\"")    
 
-    live_command_output "" "" "yes" "Formatting $DISK" "${commands_to_run[@]}"
+    live_command_output "" "" "Formatting $DISK" "${commands_to_run[@]}"
     run_btrfs_setup
 }
 

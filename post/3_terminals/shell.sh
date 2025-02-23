@@ -32,7 +32,7 @@ configure_bash_it() {
 
     commands_to_run+=("git clone --depth=1 https://github.com/Bash-it/bash-it.git /home/$term_user/.bash_it && /home/$term_user/.bash_it/install.sh")
     commands_to_run+=("chown -R $term_user:$term_user /home/$term_user/.bash_it")
-    live_command_output "" "" "yes" "Installing Bash-it" "${commands_to_run[@]}"
+    live_command_output "" "" "Installing Bash-it" "${commands_to_run[@]}"
 }
 
 configure_oh_my_zsh() {
@@ -57,7 +57,7 @@ configure_oh_my_zsh() {
     commands_to_run+=("chown -R $term_user:$term_user /home/$term_user/.oh-my-zsh")
     commands_to_run+=("chown -R $term_user:$term_user /home/$term_user/.zshrc")
 
-    live_command_output "" "" "yes" "Installing ohmyzsh" "${commands_to_run[@]}"
+    live_command_output "" "" "Installing ohmyzsh" "${commands_to_run[@]}"
 }
 
 configure_fisher() {
@@ -68,7 +68,7 @@ configure_fisher() {
         commands_to_run+=("fish -c 'curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher'")
     fi
 
-    live_command_output "" "" "yes" "Installing Fisher for Fish" "${commands_to_run[@]}"
+    live_command_output "" "" "Installing Fisher for Fish" "${commands_to_run[@]}"
 
 }
 
@@ -113,7 +113,7 @@ configure_bash() {
 
     install_pacman_packages bash
     local commands_to_run=("chsh -s /usr/bin/bash $term_user")
-    live_command_output "" "" "yes" "Configuring bash terminal" "${commands_to_run[@]}"
+    live_command_output "" "" "Configuring bash terminal" "${commands_to_run[@]}"
 
     local title="Install frameworks for bash"
     local description="This allows you to set up different frameworks for bash. Please select the framework which shall be configured."
@@ -137,7 +137,7 @@ configure_zsh() {
 
     install_pacman_packages zsh
     local commands_to_run=("chsh -s /usr/bin/zsh $term_user")
-    live_command_output "" "" "yes" "Configuring zsh terminal" "${commands_to_run[@]}"
+    live_command_output "" "" "Configuring zsh terminal" "${commands_to_run[@]}"
 
     local title="Install frameworks for zsh"
     local description="This allows you to set up different frameworks for zsh. Please select the framework which shall be configured."
@@ -161,7 +161,7 @@ configure_fish() {
 
     install_pacman_packages fish
     local commands_to_run=("chsh -s /usr/bin/fish $term_user")
-    live_command_output "" "" "yes" "Configuring fish terminal" "${commands_to_run[@]}"
+    live_command_output "" "" "Configuring fish terminal" "${commands_to_run[@]}"
 
     local title="Install frameworks for fish"
     local description="This allows you to set up different frameworks for fish. Please select the framework which shall be configured."
@@ -185,7 +185,7 @@ configure_elvish() {
 
     install_pacman_packages elvish
     local commands_to_run=("chsh -s /usr/bin/elvish $term_user")
-    live_command_output "" "" "yes" "Configuring elvish terminal" "${commands_to_run[@]}"
+    live_command_output "" "" "Configuring elvish terminal" "${commands_to_run[@]}"
     continue_script 2 "Elvish installed" "Elvish installed correctly"
 }
 
@@ -194,7 +194,7 @@ configure_tcsh() {
 
     install_pacman_packages tcsh
     local commands_to_run=("chsh -s /usr/bin/tcsh $term_user")
-    live_command_output "" "" "yes" "Configuring tcsh terminal" "${commands_to_run[@]}"
+    live_command_output "" "" "Configuring tcsh terminal" "${commands_to_run[@]}"
     continue_script 2 "Tcsh installed" "Tcsh installed correctly"
 }
 
@@ -203,6 +203,6 @@ configure_nushell() {
 
     install_pacman_packages nushell
     local commands_to_run=("chsh -s /usr/bin/nu $term_user")
-    live_command_output "" "" "yes" "Configuring nu terminal" "${commands_to_run[@]}"
+    live_command_output "" "" "Configuring nu terminal" "${commands_to_run[@]}"
     continue_script 2 "Nushell installed" "Nushell installed correctly"
 }
