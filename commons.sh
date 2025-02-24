@@ -161,55 +161,64 @@ live_command_output() {
     local context="$4"
     shift 4
     local commands=("$@")
-    local script_name
-    script_name=$(basename "$(realpath "$0")")
-    local combined_log
-    combined_log="/tmp/${script_name}_$(date +%Y_%m_%d_%H_%M_%S).log"
+    local script_name=$(basename "$(realpath "$0")")
+    local combined_log="/tmp/${script_name}_$(date +%Y_%m_%d_%H_%M_%S).log"
     local exit_code=0
-    local title="Live Command Execution"
 
     cleanup() {
-        [[ -n "$dialog_pid" ]] && kill "$dialog_pid" 2>/dev/null
         rm -f "$combined_log"
     }
     trap cleanup EXIT
 
     execute_command() {
         local cmd="$1"
-        echo "Running: $cmd" >> "$combined_log"
-        if [[ "$user" == "root" ]]; then
-            eval "$cmd" >> "$combined_log" 2>&1
-        else
-            echo "$pass" | sudo -u "$user" -S bash -c "$cmd" >> "$combined_log" 2>&1
-        fi
-        exit_code=$?
+        {
+            terminal_title "Running: $cmd" >> "$combined_log"
+            if [ "$user" = "root" ]; then
+                eval "$cmd" >> "$combined_log" 2>&1
+            else
+                echo "$pass" | sudo -u "$user" -S bash -c "$cmd" >> "$combined_log" 2>&1
+
+            fi
+            exit_code=$?
+            output_error "$cmd" "$exit_code"
+        }
         return $exit_code
     }
 
     {
         for cmd in "${commands[@]}"; do
             execute_command "$cmd" || { 
-                echo "Error encountered, check logs: $combined_log" >> "$combined_log"
+                scroll_window_output return_value "$(terminal_title "$script_name Error, the logs are:")" "$combined_log"
+                if [ $return_value -eq 3 ]; then
+                    continue_script 3 "You decided to exit" "Script exited execution. Bye."
+                    exit 1
+                fi
+                exit_code=$?
                 sleep 2
-                [[ -n "$dialog_pid" ]] && kill "$dialog_pid"
-                exit 1
-            }
+                killall dialog
+                break
+        }
         done
 
-        if [[ $exit_code -eq 0 ]]; then
-            echo "Done! Check logs at $combined_log" >> "$combined_log"
+        if [ $exit_code -eq 0 ]; then
+            terminal_title "Done, continuing to next step!" >> "$combined_log"
+            terminal_title "read the logs for this operation on $combined_log" >> "$combined_log"
             sleep 2
-            [[ -n "$dialog_pid" ]] && kill "$dialog_pid"
+            killall dialog
         fi
     } &
 
     tail -f "$combined_log" | dialog \
-        --backtitle "$title" \
+        --backtitle "$script_name on live viewer" \
         --title "$title" \
-        --programbox 20 80 2>&1 >/dev/tty &
+        --programbox "" \
+        "$full_height" "$full_width" 2>&1 >/dev/tty &
 
     dialog_pid=$!
     wait "$dialog_pid"
+
+    handle_exit_code "$exit_code" "return"
 }
 
 input_text() {
