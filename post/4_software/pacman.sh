@@ -23,14 +23,15 @@ install_pacman_packages() {
     for package in "${packages[@]}"; do
         if ! check_pacman_package "$package"; then
             packages_to_install+=("$package")
-            pause_script "" "Paquete $package no esta"
         fi
     done
 
     if [ "${#packages_to_install[@]}" -gt 0 ]; then
-        formatted_list=$(printf '%s\n' "${packages_to_install[@]}" | column)
-        continue_script 2 "To be installed" "Pacman will install the following packages:\n\n$formatted_list"
-        live_command_output "" "" "Installing packages" "pacman -S --noconfirm ${packages_to_install[*]}"
+        formatted_list=$(printf '%s\n' "${packages_to_install[@]}" | tr '\n' ' ')  # Ensure clean formatting
+        continue_script 4 "To be installed" "Pacman will install the following packages:\n\n$formatted_list"
+
+        # Correct argument passing for live_command_output
+        live_command_output "root" "" "Installing packages" pacman -S --noconfirm "${packages_to_install[@]}"
     else
         continue_script 2 "Packages exist" "All packages are already installed and up-to-date."
     fi
