@@ -60,7 +60,9 @@ clean_fstab() {
 }
 
 configure_snapper() {
+    pause_script "" "Antes de snapper"
     install_pacman_packages snapper
+    pause_script "" "Despues de snapper"
     local commands_to_run=()
 
     if [[ ! -d "/.snapshots" ]]; then
