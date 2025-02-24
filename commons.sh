@@ -164,18 +164,23 @@ validate_user() {
 
 execute_command() {
     local cmd="$1"
-    local run_user="$user"
-    
-    [[ "$cmd" == *"makepkg"* ]] && {
+    local run_user="${2:-root}"
+
+
+    if [[ "$cmd" == *"makepkg"* ]]; then
+        if ! id "sysadmin" &>/dev/null; then
+            echo "Error: sysadmin user does not exist." >&2
+            exit 1
+        fi
         run_user="sysadmin"
-    }
+    fi
 
     {
         terminal_title "Running: $cmd" >> "$combined_log"
         if [ "$run_user" = "root" ]; then
             eval "$cmd" >> "$combined_log" 2>&1
         else
-            echo "$pass" | su - "$run_user" -c "$cmd" >> "$combined_log" 2>&1
+            echo "$pass" | sudo -S -u "$run_user" bash -c "$cmd" >> "$combined_log" 2>&1
         fi
 
         exit_code=$?
@@ -185,8 +190,9 @@ execute_command() {
     return $exit_code
 }
 
+
 cleanup() {
-    rm -f "$combined_log"
+    [ -f "$combined_log" ] && rm -f "$combined_log"
 }
 
 live_command_output() {
@@ -206,7 +212,7 @@ live_command_output() {
     {
         for cmd in "${commands[@]}"; do
             titl="$cmd"
-            execute_command "$cmd" || { 
+            execute_command "$cmd" "$user" || { 
                 scroll_window_output return_value "$(terminal_title "$script_name Error, the logs are:")" "$combined_log"
                 if [ $return_value -eq 3 ]; then
                     continue_script 3 "You decided to exit" "Script exited execution. Bye."
@@ -233,9 +239,9 @@ live_command_output() {
         --title "$title" \
         --programbox "" \
         "$full_height" "$full_width" 2>&1 >/dev/tty &
-
     dialog_pid=$!
-    wait "$dialog_pid"
+    wait "$dialog_pid" || true
+
 
     return $exit_code
 }
