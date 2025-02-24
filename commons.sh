@@ -154,47 +154,6 @@ scroll_window_output() {
     rm -f "$temp_file"
 }
 
-validate_user() {
-    local user="$1"
-    if ! id "$user" &>/dev/null; then
-        echo "Error: Invalid user '$user'." >&2
-        exit 1
-    fi
-}
-
-execute_command() {
-    local cmd="$1"
-    local run_user="${2:-root}"
-
-
-    if [[ "$cmd" == *"makepkg"* ]]; then
-        if ! id "sysadmin" &>/dev/null; then
-            echo "Error: sysadmin user does not exist." >&2
-            exit 1
-        fi
-        run_user="sysadmin"
-    fi
-
-    {
-        terminal_title "Running: $cmd" >> "$combined_log"
-        if [ "$run_user" = "root" ]; then
-            eval "$cmd" >> "$combined_log" 2>&1
-        else
-            echo "$pass" | sudo -S -u "$run_user" bash -c "$cmd" >> "$combined_log" 2>&1
-        fi
-
-        exit_code=$?
-        output_error "$cmd" "$exit_code"
-    }
-
-    return $exit_code
-}
-
-
-cleanup() {
-    [ -f "$combined_log" ] && rm -f "$combined_log"
-}
-
 live_command_output() {
     local user="${1:-root}"
     local pass="$2"
@@ -202,48 +161,55 @@ live_command_output() {
     local context="$4"
     shift 4
     local commands=("$@")
-    local script_name=$(basename "$(realpath "$0")")
-    local combined_log="/tmp/${script_name}_$(date +%Y_%m_%d_%H_%M_%S).log"
+    local script_name
+    script_name=$(basename "$(realpath "$0")")
+    local combined_log
+    combined_log="/tmp/${script_name}_$(date +%Y_%m_%d_%H_%M_%S).log"
     local exit_code=0
-    local titl=''
+    local title="Live Command Execution"
 
-    trap cleanup EXIT INT TERM
+    cleanup() {
+        [[ -n "$dialog_pid" ]] && kill "$dialog_pid" 2>/dev/null
+        rm -f "$combined_log"
+    }
+    trap cleanup EXIT
+
+    execute_command() {
+        local cmd="$1"
+        echo "Running: $cmd" >> "$combined_log"
+        if [[ "$user" == "root" ]]; then
+            eval "$cmd" >> "$combined_log" 2>&1
+        else
+            echo "$pass" | sudo -u "$user" -S bash -c "$cmd" >> "$combined_log" 2>&1
+        fi
+        exit_code=$?
+        return $exit_code
+    }
 
     {
         for cmd in "${commands[@]}"; do
-            titl="$cmd"
-            execute_command "$cmd" "$user" || { 
-                scroll_window_output return_value "$(terminal_title "$script_name Error, the logs are:")" "$combined_log"
-                if [ $return_value -eq 3 ]; then
-                    continue_script 3 "You decided to exit" "Script exited execution. Bye."
-                    break && exit
-                    
-                fi
-                exit_code=$?
+            execute_command "$cmd" || { 
+                echo "Error encountered, check logs: $combined_log" >> "$combined_log"
                 sleep 2
-                killall dialog
-                break
+                [[ -n "$dialog_pid" ]] && kill "$dialog_pid"
+                exit 1
             }
         done
 
-        if [ $exit_code -eq 0 ]; then
-            terminal_title "Done, continuing to next step!" >> "$combined_log"
-            terminal_title "read the logs for this operation on $combined_log" >> "$combined_log"
-            sleep 3
-            killall dialog
+        if [[ $exit_code -eq 0 ]]; then
+            echo "Done! Check logs at $combined_log" >> "$combined_log"
+            sleep 2
+            [[ -n "$dialog_pid" ]] && kill "$dialog_pid"
         fi
     } &
 
     tail -f "$combined_log" | dialog \
-        --backtitle "$titl on live viewer" \
+        --backtitle "$title" \
         --title "$title" \
-        --programbox "" \
-        "$full_height" "$full_width" 2>&1 >/dev/tty &
+        --programbox 20 80 2>&1 >/dev/tty &
+
     dialog_pid=$!
-    wait "$dialog_pid" || true
-
-
-    return $exit_code
+    wait "$dialog_pid"
 }
 
 input_text() {

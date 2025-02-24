@@ -27,7 +27,7 @@ install_pacman_packages() {
     done
 
     if [ "${#packages_to_install[@]}" -gt 0 ]; then
-        formatted_list=$(printf '%s\n' "${packages_to_install[@]}" | tr '\n' ' ')  # Ensure clean formatting
+        formatted_list=$(printf '%s\n' "${packages_to_install[@]}" | tr '\n' ' ')
         continue_script 4 "To be installed" "Pacman will install the following packages:\n\n$formatted_list"
 
         # Correct argument passing for live_command_output
