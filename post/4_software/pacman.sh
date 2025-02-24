@@ -23,6 +23,7 @@ install_pacman_packages() {
     for package in "${packages[@]}"; do
         if ! check_pacman_package "$package"; then
             packages_to_install+=("$package")
+            pause_script "" "Paquete $package no esta"
         fi
     done
 
