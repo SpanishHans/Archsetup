@@ -162,36 +162,12 @@ validate_user() {
     fi
 }
 
-enable_pacman_no_pass() {
-        local run_user="$1"
-        if [[ -z "$run_user" ]]; then
-            continue_script 2 "no user for visudo" "No visudo user was given, aborting"
-            exit 1
-        fi
-
-        if ! sudo grep -q "^${run_user} ALL=(ALL) NOPASSWD: /usr/bin/pacman" /etc/sudoers; then
-            echo "${run_user} ALL=(ALL) NOPASSWD: /usr/bin/pacman" | sudo tee -a /etc/sudoers > /dev/null
-        fi
-    }
-
-disable_pacman_no_pass() {
-    local run_user="$1"
-    if [[ -z "$run_user" ]]; then
-        continue_script 2 "no user for visudo" "No visudo user was given, aborting"
-        exit 1
-    fi
-
-    sudo sed -i "/^${run_user} ALL=(ALL) NOPASSWD: \/usr\/bin\/pacman$/d" /etc/sudoers
-
-}
-
 execute_command() {
     local cmd="$1"
     local run_user="$user"
     
     [[ "$cmd" == *"makepkg"* ]] && {
         run_user="sysadmin"
-        enable_pacman_no_pass "$run_user"
     }
 
     {
@@ -205,8 +181,6 @@ execute_command() {
         exit_code=$?
         output_error "$cmd" "$exit_code"
     }
-
-    [[ "$run_user" == "sysadmin" ]] && disable_pacman_no_pass "$run_user"
 
     return $exit_code
 }
@@ -225,11 +199,13 @@ live_command_output() {
     local script_name=$(basename "$(realpath "$0")")
     local combined_log="/tmp/${script_name}_$(date +%Y_%m_%d_%H_%M_%S).log"
     local exit_code=0
+    local titl=''
 
     trap cleanup EXIT INT TERM
 
     {
         for cmd in "${commands[@]}"; do
+            titl="$cmd"
             execute_command "$cmd" || { 
                 scroll_window_output return_value "$(terminal_title "$script_name Error, the logs are:")" "$combined_log"
                 if [ $return_value -eq 3 ]; then
@@ -246,13 +222,13 @@ live_command_output() {
         if [ $exit_code -eq 0 ]; then
             terminal_title "Done, continuing to next step!" >> "$combined_log"
             terminal_title "read the logs for this operation on $combined_log" >> "$combined_log"
-            sleep 2
+            sleep 3
             killall dialog
         fi
     } &
 
     tail -f "$combined_log" | dialog \
-        --backtitle "$script_name on live viewer" \
+        --backtitle "$titl on live viewer" \
         --title "$title" \
         --programbox "" \
         "$full_height" "$full_width" 2>&1 >/dev/tty &
