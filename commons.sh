@@ -157,8 +157,7 @@ scroll_window_output() {
 live_command_output() {
     local user="${1:-root}"
     local pass="$2"
-    local show_logs="${3:-no}"
-    local context="$4"
+    local context="$3"
     shift 4
     local commands=("$@")
     local script_name=$(basename "$(realpath "$0")")
