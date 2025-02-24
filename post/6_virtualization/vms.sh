@@ -56,7 +56,7 @@ hyper_type_1() {
     description="This script aids the installation of type 1 hypervisors for the fastest possible VMs."
 
     while true; do
-        options=(\
+        local options=(\
             'qemu-desktop             (Full-system emulation x86_64 only)' \
             'qemu-emulators-full      (Full-system and Usermode emulation both for x86 and ARM)' \
             'qemu-full                (Everything under the sun)' \

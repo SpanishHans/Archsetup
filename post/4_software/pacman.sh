@@ -27,9 +27,10 @@ install_pacman_packages() {
     done
 
     if [ "${#packages_to_install[@]}" -gt 0 ]; then
-        cols=$(echo "${packages_to_install[@]}" | column)
-        continue_script 4 "To be installed" "Pacman will install the following packages:\n\n$cols"
-        live_command_output "" "" "Installing packages $cols" "pacman -S --noconfirm ${packages_to_install[*]}"
+        formatted_list=$(printf '%s\n' "${packages_to_install[@]}" | column)
+        continue_script 4 "To be installed" "Pacman will install the following packages:\n\n$formatted_list"
+        
+        live_command_output "root" "" "Installing packages" "pacman -S --noconfirm ${packages_to_install[*]}"
     else
         continue_script 2 "Packages exist" "All packages are already installed and up-to-date."
     fi
@@ -37,10 +38,6 @@ install_pacman_packages() {
 
 check_pacman_package() {
     local package_name="$1"
-    
-    if pacman -Qq | grep -qw "$package_name"; then
-        return 0  # Package is installed
-    else
-        return 1  # Package is not installed
-    fi
+    pacman -Q "$package_name" &>/dev/null
 }
+

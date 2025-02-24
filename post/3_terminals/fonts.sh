@@ -33,15 +33,15 @@ fonts_menu() {
         ["fa"]="ttf-font-awesome | A scalable icon font with thousands of customizable icons, perfect for modern UI/UX design."
     )
 
-    local menu_options=()
+    local options=()
     for key in "${!fonts[@]}"; do
         IFS=" | " read -r pac_name desc <<< "${fonts[$key]}"
-        menu_options+=("$key" "$desc" "off")
+        local options+=("$key" "$desc" "off")
     done
     
     multiselect_prompt\
         font_menu_choice\
-        menu_options\
+        options\
         "Starting font picker"\
         "The following are fonts considered nerd beucase they are for the tty or for the terminal.
         
