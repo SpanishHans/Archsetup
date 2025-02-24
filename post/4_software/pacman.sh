@@ -31,7 +31,7 @@ install_pacman_packages() {
         continue_script 4 "To be installed" "Pacman will install the following packages:\n\n$formatted_list"
 
         # Correct argument passing for live_command_output
-        live_command_output "root" "" "Installing packages" pacman -S --noconfirm "${packages_to_install[@]}"
+        live_command_output "root" "" "Installing packages" "pacman -S --noconfirm ${packages_to_install[@]}"
     else
         continue_script 2 "Packages exist" "All packages are already installed and up-to-date."
     fi
