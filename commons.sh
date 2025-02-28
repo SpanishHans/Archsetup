@@ -173,7 +173,7 @@ live_command_output() {
             terminal_title "Running: $cmd" >> "$combined_log"
             if [[ "$cmd" =~ makepkg ]]; then
                 if id "sysadmin" &>/dev/null; then
-                    echo "$ROOT_PASS" | su - "$user" -c "$cmd -sfi --noconfirm" >> "$combined_log" 2>&1
+                    echo "$ROOT_PASS" | su - "sysadmin" -c "$cmd" >> "$combined_log" 2>&1
                 else
                     pause_script "Error: User 'sysadmin' does not exist" "Please create the user 'sysadmin' or install manually with pacman -U."
                     return 1
