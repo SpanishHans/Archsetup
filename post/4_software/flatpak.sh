@@ -82,7 +82,7 @@ install_flatpak_app() {
 
     local commands_to_run=()
     commands_to_run+=("flatpak install --assumeyes --noninteractive $app_id")
-    live_command_output "" "" "Installing $app" "${commands_to_run[@]}"
+    live_command_output  "Installing $app" "${commands_to_run[@]}"
 }
 
 install_all_flatpaks () {

@@ -73,7 +73,7 @@ configure_docker() {
     commands_to_run+=("systemctl enable docker")
     commands_to_run+=("systemctl start --now docker")
 
-    live_command_output "" "" "Installing Docker" "${commands_to_run[@]}"
+    live_command_output  "Installing Docker" "${commands_to_run[@]}"
     continue_script 2 "Docker" "Docker Setup complete!"
 }
 

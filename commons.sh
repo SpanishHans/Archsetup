@@ -29,7 +29,7 @@ check_internet() {
     
     commands_to_run+=("ping -c 3 -q google.com")
     
-    live_command_output "" "" "Checking internet connection." "${commands_to_run[@]}"
+    live_command_output  "Checking internet connection." "${commands_to_run[@]}"
     export HAS_INTERNET=true
     
     continue_script 3 "You have internet!" "Connection has been tested by pinging google."

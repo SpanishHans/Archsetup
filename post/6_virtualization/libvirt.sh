@@ -58,7 +58,7 @@ configure_libvirt() {
     commands_to_run+=("echo \"unix_sock_rw_perms = '0770' \" | tee -a /etc/libvirt/libvirtd.conf")
 
     commands_to_run+=("systemctl restart libvirtd")
-    live_command_output "" "" "Installing dependencies" "${commands_to_run[@]}"
+    live_command_output  "Installing dependencies" "${commands_to_run[@]}"
 
     continue_script 2 "Libvirt" "Libvirt has been setup correctly!"
 }

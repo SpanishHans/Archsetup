@@ -97,6 +97,6 @@ dkms_driver() {
         grub-mkconfig -o /boot/grub/grub.cfg
     ')
 
-    live_command_output "" "" "Installing DKMS driver" "${commands_to_run[@]}"
+    live_command_output  "Installing DKMS driver" "${commands_to_run[@]}"
     continue_script 2 "Nvidia DKMS" "Nvidia DKMS Setup complete!"
 }

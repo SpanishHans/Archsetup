@@ -59,14 +59,14 @@ regen_cpio() {
         fi
     ')
     commands_to_run+=("grub-mkconfig -o /boot/grub/grub.cfg")
-    live_command_output "" "" "Regenerating cpio""${commands_to_run[@]}"
+    live_command_output  "Regenerating cpio""${commands_to_run[@]}"
 }
 
 theme_connect() {
     install_aur_package "https://aur.archlinux.org/plymouth-themes-adi1090x-pack1-git.git"
     commands_to_run=("plymouth-set-default-theme -R connect")
 
-    live_command_output "" "" "Installing selected plymouth theme: connect""${commands_to_run[@]}"
+    live_command_output  "Installing selected plymouth theme: connect""${commands_to_run[@]}"
     continue_script 2 "Plymouth theme connect installed" "The Plymouth theme connect has been installed!"
 }
 
@@ -74,7 +74,7 @@ theme_deus_ex() {
     install_aur_package "https://aur.archlinux.org/plymouth-themes-adi1090x-pack2-git.git"
     commands_to_run+=("plymouth-set-default-theme -R deus_ex")
 
-    live_command_output "" "" "Installing selected plymouth theme: deus ex""${commands_to_run[@]}"
+    live_command_output  "Installing selected plymouth theme: deus ex""${commands_to_run[@]}"
     continue_script 2 "Plymouth theme deus ex installed" "The Plymouth theme deus ex has been installed!"
 }
 
@@ -82,7 +82,7 @@ theme_lone() {
     install_aur_package  "https://aur.archlinux.org/plymouth-themes-adi1090x-pack3-git.git"
     commands_to_run+=("plymouth-set-default-theme -R lone")
 
-    live_command_output "" "" "Installing selected plymouth theme: lone""${commands_to_run[@]}"
+    live_command_output  "Installing selected plymouth theme: lone""${commands_to_run[@]}"
     continue_script 2 "Plymouth theme lone installed" "The Plymouth theme lone has been installed!"
 }
 
@@ -90,6 +90,6 @@ theme_red_loader() {
     install_aur_package "https://aur.archlinux.org/plymouth-themes-adi1090x-pack4-git.git"
     commands_to_run+=("plymouth-set-default-theme -R red_loader")
 
-    live_command_output "" "" "Installing selected plymouth theme: red loader""${commands_to_run[@]}"
+    live_command_output  "Installing selected plymouth theme: red loader""${commands_to_run[@]}"
     continue_script 2 "Plymouth theme red loader installed" "The Plymouth theme red loader has been installed!"
 }
