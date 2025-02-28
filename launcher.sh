@@ -21,7 +21,6 @@ export HAS_INTERNET=false
 
 check_live_env
 check_dialog
-check_internet
 
 if [ "$USE_DIALOG" = false ]; then
     clear
@@ -43,6 +42,8 @@ fi
 
 cp -f .dialogrc /root/.dialogrc
 
+check_internet
+
 launcher_menu () 
 {
     local title="Script Installer Menu"
@@ -51,9 +52,6 @@ launcher_menu ()
 Navigate though the menus with the arrow keys or with the paging keys. 
 Select with enter. 
 Press space for multiselect."
-
-    user_password_prompt "sysadmin" sysadmin_pass
-    export ROOT_PASS="$sysadmin_pass"
 
     while true; do
         local options=(\
