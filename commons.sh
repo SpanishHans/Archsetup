@@ -171,12 +171,7 @@ live_command_output() {
         local cmd="$1"
         {
             terminal_title "Running: $cmd" >> "$combined_log"
-            if [ "$user" = "root" ]; then
-                eval "$cmd" >> "$combined_log" 2>&1
-            else
-                echo "$pass" | sudo -u "$user" -S bash -c "$cmd" >> "$combined_log" 2>&1
-
-            fi
+            eval "$cmd" >> "$combined_log" 2>&1
             exit_code=$?
             output_error "$cmd" "$exit_code"
         }
