@@ -32,7 +32,7 @@ check_internet() {
     live_command_output "" "" "Checking internet connection." "${commands_to_run[@]}"
     export HAS_INTERNET=true
     
-    continue_script 2 "You have internet!" "Connection has been tested by pinging google."
+    continue_script 3 "You have internet!" "Connection has been tested by pinging google."
 }
 
 check_live_env(){
