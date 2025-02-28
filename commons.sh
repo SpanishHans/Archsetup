@@ -26,23 +26,10 @@ check_dialog(){
 check_internet() {
     
     commands_to_run+=("ping -c 3 -q google.com")
+    commands_to_run+=("echo ")
     
     live_command_output "" "" "Checking internet connection." "${commands_to_run[@]}"
-    live_output_status=$?
-    
-    pause_script "" "HAS_INTERNET: $live_output_status"
-    
-    if [[ $live_output_status -eq 1 ]]; then
-        HAS_INTERNET=true
-    elif ping -c 3 -q google.com > /dev/null 2>&1; then
-        HAS_INTERNET=true
-    else
-        HAS_INTERNET=false
-    fi
-    
-    pause_script "" "HAS_INTERNET: $HAS_INTERNET"
-
-    export HAS_INTERNET
+    export HAS_INTERNET=true
 }
 
 check_live_env(){

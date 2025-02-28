@@ -16,6 +16,8 @@
 
 source ./commons.sh
 
+export HAS_INTERNET=false
+
 check_live_env
 check_dialog
 check_internet
