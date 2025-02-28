@@ -173,7 +173,15 @@ live_command_output() {
             terminal_title "Running: $cmd" >> "$combined_log"
             if [[ "$cmd" =~ makepkg ]]; then
                 if id "sysadmin" &>/dev/null; then
-                    su - "sysadmin" -c "$cmd -sfi --noconfirm" >> "$combined_log" 2>&1
+                    
+                    password=$(dialog --passwordbox "Enter password for $user:" "$full_height" "$full_width" 3>&1 1>&2 2>&3)
+                
+                    if [[ -z "$password" ]]; then
+                        pause_script "No password entered. Aborting."
+                        return 1
+                    fi
+                    echo "$password" | su - "$user" -c "$cmd -sfi --noconfirm" >> "$combined_log" 2>&1
+
                 else
                     pause_script "Error: User 'sysadmin' does not exist" "Please create the user 'sysadmin' or install manually with pacman -U."
                     return 1
