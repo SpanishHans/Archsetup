@@ -37,6 +37,8 @@ check_internet() {
     else
         HAS_INTERNET=false
     fi
+    
+    pause_script "" "HAS_INTERNET: $HAS_INTERNET"
 
     export HAS_INTERNET
 }
