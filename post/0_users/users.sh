@@ -80,14 +80,14 @@ change_admin_privs() {
         case $wheel_menu in
             0)  sudo_access="n";break;;
             1)  sudo_access="y";break;;
-            *)  continue_script 1 "Option not valid" "That is not an option, retry.";;
+            *)  continue_script 2 "Option not valid" "That is not an option, retry.";;
         esac
     done
 
     if [[ "$sudo_access" == "y" ]]; then
         usermod -aG wheel "$username" && continue_script 3 "$username is now admin" "User $username now is an admin (wheel)."
     else
-        continue_script 1 "User not wheel" "User $username now isn't an admin (wheel)."
+        continue_script 2 "User not wheel" "User $username now isn't an admin (wheel)."
     fi
 }
 
@@ -159,7 +159,7 @@ modify_user() {
                 break;;
             1)  change_admin_privs "$username";break;;
             b)  break;;
-            *)  continue_script 1 "Option not valid" "That is not an option, retry.";;
+            *)  continue_script 2 "Option not valid" "That is not an option, retry.";;
         esac
     done
 }
@@ -181,7 +181,7 @@ delete_user() {
         fi
         userdel -r "$username" && continue_script 2 "$username deleted" "User $username and their files deleted."
     else
-        continue_script 1 "User doesn't exist" "User $username does not exist."
+        continue_script 2 "User doesn't exist" "User $username does not exist."
     fi
 }
 
@@ -213,7 +213,7 @@ users_menu() {
             2)  delete_user;;
             3)  list_users;;
             b)  break;;
-            *)  continue_script 1 "Option not valid" "That is not an option, returning to start menu.";exit;;
+            *)  continue_script 2 "Option not valid" "That is not an option, returning to start menu.";exit;;
         esac
     done
 }
