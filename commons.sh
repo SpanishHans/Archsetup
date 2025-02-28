@@ -33,7 +33,7 @@ check_internet() {
     pause_script "" "HAS_INTERNET: $live_output_status"
     
     if [[ $live_output_status -eq 1 ]]; then
-        HAS_INTERNET=false
+        HAS_INTERNET=true
     elif ping -c 3 -q google.com > /dev/null 2>&1; then
         HAS_INTERNET=true
     else
