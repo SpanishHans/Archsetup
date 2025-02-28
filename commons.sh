@@ -171,7 +171,16 @@ live_command_output() {
         local cmd="$1"
         {
             terminal_title "Running: $cmd" >> "$combined_log"
-            eval "$cmd" >> "$combined_log" 2>&1
+            if [[ "$cmd" =~ makepkg ]]; then
+                if id "sysadmin" &>/dev/null; then
+                    su - "sysadmin" -c "$cmd -sfi --noconfirm" >> "$combined_log" 2>&1
+                else
+                    pause_script "Error: User 'sysadmin' does not exist" "Please create the user 'sysadmin' or install manually with pacman -U."
+                    return 1
+                fi
+            else
+                eval "$cmd" >> "$combined_log" 2>&1
+            fi
             exit_code=$?
             output_error "$cmd" "$exit_code"
         }
