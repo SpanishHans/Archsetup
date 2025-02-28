@@ -155,10 +155,8 @@ scroll_window_output() {
 }
 
 live_command_output() {
-    local user="${1:-root}"
-    local pass="$2"
-    local context="$3"
-    shift 3
+    local context="$1"
+    shift 1
     local commands=("$@")
     local script_name=$(basename "$(realpath "$0")")
     local combined_log="/tmp/${script_name}_$(date +%Y_%m_%d_%H_%M_%S).log"
