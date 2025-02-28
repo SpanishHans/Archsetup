@@ -25,6 +25,8 @@ check_dialog(){
 
 check_internet() {
     
+    continue_script 2 "Testing internet connection" "A test for internet connection will now start."
+    
     commands_to_run+=("ping -c 3 -q google.com")
     
     live_command_output "" "" "Checking internet connection." "${commands_to_run[@]}"
