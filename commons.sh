@@ -24,14 +24,21 @@ check_dialog(){
 }
 
 check_internet() {
-    local target="google.com"
-
-    if ping -c 3 -q "$target" > /dev/null 2>&1; then
-        HAS_INTERNET=true
-    else
-        HAS_INTERNET=false
-    fi
-    export HAS_INTERNET
+    
+    commands_to_run+=("ping -c 3 -q google.com")
+    
+    live_command_output "" "" "Checking internet connection."
+    live_output_status=$?
+    
+        if [[ $live_output_status -eq 1 ]]; then
+            HAS_INTERNET=false
+        elif ping -c 3 -q google.com > /dev/null 2>&1; then
+            HAS_INTERNET=true
+        else
+            HAS_INTERNET=false
+        fi
+    
+        export HAS_INTERNET
 }
 
 check_live_env(){
@@ -204,6 +211,9 @@ live_command_output() {
             terminal_title "read the logs for this operation on $combined_log" >> "$combined_log"
             sleep 2
             killall dialog
+            return 0  # Success
+        else
+            return 1  # Failure
         fi
     } &
 
@@ -215,8 +225,6 @@ live_command_output() {
 
     dialog_pid=$!
     wait "$dialog_pid"
-
-    handle_exit_code "$exit_code" "return"
 }
 
 input_text() {
