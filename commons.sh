@@ -106,7 +106,6 @@ continue_script() {
         0)  return;;
         1)  exit;;
     esac
-
 }
 
 output_error() {

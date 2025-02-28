@@ -64,6 +64,7 @@ user_password_prompt () {
     local pass="$2"
     ensure_same_pass "$user" user_password
     eval "$pass='$user_password'"
+    continue_script 2 "Password set!" "Password for user '$user' has been set.\n${sysadmin_password:0:1}*******${sysadmin_password: -1}"
 }
 
 change_admin_privs() {
