@@ -30,6 +30,8 @@ check_internet() {
     live_command_output "" "" "Checking internet connection." "${commands_to_run[@]}"
     live_output_status=$?
     
+    pause_script "" "HAS_INTERNET: $live_output_status"
+    
     if [[ $live_output_status -eq 1 ]]; then
         HAS_INTERNET=false
     elif ping -c 3 -q google.com > /dev/null 2>&1; then
