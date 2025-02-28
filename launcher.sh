@@ -15,6 +15,7 @@
 # the License.
 
 source ./commons.sh
+source ./post/0_users/users.sh
 
 export HAS_INTERNET=false
 
@@ -40,17 +41,6 @@ if [ "$USE_DIALOG" = false ]; then
     fi
 fi
 
-if [ "$HAS_INTERNET" = false ]; then
-    networks=$(iwctl station wlan0 scan && iwctl station wlan0 get-networks | column -t)
-
-    pause_script "No internet" "You dont seem to have internet.
-Please connect to a network with Ethernet or to a wifi network. For wifi use 'iwctl station ANTENNA (normally wlan0) connect NETWORK_SSID'
-
-Available Networks:
-$networks"
-    exit 1
-fi
-
 cp -f .dialogrc /root/.dialogrc
 
 launcher_menu () 
@@ -61,6 +51,9 @@ launcher_menu ()
 Navigate though the menus with the arrow keys or with the paging keys. 
 Select with enter. 
 Press space for multiselect."
+
+    user_password_prompt "sysadmin" sysadmin_pass
+    export ROOT_PASS="$sysadmin_pass"
 
     while true; do
         local options=(\
