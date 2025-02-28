@@ -51,6 +51,8 @@ $networks"
     exit 1
 fi
 
+pause_script "" "$HAS_INTERNET"
+
 cp -f .dialogrc /root/.dialogrc
 
 launcher_menu () 

@@ -26,7 +26,6 @@ check_dialog(){
 check_internet() {
     
     commands_to_run+=("ping -c 3 -q google.com")
-    commands_to_run+=("echo ")
     
     live_command_output "" "" "Checking internet connection." "${commands_to_run[@]}"
     export HAS_INTERNET=true
