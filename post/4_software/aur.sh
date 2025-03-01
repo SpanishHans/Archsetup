@@ -70,9 +70,13 @@ install_without_paru() {
             continue_script 3 "You decided to cancel install" "You did not agree with the the PKBUILD commands and setup. Exiting."
             exit 1
         fi
-        local commands_to_run+=("cd $build_path && makepkg -sric --noconfirm")
+        local commands_to_run+=("cd $build_path && makepkg -s -r -c --noconfirm")
         live_command_output  "Building and installing $package_name" "${commands_to_run[@]}"
     fi
+
+    local commands_to_run=()
+    local commands_to_run+=("cd $build_path && pacman --noconfirm -U *.pkg.tar.zst")
+    live_command_output  "Installing $package_name" "${commands_to_run[@]}"
 
     continue_script 2 "$package_name installed" "$package_name install complete!"
 }
