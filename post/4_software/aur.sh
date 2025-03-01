@@ -51,7 +51,7 @@ install_aur_package () {
 
 install_without_paru() {
     local url="$1"
-    local bui_user="$USER_WITH_SUDO_USER"
+    local bui_user="sysadmin"
     local package_name=$(basename "$url" .git)
     local build_path="/home/$bui_user/builds/$package_name"
 
