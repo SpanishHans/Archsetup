@@ -102,7 +102,6 @@ install_flatpak_zen() {
     local app="Zen"
     local app_id="app.zen_browser.zen"
     install_with_flatpak "$app" "$app_id"
-
 }
 
 install_flatpak_zed () {
@@ -156,5 +155,11 @@ install_flatpak_rnote () {
 install_flatpak_kden_live () {
     local app="Kden Live"
     local app_id="org.kde.kdenlive"
+    install_with_flatpak "$app" "$app_id"
+}
+
+install_flatpak_steam () {
+    local app="Steam"
+    local app_id="com.valvesoftware.Steam"
     install_with_flatpak "$app" "$app_id"
 }
