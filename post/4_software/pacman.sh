@@ -30,8 +30,12 @@ install_pacman_packages() {
         formatted_list=$(printf '%s\n' "${packages_to_install[@]}" | tr '\n' ' ')
         continue_script 4 "To be installed" "Pacman will install the following packages:\n\n$formatted_list"
 
-        # Correct argument passing for live_command_output
-        live_command_output "Installing packages" "pacman -S --noconfirm ${packages_to_install[@]}"
+        # Use an array to store the command
+        local coms=()
+        coms+=("pacman -S --noconfirm ${packages_to_install[*]}")
+
+        # Call live_command_output with the command array
+        live_command_output "Installing packages" "${coms[@]}"
     else
         continue_script 2 "Packages exist" "All packages are already installed and up-to-date."
     fi
