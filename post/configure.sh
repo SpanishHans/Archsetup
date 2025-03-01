@@ -57,7 +57,6 @@ configure_menu () {
             "Install software                (Install common software from Flatpak or AUR.)" \
             "Extra tools and utils           (Git, chezmoi, multi clipboard)" \
             "Virtualization                  (Docker, Virtualbox, virt-manager, LXC)" \
-            "Programming languages           (Python, Javascript, Java, C, Rust)" \
             "Plymouth                        (Startup animation)" \
             "Nvidia                          (Nvidia Graphics cards)" \
             "Back"
