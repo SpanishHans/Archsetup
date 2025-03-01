@@ -78,7 +78,7 @@ configure_docker() {
 }
 
 configure_podman() {
-    install_pacman_packages podman
+    install_pacman_packages podman podman-compose
     continue_script 2 "Podman" "Podman Setup complete!"
 }
 
