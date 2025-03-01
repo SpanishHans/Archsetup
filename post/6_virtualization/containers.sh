@@ -25,7 +25,7 @@ containers_menu() {
 
     while true; do
         local options=(\
-            'Container technology         (Containers)' \  
+            'Container technology         (Containers.)' \
             'Distrobox                    (Containers for running tiny VMs.)' \
             'LXC Containers               (Containers but closer to baremetal. Fixed resources, think VM.)' \
             "Back"

@@ -24,7 +24,7 @@ virtualization_menu () {
 
     while true; do
         local options=(\
-            'Containers         (Containers like Docker, Distrobox or LXC)' \  
+            'Containers         (Containers like Docker, Distrobox or LXC)' \
             'VM Hypervisors     (QEMU and Virtualbox)' \
             "Back"
         )
