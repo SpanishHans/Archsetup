@@ -36,6 +36,7 @@ flatpak_menu() {
             "Blender                       (3D modelling)"\
             "Rnote                         (Whiteboard)"\
             "Kden Live                     (Video editor)"\
+            "Steam                         (Game manager)"\
             "All apps                      (Install all the above)"\
             "Back"
         )
@@ -95,6 +96,7 @@ install_all_flatpaks () {
     install_flatpak_blender
     install_flatpak_rnote
     install_flatpak_kden_live
+    install_flatpak_steam
     continue_script 2 "Everything" "Everything setup complete!"
 }
 
