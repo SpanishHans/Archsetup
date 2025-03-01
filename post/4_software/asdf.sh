@@ -94,7 +94,6 @@ configure_asdf() {
         commands_to_run+=("chown $user:$user /home/$user/.tool-versions")
     fi
 
-    commands_to_run+=("touch $path")
     live_command_output  "Configuring ASDF" "${commands_to_run[@]}"
     
     local commands_to_run=()
