@@ -21,12 +21,6 @@ source ./post/4_software/aur.sh
 asdf_menu () {
     local title='Programming Language Installation with ASDF'
     local description="This script helps you easily install and manage programming languages using the ASDF version manager."
-    install_asdf
-    pick_user \
-        langs_username \
-        "User to set up ASDF for" \
-        "Please enter the user who shall get ASDF: "
-    configure_asdf "$langs_username"
 
     pick_user \
         prompt_username \
@@ -240,6 +234,13 @@ install_with_asdf() {
     local user="$1"
     local item="$2"
     local version="$3"
+    
+    install_asdf
+    pick_user \
+        langs_username \
+        "User to set up ASDF for" \
+        "Please enter the user who shall get ASDF: "
+    configure_asdf "$langs_username"
 
     check_asdf_package "$user" "$item" "$version"
 }
