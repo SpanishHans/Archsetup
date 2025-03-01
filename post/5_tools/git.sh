@@ -26,11 +26,6 @@ git_menu() {
         git_user \
         "Local User to setup git for" \
         "Please enter the user whose git shall be configured: "
-    input_pass \
-        pass\
-        "Password for $git_user" \
-        "Please provide the password for $git_user in order to run commands on their behalf." \
-        "Please input the password for $git_user: "
 
     input_text \
         gitusername \

@@ -143,7 +143,7 @@ starship_theme_pure_prompt() {
     local term_username="$1"
 
     local commands_to_run=()
-    local commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/pure.toml /home/$term_username/.config/starship.toml")
+    commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/pure.toml /home/$term_username/.config/starship.toml")
     live_command_output  "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
     continue_script 2 "Theme configured" "The theme has been set up."
 }
@@ -152,7 +152,7 @@ starship_theme_pastel_powerline() {
     local term_username="$1"
 
     local commands_to_run=()
-    local commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/pastel.toml /home/$term_username/.config/starship.toml")
+    commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/pastel.toml /home/$term_username/.config/starship.toml")
     live_command_output  "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
     continue_script 2 "Theme configured" "The theme has been set up."
 }
@@ -161,7 +161,7 @@ starship_theme_tokyo_night() {
     local term_username="$1"
 
     local commands_to_run=()
-    local commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/tokyo.toml /home/$term_username/.config/starship.toml")
+    commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/tokyo.toml /home/$term_username/.config/starship.toml")
     live_command_output  "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
     continue_script 2 "Theme configured" "The theme has been set up."
 }
@@ -170,7 +170,7 @@ starship_theme_gruvbox_rainbow() {
     local term_username="$1"
 
     local commands_to_run=()
-    local commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/gruvbox.toml /home/$term_username/.config/starship.toml")
+    commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/gruvbox.toml /home/$term_username/.config/starship.toml")
     live_command_output  "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
     continue_script 2 "Theme configured" "The theme has been set up."
 }
@@ -179,7 +179,7 @@ starship_theme_jetpack() {
     local term_username="$1"
 
     local commands_to_run=()
-    local commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/jetpack.toml /home/$term_username/.config/starship.toml")
+    commands_to_run+=("cp -f  /root/Archsetup/post/3_terminals/starship_themes/jetpack.toml /home/$term_username/.config/starship.toml")
     live_command_output  "Configuring theme for starship for $term_username" "${commands_to_run[@]}"
     continue_script 2 "Theme configured" "The theme has been set up."
 }
