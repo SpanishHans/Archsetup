@@ -55,7 +55,6 @@ Please choose what fonts you require."
         fi
     done
     #install_fonts filtered_fonts
-    pause_script "fonts" "$filtered_fonts"
 }
 
 install_fonts() {
@@ -77,4 +76,52 @@ install_fonts() {
 
 Installed:    
 $(printf "%s\n" "${options[@]}")"
+}
+
+run_btrfs_setup() {
+    declare -A subvols
+    local subvols=(
+        ["@var_cache"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/cache | Cached data for apps and package managers, can be recreated if cleared."
+        ["@var_spool"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/spool | Holds queues for tasks like mail, printing, or other pending jobs."
+        ["@var_tmp"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/tmp | Temporary files for apps and services, persisting after reboots if needed."
+        ["@var_log"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/log | System and application log files for tracking events and troubleshooting."
+        ["@var_crash"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/crash | Crash reports and core dumps for analyzing system and application failures."
+        ["@var_lib_libvirt_images"]="${ROOT_PART} | ssd,noatime,nodatacow,nodev,nosuid,noexec | /var/lib/libvirt/images | Disk images and metadata for virtual machines managed by libvirt."
+        ["@var_lib_machines"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/machines | Container images and metadata for systemd-nspawn containers."
+        ["@var_lib_containers"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/containers | Container images and volumes for containers and or Podman."
+        ["@var_lib_flatpak"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid | /var/lib/flatpak | Installed Flatpak apps and their sandboxed data and dependencies."
+        ["@var_lib_docker"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/docker | Container images, volumes, and metadata for Docker environments."
+        ["@var_lib_distrobox"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/distrobox | Data and images for running and managing Distrobox containers."
+        ["@var_lib_gdm"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/gdm | Configuration and session data for GNOME Display Manager (GDM)."
+        ["@var_lib_accounts"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/AccountsService | User account settings and data managed by AccountsService."
+    )
+
+    local menu_options=()
+    for key in "${!subvols[@]}"; do
+        IFS=" | " read -r disk flags path desc <<< "${subvols[$key]}"
+        menu_options+=("$key" "$desc" "on")
+    done
+    
+    if [[ "$ROOT_FORM" == "btrfs" ]]; then
+    
+        multiselect_prompt\
+            subvol_menu_choice\
+            menu_options\
+            "Starting subvol picker"\
+            "The following volumes are required for the system to work and will be create automatically.
+            
+        1. @
+        2. @home
+        3. @snapshots
+            
+        Please choose what extra subvolumes you require."
+
+        declare -A filtered_subvols
+        for choice in "${subvol_menu_choice[@]}"; do
+            if [[ -n "${subvols[$choice]}" ]]; then
+                filtered_subvols["$choice"]="${subvols[$choice]}"
+            fi
+        done
+        mount_btrfs filtered_subvols
+    fi
 }
