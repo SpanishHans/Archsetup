@@ -43,11 +43,14 @@ fonts_menu() {
 
     dialog --title "Debug Selected Choices" --msgbox "Selected: ${selected_choices[*]}" 10 50
 
-    # local package_names=()
-    # for choice in "${selected_choices[@]}"; do
-    #     IFS=" " read -r pac_name _ <<< "${fonts[$choice]}"
-    #     package_names+=("$pac_name")
-    # done
+    local package_names=()
+    for choice in "${selected_choices[@]}"; do
+        IFS=" " read -r pac_name _ <<< "${fonts[$choice]}"
+        package_names+=("$pac_name")
+    done
+
+    dialog --title "Debug Selected Choices" --msgbox "Selected: ${package_names[*]}" 10 50
+
 
     # pause_script "" "$package_names"
 
