@@ -217,8 +217,8 @@ live_command_output() {
                     exit 1
                 fi
                 exit_code=$?
-                sleep 2
-                killall dialog
+                # sleep 2
+                # killall dialog
                 break
             }
         done
