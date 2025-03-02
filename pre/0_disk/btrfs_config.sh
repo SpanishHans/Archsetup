@@ -112,19 +112,17 @@ run_btrfs_setup() {
         ["@var_lib_accounts"]="${ROOT_PART} | ssd,noatime,compress=zstd,nodatacow,nodev,nosuid,noexec | /var/lib/AccountsService | User account settings and data managed by AccountsService."
     )
 
-    local menu_options=()
+    local options=()
     for key in "${!subvols[@]}"; do
         IFS=" | " read -r disk flags path desc <<< "${subvols[$key]}"
-        menu_options+=("$key" "$desc" "on")
+        options+=("$key" "$desc" "on")
     done
     
     if [[ "$ROOT_FORM" == "btrfs" ]]; then
-    
-        multiselect_prompt \
-            subvol_menu_choice \
-            "Starting subvol picker" \
-            "The following volumes are required for the system to work and will be create automatically\n\n.1. @\n2. @home\n\n3. @snapshots\n\nPlease choose what extra subvolumes you require." \
-            menu_options
+
+        subvol_menu_choice=($(multiselect_prompt "Starting subvol picker" "The following volumes are required for the system to work and will be create automatically\n\n.1. @\n2. @home\n\n3. @snapshots\n\nPlease choose what extra subvolumes you require." "${options[@]}"))
+
+        dialog --title "Debug Selected Choices" --msgbox "Selected: ${subvol_menu_choice[*]}" 10 50
 
         declare -A filtered_subvols
         for choice in "${subvol_menu_choice[@]}"; do
@@ -132,6 +130,9 @@ run_btrfs_setup() {
                 filtered_subvols["$choice"]="${subvols[$choice]}"
             fi
         done
+
+        dialog --title "Debug Selected Choices" --msgbox "Selected: ${filtered_subvols[*]}" 10 50
+
         mount_btrfs filtered_subvols
     fi
 }
