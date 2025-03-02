@@ -66,6 +66,7 @@ asdf_menu () {
             *)  continue_script 2 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
     done
+    cp -r /root/.asdf /opt/asdf
 }
 
 install_asdf() {
