@@ -40,7 +40,7 @@ check_internet() {
         exit 1
     fi
 
-    continue_script 2 "You have internet!" "$TEMP_FILE"
+    continue_script 2 "You have internet!" "$(cat "$TEMP_FILE")"
     rm -f "$TEMP_FILE"  # Clean up temporary file
 }
 
