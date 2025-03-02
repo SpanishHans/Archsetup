@@ -44,8 +44,6 @@ check_internet() {
     rm -f "$TEMP_FILE"  # Clean up temporary file
 }
 
-
-
 check_live_env(){
     if [ -d /run/archiso ]; then
         LIVE_ENV=true
