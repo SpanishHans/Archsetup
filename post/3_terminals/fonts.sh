@@ -100,31 +100,3 @@ fonts_menu() {
         sleep 2
     fi
 }
-
-multiselect_prompt() {
-    local msg_title="${1:-Default}"
-    local msg_text="${2:-Default}"
-    shift 2
-    local options=("$@")
-
-    local title=$(echo -e "$msg_title")
-    local description=$(echo -e "$msg_text \n\nUse SPACE to select/deselect options and OK when finished.")
-
-    dialog_output=$(dialog \
-        --backtitle "$title" \
-        --title "$title" \
-        --checklist "$description" \
-        20 60 15 "${options[@]}" 2>&1 >/dev/tty)
-
-    exit_code=$?
-    
-    if [ $exit_code -eq 0 ]; then
-        echo "$dialog_output"
-    else
-        echo ""
-    fi
-
-    return $exit_code
-}
-
-fonts_menu
