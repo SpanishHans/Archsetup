@@ -42,7 +42,7 @@ fi
 
 configure_menu () {
 
-    user_password_prompt "sysadmin" sysadmin_pass
+    user_password_prompt "installer" installer_pass
     export ROOT_PASS="$sysadmin_pass"
 
     local title="Configure your PC after install"

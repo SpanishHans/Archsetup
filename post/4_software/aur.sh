@@ -51,9 +51,9 @@ install_aur_package () {
 
 install_without_paru() {
     local url="$1"
-    local bui_user="sysadmin"
+    local bui_user="installer"
     local package_name=$(basename "$url" .git)
-    local build_path="/home/$bui_user/builds/$package_name"
+    local build_path="/usr/local/src/aur-builds/$package_name"
 
     if [[ ! -d "$build_path" ]]; then
         local commands_to_run=()
@@ -64,19 +64,13 @@ install_without_paru() {
     fi
 
     if ! ls $build_path/*.pkg.tar.zst &>/dev/null; then
-        local commands_to_run=()
         scroll_window_output return_value "Viewing PKGBUILD for $package_name" "$build_path/PKGBUILD"
         if [ $return_value -eq 3 ]; then
-            continue_script 3 "You decided to cancel install" "You did not agree with the the PKBUILD commands and setup. Exiting."
+            continue_script 3 "You decided to cancel install" "You did not agree with the PKGBUILD commands and setup. Exiting."
             exit 1
         fi
-        commands_to_run+=("cd $build_path && makepkg -s -r -c --noconfirm")
-        live_command_output  "Building and installing $package_name" "${commands_to_run[@]}"
+        live_command_output "Building and installing $package_name" "cd $build_path && makepkg -sric --noconfirm"
     fi
-
-    local commands_to_run=()
-    commands_to_run+=("cd $build_path && pacman --noconfirm -U *.pkg.tar.zst")
-    live_command_output  "Installing $package_name" "${commands_to_run[@]}"
 
     continue_script 2 "$package_name installed" "$package_name install complete!"
 }

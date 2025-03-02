@@ -275,7 +275,6 @@ install_asdf_package() {
     
     commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
     commands_to_run+=("chmod -R a+rx /opt/asdf")
-    commands_to_run+=("chown -R sysadmin:sysadmin /opt/asdf")
     live_command_output  "Configuring $item from ASDF" "${commands_to_run[@]}"
 }
 
