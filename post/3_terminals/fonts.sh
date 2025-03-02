@@ -77,11 +77,11 @@ fonts_menu() {
     local selected_choices=()
     
     declare -A fonts=(
-        ["terminus"]="terminus-font A clean, monospaced font optimized for terminal use in text-only environments (init 3). Perfect for coding and system monitoring."
-        ["dejavu"]="ttf-dejavu-nerd A versatile font family with wide character support, balancing clarity and elegance for interfaces and documents."
-        ["proto"]="ttf-0xproto-nerd A bold, futuristic font with sharp, geometric shapes, ideal for sci-fi and tech-inspired designs."
-        ["fira"]="ttf-firacode-nerd A monospaced font with ligatures for coding, offering a clean and expressive environment for developers."
-        ["fa"]="ttf-font-awesome A scalable icon font with thousands of customizable icons, perfect for modern UI/UX design."
+        ["Terminus"]="terminus-font A clean, monospaced font optimized for terminal use in text-only environments (init 3). Perfect for coding and system monitoring."
+        ["Dejavu"]="ttf-dejavu-nerd A versatile font family with wide character support, balancing clarity and elegance for interfaces and documents."
+        ["0x proto"]="ttf-0xproto-nerd A bold, futuristic font with sharp, geometric shapes, ideal for sci-fi and tech-inspired designs."
+        ["Fira code"]="ttf-firacode-nerd A monospaced font with ligatures for coding, offering a clean and expressive environment for developers."
+        ["Font awesome"]="ttf-font-awesome A scalable icon font with thousands of customizable icons, perfect for modern UI/UX design."
     )
 
     local options=()
