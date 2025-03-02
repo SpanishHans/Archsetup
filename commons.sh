@@ -24,23 +24,25 @@ check_dialog(){
 }
 
 check_internet() {
-    TEMP_FILE=$(mktemp)
+    TEMP_FILE=$(mktemp)  # Create a temporary file to store output
     
-    dialog --infobox "Testing internet connection..." $half_height $half_width
-    sleep 2
+    dialog --infobox "Testing internet connection..." 5 50
+    sleep 2  # Short delay for user feedback
     
     ping -c 3 -q google.com > "$TEMP_FILE" 2>&1
     if [ $? -eq 0 ]; then
-        echo "\n\nInternet connection is active." >> "$TEMP_FILE"
+        printf "\n\nInternet connection is active.\n" >> "$TEMP_FILE"
         export HAS_INTERNET=true
     else
-        echo "\n\nNo internet connection detected." >> "$TEMP_FILE"
+        printf "\n\nNo internet connection detected.\n" >> "$TEMP_FILE"
         export HAS_INTERNET=false
+        exit 1
     fi
 
-    dialog --textbox "$TEMP_FILE" $half_height $half_width
-    rm -f "$TEMP_FILE"
+    dialog --textbox "$TEMP_FILE" 15 60  # Show results in a dialog window
+    rm -f "$TEMP_FILE"  # Clean up temporary file
 }
+
 
 
 check_live_env(){

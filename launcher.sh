@@ -17,8 +17,6 @@
 source ./commons.sh
 source ./post/0_users/users.sh
 
-export HAS_INTERNET=false
-
 check_live_env
 check_dialog
 
