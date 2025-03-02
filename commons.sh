@@ -362,7 +362,8 @@ multiselect_prompt() {
     local msg_title="${2:-Default}"
     local msg_text="${3:-Default}"
     shift 3
-    local -n options="$4"
+    # local -n options="$4"
+    options=("$@")
 
     pause_script "" "$options"
     
