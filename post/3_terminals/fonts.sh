@@ -23,7 +23,7 @@ source ./post/4_software/pacman.sh
 ################################################################################
 
 fonts_menu() {
-    declare -A fonts=(
+    declare -A 
         ["terminus"]="terminus-font | A clean, monospaced font optimized for terminal use in text-only environments (init 3). Perfect for coding and system monitoring."
         ["dejavu"]="ttf-dejavu-nerd | A versatile font family with wide character support, balancing clarity and elegance for interfaces and documents."
         ["proto"]="ttf-0xproto-nerd | A bold, futuristic font with sharp, geometric shapes, ideal for sci-fi and tech-inspired designs."
@@ -48,7 +48,7 @@ fonts_menu() {
     for choice in "${font_menu_choice[@]}"; do
         if [[ -n "${fonts[$choice]}" ]]; then
             filtered_fonts["$choice"]="${fonts[$choice]}"
-        fi
+        fi;
     done
 
     install_fonts filtered_fonts

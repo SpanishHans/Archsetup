@@ -358,7 +358,7 @@ menu_prompt() {
 }
 
 multiselect_prompt() {
-    local -n choices="$1"
+    local choices_var="$1"
     local msg_title="${2:-Default}"
     local msg_text="${3:-Default}"
     local -n options="$4"
@@ -370,14 +370,15 @@ multiselect_prompt() {
         --backtitle "$msg_title" \
         --title "$msg_title" \
         --checklist "$description" \
-        $full_height $full_width 15 "${options[@]}" 2>&1 >/dev/tty)
+        20 70 15 "${options[@]}" 2>&1 >/dev/tty)
 
     local exit_code=$?
 
     if [[ $exit_code -eq 0 ]]; then
-        IFS=$' ' read -r -a choices <<< "$dialog_output"
+        IFS=$' ' read -r -a result <<< "$dialog_output"
+        eval "$choices_var=(\"\${result[@]}\")"  # Store results in the passed variable
     else
-        choices=()
+        eval "$choices_var=()"
     fi
 
     return $exit_code
