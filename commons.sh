@@ -375,7 +375,7 @@ multiselect_prompt() {
     exit_code=$?
     
     if [ $exit_code -eq 0 ]; then
-        echo "$dialog_output"
+        printf '%s\n' $dialog_output
     else
         echo ""
     fi
