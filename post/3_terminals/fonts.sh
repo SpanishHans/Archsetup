@@ -23,9 +23,7 @@ source ./post/4_software/pacman.sh
 ################################################################################
 
 fonts_menu() {
-
-    declare -A fonts
-    local fonts=(
+    declare -A fonts=(
         ["terminus"]="terminus-font | A clean, monospaced font optimized for terminal use in text-only environments (init 3). Perfect for coding and system monitoring."
         ["dejavu"]="ttf-dejavu-nerd | A versatile font family with wide character support, balancing clarity and elegance for interfaces and documents."
         ["proto"]="ttf-0xproto-nerd | A bold, futuristic font with sharp, geometric shapes, ideal for sci-fi and tech-inspired designs."
@@ -36,13 +34,14 @@ fonts_menu() {
     local options=()
     for key in "${!fonts[@]}"; do
         IFS=" | " read -r pac_name desc <<< "${fonts[$key]}"
-        local options+=("$key" "$desc" "off")
+        options+=("$key" "$desc" "off")
     done
-    
-    multiselect_prompt\
-        font_menu_choice\
-        "Starting font picker"\
-        "The following are fonts considered nerd beucase they are for the tty or for the terminal.\n\nPlease choose what fonts you require."\
+
+    declare -a font_menu_choice  # Ensure this is an indexed array
+    multiselect_prompt \
+        font_menu_choice \
+        "Starting font picker" \
+        "The following are fonts considered nerd because they are for the TTY or for the terminal.\n\nPlease choose what fonts you require." \
         options
 
     declare -A filtered_fonts
@@ -51,6 +50,7 @@ fonts_menu() {
             filtered_fonts["$choice"]="${fonts[$choice]}"
         fi
     done
+
     install_fonts filtered_fonts
 }
 
@@ -61,14 +61,12 @@ install_fonts() {
     local options=()
     for key in "${!given_array[@]}"; do
         IFS=" | " read -r pac_name desc <<< "${given_array[$key]}"
-
         pac_name=$(echo "$pac_name" | xargs)
         desc=$(echo "$desc" | xargs)
         install_pacman_packages "$pac_name"
         local options+=("$pac_name")
     done
 
-    live_command_output  "Configuring selected fonts" "${commands_to_run[@]}"
     continue_script 2 "Installed fonts" "Finished installing all selected fonts.
 
 Installed:    
