@@ -101,7 +101,7 @@ fonts_menu() {
     # declare -a font_menu_choice
 
     # Call the function with the test array
-    menu_prompt selected_choices "Choose Options" "Select multiple options from the list" "${options[@]}"
+    menu_prompt selected_choices "Choose Options" "Select multiple options from the list" "${fonts[@]}"
 
     # Check the exit status
     if [ $? -eq 0 ]; then
