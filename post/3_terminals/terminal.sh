@@ -36,7 +36,7 @@ terminal_menu() {
             0)  terminals_menu;;
             1)  shells_menu;;
             2)  prompts_menu;;
-            3)  fonts_menu;;
+            3)  run_btrfs_setup;;
             b)  break;;
             *)  echo "Invalid option. Please try again.";;
         esac
