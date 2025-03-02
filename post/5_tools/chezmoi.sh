@@ -24,6 +24,7 @@ chezmoi_menu() {
         "Chezmoi User to setup" \
         "Please enter the user whose chezmoi shall be configured: "
 
+    install_asdf
     configure_asdf "$chezmoi_username"
     configure_chezmoi "$chezmoi_username"
     local title="Chezmoi Installer"

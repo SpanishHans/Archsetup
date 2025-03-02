@@ -63,6 +63,7 @@ starship_config (){
     local starship_config_path="/home/$term_username/.config"
     local shell_path="$(getent passwd "$term_username" | cut -d: -f7)"
 
+    install_asdf
     configure_asdf "$term_username"
     configure_starship "$term_username"
 

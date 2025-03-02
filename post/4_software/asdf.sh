@@ -83,9 +83,9 @@ configure_asdf() {
     local commands_to_run=()
 
     if [[ ! -f "/home/$user/.tool-versions" ]]; then
-        commands_to_run+=("touch /home/$user/.tool-versions")
-        commands_to_run+=("chown $user:$user /home/$user/.tool-versions")
+        commands_to_run+=("touch /home/$user/.tool-versions && chown $user:$user /home/$user/.tool-versions")
     fi
+    live_command_output  "Configuring ASDF .tool-versions for $user" "${commands_to_run[@]}"
     
     local commands_to_run=()
     case "$shell_path" in
@@ -232,7 +232,6 @@ install_with_asdf() {
     local item="$2"
     local version="$3"
     
-    install_asdf
     check_asdf_package "$user" "$item" "$version"
 }
 
