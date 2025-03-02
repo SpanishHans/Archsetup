@@ -252,15 +252,16 @@ install_asdf_package() {
     local path="/home/$user/.tool-versions"
     local commands_to_run=()
 
-    asdf plugin list | grep -q "$item" || commands_to_run+=("asdf plugin add $item")
-    asdf list $item | grep -q "$version" || commands_to_run+=("asdf install $item $version")
+    commands_to_run+=("asdf plugin list | grep -q "$item" || asdf plugin add $item")
+    commands_to_run+=("asdf list $item | grep -q "$version" || asdf install $item $version")
 
     commands_to_run+=(
         "if ! grep -Fxq '$item $version' $path; then
             echo '$item $version' >> $path
         fi")
-    asdf set $item $version
-    live_command_output "" "Configuring $item from ASDF" "${commands_to_run[@]}"
+    commands_to_run+=("asdf set $item $version")
+    export TARGET_USER="$user"
+    live_command_output "sysuser" "Configuring $item from ASDF" "${commands_to_run[@]}"
 }
 
 install_all_asdf () {
