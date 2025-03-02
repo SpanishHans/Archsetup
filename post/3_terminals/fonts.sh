@@ -54,6 +54,7 @@ Please choose what fonts you require."
         fi
     done
     #install_fonts filtered_fonts
+    pause_script "fonts" "$filtered_fonts"
 }
 
 install_fonts() {
