@@ -55,7 +55,7 @@ configure_chezmoi_default() {
         commands_to_run+=("rm -rf /home/$chezmoi_username/.local/share/chezmoi")
     fi
 
-    commands_to_run+=("chezmoi init https://github.com/SpanishHans/dotfiles")
+    commands_to_run+=("git clone https://github.com/SpanishHans/dotfiles /home/$chezmoi_username/.local/share/chezmoi")
     commands_to_run+=("cp -rf /home/$chezmoi_username/.local/share/chezmoi/private_dot_config/* /home/$chezmoi_username/.config/")
     live_command_output "sysuser" "$chezmoi_username" "Configuring chezmoi" "${commands_to_run[@]}"
 
