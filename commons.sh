@@ -40,7 +40,7 @@ check_internet() {
         exit 1
     fi
 
-    dialog --textbox "$TEMP_FILE" $half_height $half_width  # Show results in a dialog window
+    continue_script 2 "You have internet!" "$TEMP_FILE"
     rm -f "$TEMP_FILE"  # Clean up temporary file
 }
 
