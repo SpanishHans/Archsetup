@@ -217,8 +217,7 @@ live_command_output() {
                     exit 1
                 fi
                 exit_code=$?
-                # sleep 2
-                # killall dialog
+                killall dialog 2>/dev/null
                 break
             }
         done
@@ -226,8 +225,7 @@ live_command_output() {
         if [ $exit_code -eq 0 ]; then
             # terminal_title "Done, continuing to next step!" >> "$combined_log"
             # terminal_title "read the logs for this operation on $combined_log" >> "$combined_log"
-            # sleep 3
-            # killall dialog
+            killall dialog 2>/dev/null
             return 0  # Success
         else
             return 1  # Failure
