@@ -122,16 +122,12 @@ run_btrfs_setup() {
 
         subvol_menu_choice=($(multiselect_prompt "Starting subvol picker" "The following volumes are required for the system to work and will be create automatically\n\n.1. @\n2. @home\n\n3. @snapshots\n\nPlease choose what extra subvolumes you require." "${options[@]}"))
 
-        dialog --title "Debug Selected Choices" --msgbox "Selected: ${subvol_menu_choice[*]}" 10 50
-
         declare -A filtered_subvols
         for choice in "${subvol_menu_choice[@]}"; do
             if [[ -n "${subvols[$choice]}" ]]; then
                 filtered_subvols["$choice"]="${subvols[$choice]}"
             fi
         done
-
-        dialog --title "Debug Selected Choices" --msgbox "Selected: ${filtered_subvols[*]}" 10 50
 
         mount_btrfs filtered_subvols
     fi
