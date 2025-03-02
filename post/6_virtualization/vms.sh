@@ -43,14 +43,9 @@ hypervisors_menu() {
 hyper_type_1() {
     configure_libvirt
 
-    pick_user \
-        qemu_user\
-        "QEMU user"\
-        "Please enter the user who shall be added to QEMU confs: "
-
     local commands_to_run=()
-    commands_to_run+=("sed -i \"s/^#user = .*/user = '$qemu_user'/\" /etc/libvirt/qemu.conf")
-    commands_to_run+=("sed -i \"s/^#group = .*/group = '$qemu_user'/\" /etc/libvirt/qemu.conf")
+    commands_to_run+=("sed -i \"s/^#user = .*/user = '$libvirt_user'/\" /etc/libvirt/qemu.conf")
+    commands_to_run+=("sed -i \"s/^#group = .*/group = '$libvirt_user'/\" /etc/libvirt/qemu.conf")
 
     title='What qemu packages to install?'
     description="This script aids the installation of type 1 hypervisors for the fastest possible VMs."

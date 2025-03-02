@@ -50,6 +50,7 @@ configure_libvirt() {
         libvirt_user \
         "Libvirt user" \
         "Please enter the user who shall be added to libvirt group: "
+    export libvirt_user
 
     local commands_to_run=()
     commands_to_run+=("usermod -aG libvirt $libvirt_user")
