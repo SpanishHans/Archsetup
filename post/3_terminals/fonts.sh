@@ -72,3 +72,25 @@ install_fonts() {
 Installed:    
 $(printf "%s\n" "${options[@]}")"
 }
+
+fonts_menu() {
+    options_array=(
+        "1" "Option One" "off"
+        "2" "Option Two" "off"
+        "3" "Option Three" "off"
+        "4" "Option Four" "off"
+    )
+
+    # Declare a variable to store selected choices
+    selected_choices=()
+
+    # Call the function with the test array
+    multiselect_prompt selected_choices "Choose Options" "Select multiple options from the list" options_array
+
+    # Check the exit status
+    if [ $? -eq 0 ]; then
+        echo "You selected: ${selected_choices[@]}"
+    else
+        echo "Selection canceled."
+    fi
+}
