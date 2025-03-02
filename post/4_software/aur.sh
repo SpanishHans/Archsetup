@@ -55,9 +55,7 @@ install_without_paru() {
 
     if [[ ! -d "$build_path" ]]; then
         local commands_to_run=()
-        commands_to_run+=("mkdir -p $build_path")
-        commands_to_run+=("git clone $url $build_path")
-        commands_to_run+=("chown -R $bui_user:$bui_user $build_path")
+        commands_to_run+=("mkdir -p $build_path && git clone $url $build_path && chown -R $bui_user:$bui_user $build_path")
         live_command_output  "Cloning $package_name" "${commands_to_run[@]}"
     fi
 
