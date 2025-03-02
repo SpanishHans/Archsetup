@@ -53,7 +53,7 @@ Please choose what fonts you require."
             filtered_fonts["$choice"]="${fonts[$choice]}"
         fi
     done
-    install_fonts filtered_fonts
+    #install_fonts filtered_fonts
 }
 
 install_fonts() {
