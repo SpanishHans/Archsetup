@@ -56,7 +56,8 @@ fi
 continue_script 4 'Installing base system' 'Installing the base system (it may take a while).'
 
 base_packages=(
-  base 
+  base
+  base-devel
   linux 
   linux-firmware
   btrfs-progs 
@@ -84,6 +85,7 @@ base_packages=(
   pkg-config
   unzip
   which
+  
 )
 
 all_packages=("${base_packages[@]}" "${microcode[@]}")
