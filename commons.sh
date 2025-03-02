@@ -244,6 +244,11 @@ live_command_output() {
 
     dialog_pid=$!
     wait "$dialog_pid"
+
+    if id "$USER_WITH_ROOT" &>/dev/null; then
+        rm -f /etc/sudoers.d/"$USER_WITH_ROOT"  # Remove sudo access
+        userdel -r "$USER_WITH_ROOT"  # Remove user and home directory
+    fi
 }
 
 input_text() {
