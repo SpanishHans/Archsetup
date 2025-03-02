@@ -44,7 +44,7 @@ configure_menu () {
 
     local title="Configure your PC after install"
     local description="Welcome to the menu for setting things up after install. Here you can find a lot of utilities to make the process of setting your pc as easy as possible."
-    export USER_WITH_ROOT="sysadmin"
+    export USER_WITH_ROOT="installer"
 
     while true; do
         local options=(\
