@@ -27,7 +27,7 @@ check_internet() {
     TEMP_FILE=$(mktemp)  # Create a temporary file to store output
     
     dialog --infobox "Testing internet connection..." 5 50
-    sleep 2  # Short delay for user feedback
+    sleep 1
     
     ping -c 3 -q google.com > "$TEMP_FILE" 2>&1
     if [ $? -eq 0 ]; then
