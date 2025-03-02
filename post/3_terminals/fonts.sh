@@ -41,8 +41,6 @@ fonts_menu() {
 
     selected_choices=($(multiselect_prompt "Choose Fonts" "Select multiple fonts" "${options[@]}"))
 
-    dialog --title "Debug Selected Choices" --msgbox "Selected: ${selected_choices[*]}" 10 50
-
     local package_names=()
     for choice in "${selected_choices[@]}"; do
         IFS="|" read -r pac_name _ <<< "${fonts[$choice]}"
@@ -51,10 +49,7 @@ fonts_menu() {
 
     dialog --title "Debug Selected Choices" --msgbox "Selected: ${package_names[*]}" 10 50
 
-
-    # pause_script "" "$package_names"
-
-    # install_fonts "${package_names[@]}"
+    install_fonts "${package_names[@]}"
 }
 
 install_fonts() {
