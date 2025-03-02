@@ -253,10 +253,8 @@ install_asdf_package() {
     local commands_to_run=()
 
     commands_to_run+=("[[ \$(asdf plugin list | grep -w "$item") ]] || asdf plugin add $item")
-    commands_to_run+=("[[ \$(asdf list $item 2>/dev/null | grep -w "$version") ]] || asdf install $item $version")
-    commands_to_run+=(
-        "grep -Fxq '$item $version' $path || echo '$item $version' >> $path"
-    )
+    commands_to_run+=("asdf install $item $version || echo 'Warning: Failed to install $item $version. The plugin may not support list-all or the version may not exist.'")
+    commands_to_run+=("grep -Fxq '$item $version' $path || echo '$item $version' >> $path")
 
     export TARGET_USER="$user"
     live_command_output "sysuser" "Configuring $item from ASDF" "${commands_to_run[@]}"
