@@ -30,8 +30,8 @@ configure_bash_it() {
         commands_to_run+=("rm -rf /home/$term_user/.bash_it")
     fi
 
-    commands_to_run+=("git clone --depth=1 https://github.com/Bash-it/bash-it.git /home/$term_user/.bash_it && /home/$term_user/.bash_it/install.sh")
-    commands_to_run+=("chown -R $term_user:$term_user /home/$term_user/.bash_it")
+    commands_to_run+=("git clone --depth=1 https://github.com/Bash-it/bash-it.git /home/$term_user/.bash_it")
+    commands_to_run+=("chown -R $term_user:$term_user /home/$term_user/.bash_it && bash /home/$term_user/.bash_it/install.sh")
     live_command_output  "Installing Bash-it" "${commands_to_run[@]}"
 }
 
