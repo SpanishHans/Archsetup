@@ -46,9 +46,6 @@ fonts_menu() {
         IFS="|" read -r pac_name _ <<< "${fonts[$choice]}"
         package_names+=("$pac_name")
     done
-
-    dialog --title "Debug Selected Choices" --msgbox "Selected: ${package_names[*]}" 10 50
-
     install_fonts "${package_names[@]}"
 }
 
@@ -59,8 +56,8 @@ install_fonts() {
 
     for entry in "${given_array[@]}"; do
         IFS='|' read -r pac_name desc <<< "$entry"
-        pac_name=$(echo "$pac_name" | xargs)  # Trim spaces
-        desc=$(echo "$desc" | xargs)  # Trim spaces
+        pac_name=$(echo "$pac_name" | xargs)
+        desc=$(echo "$desc" | xargs)
         packages+=("$pac_name")
         options+=("$pac_name")
     done
