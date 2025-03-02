@@ -29,10 +29,7 @@ install_pacman_packages() {
     if [ "${#packages_to_install[@]}" -gt 0 ]; then
         formatted_list=$(printf '%s\n' "${packages_to_install[@]}" | tr '\n' ' ')
 
-        continue_script 4 "To be installed" "Pacman will install the following packages
-
-To install:    
-$(printf "%s\n" "${packages_to_install[@]}")"
+        continue_script 4 "To be installed" "Pacman will install the following packages\n\nTo install:\n\n$(printf "%s\n" "${packages_to_install[@]}")"
 
         local coms=()
         coms+=("pacman -S --noconfirm ${packages_to_install[*]}")

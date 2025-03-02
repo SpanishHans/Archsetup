@@ -66,8 +66,5 @@ install_fonts() {
         install_pacman_packages "${packages[@]}"
     fi
 
-    continue_script 2 "Installed fonts" "Finished installing all selected fonts.
-
-Installed:    
-$(printf "%s\n" "${options[@]}")"
+    continue_script 2 "Installed fonts" "Finished installing all selected fonts."
 }
