@@ -44,6 +44,7 @@ fonts_menu() {
     local selected_string
     selected_string=$(printf ", %s" "${selected_choices[@]}")
     selected_string=${selected_string:2}  # Elimina la coma inicial
+    pause_script "You selected:" "$selected_string"
 
     # local package_names=()
     # for choice in "${selected_choices[@]}"; do
