@@ -358,15 +358,11 @@ menu_prompt() {
 }
 
 multiselect_prompt() {
-    local choices="$1"
-    local msg_title="${2:-Default}"
-    local msg_text="${3:-Default}"
-    shift 3
-    # local -n options="$4"
-    options=("$@")
+    local msg_title="${1:-Default}"
+    local msg_text="${2:-Default}"
+    shift 2
+    local options=("$@")
 
-    pause_script "" "$options"
-    
     local title=$(echo -e "$msg_title")
     local description=$(echo -e "$msg_text \n\nUse SPACE to select/deselect options and OK when finished.")
 
@@ -374,11 +370,15 @@ multiselect_prompt() {
         --backtitle "$title" \
         --title "$title" \
         --checklist "$description" \
-        $full_height $full_width 15 "${options[@]}" 2>&1 >/dev/tty)
+        20 60 15 "${options[@]}" 2>&1 >/dev/tty)
+
     exit_code=$?
     
-    IFS=$' ' read -r -a choices_array <<< "$dialog_output"
-        
-    eval "$choices=(${choices_array[@]})"
+    if [ $exit_code -eq 0 ]; then
+        echo "$dialog_output"
+    else
+        echo ""
+    fi
+
     return $exit_code
 }

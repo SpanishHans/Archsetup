@@ -74,36 +74,24 @@ $(printf "%s\n" "${options[@]}")"
 }
 
 fonts_menu() {
-    # options=(
-    #     "1" "Option One" "off"
-    #     "2" "Option Two" "off"
-    #     "3" "Option Three" "off"
-    #     "4" "Option Four" "off"
-    # )
-
-    # Declare a variable to store selected choices
-    selected_choices=()
+    local selected_choices=()
     
     declare -A fonts=(
-        ["terminus"]="terminus-font | A clean, monospaced font optimized for terminal use in text-only environments (init 3). Perfect for coding and system monitoring."
-        ["dejavu"]="ttf-dejavu-nerd | A versatile font family with wide character support, balancing clarity and elegance for interfaces and documents."
-        ["proto"]="ttf-0xproto-nerd | A bold, futuristic font with sharp, geometric shapes, ideal for sci-fi and tech-inspired designs."
-        ["fira"]="ttf-firacode-nerd | A monospaced font with ligatures for coding, offering a clean and expressive environment for developers."
-        ["fa"]="ttf-font-awesome | A scalable icon font with thousands of customizable icons, perfect for modern UI/UX design."
+        ["terminus"]="terminus-font A clean, monospaced font optimized for terminal use in text-only environments (init 3). Perfect for coding and system monitoring."
+        ["dejavu"]="ttf-dejavu-nerd A versatile font family with wide character support, balancing clarity and elegance for interfaces and documents."
+        ["proto"]="ttf-0xproto-nerd A bold, futuristic font with sharp, geometric shapes, ideal for sci-fi and tech-inspired designs."
+        ["fira"]="ttf-firacode-nerd A monospaced font with ligatures for coding, offering a clean and expressive environment for developers."
+        ["fa"]="ttf-font-awesome A scalable icon font with thousands of customizable icons, perfect for modern UI/UX design."
     )
 
     local options=()
     for key in "${!fonts[@]}"; do
-        IFS=" | " read -r pac_name desc <<< "${fonts[$key]}"
+        IFS=" " read -r pac_name desc <<< "${fonts[$key]}"
         options+=("$key" "$desc" "off")
     done
 
-    # declare -a font_menu_choice
+    selected_choices=($(multiselect_prompt "Choose Fonts" "Select multiple fonts" "${options[@]}"))
 
-    # Call the function with the test array
-    multiselect_prompt selected_choices "Choose Options" "Select multiple options from the list" "${fonts[@]}"
-
-    # Check the exit status
     if [ $? -eq 0 ]; then
         echo "You selected: ${selected_choices[@]}"
         sleep 2
@@ -112,3 +100,31 @@ fonts_menu() {
         sleep 2
     fi
 }
+
+multiselect_prompt() {
+    local msg_title="${1:-Default}"
+    local msg_text="${2:-Default}"
+    shift 2
+    local options=("$@")
+
+    local title=$(echo -e "$msg_title")
+    local description=$(echo -e "$msg_text \n\nUse SPACE to select/deselect options and OK when finished.")
+
+    dialog_output=$(dialog \
+        --backtitle "$title" \
+        --title "$title" \
+        --checklist "$description" \
+        20 60 15 "${options[@]}" 2>&1 >/dev/tty)
+
+    exit_code=$?
+    
+    if [ $exit_code -eq 0 ]; then
+        echo "$dialog_output"
+    else
+        echo ""
+    fi
+
+    return $exit_code
+}
+
+fonts_menu
