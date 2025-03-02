@@ -54,20 +54,24 @@ fonts_menu() {
 
 install_fonts() {
     local -a given_array=("$@")  # Correctly handle passed array elements
-    local commands_to_run=()
     local options=()
+    local packages=()
 
-    for key in "${!given_array[@]}"; do
-        IFS='|' read -r pac_name desc <<< "${given_array[$key]}"
-        pac_name=$(echo "$pac_name" | xargs)
-        desc=$(echo "$desc" | xargs)
-        
-        install_pacman_packages "$pac_name"
+    for entry in "${given_array[@]}"; do
+        IFS='|' read -r pac_name desc <<< "$entry"
+        pac_name=$(echo "$pac_name" | xargs)  # Trim spaces
+        desc=$(echo "$desc" | xargs)  # Trim spaces
+        packages+=("$pac_name")
         options+=("$pac_name")
     done
+
+    if [[ ${#packages[@]} -gt 0 ]]; then
+        install_pacman_packages "${packages[@]}"
+    fi
 
     continue_script 2 "Installed fonts" "Finished installing all selected fonts.
 
 Installed:    
 $(printf "%s\n" "${options[@]}")"
 }
+
