@@ -51,12 +51,12 @@ configure_menu () {
             "Users and passwords             (Set new users and admins)" \
             "Rollback                        (Restore to previous system state)" \
             "Desktop Environments            (Desktop UI / Window managers)" \
-            "Customize terminal              (Customize terminal framework and style)" \
             "Install software                (Install common software from Flatpak or AUR.)" \
             "Extra tools and utils           (Git, chezmoi, multi clipboard)" \
             "Virtualization                  (Docker, Virtualbox, virt-manager, LXC)" \
             "Plymouth                        (Startup animation)" \
             "Nvidia                          (Nvidia Graphics cards)" \
+            "Customize terminal              (Customize terminal framework and style)" \
             "Back"
         )
         menu_prompt configure_choice "$title" "$description" "${options[@]}"
@@ -64,12 +64,12 @@ configure_menu () {
             0)  users_menu;;
             1)  rollback_menu;;
             2)  desktops_menu;;
-            3)  terminal_menu;;
-            4)  software_menu;;
-            5)  tools_menu;;
-            6)  virtualization_menu;;
-            7)  plymouth_menu;;
-            8)  nvidia_menu;;
+            3)  software_menu;;
+            4)  tools_menu;;
+            5)  virtualization_menu;;
+            6)  plymouth_menu;;
+            7)  nvidia_menu;;
+            8)  terminal_menu;;
             b)  break;;
             *)  continue_script 2 "Not a valid choice!" "Invalid choice, please try again.";;
         esac
