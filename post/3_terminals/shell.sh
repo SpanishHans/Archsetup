@@ -27,7 +27,7 @@ configure_bash_it() {
     local commands_to_run=()
 
     if [[ -d "/home/$term_user/.bash_it" ]]; then
-        commands_to_run+=("rm -rf /home/$term_user/.bash_it rm -rf /home/$term_user/.bashrc")
+        commands_to_run+=("rm -rf /home/$term_user/.bash_it && rm -rf /home/$term_user/.bashrc")
     fi
 
     commands_to_run+=("git clone --depth=1 https://github.com/Bash-it/bash-it.git /home/$term_user/.bash_it && /home/$term_user/.bash_it/install.sh")
