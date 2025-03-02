@@ -24,11 +24,11 @@ terminal_menu() {
     local title="Terminal global configurator."
     local description="This allows you to set up terminals, shells and frameworks for a given user."
     while true; do
-        local options=(\
-            "configure terminals"\
-            "configure shells"\
-            "configure prompts"\
-            "configure fonts"\
+        local options=( \
+            "configure terminals" \
+            "configure shells" \
+            "configure prompts" \
+            "configure fonts" \
             "Back"
         )
         menu_prompt term_choice "$title" "$description" "${options[@]}"
@@ -36,7 +36,7 @@ terminal_menu() {
             0)  terminals_menu;;
             1)  shells_menu;;
             2)  prompts_menu;;
-            3)  run_btrfs_setup;;
+            3)  fonts_menu;;
             b)  break;;
             *)  echo "Invalid option. Please try again.";;
         esac
