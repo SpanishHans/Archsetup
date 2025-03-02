@@ -55,6 +55,8 @@ install_fonts() {
     local commands_to_run=()
     local options=()
 
+    pause_script "" "$given_array"
+
     for key in "${!given_array[@]}"; do
         IFS='|' read -r pac_name desc <<< "${given_array[$key]}"
         pac_name=$(echo "$pac_name" | xargs)
