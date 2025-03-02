@@ -40,7 +40,7 @@ fi
 
 cp -f .dialogrc /root/.dialogrc
 
-check_internet
+# check_internet
 
 launcher_menu () 
 {
