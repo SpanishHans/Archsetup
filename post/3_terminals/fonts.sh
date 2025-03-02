@@ -23,55 +23,51 @@ source ./post/4_software/pacman.sh
 ################################################################################
 
 fonts_menu() {
+    local selected_choices=()
+    
     declare -A fonts=(
-        ["terminus"]="terminus-font | A clean, monospaced font optimized for terminal use in text-only environments (init 3). Perfect for coding and system monitoring."
-        ["dejavu"]="ttf-dejavu-nerd | A versatile font family with wide character support, balancing clarity and elegance for interfaces and documents."
-        ["proto"]="ttf-0xproto-nerd | A bold, futuristic font with sharp, geometric shapes, ideal for sci-fi and tech-inspired designs."
-        ["fira"]="ttf-firacode-nerd | A monospaced font with ligatures for coding, offering a clean and expressive environment for developers."
-        ["fa"]="ttf-font-awesome | A scalable icon font with thousands of customizable icons, perfect for modern UI/UX design."
+        ["Terminus"]="terminus-font A clean, monospaced font optimized for terminal use in text-only environments (init 3). Perfect for coding and system monitoring."
+        ["Dejavu"]="ttf-dejavu-nerd A versatile font family with wide character support, balancing clarity and elegance for interfaces and documents."
+        ["0x proto"]="ttf-0xproto-nerd A bold, futuristic font with sharp, geometric shapes, ideal for sci-fi and tech-inspired designs."
+        ["Fira code"]="ttf-firacode-nerd A monospaced font with ligatures for coding, offering a clean and expressive environment for developers."
+        ["Font awesome"]="ttf-font-awesome A scalable icon font with thousands of customizable icons, perfect for modern UI/UX design."
     )
 
     local options=()
     for key in "${!fonts[@]}"; do
-        IFS=" | " read -r pac_name desc <<< "${fonts[$key]}"
+        IFS=" " read -r pac_name desc <<< "${fonts[$key]}"
         options+=("$key" "$desc" "off")
     done
 
-    declare -a font_menu_choice
-    multiselect_prompt \
-        font_menu_choice \
-        "Starting font picker" \
-        "The following are fonts considered nerd because they are for the TTY or for the terminal.\n\nPlease choose what fonts you require." \
-        options
+    selected_choices=($(multiselect_prompt "Choose Fonts" "Select multiple fonts" "${options[@]}"))
 
-    declare -A filtered_fonts
-    for choice in "${font_menu_choice[@]}"; do
-        if [[ -n "${fonts[$choice]}" ]]; then
-            filtered_fonts["$choice"]="${fonts[$choice]}"
-        fi;
+    local package_names=()
+    for choice in "${selected_choices[@]}"; do
+        IFS=" " read -r pac_name _ <<< "${fonts[$choice]}"
+        package_names+=("$pac_name")
     done
 
-    install_fonts filtered_fonts
+    install_fonts "${package_names[@]}"
 }
 
 install_fonts() {
-    local -n given_array="$1"
-    local commands_to_run=()
+    local packages=("$@")  # Capture package names as an array
 
-    local options=()
-    for key in "${!given_array[@]}"; do
-        IFS=" | " read -r pac_name desc <<< "${given_array[$key]}"
-        pac_name=$(echo "$pac_name" | xargs)
-        desc=$(echo "$desc" | xargs)
-        install_pacman_packages "$pac_name"
-        local options+=("$pac_name")
-    done
+    if [[ ${#packages[@]} -eq 0 ]]; then
+        echo "No fonts selected. Exiting."
+        return
+    fi
 
+    # Install selected fonts
+    install_pacman_packages "${packages[@]}"
+
+    # Show a completion message
     continue_script 2 "Installed fonts" "Finished installing all selected fonts.
 
 Installed:    
-$(printf "%s\n" "${options[@]}")"
+$(printf "%s\n" "${packages[@]}")"
 }
+
 
 fonts_menu() {
     local selected_choices=()
@@ -92,11 +88,5 @@ fonts_menu() {
 
     selected_choices=($(multiselect_prompt "Choose Fonts" "Select multiple fonts" "${options[@]}"))
 
-    if [ $? -eq 0 ]; then
-        echo "You selected: ${selected_choices[@]}"
-        sleep 2
-    else
-        echo "Selection canceled."
-        sleep 2
-    fi
+    
 }
