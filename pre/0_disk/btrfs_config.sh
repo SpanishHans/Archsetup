@@ -120,17 +120,11 @@ run_btrfs_setup() {
     
     if [[ "$ROOT_FORM" == "btrfs" ]]; then
     
-        multiselect_prompt\
-            subvol_menu_choice\
-            menu_options\
-            "Starting subvol picker"\
-            "The following volumes are required for the system to work and will be create automatically.
-            
-        1. @
-        2. @home
-        3. @snapshots
-            
-        Please choose what extra subvolumes you require."
+        multiselect_prompt \
+            subvol_menu_choice \
+            "Starting subvol picker" \
+            "The following volumes are required for the system to work and will be create automatically\n\n.1. @\n2. @home\n\n3. @snapshots\n\nPlease choose what extra subvolumes you require." \
+            menu_options
 
         declare -A filtered_subvols
         for choice in "${subvol_menu_choice[@]}"; do

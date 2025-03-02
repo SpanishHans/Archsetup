@@ -359,9 +359,11 @@ menu_prompt() {
 
 multiselect_prompt() {
     local choices="$1"
-    local -n options="$2"
-    local msg_title="${3:-Default}"
-    local msg_text="${4:-Default}"
+    local msg_title="${2:-Default}"
+    local msg_text="${3:-Default}"
+    shift 3
+    local -n options="$4"
+    
     local title=$(echo -e "$msg_title")
     local description=$(echo -e "$msg_text \n\nUse SPACE to select/deselect options and OK when finished.")
 
