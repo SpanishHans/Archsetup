@@ -161,6 +161,11 @@ live_command_output() {
     local script_name=$(basename "$(realpath "$0")")
     local combined_log="/tmp/${script_name}_$(date +%Y_%m_%d_%H_%M_%S).log"
     local exit_code=0
+    
+    if ! id "installer" &>/dev/null; then
+        useradd -m -G wheel -s /bin/bash installer
+        echo "installer ALL=(ALL) NOPASSWD: ALL" | tee /etc/sudoers.d/installer
+    fi
 
     cleanup() {
         rm -f "$combined_log"
@@ -171,21 +176,28 @@ live_command_output() {
         local cmd="$1"
         {
             terminal_title "Running: $cmd" >> "$combined_log"
+            
             if [[ "$cmd" =~ makepkg ]]; then
-                if id "sysadmin" &>/dev/null; then
-                    echo "$ROOT_PASS" | su - "sysadmin" -c "$cmd" >> "$combined_log" 2>&1
+                sudo -u installer bash -c "$cmd" >> "$combined_log" 2>&1
+
+            elif [[ "$cmd" =~ ssh-keygen || "$cmd" =~ ssh-agent || "$cmd" =~ ssh-add ]]; then
+                if [[ -n "$TARGET_USER" ]]; then
+                    sudo -u "$TARGET_USER" bash -c "$cmd" >> "$combined_log" 2>&1
                 else
-                    pause_script "Error: User 'sysadmin' does not exist" "Please create the user 'sysadmin' or install manually with pacman -U."
+                    pause_script "Error: TARGET_USER is not set" "Please set TARGET_USER before running SSH commands."
                     return 1
                 fi
+
             else
                 eval "$cmd" >> "$combined_log" 2>&1
             fi
+    
             exit_code=$?
             output_error "$cmd" "$exit_code"
         }
         return $exit_code
     }
+
 
     {
         for cmd in "${commands[@]}"; do
@@ -199,7 +211,7 @@ live_command_output() {
                 sleep 2
                 killall dialog
                 break
-        }
+            }
         done
 
         if [ $exit_code -eq 0 ]; then
