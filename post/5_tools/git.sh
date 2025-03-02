@@ -81,23 +81,12 @@ git_menu() {
 
     commands_to_run+=("ssh-keygen -t ed25519 -C \"$gitemail\" -f \"$ssh_key_path\" -N \"$sshpass\"")
     commands_to_run+=("chown -R $git_user:$git_user $home_path/.ssh")
+    commands_to_run+=("eval \"\$(ssh-agent -s)\"")
+    commands_to_run+=("ssh-add \"$ssh_key_path\"")
+
     export TARGET_USER="$git_user"
     live_command_output "sysuser" "Creating ssh keys" "${commands_to_run[@]}"
 
-
-    pause_script "" "Done creating SSH key.
-
-Now run the following commands:
-
-1. Start the SSH agent:
-   ssh-agent -s
-
-2. Add your new key to the agent:
-   ssh-add \"$ssh_key_path\"
-
-Please add the following text to your GitHub account to gain push access and access to private repos:
-
-$(cat \"${ssh_key_path}.pub\")
-"
+    pause_script "" "Done creating SSH key.\n\nPlease add the following text to your GitHub account to gain push access and access to private repos:\n\n$(cat \"${ssh_key_path}.pub\")"
     continue_script 2 "Git" "Git Setup complete!"
 }
