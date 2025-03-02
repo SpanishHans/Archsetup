@@ -69,7 +69,7 @@ output() {
 
 terminal_title() {
     local msg_title="${1:-Default}"
-    local wrapped_title=$(echo "$msg_title" | fold -s -w 100)
+    local wrapped_title=$(echo "$msg_title" | awk '{ gsub(/.{100}/,"&\n") }1')
     local length=$(echo "$wrapped_title" | awk 'BEGIN { max = 0 } { if (length($0) > max) max = length($0) } END { print max }')
     local border=$(printf '%*s' $((length + 8)) '' | tr ' ' '=')
 
