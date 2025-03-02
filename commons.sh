@@ -39,7 +39,7 @@ check_internet() {
         exit 1
     fi
 
-    dialog --textbox "$TEMP_FILE" 15 60  # Show results in a dialog window
+    dialog --textbox "$TEMP_FILE" $half_height $half_width  # Show results in a dialog window
     rm -f "$TEMP_FILE"  # Clean up temporary file
 }
 
