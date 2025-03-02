@@ -259,7 +259,6 @@ install_asdf_package() {
         "if ! grep -Fxq '$item $version' $path; then
             echo '$item $version' >> $path
         fi")
-    commands_to_run+=("asdf set $item $version")
     export TARGET_USER="$user"
     live_command_output "sysuser" "Configuring $item from ASDF" "${commands_to_run[@]}"
 }
