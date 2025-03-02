@@ -224,10 +224,10 @@ live_command_output() {
         done
 
         if [ $exit_code -eq 0 ]; then
-            terminal_title "Done, continuing to next step!" >> "$combined_log"
-            terminal_title "read the logs for this operation on $combined_log" >> "$combined_log"
-            sleep 3
-            killall dialog
+            # terminal_title "Done, continuing to next step!" >> "$combined_log"
+            # terminal_title "read the logs for this operation on $combined_log" >> "$combined_log"
+            # sleep 3
+            # killall dialog
             return 0  # Success
         else
             return 1  # Failure
