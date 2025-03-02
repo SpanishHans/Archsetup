@@ -90,7 +90,9 @@ fonts_menu() {
     # Check the exit status
     if [ $? -eq 0 ]; then
         echo "You selected: ${selected_choices[@]}"
+        sleep 2
     else
         echo "Selection canceled."
+        sleep 2
     fi
 }
