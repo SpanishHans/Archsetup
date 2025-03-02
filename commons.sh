@@ -24,12 +24,24 @@ check_dialog(){
 }
 
 check_internet() {
+    TEMP_FILE=$(mktemp)
     
-    continue_script 2 "Testing internet connection" "A test for internet connection will now start."
-    ping -c 3 -q google.com
-    export HAS_INTERNET=true
+    dialog --infobox "Testing internet connection..." $half_height $half_width
+    sleep 2
     
+    ping -c 3 -q google.com > "$TEMP_FILE" 2>&1
+    if [ $? -eq 0 ]; then
+        echo "Internet connection is active." >> "$TEMP_FILE"
+        export HAS_INTERNET=true
+    else
+        echo "No internet connection detected." >> "$TEMP_FILE"
+        export HAS_INTERNET=false
+    fi
+
+    dialog --textbox "$TEMP_FILE" $half_height $half_width
+    rm -f "$TEMP_FILE"
 }
+
 
 check_live_env(){
     if [ -d /run/archiso ]; then
