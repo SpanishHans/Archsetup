@@ -72,13 +72,9 @@ install_asdf() {
     install_aur_package "https://aur.archlinux.org/asdf-vm.git"
     
     if [[ ! -d "/opt/asdf" ]]; then
-        commands_to_run+=("mkdir -p /opt/asdf")
-        commands_to_run+=("chown -R root:users /opt/asdf")
-        commands_to_run+=("chmod -R g+rwX /opt/asdf")
-        commands_to_run+=("chmod -R g+s /opt/asdf")
+        commands_to_run+=("mkdir -p /opt/asdf && chown -R root:users /opt/asdf && chmod -R g+rwX /opt/asdf && chmod -R g+s /opt/asdf")
     fi
     live_command_output  "Configuring ASDF /opt/asdf directory" "${commands_to_run[@]}"
-    
 }
 
 configure_asdf() {

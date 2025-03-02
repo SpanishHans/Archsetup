@@ -84,8 +84,7 @@ base_packages=(
   fakeroot
   pkg-config
   unzip
-  which
-  
+  which 
 )
 
 all_packages=("${base_packages[@]}" "${microcode[@]}")
