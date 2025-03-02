@@ -43,13 +43,13 @@ fonts_menu() {
 
     pause_script "" "$selected_choices"
 
-    local package_names=()
-    for choice in "${selected_choices[@]}"; do
-        IFS=" " read -r pac_name _ <<< "${fonts[$choice]}"
-        package_names+=("$pac_name")
-    done
+    # local package_names=()
+    # for choice in "${selected_choices[@]}"; do
+    #     IFS=" " read -r pac_name _ <<< "${fonts[$choice]}"
+    #     package_names+=("$pac_name")
+    # done
 
-    pause_script "" "$package_names"
+    # pause_script "" "$package_names"
 
     install_fonts "${package_names[@]}"
 }
