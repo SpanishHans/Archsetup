@@ -252,7 +252,7 @@ install_asdf_package() {
     local path="/home/$user/.tool-versions"
     local commands_to_run=()
 
-    commands_to_run+=("asdf plugin list | grep -q \"$item\" ]] || asdf plugin add $item")
+    commands_to_run+=("asdf plugin list | grep -q "$item" || asdf plugin add $item")
     commands_to_run+=("asdf install $item $version || echo 'Warning: Failed to install $item $version. The plugin may not support list-all or the version may not exist.'")
     commands_to_run+=("grep -Fxq '$item $version' $path || echo '$item $version' >> $path")
 
