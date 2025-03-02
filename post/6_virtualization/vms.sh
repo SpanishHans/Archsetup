@@ -41,7 +41,11 @@ hypervisors_menu() {
 }
 
 hyper_type_1() {
-    configure_libvirt
+    pick_user \
+        libvirt_user \
+        "Libvirt user" \
+        "Please enter the user who shall be added to libvirt group: "
+    configure_libvirt "$libvirt_user"
 
     local commands_to_run=()
     commands_to_run+=("sed -i \"s/^#user = .*/user = '$libvirt_user'/\" /etc/libvirt/qemu.conf")
