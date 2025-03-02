@@ -31,10 +31,12 @@ check_internet() {
     
     ping -c 3 -q google.com > "$TEMP_FILE" 2>&1
     if [ $? -eq 0 ]; then
-        terminal_title "\n\nInternet connection is active." >> "$TEMP_FILE"
+        printf "\n\n" >> "$TEMP_FILE"
+        terminal_title "Internet connection is active." >> "$TEMP_FILE"
         export HAS_INTERNET=true
     else
-        terminal_title "\n\nNo internet connection detected." >> "$TEMP_FILE"
+        printf "\n\n" >> "$TEMP_FILE"
+        terminal_title "No internet connection detected." >> "$TEMP_FILE"
         export HAS_INTERNET=false
         exit 1
     fi
