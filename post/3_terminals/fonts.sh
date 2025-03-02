@@ -39,10 +39,10 @@ fonts_menu() {
         local options+=("$key" "$desc" "off")
     done
     
-    multiselect_prompt \
-        font_menu_choice \
-        "Starting font picker" \
-        "The following are fonts considered nerd beucase they are for the tty or for the terminal.\n\nPlease choose what fonts you require." \
+    multiselect_prompt\
+        font_menu_choice\
+        "Starting font picker"\
+        "The following are fonts considered nerd beucase they are for the tty or for the terminal.\n\nPlease choose what fonts you require."\
         options
 
     declare -A filtered_fonts
