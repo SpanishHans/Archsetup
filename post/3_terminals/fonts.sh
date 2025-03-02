@@ -39,15 +39,17 @@ fonts_menu() {
         options+=("$key" "$desc" "off")
     done
 
-    mapfile -t selected_choices < <(multiselect_prompt "Elige fuentes" "Selecciona múltiples fuentes" "${options[@]}")
+    selected_choices=($(multiselect_prompt "Choose Fonts" "Select multiple fonts" "${options[@]}"))
 
-    local package_names=()
-    for choice in "${selected_choices[@]}"; do
-        IFS="|" read -r pac_name _ <<< "${fonts[$choice]}"
-        package_names+=("$pac_name")
-    done
+    dialog --title "Debug Selected Choices" --msgbox "Selected: ${selected_choices[*]}" 10 50
 
-    echo "Fuentes seleccionadas: ${package_names[*]}"
+    # local package_names=()
+    # for choice in "${selected_choices[@]}"; do
+    #     IFS=" " read -r pac_name _ <<< "${fonts[$choice]}"
+    #     package_names+=("$pac_name")
+    # done
+
+    # pause_script "" "$package_names"
 
     # install_fonts "${package_names[@]}"
 }
