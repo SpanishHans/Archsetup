@@ -41,7 +41,7 @@ fonts_menu() {
 
     selected_choices=($(multiselect_prompt "Choose Fonts" "Select multiple fonts" "${options[@]}"))
 
-    pause_script "" "$selected_choices"
+    pause_script "" selected_choices
 
     # local package_names=()
     # for choice in "${selected_choices[@]}"; do
