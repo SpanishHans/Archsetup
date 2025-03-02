@@ -122,7 +122,7 @@ output_error() {
         local cmd="$1"
         local exit_code="$2"
                
-        local wrapped_cmd=$(echo "$cmd" | fold -s -w 100)
+        local wrapped_cmd=$(echo "$cmd" | awk '{ gsub(/.{100}/,"&\n") }1')
 
         if [ "$exit_code" -eq 0 ]; then
             echo -e "\
