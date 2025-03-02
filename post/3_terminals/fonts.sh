@@ -45,7 +45,7 @@ fonts_menu() {
 
     local package_names=()
     for choice in "${selected_choices[@]}"; do
-        IFS=" " read -r pac_name _ <<< "${fonts[$choice]}"
+        IFS="|" read -r pac_name _ <<< "${fonts[$choice]}"
         package_names+=("$pac_name")
     done
 
