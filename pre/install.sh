@@ -108,7 +108,7 @@ this automatically:
     7. Creates initramfs with mkinitcpio -P
     8. Installs grub for the system with btrfs and snapper-rollback support"
     
-continue_script 5 'Chroot description' "$description"
+continue_script 4 'Chroot description' "$description"
 
 commands_to_run=()
 commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF

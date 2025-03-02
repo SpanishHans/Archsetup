@@ -39,7 +39,7 @@ chezmoi_menu() {
             0)  configure_chezmoi_default "$chezmoi_username";;
             1)  configure_chezmoi_no_default "$chezmoi_username";;
             b)  break;;
-            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
+            *)  continue_script 2 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
     done
 }

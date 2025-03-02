@@ -82,7 +82,7 @@ mount_btrfs() {
     commands_to_run+=("mount -o nodev,nosuid,noexec \"${EFI_PART}\" /mnt/efi")
     live_command_output  "Configuring BTRFS volumes on $ROOT_PART" "${commands_to_run[@]}"
     
-    continue_script 5 "Finished BTRFS setup" "Finished mouting BTRFS and all of its required structure.
+    continue_script 2 "Finished BTRFS setup" "Finished mouting BTRFS and all of its required structure.
 
 @          has /
 @home      has /home

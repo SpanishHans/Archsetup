@@ -62,7 +62,7 @@ pick_user() {
 user_password_prompt () {
     local user="$1"
     local pass="$2"
-    ensure_same_pass "$user" user_password && continue_script 3 "Password set!" "Password has been set.\n\nUser: '$user' \nPassword: ${user_password:0:1}*******${user_password: -1}"
+    ensure_same_pass "$user" user_password && continue_script 2 "Password set!" "Password has been set.\n\nUser: '$user' \nPassword: ${user_password:0:1}*******${user_password: -1}"
     eval "$pass='$user_password'"
 }
 
@@ -85,7 +85,7 @@ change_admin_privs() {
     done
 
     if [[ "$sudo_access" == "y" ]]; then
-        usermod -aG wheel "$username" && continue_script 3 "$username is now admin" "User $username now is an admin (wheel)."
+        usermod -aG wheel "$username" && continue_script 2 "$username is now admin" "User $username now is an admin (wheel)."
     else
         continue_script 2 "User not wheel" "User $username now isn't an admin (wheel)."
     fi

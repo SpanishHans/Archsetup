@@ -32,7 +32,7 @@ nvidia_menu () {
         case $nvidia_menu_choice in
             0)  dkms_driver;;
             b)  break;;
-            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
+            *)  continue_script 2 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
     done
 }

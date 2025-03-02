@@ -51,7 +51,7 @@ With this in mind, let's pick between sane defaults or full custom mode."
             1)  custom_default_route;break;;
             2)  full_custom_route;break;;
             e)  exit;;
-            *)  continue_script 1 "Option not valid" "That is not an option, returning to start menu.";exit;;
+            *)  continue_script 2 "Option not valid" "That is not an option, returning to start menu.";exit;;
         esac
     done
 }
@@ -142,7 +142,7 @@ Simply select a disk, format and come back here. When done, select option 'c' to
             c)  break;;
             e)  exit;;
             *)  if ! cgdisk "$DISK"; then
-                    continue_script 1 "Exited cgdisk for $DISK" "cgdisk exited for disk $DISK. Returning to menu."
+                    continue_script 2 "Exited cgdisk for $DISK" "cgdisk exited for disk $DISK. Returning to menu."
                 fi
                 ;;
         esac
@@ -196,7 +196,7 @@ Please select a filesystem for it from the following:"
         2)  format_for_efi "$partition";;
         b)  return;;
         e)  exit;;
-        *)  continue_script 1 "Option not valid" "That is not an option, retry.";;
+        *)  continue_script 2 "Option not valid" "That is not an option, retry.";;
     esac
 }
 
@@ -262,7 +262,7 @@ Please go back and format the partition as EFI Partition."
         export EFI_PART EFI_FORM
         exit
     else
-        continue_script 1 "Formatted as EFI" "The partition ($EFI_PART) is correctly formatted as EFI."
+        continue_script 2 "Formatted as EFI" "The partition ($EFI_PART) is correctly formatted as EFI."
     fi
     
 }

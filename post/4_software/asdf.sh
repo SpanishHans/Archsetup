@@ -22,11 +22,13 @@ asdf_menu () {
     local title='Programming Language Installation with ASDF'
     local description="This script helps you easily install and manage programming languages using the ASDF version manager."
 
+    install_asdf
     pick_user \
-        prompt_username \
-        "User to setp ASDF program for" \
-        "Install ASDF software for a given user. Please select the user who shall receive software: "
-
+        asdf_username \
+        "User to set up ASDF for" \
+        "Please enter the user who shall get ASDF: "
+    configure_asdf "$asdf_username"
+    
     while true; do
         local options=(\
             'Python             (Installs Python and its dependencies, including pip and virtualenv)' \
@@ -47,27 +49,36 @@ asdf_menu () {
 
         menu_prompt virt_menu_choice "$title" "$description" "${options[@]}"
         case $virt_menu_choice in
-            0)  configure_python;;
-            1)  configure_node;;
-            2)  configure_java;;
-            3)  configure_rust;;
-            4)  configure_make;;
-            5)  configure_cmake;;
-            6)  configure_ninja;;
-            7)  configure_dotnet;;
-            8)  configure_neovim;;
-            9)  configure_chezmoi;;
-            10) configure_starship;;
-            11) configure_glow;;
-            12) install_all_asdf;;
+            0)  configure_python "$asdf_username";;
+            1)  configure_node "$asdf_username";;
+            2)  configure_java "$asdf_username";;
+            3)  configure_rust "$asdf_username";;
+            4)  configure_make "$asdf_username";;
+            5)  configure_cmake "$asdf_username";;
+            6)  configure_ninja "$asdf_username";;
+            7)  configure_dotnet "$asdf_username";;
+            8)  configure_neovim "$asdf_username";;
+            9)  configure_chezmoi "$asdf_username";;
+            10) configure_starship "$asdf_username";;
+            11) configure_glow "$asdf_username";;
+            12) install_all_asdf "$asdf_username";;
             b)  break;;
-            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
+            *)  continue_script 2 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
     done
 }
 
 install_asdf() {
     install_aur_package "https://aur.archlinux.org/asdf-vm.git"
+    
+    if [[ ! -d "/opt/asdf" ]]; then
+        commands_to_run+=("mkdir -p /opt/asdf")
+        commands_to_run+=("chown -R root:users /opt/asdf")
+        commands_to_run+=("chmod -R g+rwX /opt/asdf")
+        commands_to_run+=("chmod -R g+s /opt/asdf")
+    fi
+    live_command_output  "Configuring ASDF /opt/asdf directory" "${commands_to_run[@]}"
+    
 }
 
 configure_asdf() {
@@ -75,20 +86,10 @@ configure_asdf() {
     local shell_path="$(getent passwd "$user" | cut -d: -f7)"
     local commands_to_run=()
 
-    if [[ ! -d "/root/.asdf" ]]; then
-        commands_to_run+=("mkdir -p /root/.asdf")
-    fi
-
-    if [[ ! -d "/opt/asdf" ]]; then
-        commands_to_run+=("mkdir -p /opt/asdf")
-    fi
-
     if [[ ! -f "/home/$user/.tool-versions" ]]; then
         commands_to_run+=("touch /home/$user/.tool-versions")
         commands_to_run+=("chown $user:$user /home/$user/.tool-versions")
     fi
-
-    live_command_output  "Configuring ASDF" "${commands_to_run[@]}"
     
     local commands_to_run=()
     case "$shell_path" in
@@ -236,12 +237,6 @@ install_with_asdf() {
     local version="$3"
     
     install_asdf
-    pick_user \
-        langs_username \
-        "User to set up ASDF for" \
-        "Please enter the user who shall get ASDF: "
-    configure_asdf "$langs_username"
-
     check_asdf_package "$user" "$item" "$version"
 }
 
@@ -272,9 +267,6 @@ install_asdf_package() {
             echo '$item $version' >> $path
         fi")
     asdf set $item $version
-    
-    commands_to_run+=("cp -rf /root/.asdf/* /opt/asdf")
-    commands_to_run+=("chmod -R a+rx /opt/asdf")
     live_command_output  "Configuring $item from ASDF" "${commands_to_run[@]}"
 }
 

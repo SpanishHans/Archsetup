@@ -35,7 +35,7 @@ hypervisors_menu() {
             0)  hyper_type_1;;
             1)  hyper_type_2;;
             b)  break;;
-            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
+            *)  continue_script 2 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
     done
 }
@@ -71,7 +71,7 @@ hyper_type_1() {
             2)  install_pacman_packages qemu-full
                 break;;
             b)  break;;
-            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
+            *)  continue_script 2 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
     done
 
@@ -94,7 +94,7 @@ hyper_type_2() {
             0)  configure_virtualbox;;
             1)  configure_vbox_ext;;
             b)  break;;
-            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
+            *)  continue_script 2 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
     done
 }

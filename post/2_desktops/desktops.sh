@@ -37,7 +37,7 @@ desktops_menu () {
             1)  DE_selector;;
             2)  WM_selector;;
             b)  break;;
-            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
+            *)  continue_script 2 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
     done
 }
@@ -189,7 +189,7 @@ DM_selector() {
             0)  DM_console;;
             1)  DM_graphical;;
             b)  break;;
-            *)  continue_script 1 "Not a valid choice!" 'You did not enter a valid selection.'
+            *)  continue_script 2 "Not a valid choice!" 'You did not enter a valid selection.'
         esac
     done
 }
@@ -213,7 +213,7 @@ DM_console() {
             2)  purge_dm;install_emptty;break;;
             3)  purge_dm;install_lemurs;break;;
             b)  break;;
-            *)  continue_script 1 "Not a valid choice!" 'You did not enter a valid selection.'
+            *)  continue_script 2 "Not a valid choice!" 'You did not enter a valid selection.'
         esac
     done
 }
@@ -237,7 +237,7 @@ DM_graphical() {
             2)  purge_dm;install_sddm;break;;
             3)  purge_dm;install_greetd;break;;
             b)  break;;
-            *)  continue_script 1 "Not a valid choice!" 'You did not enter a valid selection.'
+            *)  continue_script 2 "Not a valid choice!" 'You did not enter a valid selection.'
         esac
     done
 }
@@ -280,7 +280,7 @@ DE_selector() {
             11) install_pantheon;break;;
             12) install_xfce;break;;
             b)  break;;
-            *)  continue_script 1 "Not a valid choice!" 'You did not enter a valid selection.'
+            *)  continue_script 2 "Not a valid choice!" 'You did not enter a valid selection.'
         esac
     done
 }
@@ -302,7 +302,7 @@ WM_selector() {
             1)  install_hyprland;break;;
             2)  install_enlightenment;break;;
             b)  break;;
-            *)  continue_script 1 "Not a valid choice!" 'You did not enter a valid selection.'
+            *)  continue_script 2 "Not a valid choice!" 'You did not enter a valid selection.'
         esac
     done
 }

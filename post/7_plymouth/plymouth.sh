@@ -41,7 +41,7 @@ plymouth_menu () {
             3)  theme_red_loader;;
             4)  regen_cpio;;
             b)  break;;
-            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
+            *)  continue_script 2 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
     done
 }

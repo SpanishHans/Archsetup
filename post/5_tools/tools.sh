@@ -43,7 +43,7 @@ tools_menu () {
             1)  chezmoi_menu;;
             2)  configure_clipboard;;
             b)  break;;
-            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
+            *)  continue_script 2 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
     done
 }

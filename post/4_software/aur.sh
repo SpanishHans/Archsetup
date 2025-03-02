@@ -33,7 +33,7 @@ aur_menu() {
             0)  configure_paru;;
             1)  configure_aur_rofi_power_menu;;
             b)  break;;
-            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again.";;
+            *)  continue_script 2 "Not a valid choice!" "Invalid choice, please try again.";;
         esac
     done
 }
@@ -66,7 +66,7 @@ install_without_paru() {
     if ! ls $build_path/*.pkg.tar.zst &>/dev/null; then
         scroll_window_output return_value "Viewing PKGBUILD for $package_name" "$build_path/PKGBUILD"
         if [ $return_value -eq 3 ]; then
-            continue_script 3 "You decided to cancel install" "You did not agree with the PKGBUILD commands and setup. Exiting."
+            continue_script 2 "You decided to cancel install" "You did not agree with the PKGBUILD commands and setup. Exiting."
             exit 1
         fi
         live_command_output "Building and installing $package_name" "cd $build_path && makepkg -sric --noconfirm"

@@ -36,7 +36,7 @@ containers_menu() {
             1)  configure_distrobox;;
             2)  configure_lxc;;
             b)  break;;
-            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
+            *)  continue_script 2 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
     done
 }
@@ -56,7 +56,7 @@ configure_classic_containers() {
             0)  configure_docker;;
             1)  configure_podman;;
             b)  break;;
-            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
+            *)  continue_script 2 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
     done
 }

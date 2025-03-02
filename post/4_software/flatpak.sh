@@ -54,7 +54,7 @@ flatpak_menu() {
             9)  install_flatpak_kden_live;;
             10)  install_all_flatpaks;;
             b)  break;;
-            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again.";;
+            *)  continue_script 2 "Not a valid choice!" "Invalid choice, please try again.";;
         esac
     done
 }

@@ -33,7 +33,7 @@ virtualization_menu () {
             0)  containers_menu;;
             1)  hypervisors_menu;;
             b)  break;;
-            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again." ;;
+            *)  continue_script 2 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
     done
 }

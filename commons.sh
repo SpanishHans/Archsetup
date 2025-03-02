@@ -26,13 +26,9 @@ check_dialog(){
 check_internet() {
     
     continue_script 2 "Testing internet connection" "A test for internet connection will now start."
-    
-    commands_to_run+=("ping -c 3 -q google.com")
-    
-    live_command_output  "Checking internet connection." "${commands_to_run[@]}"
+    ping -c 3 -q google.com
     export HAS_INTERNET=true
     
-    continue_script 3 "You have internet!" "Connection has been tested by pinging google."
 }
 
 check_live_env(){
@@ -204,7 +200,7 @@ live_command_output() {
             execute_command "$cmd" || { 
                 scroll_window_output return_value "$(terminal_title "$script_name Error, the logs are:")" "$combined_log"
                 if [ $return_value -eq 3 ]; then
-                    continue_script 3 "You decided to exit" "Script exited execution. Bye."
+                    continue_script 2 "You decided to exit" "Script exited execution. Bye."
                     exit 1
                 fi
                 exit_code=$?

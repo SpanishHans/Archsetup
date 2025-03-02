@@ -42,9 +42,6 @@ fi
 
 configure_menu () {
 
-    user_password_prompt "installer" installer_pass
-    export ROOT_PASS="$sysadmin_pass"
-
     local title="Configure your PC after install"
     local description="Welcome to the menu for setting things up after install. Here you can find a lot of utilities to make the process of setting your pc as easy as possible."
 
@@ -73,7 +70,7 @@ configure_menu () {
             7)  plymouth_menu;;
             8)  nvidia_menu;;
             b)  break;;
-            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again.";;
+            *)  continue_script 2 "Not a valid choice!" "Invalid choice, please try again.";;
         esac
     done
 }

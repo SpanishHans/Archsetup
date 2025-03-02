@@ -98,5 +98,5 @@ Please add the following text to your GitHub account to gain push access and acc
 
 $(cat \"${ssh_key_path}.pub\")
 "
-    continue_script 1 "Git" "Git Setup complete!"
+    continue_script 2 "Git" "Git Setup complete!"
 }

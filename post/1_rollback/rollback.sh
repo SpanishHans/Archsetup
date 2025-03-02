@@ -42,7 +42,7 @@ rollback_menu() {
             4)  clean_fstab;;
             5)  do_all;;
             b)  break;;
-            *)  continue_script 1 "Not a valid choice!" "Invalid choice, please try again.";;
+            *)  continue_script 2 "Not a valid choice!" "Invalid choice, please try again.";;
         esac
     done
 }
