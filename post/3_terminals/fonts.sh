@@ -39,11 +39,6 @@ fonts_menu() {
         options+=("$key" "$desc" "off")
     done
 
-    local selected_string
-    selected_string=$(printf ", %s" "${options[@]}")
-    selected_string=${selected_string:2}  # Elimina la coma inicial
-    pause_script "You selected:" "$selected_string"
-
     selected_choices=($(multiselect_prompt "Choose Fonts" "Select multiple fonts" "${options[@]}"))
 
     local selected_string

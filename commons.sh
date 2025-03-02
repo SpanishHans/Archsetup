@@ -373,5 +373,12 @@ multiselect_prompt() {
         20 60 15 "${options[@]}" 2>&1 >/dev/tty)
 
     exit_code=$?
+    
+    if [ $exit_code -eq 0 ]; then
+        echo "$dialog_output"
+    else
+        echo ""
+    fi
+
     return $exit_code
 }
