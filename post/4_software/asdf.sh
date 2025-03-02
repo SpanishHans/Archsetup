@@ -28,6 +28,7 @@ asdf_menu () {
         "User to set up ASDF for" \
         "Please enter the user who shall get ASDF: "
     configure_asdf "$asdf_username"
+    export TARGET_USER="$asdf_username"
     
     while true; do
         local options=(\
@@ -260,7 +261,7 @@ install_asdf_package() {
         "if ! grep -Fxq '$item $version' $path; then
             echo '$item $version' >> $path
         fi")
-    export TARGET_USER="$user"
+    
     live_command_output "sysuser" "Configuring $item from ASDF" "${commands_to_run[@]}"
 }
 
