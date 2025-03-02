@@ -39,7 +39,7 @@ start_disk_setup || { pause_script "Error on disk setup" "start_disk failed. Exi
 
 commands_to_run=()
 
-continue_script 4 'Detect CPU vendor' 'Detecting ucode for processor brand'
+continue_script 2 'Detect CPU vendor' 'Detecting ucode for processor brand'
 CPU=$(grep -m 1 'vendor_id' /proc/cpuinfo)
 
 if [[ "${CPU}" == *"AuthenticAMD"* ]]; then
@@ -53,7 +53,7 @@ else
     exit 1
 fi
 
-continue_script 4 'Installing base system' 'Installing the base system (it may take a while).'
+continue_script 2 'Installing base system' 'Installing the base system (it may take a while).'
 
 base_packages=(
   base

@@ -85,6 +85,8 @@ full_default_route() {
     commands_to_run+=("sync")
     commands_to_run+=("udevadm settle")
     commands_to_run+=("partprobe \"${DISK}\"")
+    
+    commands_to_run+=("if [[ -z \"\$(lsblk -no NAME \"${DISK}\" | grep -v \"$(basename ${DISK})\")\" ]]; then echo 'Disk is clean'; else echo 'Disk still has partitions!' && exit 1; fi")
 
     EFI_PART="/dev/disk/by-partlabel/ESP"
     ROOT_PART="/dev/disk/by-partlabel/rootfs"
