@@ -79,11 +79,7 @@ git_menu() {
         rm -rf $ssh_key_path
     fi
 
-    commands_to_run+=("ssh-keygen -t ed25519 -C \"$gitemail\" -f \"$ssh_key_path\" -N \"$sshpass\"")
-    commands_to_run+=("chown -R $git_user:$git_user $home_path/.ssh")
-    commands_to_run+=("eval \"\$(ssh-agent -s)\"")
-    commands_to_run+=("ssh-add \"$ssh_key_path\"")
-
+    commands_to_run+=("ssh-keygen -t ed25519 -C \"$gitemail\" -f \"$ssh_key_path\" -N \"$sshpass\" && chown -R $git_user:$git_user $home_path/.ssh && eval \"\$(ssh-agent -s)\" && ssh-add \"$ssh_key_path\"")
     export TARGET_USER="$git_user"
     live_command_output "sysuser" "Creating ssh keys" "${commands_to_run[@]}"
 
