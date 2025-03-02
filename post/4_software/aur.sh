@@ -49,7 +49,7 @@ install_aur_package () {
 
 install_without_paru() {
     local url="$1"
-    local bui_user="installer"
+    local bui_user="$USER_WITH_ROOT"
     local package_name=$(basename "$url" .git)
     local build_path="/usr/local/src/aur-builds/$package_name"
 

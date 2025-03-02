@@ -171,9 +171,9 @@ live_command_output() {
     local combined_log="/tmp/${script_name}_$(date +%Y_%m_%d_%H_%M_%S).log"
     local exit_code=0
     
-    if ! id "installer" &>/dev/null; then
-        useradd -m -G wheel -s /bin/bash installer
-        echo "installer ALL=(ALL) NOPASSWD: ALL" | tee /etc/sudoers.d/installer
+    if ! id "$USER_WITH_ROOT" &>/dev/null; then
+        useradd -m -G wheel -s /bin/bash "$USER_WITH_ROOT"
+        echo "$USER_WITH_ROOT ALL=(ALL) NOPASSWD: ALL" | tee /etc/sudoers.d/"$USER_WITH_ROOT"
     fi
 
     cleanup() {
@@ -187,7 +187,7 @@ live_command_output() {
             terminal_title "Running: $cmd" >> "$combined_log"
             
             if [[ "$cmd" =~ makepkg ]]; then
-                sudo -u installer bash -c "$cmd" >> "$combined_log" 2>&1
+                sudo -u "$USER_WITH_ROOT" bash -c "$cmd" >> "$combined_log" 2>&1
 
             elif [[ "$cmd" =~ ssh-keygen || "$cmd" =~ ssh-agent || "$cmd" =~ ssh-add ]]; then
                 if [[ -n "$TARGET_USER" ]]; then
