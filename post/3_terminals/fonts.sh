@@ -85,7 +85,7 @@ fonts_menu() {
     selected_choices=()
 
     # Call the function with the test array
-    multiselect_prompt selected_choices "Choose Options" "Select multiple options from the list" options_array
+    menu_prompt selected_choices "Choose Options" "Select multiple options from the list" options_array
 
     # Check the exit status
     if [ $? -eq 0 ]; then
