@@ -265,18 +265,19 @@ install_asdf_package() {
 }
 
 install_all_asdf () {
-    configure_python
-    configure_node
-    configure_java
-    configure_rust
-    configure_make
-    configure_cmake
-    configure_ninja
-    configure_dotnet
-    configure_neovim
-    configure_chezmoi
-    configure_starship
-    configure_glow
+    local asdf_username="$1"
+    configure_python "$asdf_username"
+    configure_node "$asdf_username"
+    configure_java "$asdf_username"
+    configure_rust "$asdf_username"
+    configure_make "$asdf_username"
+    configure_cmake "$asdf_username"
+    configure_ninja "$asdf_username"
+    configure_dotnet "$asdf_username"
+    configure_neovim "$asdf_username"
+    configure_chezmoi "$asdf_username"
+    configure_starship "$asdf_username"
+    configure_glow "$asdf_username"
     continue_script 2 "Everything" "Everything setup complete!"
 }
 
