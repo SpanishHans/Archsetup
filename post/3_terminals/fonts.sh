@@ -74,18 +74,33 @@ $(printf "%s\n" "${options[@]}")"
 }
 
 fonts_menu() {
-    options_array=(
-        "1" "Option One" "off"
-        "2" "Option Two" "off"
-        "3" "Option Three" "off"
-        "4" "Option Four" "off"
+    # options_array=(
+    #     "1" "Option One" "off"
+    #     "2" "Option Two" "off"
+    #     "3" "Option Three" "off"
+    #     "4" "Option Four" "off"
+    # )
+
+    # # Declare a variable to store selected choices
+    # selected_choices=()
+    declare -A fonts=(
+        ["terminus"]="terminus-font | A clean, monospaced font optimized for terminal use in text-only environments (init 3). Perfect for coding and system monitoring."
+        ["dejavu"]="ttf-dejavu-nerd | A versatile font family with wide character support, balancing clarity and elegance for interfaces and documents."
+        ["proto"]="ttf-0xproto-nerd | A bold, futuristic font with sharp, geometric shapes, ideal for sci-fi and tech-inspired designs."
+        ["fira"]="ttf-firacode-nerd | A monospaced font with ligatures for coding, offering a clean and expressive environment for developers."
+        ["fa"]="ttf-font-awesome | A scalable icon font with thousands of customizable icons, perfect for modern UI/UX design."
     )
 
-    # Declare a variable to store selected choices
-    selected_choices=()
+    local options=()
+    for key in "${!fonts[@]}"; do
+        IFS=" | " read -r pac_name desc <<< "${fonts[$key]}"
+        options+=("$key" "$desc" "off")
+    done
+
+    declare -a font_menu_choice
 
     # Call the function with the test array
-    menu_prompt selected_choices "Choose Options" "Select multiple options from the list" options_array
+    menu_prompt selected_choices "Choose Options" "Select multiple options from the list" font_menu_choice
 
     # Check the exit status
     if [ $? -eq 0 ]; then
