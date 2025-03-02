@@ -92,11 +92,11 @@ configure_asdf() {
     case "$shell_path" in
         "/bin/bash" | "/usr/bin/bash")
             local commands_to_run=()
-            commands_to_run+=(
-                "if ! grep -Fxq 'export ASDF_DATA_DIR=/opt/asdf' /home/$user/.bash_profile; then
-                    echo 'export ASDF_DATA_DIR=/opt/asdf' >> /home/$user/.bash_profile
-                fi"
-            )
+            # commands_to_run+=(
+            #     "if ! grep -Fxq 'export ASDF_DATA_DIR=/opt/asdf' /home/$user/.bash_profile; then
+            #         echo 'export ASDF_DATA_DIR=/opt/asdf' >> /home/$user/.bash_profile
+            #     fi"
+            # )
             commands_to_run+=(
                 "if ! grep -Fxq 'export PATH="\${ASDF_DATA_DIR:-\$HOME/.asdf}/shims:\$PATH"' /home/$user/.bash_profile; then
                     echo 'export PATH="\${ASDF_DATA_DIR:-\$HOME/.asdf}/shims:\$PATH"' >> /home/$user/.bash_profile
@@ -110,24 +110,21 @@ configure_asdf() {
             ;;
         "/bin/zsh" | "/usr/bin/zsh")
             local commands_to_run=()
-            local ASDF_DATA_DIR="\$ASDF_DATA_DIR"
-            local HOME="\$HOME"
-            local PATH="\$PATH"
-            commands_to_run+=(
-                "if ! grep -Fxq 'export ASDF_DATA_DIR=/opt/asdf' /home/$user/.zshrc; then
-                    echo 'export ASDF_DATA_DIR=/opt/asdf' >> /home/$user/.zshrc
-                fi"
-            )
+            # commands_to_run+=(
+            #     "if ! grep -Fxq 'export ASDF_DATA_DIR=/opt/asdf' /home/$user/.zshrc; then
+            #         echo 'export ASDF_DATA_DIR=/opt/asdf' >> /home/$user/.zshrc
+            #     fi"
+            # )
             commands_to_run+=(
                 "if ! grep -Fxq 'export PATH="\${ASDF_DATA_DIR:-\$HOME/.asdf}/shims:\$PATH"' /home/$user/.zshrc; then
                     echo 'export PATH="\${ASDF_DATA_DIR:-\$HOME/.asdf}/shims:\$PATH"' >> /home/$user/.zshrc
                 fi"
             )
             commands_to_run+=(
-                "mkdir -p "/opt/asdf/completions""
+                "mkdir -p "/home/$user/.asdf/completions""
             )
             commands_to_run+=(
-                "asdf completion zsh > "/opt/asdf/completions/_asdf""
+                "asdf completion zsh > "/home/$user/.asdf/completions/_asdf""
             )
             commands_to_run+=(
                 "if ! grep -Fxq 'fpath=(\${ASDF_DATA_DIR:-\$HOME/.asdf}/completions \$fpath)' /home/$user/.zshrc; then
@@ -138,11 +135,11 @@ configure_asdf() {
             ;;
         "/bin/fish" | "/usr/bin/fish")
             local commands_to_run=()
-            commands_to_run+=(
-                "if ! grep -Fxq 'set -gx --prepend ASDF_DATA_DIR "/opt/asdf"' /home/$user/.config/fish/config.fish; then
-                    echo 'set -gx --prepend ASDF_DATA_DIR "/opt/asdf"' >> /home/$user/.config/fish/config.fish
-                fi"
-            )
+            # commands_to_run+=(
+            #     "if ! grep -Fxq 'set -gx --prepend ASDF_DATA_DIR "/opt/asdf"' /home/$user/.config/fish/config.fish; then
+            #         echo 'set -gx --prepend ASDF_DATA_DIR "/opt/asdf"' >> /home/$user/.config/fish/config.fish
+            #     fi"
+            # )
             commands_to_run+=(
                 "if ! grep -Fxq 'if test -z \$ASDF_DATA_DIR' /home/$user/.config/fish/config.fish; then
                     echo 'if test -z \$ASDF_DATA_DIR' >> /home/$user/.config/fish/config.fish
@@ -163,8 +160,8 @@ configure_asdf() {
         "/bin/elvish" | "/usr/bin/elvish")
             local commands_to_run=()
             commands_to_run+=(
-                "if ! grep -Fxq 'var asdf_data_dir = \"/opt/asdf\"' /home/$user/.config/elvish/rc.elv; then
-                    echo 'var asdf_data_dir = ~'/.asdf'' >> /home/$user/.config/elvish/rc.elv
+                "if ! grep -Fxq 'var asdf_data_dir = ~'\''/.asdf' /home/$user/.config/elvish/rc.elv; then
+                    echo 'var asdf_data_dir = ~'\''/.asdf' >> /home/$user/.config/elvish/rc.elv
                     echo 'if (and (has-env ASDF_DATA_DIR) (!=s \$E:ASDF_DATA_DIR '')) {' >> /home/$user/.config/elvish/rc.elv
                     echo '  set asdf_data_dir = \$E:ASDF_DATA_DIR' >> /home/$user/.config/elvish/rc.elv
                     echo '}' >> /home/$user/.config/elvish/rc.elv
@@ -181,12 +178,12 @@ configure_asdf() {
             )
             ;;
         "/bin/nu" | "/usr/bin/nu")
-            local commands_to_run=()
-            commands_to_run+=(
-                "if ! grep -Fxq '\$env.ASDF_DATA_DIR = \"/opt/asdf\"' /home/$user/.config/nushell/config.nu; then
-                    echo '\$env.ASDF_DATA_DIR = \"/opt/asdf\"' >> /home/$user/.config/nushell/config.nu
-                fi"
-            )
+            # local commands_to_run=()
+            # commands_to_run+=(
+            #     "if ! grep -Fxq '\$env.ASDF_DATA_DIR = \"/opt/asdf\"' /home/$user/.config/nushell/config.nu; then
+            #         echo '\$env.ASDF_DATA_DIR = \"/opt/asdf\"' >> /home/$user/.config/nushell/config.nu
+            #     fi"
+            # )
             commands_to_run+=(
                 "if ! grep -Fxq 'let shims_dir = (' /home/$user/.config/nushell/config.nu; then
                     echo 'let shims_dir = (' >> /home/$user/.config/nushell/config.nu
