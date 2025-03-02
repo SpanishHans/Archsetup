@@ -71,7 +71,7 @@ git_menu() {
     ui = auto
 ")
     commands_to_run+=("chown $git_user:$git_user $gitconfig_path")
-    live_command_output "" "Installing git" "${commands_to_run[@]}"
+    live_command_output "" "" "Installing git" "${commands_to_run[@]}"
 
     local commands_to_run=()
     ssh_key_path="$home_path/.ssh/id_ed25519"
@@ -80,8 +80,8 @@ git_menu() {
     fi
 
     commands_to_run+=("ssh-keygen -t ed25519 -C \"$gitemail\" -f \"$ssh_key_path\" -N \"$sshpass\" && chown -R $git_user:$git_user $home_path/.ssh && eval \"\$(ssh-agent -s)\" && ssh-add \"$ssh_key_path\"")
-    export TARGET_USER="$git_user"
-    live_command_output "sysuser" "Creating ssh keys" "${commands_to_run[@]}"
+
+    live_command_output "sysuser" "$git_user" "Creating ssh keys" "${commands_to_run[@]}"
 
     pause_script "" "Done creating SSH key.\n\nPlease add the following text to your GitHub account to gain push access and access to private repos:\n\n$(cat \"${ssh_key_path}.pub\")"
     continue_script 2 "Git" "Git Setup complete!"

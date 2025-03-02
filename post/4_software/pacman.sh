@@ -33,7 +33,7 @@ install_pacman_packages() {
         local coms=()
         coms+=("pacman -S --noconfirm ${packages_to_install[*]}")
 
-        live_command_output "" "Installing packages" "${coms[@]}"
+        live_command_output "" "" "Installing packages" "${coms[@]}"
     else
         continue_script 2 "Packages exist" "All packages are already installed and up-to-date."
     fi

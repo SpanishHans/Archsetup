@@ -165,8 +165,9 @@ scroll_window_output() {
 
 live_command_output() {
     local type="$1"
-    local context="$2"
-    shift 2
+    local user="$2"
+    local context="$3"
+    shift 3
     local commands=("$@")
     local script_name=$(basename "$(realpath "$0")")
     local combined_log="/tmp/${script_name}_$(date +%Y_%m_%d_%H_%M_%S).log"
@@ -192,10 +193,10 @@ live_command_output() {
                 sudo -u "$USER_WITH_ROOT" bash -c "$cmd" >> "$combined_log" 2>&1
 
             elif [[ "$type" == sysuser ]]; then
-                if [[ -n "$TARGET_USER" ]]; then
-                    sudo -u "$TARGET_USER" bash -c "$cmd" >> "$combined_log" 2>&1
+                if [[ -n "$user" ]]; then
+                    sudo -u "$user" bash -c "$cmd" >> "$combined_log" 2>&1
                 else
-                    pause_script "Error: TARGET_USER is not set" "Please set TARGET_USER before running SSH commands."
+                    pause_script "Error: user is not set" "Please set user before running SSH commands."
                     return 1
                 fi
 

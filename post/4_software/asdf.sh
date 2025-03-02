@@ -28,7 +28,6 @@ asdf_menu () {
         "User to set up ASDF for" \
         "Please enter the user who shall get ASDF: "
     configure_asdf "$asdf_username"
-    export TARGET_USER="$asdf_username"
     
     while true; do
         local options=(\
@@ -76,7 +75,7 @@ install_asdf() {
     if [[ ! -d "/opt/asdf" ]]; then
         commands_to_run+=("mkdir -p /opt/asdf && chown -R root:users /opt/asdf && chmod -R g+rwX /opt/asdf && chmod -R g+s /opt/asdf")
     fi
-    live_command_output "" "Configuring ASDF /opt/asdf directory" "${commands_to_run[@]}"
+    live_command_output "" "" "Configuring ASDF /opt/asdf directory" "${commands_to_run[@]}"
 }
 
 configure_asdf() {
@@ -87,7 +86,7 @@ configure_asdf() {
     if [[ ! -f "/home/$user/.tool-versions" ]]; then
         commands_to_run+=("touch /home/$user/.tool-versions && chown $user:$user /home/$user/.tool-versions")
     fi
-    live_command_output "" "Configuring ASDF .tool-versions for $user" "${commands_to_run[@]}"
+    live_command_output "" "" "Configuring ASDF .tool-versions for $user" "${commands_to_run[@]}"
     
     local commands_to_run=()
     case "$shell_path" in
@@ -222,7 +221,7 @@ configure_asdf() {
             ;;
     esac
 
-    live_command_output "" "Configuring ASDF" "${commands_to_run[@]}"
+    live_command_output "" "" "Configuring ASDF" "${commands_to_run[@]}"
     continue_script 2 "ASDF Config" "ASDF configuration complete!"
 }
 
@@ -262,7 +261,7 @@ install_asdf_package() {
             echo '$item $version' >> $path
         fi")
     
-    live_command_output "sysuser" "Configuring $item from ASDF" "${commands_to_run[@]}"
+    live_command_output "sysuser" "$user" "Configuring $item from ASDF" "${commands_to_run[@]}"
 }
 
 install_all_asdf () {
