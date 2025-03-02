@@ -370,7 +370,7 @@ multiselect_prompt() {
         --backtitle "$title" \
         --title "$title" \
         --checklist "$description" \
-        20 60 15 "${options[@]}" 2>&1 >/dev/tty)
+        $full_height $full_width 15 "${options[@]}" 2>&1 >/dev/tty)
 
     exit_code=$?
     
