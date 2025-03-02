@@ -37,14 +37,15 @@ fonts_menu() {
     for key in "${!fonts[@]}"; do
         IFS=" | " read -r pac_name desc <<< "${fonts[$key]}"
         local options+=("$key" "$desc" "off")
+        pause_script "" "$options"
     done
-    
+
     multiselect_prompt\
         font_menu_choice\
         options\
         "Starting font picker"\
         "The following are fonts considered nerd beucase they are for the tty or for the terminal.
-        
+    
 Please choose what fonts you require."
 
     declare -A filtered_fonts
