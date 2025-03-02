@@ -44,8 +44,6 @@ install_aur_package () {
 
     if ! check_pacman_package "$package"; then
         install_without_paru "$url"
-    else
-        continue_script 2 "$package installed" "$package is already installed."
     fi
 }
 

@@ -81,6 +81,8 @@ base_packages=(
   usbutils 
   debugedit 
   fakeroot
+  pkg-config
+  unzip
 )
 
 all_packages=("${base_packages[@]}" "${microcode[@]}")
