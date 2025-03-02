@@ -26,18 +26,18 @@ flatpak_menu() {
 
     while true; do
         local options=(\
-            "Zen Browser                   (A firefox based, pretty and FAST browser.)"\
-            "Zed Code Editor               (A fast code editor.)"\
-            "Visual Studio Code            (classic code editor)"\
-            "Spotify                       (Spotify client)"\
-            "Discord                       (Discord client)"\
-            "Gimp                          (Photoshop)"\
-            "Inkscape                      (Illustrator)"\
-            "Blender                       (3D modelling)"\
-            "Rnote                         (Whiteboard)"\
-            "Kden Live                     (Video editor)"\
-            "Steam                         (Game manager)"\
-            "All apps                      (Install all the above)"\
+            "Zen Browser                   (A firefox based, pretty and FAST browser.)" \
+            "Zed Code Editor               (A fast code editor.)" \
+            "Visual Studio Code            (classic code editor)" \
+            "Spotify                       (Spotify client)" \
+            "Discord                       (Discord client)" \
+            "Gimp                          (Photoshop)"  \
+            "Inkscape                      (Illustrator)" \
+            "Blender                       (3D modelling)" \
+            "Rnote                         (Whiteboard)" \
+            "Kden Live                     (Video editor)" \
+            "Steam                         (Game manager)" \
+            "All apps                      (Install all the above)" \
             "Back"
         )
         menu_prompt flt_choice "$title" "$description" "${options[@]}"
@@ -52,7 +52,8 @@ flatpak_menu() {
             7)  install_flatpak_blender;;
             8)  install_flatpak_rnote;;
             9)  install_flatpak_kden_live;;
-            10)  install_all_flatpaks;;
+            10)  install_flatpak_steam;;
+            11)  install_all_flatpaks;;
             b)  break;;
             *)  continue_script 2 "Not a valid choice!" "Invalid choice, please try again.";;
         esac
