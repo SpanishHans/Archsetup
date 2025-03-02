@@ -23,7 +23,7 @@ source ./post/4_software/pacman.sh
 ################################################################################
 
 fonts_menu() {
-    declare -A 
+    declare -A fonts=(
         ["terminus"]="terminus-font | A clean, monospaced font optimized for terminal use in text-only environments (init 3). Perfect for coding and system monitoring."
         ["dejavu"]="ttf-dejavu-nerd | A versatile font family with wide character support, balancing clarity and elegance for interfaces and documents."
         ["proto"]="ttf-0xproto-nerd | A bold, futuristic font with sharp, geometric shapes, ideal for sci-fi and tech-inspired designs."
@@ -37,7 +37,7 @@ fonts_menu() {
         options+=("$key" "$desc" "off")
     done
 
-    declare -a font_menu_choice  # Ensure this is an indexed array
+    declare -a font_menu_choice
     multiselect_prompt \
         font_menu_choice \
         "Starting font picker" \
