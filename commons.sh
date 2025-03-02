@@ -26,7 +26,7 @@ check_dialog(){
 check_internet() {
     TEMP_FILE=$(mktemp)  # Create a temporary file to store output
     
-    dialog --infobox "Testing internet connection..." 5 50
+    continue_script 2 "Testing Internet!" "Testing internet connection..."
     
     ping -c 3 -q google.com > "$TEMP_FILE" 2>&1
     if [ $? -eq 0 ]; then
