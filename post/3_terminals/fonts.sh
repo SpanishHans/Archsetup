@@ -51,21 +51,23 @@ fonts_menu() {
 }
 
 install_fonts() {
-    local packages=("$@")  # Capture package names as an array
+    local -a given_array=("$@")  # Correctly handle passed array elements
+    local commands_to_run=()
+    local options=()
 
-    if [[ ${#packages[@]} -eq 0 ]]; then
-        echo "No fonts selected. Exiting."
-        return
-    fi
+    for key in "${!given_array[@]}"; do
+        IFS='|' read -r pac_name desc <<< "${given_array[$key]}"
+        pac_name=$(echo "$pac_name" | xargs)
+        desc=$(echo "$desc" | xargs)
+        
+        install_pacman_packages "$pac_name"
+        options+=("$pac_name")
+    done
 
-    # Install selected fonts
-    install_pacman_packages "${packages[@]}"
-
-    # Show a completion message
     continue_script 2 "Installed fonts" "Finished installing all selected fonts.
 
 Installed:    
-$(printf "%s\n" "${packages[@]}")"
+$(printf "%s\n" "${options[@]}")"
 }
 
 
