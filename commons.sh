@@ -164,8 +164,9 @@ scroll_window_output() {
 }
 
 live_command_output() {
-    local context="$1"
-    shift 1
+    local type="$1"
+    local context="$2"
+    shift 2
     local commands=("$@")
     local script_name=$(basename "$(realpath "$0")")
     local combined_log="/tmp/${script_name}_$(date +%Y_%m_%d_%H_%M_%S).log"
@@ -182,14 +183,15 @@ live_command_output() {
     trap cleanup EXIT
 
     execute_command() {
-        local cmd="$1"
+        local type="$1"
+        local cmd="$2"
         {
             terminal_title "Running: $cmd" >> "$combined_log"
             
-            if [[ "$cmd" =~ makepkg ]]; then
+            if [[ "$type" == makepkg ]]; then
                 sudo -u "$USER_WITH_ROOT" bash -c "$cmd" >> "$combined_log" 2>&1
 
-            elif [[ "$cmd" =~ ssh-keygen || "$cmd" =~ ssh-agent || "$cmd" =~ ssh-add ]]; then
+            elif [[ "$type" == sysuser ]]; then
                 if [[ -n "$TARGET_USER" ]]; then
                     sudo -u "$TARGET_USER" bash -c "$cmd" >> "$combined_log" 2>&1
                 else
@@ -210,7 +212,7 @@ live_command_output() {
 
     {
         for cmd in "${commands[@]}"; do
-            execute_command "$cmd" || { 
+            execute_command "$type" "$cmd" || { 
                 scroll_window_output return_value "$(terminal_title "$script_name Error, the logs are:")" "$combined_log"
                 if [ $return_value -eq 3 ]; then
                     continue_script 2 "You decided to exit" "Script exited execution. Bye."

@@ -71,7 +71,7 @@ git_menu() {
     ui = auto
 ")
     commands_to_run+=("chown $git_user:$git_user $gitconfig_path")
-    live_command_output  "Installing git" "${commands_to_run[@]}"
+    live_command_output "" "Installing git" "${commands_to_run[@]}"
 
     local commands_to_run=()
     ssh_key_path="$home_path/.ssh/id_ed25519"
@@ -81,7 +81,8 @@ git_menu() {
 
     commands_to_run+=("ssh-keygen -t ed25519 -C \"$gitemail\" -f \"$ssh_key_path\" -N \"$sshpass\"")
     commands_to_run+=("chown -R $git_user:$git_user $home_path/.ssh")
-    live_command_output "Creating ssh keys" "${commands_to_run[@]}"
+    export TARGET_USER="$git_user"
+    live_command_output "sysuser" "Creating ssh keys" "${commands_to_run[@]}"
 
 
     pause_script "" "Done creating SSH key.

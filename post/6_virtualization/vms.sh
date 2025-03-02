@@ -70,7 +70,7 @@ hyper_type_1() {
         esac
     done
 
-    live_command_output  "Installing selected QEMU hypervisor" "${commands_to_run[@]}"
+    live_command_output "" "Installing selected QEMU hypervisor" "${commands_to_run[@]}"
     continue_script 2 "Qemu" "Qemu Setup complete!"
 }
 

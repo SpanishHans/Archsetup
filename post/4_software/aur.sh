@@ -56,7 +56,7 @@ install_without_paru() {
     if [[ ! -d "$build_path" ]]; then
         local commands_to_run=()
         commands_to_run+=("mkdir -p $build_path && git clone $url $build_path && chown -R $bui_user:$bui_user $build_path")
-        live_command_output  "Cloning $package_name" "${commands_to_run[@]}"
+        live_command_output "" "Cloning $package_name" "${commands_to_run[@]}"
     fi
 
     if ! ls $build_path/*.pkg.tar.zst &>/dev/null; then
@@ -65,7 +65,7 @@ install_without_paru() {
             continue_script 2 "You decided to cancel install" "You did not agree with the PKGBUILD commands and setup. Exiting."
             exit 1
         fi
-        live_command_output "Building and installing $package_name" "cd $build_path && makepkg -sric --noconfirm"
+        live_command_output "makepkg" "Building and installing $package_name" "cd $build_path && makepkg -sric --noconfirm"
     fi
 
     continue_script 2 "$package_name installed" "$package_name install complete!"
