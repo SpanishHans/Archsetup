@@ -15,7 +15,6 @@
 # the License.
 
 source ./commons.sh
-source ./post/0_users/users.sh
 source ./post/4_software/pacman_installer.sh
 
 flatpak_menu() {
