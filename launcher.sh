@@ -40,7 +40,10 @@ fi
 
 cp -f .dialogrc /root/.dialogrc
 
-# check_internet
+check_internet
+update_mirrors
+refresh_pacman_db
+install_fs_tools
 
 launcher_menu () 
 {

@@ -44,7 +44,7 @@ plymouth_menu () {
             *)  continue_script 2 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
     done
-    cp -f plymouth-wait-for-animation.service /etc/systemd/system
+    cp -f ./post/7_plymouth/plymouth-wait-for-animation.service /etc/systemd/system
     systemctl enable plymouth-wait-for-animation.service
 }
 

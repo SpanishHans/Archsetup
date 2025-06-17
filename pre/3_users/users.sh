@@ -22,27 +22,15 @@ root_password_prompt () {
     eval "$pass='$root_password'"
 }
 
-sysadmin_password_prompt () {
-    local pass="$1"
-    ensure_same_pass "sysadmin" sysadmin_password
-    eval "$pass='$sysadmin_password'"
-}
-
 user_setup () {
     clear
     continue_script 2 "Entered root user setup!" "Please provide a password for the root user."
     root_password_prompt root_password
 
-    continue_script 2 "Entered sysadmin user setup!" "Please provide a password for the sysadmin user."
-    sysadmin_password_prompt sysadmin_password
-
     masked_root_password="${root_password:0:1}*******${root_password: -1}"
-    masked_sysadmin_password="${sysadmin_password:0:1}*******${sysadmin_password: -1}"
     export root_password
-    export masked_sysadmin_password
 
     continue_script 4 'Admin users password configuration' "Root username:    root
 Admin username:    sysadmin
-Root     Password:    $masked_root_password
-Sysadmin Password:    $masked_sysadmin_password"
+Root     Password:    $masked_root_password"
 }

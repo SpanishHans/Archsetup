@@ -58,33 +58,32 @@ continue_script 2 'Installing base system' 'Installing the base system (it may t
 base_packages=(
   base
   base-devel
-  linux 
+  linux
   linux-firmware
-  btrfs-progs 
-  grub 
+  btrfs-progs
+  grub
   efibootmgr
-  sudo 
-  polkit 
+  sudo
+  polkit
   networkmanager
-  firewalld 
-  openssh 
+  openssh
   nano
-  tree 
-  less 
+  tree
+  less
   wayland
-  pipewire 
+  pipewire
   wireplumber
-  pipewire-alsa 
+  pipewire-alsa
   pipewire-pulse
-  pipewire-jack 
-  git 
+  pipewire-jack
+  git
   dialog
-  usbutils 
-  debugedit 
+  usbutils
+  debugedit
   fakeroot
   pkg-config
   unzip
-  which 
+  which
 )
 
 all_packages=("${base_packages[@]}" "${microcode[@]}")
@@ -129,10 +128,7 @@ EOF")
 
 commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
     echo '#### STARTING 3. #### ->> root_password_setup'
-    useradd -c \"Sysadmin\" -m sysadmin || { echo 'useradd failed'; exit 1; }
-    usermod -aG wheel sysadmin
     echo \"root:\$root_password\" | chpasswd || { echo 'root password set failed'; exit 1; }
-    echo \"sysadmin:\$sysadmin_password\" | chpasswd || { echo 'sysadmin password set failed'; exit 1; }
 EOF")
 
 commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF

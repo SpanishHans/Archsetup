@@ -20,7 +20,7 @@ source ./pre/0_disk/ext4_config.sh
 source ./pre/0_disk/btrfs_config.sh
 
 choose_custom_or_default_layout() {
-    local title="Entered disk setup!" 
+    local title="Entered disk setup!"
     local description="The following section will help you configure anything disk related: Formatting, partitioning and mounting. Keep in mind those operations are DESTRUCTIVE and will result in data loss for the disks or partitions involved.
 
 BACKUP DATA BEFORE PROCEEDING, you have been warned!
@@ -57,6 +57,44 @@ With this in mind, let's pick between sane defaults or full custom mode."
 }
 
 full_default_route() {
+    nuke_disk
+    autopartition_disk
+    enforce_btrfs
+    run_btrfs_setup
+}
+
+custom_default_route() {
+    nuke_disk
+    autopartition_disk
+    edit_disk
+    set_filesystem_for_partitions
+    select_efi_partition
+    select_root_partition
+    run_btrfs_setup
+}
+
+full_custom_route() {
+    nuke_disk
+    autopartition_disk
+    edit_disk
+    set_filesystem_for_partitions
+    select_efi_partition
+    select_root_partition
+    case "$ROOT_FORM" in
+        btrfs)
+            run_btrfs_setup "$ROOT_PART"
+            ;;
+        ext4)
+            run_ext4_setup "$ROOT_PART"
+            ;;
+        *)
+            continue_script 2 "Unsupported Filesystem" "The root filesystem $ROOT_FORM is not currently supported by this installer."
+            exit 1
+            ;;
+    esac
+}
+
+nuke_disk() {
     local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
     local disks+=("Continue")
     local disks+=("Exit")
@@ -77,16 +115,38 @@ full_default_route() {
                 ;;
         esac
     done
+    commands_to_run=()
 
+    # 1. Wipe all partition info
+    commands_to_run+=("wipefs --all --force \"${DISK}\"")
+
+    # 2. Overwrite beginning of disk
+    commands_to_run+=("dd if=/dev/zero of=\"${DISK}\" bs=1M count=10 status=progress")
+
+    # 3. Reload partition info
+    commands_to_run+=("partprobe \"${DISK}\"")
+    commands_to_run+=("udevadm settle")
+
+    # 4. Zap and create fresh GPT
     commands_to_run+=("sgdisk --zap-all \"${DISK}\"")
     commands_to_run+=("sgdisk -g \"${DISK}\"")
+
+    # 5. Create partitions
     commands_to_run+=("sgdisk -n 1:0:+1024M -t 1:ef00 -c 1:'ESP' \"${DISK}\"")
     commands_to_run+=("sgdisk -n 2:0:0 -c 2:'rootfs' \"${DISK}\"")
+
+    # 6. Sync and reload
     commands_to_run+=("sync")
     commands_to_run+=("udevadm settle")
     commands_to_run+=("partprobe \"${DISK}\"")
-    
-    commands_to_run+=("if [[ -z \"\$(lsblk -no NAME \"${DISK}\" | grep -v \"$(basename ${DISK})\")\" ]]; then echo 'Disk is clean'; else echo 'Disk still has partitions!' && exit 1; fi")
+
+    # 7. Check if partitions created
+    commands_to_run+=("[[ \$(lsblk -no NAME \"${DISK}\" | grep -c '^$(basename ${DISK})[0-9]\+') -ge 2 ]] && echo 'Partitions created successfully' || { echo 'Partitioning failed'; exit 1; }")
+    live_command_output "" "" "Nuking $DISK" "${commands_to_run[@]}"
+}
+
+autopartition_disk() {
+    commands_to_run=()
 
     EFI_PART="/dev/disk/by-partlabel/ESP"
     ROOT_PART="/dev/disk/by-partlabel/rootfs"
@@ -103,34 +163,19 @@ full_default_route() {
 
     commands_to_run+=("sync")
     commands_to_run+=("udevadm settle")
-    commands_to_run+=("partprobe \"${DISK}\"")    
+    commands_to_run+=("partprobe \"${DISK}\"")
 
-    live_command_output "" "" "Formatting $DISK" "${commands_to_run[@]}"
-    run_btrfs_setup
+    live_command_output "" "" "Partitioning $DISK" "${commands_to_run[@]}"
 }
 
-custom_default_route() {
-    format_and_partition_disks
-    set_filesystem_for_partitions
-    select_efi_partition
-    select_root_partition
-    run_btrfs_setup
-}
-
-full_custom_route() {
-    format_and_partition_disks
-    set_filesystem_for_partitions
-    continue_script 2 "Full custom not ready!" "The rest of the full custom logic for mounting whatever you want is not ready yet, sorry."
-}
-
-format_and_partition_disks() {
+edit_disk() {
     local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
     local disks+=("Continue")
     local disks+=("Exit")
     local title="Starting disk partitioner"
-    local description="The following menu shall help you format and partition disks in order to make space for installing arch. 
-    
-Simply select a disk, format and come back here. When done, select option 'c' to continue script execution."
+    local description="The following menu shall help you edit a disks partitions in order to make space for installing arch.
+
+Simply select a disk, edit as neccesary and come back. When done, select option 'c' to continue script execution."
 
     if [ ${#disks[@]} -eq 0 ]; then
             continue_script 2 "No disks found" "No valid storage devices found. Exiting."
@@ -156,8 +201,8 @@ set_filesystem_for_partitions() {
     local partitions+=("Continue")
     local partitions+=("Exit")
     local title="Starting partition formatter"
-    local description="The following menu shall help you assing a filesystem to a selected partition. 
-    
+    local description="The following menu shall help you assing a filesystem to a selected partition.
+
 Simply select a partition, format it on the menu that opens up and then come back here. When done, select option 1 to continue script execution."
 
     if [ ${#partitions[@]} -eq 0 ]; then
@@ -179,30 +224,35 @@ Simply select a partition, format it on the menu that opens up and then come bac
 
 format_a_partition() {
     local partition="$1"
-    
+
     local title="Pick a filesystem for $partition"
-    local description="You are now setting a filesystem for partition $partition. 
-    
+    local description="You are now setting a filesystem for partition $partition.
+
 Please select a filesystem for it from the following:"
-    local options=(\
-        "Format as EXT4" \
-        "Format as BTRFS" \
+    local options=(
         "Format as EFI" \
+        "Format as BTRFS" \
+        "Format as EXT4" \
+        "Format as NTFS" \
+        "Format as XFS" \
         "Back" \
         "Exit"
     )
+
     menu_prompt partition_menu "$title" "$description" "${options[@]}"
     case $partition_menu in
-        0)  format_as_ext4 "$partition";;
-        1)  format_as_btrfs "$partition";;
-        2)  format_for_efi "$partition";;
+        0)  enforce_efi "$partition";;
+        1)  enforce_btrfs "$partition";;
+        2)  enforce_ext4 "$partition";;
+        3)  enforce_ntfs "$partition";;
+        4)  enforce_xfs "$partition";;
         b)  return;;
         e)  exit;;
         *)  continue_script 2 "Option not valid" "That is not an option, retry.";;
     esac
 }
 
-format_for_efi() {
+format_as_efi() {
     local partition="$1"
     mkfs.fat -F 32 "${partition}"
 }
@@ -215,6 +265,83 @@ format_as_ext4() {
 format_as_btrfs() {
     local partition="$1"
     mkfs.btrfs -f "${partition}"
+}
+
+format_as_ntfs() {
+    local partition="$1"
+    mkfs.ntfs -f "${partition}"
+}
+
+format_as_xfs() {
+    local partition="$1"
+    mkfs.xfs -f "${partition}"
+}
+
+enforce_efi() {
+    format_as_efi "$EFI_PART"
+    EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
+    if [[ "$EFI_FORM" != "vfat" ]]; then
+        continue_script 2 "Not EFI" "Error: The selected partition ($EFI_PART) is not formatted as EFI.
+Please go back and format the partition as EFI Partition."
+        export EFI_PART EFI_FORM
+        exit
+    else
+        continue_script 2 "Formatted as EFI" "The partition ($EFI_PART) is correctly formatted as EFI."
+    fi
+}
+
+enforce_btrfs() {
+    format_as_btrfs "$ROOT_PART"
+    ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
+    if [[ "$ROOT_FORM" != "btrfs" ]]; then
+        continue_script 2 "Not BTRFS" "Error: The selected partition ($ROOT_PART) is not formatted as BTRFS.
+Please go back and format the partition as BTRFS Partition."
+        export ROOT_PART ROOT_FORM
+        exit
+    else
+        continue_script 2 "Is BTRFS" "The partition ($ROOT_PART) is correctly formatted as BTRFS."
+    fi
+}
+
+enforce_ext4() {
+    format_as_ext4 "$ROOT_PART"
+    ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
+    if [[ "$ROOT_FORM" != "ext4" ]]; then
+        continue_script 2 "Not EXT4" "Error: The selected partition ($ROOT_PART) is not formatted as EXT4.
+Please go back and format the partition as EXT4 Partition."
+        export ROOT_PART ROOT_FORM
+        exit
+    else
+        continue_script 2 "Is EXT4" "The partition ($ROOT_PART) is correctly formatted as EXT4."
+    fi
+}
+
+enforce_ntfs() {
+    format_as_ntfs "$ROOT_PART"
+    ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
+
+    if [[ "$ROOT_FORM" != "ntfs" ]]; then
+        continue_script 2 "Not NTFS" "Error: The selected partition ($ROOT_PART) is not formatted as NTFS.
+Please go back and format the partition as NTFS Partition."
+        export ROOT_PART ROOT_FORM
+        exit
+    else
+        continue_script 2 "Is NTFS" "The partition ($ROOT_PART) is correctly formatted as NTFS."
+    fi
+}
+
+enforce_xfs() {
+    format_as_xfs "$ROOT_PART"
+    ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
+
+    if [[ "$ROOT_FORM" != "xfs" ]]; then
+        continue_script 2 "Not XFS" "Error: The selected partition ($ROOT_PART) is not formatted as XFS.
+Please go back and format the partition as XFS Partition."
+        export ROOT_PART ROOT_FORM
+        exit
+    else
+        continue_script 2 "Is XFS" "The partition ($ROOT_PART) is correctly formatted as XFS."
+    fi
 }
 
 select_efi_partition() {
@@ -231,7 +358,7 @@ select_efi_partition() {
     local max_label_len=0
     local max_size_len=0
     local max_fstype_len=0
-    
+
     for i in "${!partitions[@]}"; do
         local partition="${partitions[$i]}"
         local label=$(lsblk -no LABEL "$partition")
@@ -256,17 +383,7 @@ select_efi_partition() {
     menu_prompt root_menu "$title" "$description" "${menu_items[@]}"
     EFI_PART="${partitions[$((root_menu))]}"
     EFI_FORM=$(lsblk -no FSTYPE "$EFI_PART")
-    format_for_efi "$EFI_PART"
-
-    if [[ "$EFI_FORM" != "vfat" ]]; then
-        continue_script 2 "Not EFI" "Error: The selected partition ($EFI_PART) is not formatted as EFI.
-Please go back and format the partition as EFI Partition."
-        export EFI_PART EFI_FORM
-        exit
-    else
-        continue_script 2 "Formatted as EFI" "The partition ($EFI_PART) is correctly formatted as EFI."
-    fi
-    
+    export EFI_PART EFI_FORM
 }
 
 select_root_partition() {
@@ -283,7 +400,7 @@ select_root_partition() {
     local max_label_len=0
     local max_size_len=0
     local max_fstype_len=0
-    
+
     for i in "${!partitions[@]}"; do
         local partition="${partitions[$i]}"
         local label=$(lsblk -no LABEL "$partition")
@@ -308,15 +425,7 @@ select_root_partition() {
     menu_prompt root_menu "$title" "$description" "${menu_items[@]}"
     ROOT_PART="${partitions[$((root_menu))]}"
     ROOT_FORM=$(lsblk -no FSTYPE "$ROOT_PART")
-    format_as_btrfs "$ROOT_PART"
-    if [[ "$ROOT_FORM" != "btrfs" ]]; then
-        continue_script 2 "Not BTRFS" "Error: The selected partition ($ROOT_PART) is not formatted as BTRFS.
-Please go back and format the partition as BTRFS Partition."
-        export ROOT_PART ROOT_FORM
-        exit
-    else
-        continue_script 2 "Is BTRFS" "The partition ($ROOT_PART) is correctly formatted as BTRFS."
-    fi
+    export ROOT_PART ROOT_FORM
 }
 
 start_disk_setup() {
