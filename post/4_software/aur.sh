@@ -16,7 +16,7 @@
 
 source ./commons.sh
 source ./post/0_users/users.sh
-source ./post/4_software/pacman.sh
+source ./post/4_software/pacman_installer.sh
 
 aur_menu() {
     local title="Installing extra software from the AUR"

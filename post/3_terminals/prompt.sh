@@ -16,8 +16,8 @@
 
 source ./commons.sh
 source ./post/0_users/users.sh
-source ./post/4_software/asdf.sh
 source ./post/4_software/pacman.sh
+source ./post/4_software/pacman_installer.sh
 
 ################################################################################
 # Prompts
@@ -63,9 +63,7 @@ starship_config (){
     local starship_config_path="/home/$term_username/.config"
     local shell_path="$(getent passwd "$term_username" | cut -d: -f7)"
 
-    install_asdf
-    configure_asdf "$term_username"
-    configure_starship "$term_username"
+    install_pacman_starship
 
     local commands_to_run=()
     if [[ -f "$starship_config_path/starship.toml" ]]; then
@@ -195,7 +193,7 @@ oh_my_posh_config () {
     local posh_config_path="/home/$term_username/bin"
     local shell_path="$(getent passwd "$term_username" | cut -d: -f7)"
 
-    commands_to_run=("curl -sS https://starship.rs/install.sh | bash")
+    commands_to_run=("curl -s https://ohmyposh.dev/install.sh | bash -s")
     live_command_output "" "" "Configuring Oh My Posh for $term_username." "${commands_to_run[@]}"
 
     local commands_to_run=()

@@ -15,7 +15,7 @@
 # the License.
 
 source ./commons.sh
-source ./post/4_software/pacman.sh
+source ./post/4_software/pacman_installer.sh
 
 ################################################################################
 # Terminals

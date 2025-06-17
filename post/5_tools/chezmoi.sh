@@ -16,7 +16,7 @@
 
 source ./commons.sh
 source ./post/0_users/users.sh
-source ./post/4_software/asdf.sh
+source ./post/4_software/pacman.sh
 
 chezmoi_menu() {
     pick_user \
@@ -24,9 +24,7 @@ chezmoi_menu() {
         "Chezmoi User to setup" \
         "Please enter the user whose chezmoi shall be configured: "
 
-    install_asdf
-    configure_asdf "$chezmoi_username"
-    configure_chezmoi "$chezmoi_username"
+    install_pacman_chezmoi
     local title="Chezmoi Installer"
     local description="This script provides an easy way to install Chezmoi for your system. Select a mode to install Chezmoi with."
 

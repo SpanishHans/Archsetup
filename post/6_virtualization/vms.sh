@@ -16,7 +16,7 @@
 
 source ./commons.sh
 source ./post/0_users/users.sh
-source ./post/4_software/pacman.sh
+source ./post/4_software/pacman_installer.sh
 source ./post/4_software/aur.sh
 
 check_kvm() {

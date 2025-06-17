@@ -16,7 +16,7 @@
 
 source ./commons.sh
 source ./post/0_users/users.sh
-source ./post/4_software/pacman.sh
+source ./post/4_software/pacman_installer.sh
 
 desktops_menu () {
     local title="Desktop UI Configuration"
@@ -159,7 +159,7 @@ install_sway() {
 }
 
 install_hyprland() {
-    install_pacman_packages hyprland hypridle xdg-desktop-portal-hyprland brightnessctl kitty waybar rofi-wayland rofi-calc swaync
+    install_pacman_packages hyprland hypridle xdg-desktop-portal-hyprland brightnessctl swww kitty rofi-wayland swaync
 }
 
 install_enlightenment() {

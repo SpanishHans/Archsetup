@@ -40,8 +40,6 @@ asdf_menu () {
             'Ninja              (Installs Ninja, a fast build system for compiling projects)' \
             '.NET               (Installs .NET SDK for cross-platform application development)' \
             'Neovim             (Installs Neovim, a modern, extensible text editor for developers)' \
-            'Chezmoi            (Installs Chezmoi, a dotmanager based on git)' \
-            'Starship           (Installs Starship, a prompt for many terminals)' \
             'Glow               (Installs Glow, a markdown reader)' \
             'Install all        (Install all the above)' \
             'Back' \
@@ -58,10 +56,8 @@ asdf_menu () {
             6)  configure_ninja "$asdf_username";;
             7)  configure_dotnet "$asdf_username";;
             8)  configure_neovim "$asdf_username";;
-            9)  configure_chezmoi "$asdf_username";;
-            10) configure_starship "$asdf_username";;
-            11) configure_glow "$asdf_username";;
-            12) install_all_asdf "$asdf_username";;
+            9) configure_glow "$asdf_username";;
+            10) install_all_asdf "$asdf_username";;
             b)  break;;
             *)  continue_script 2 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
@@ -349,22 +345,6 @@ configure_neovim() {
     local user="$1"
     local item="neovim"
     local version="stable"
-
-    install_with_asdf "$user" "$item" "$version"
-}
-
-configure_chezmoi() {
-    local user="$1"
-    local item="chezmoi"
-    local version="2.59.1"
-
-    install_with_asdf "$user" "$item" "$version"
-}
-
-configure_starship() {
-    local user="$1"
-    local item="starship"
-    local version="1.22.1"
 
     install_with_asdf "$user" "$item" "$version"
 }

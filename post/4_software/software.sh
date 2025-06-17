@@ -15,8 +15,10 @@
 # the License.
 
 source ./commons.sh
+source ./post/4_software/pacman.sh
 source ./post/4_software/aur.sh
 source ./post/4_software/flatpak.sh
+source ./post/4_software/mise.sh
 source ./post/4_software/asdf.sh
 
 software_menu() {
@@ -25,16 +27,20 @@ software_menu() {
 
     while true; do
         local options=(\
-            "Install from Flatpak"\
+            "Install from Pacman"\
             "Install from AUR"\
+            "Install from Flatpak"\
+            "Install from MISE"\
             "Install from ASDF"\
             "Back"
         )
         menu_prompt source_choice "$title" "$description" "${options[@]}"
         case $source_choice in
-            0)  flatpak_menu;;
+            0)  pacman_menu;;
             1)  aur_menu;;
-            2)  asdf_menu;;
+            2)  flatpak_menu;;
+            3)  mise_menu;;
+            4)  asdf_menu;;
             b)  break;;
             *)  continue_script 2 "Not a valid choice!" "Invalid choice, please try again.";;
         esac
