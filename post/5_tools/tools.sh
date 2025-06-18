@@ -27,6 +27,11 @@ configure_clipboard() {
     continue_script 2 "Clipboard" "Clipboard Setup complete!"
 }
 
+configure_waybar() {
+    install_pacman_packages waybar
+    continue_script 2 "Waybar" "Waybar Setup complete!"
+}
+
 configure_eww() {
     configure_rust
     pick_user \
@@ -64,6 +69,9 @@ tools_menu () {
             "Git                (Version control)" \
             "Chezmoi            (dotfile manager)" \
             "Clipboard          (History)" \
+            "Eww                (Widget system)" \
+            "Rofi               (App launcher)" \
+            "Swww               (Wallpaper manager)" \
             "Back" \
         )
         menu_prompt tools_menu_choice "$title" "$description" "${options[@]}"
