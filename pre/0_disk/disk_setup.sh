@@ -85,7 +85,7 @@ full_default_route() {
             0)  nuke_disk;break;;
             1)  autopartition_disk;break;;
             2)  enforce_btrfs;run_btrfs_setup;break;;
-            b)  break;;
+            b)  exit;;
             *)  continue_script 2 "Option not valid" "That is not an option, returning to start menu.";exit;;
         esac
     done
@@ -131,7 +131,7 @@ custom_default_route() {
             4)  select_efi_partition;break;;
             5)  select_root_partition;break;;
             6)  enforce_btrfs;run_btrfs_setup;break;;
-            b)  break;;
+            b)  exit;;
             *)  continue_script 2 "Option not valid" "That is not an option, returning to start menu.";exit;;
         esac
     done
@@ -189,7 +189,7 @@ Proceed step-by-step and run install when ready."
                 esac
                 break
                 ;;
-            b)  break;;
+            b)  exit;;
             *)  continue_script 2 "Option not valid" "That is not an option, returning to menu.";;
         esac
     done
