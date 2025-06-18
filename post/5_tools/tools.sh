@@ -41,7 +41,7 @@ configure_eww() {
     install_pacman_packages mise
     
     commands_to_run+=("mise use -g rust")
-    commands_to_run+=(". \"$HOME/.cargo/env\"")
+    commands_to_run+=(". \"/home/$eww_username/eww/.cargo/env\"")
     if [[ -d "/home/$eww_username/eww" ]]; then
         commands_to_run+=("rm -rf /home/$eww_username/eww")
     fi
