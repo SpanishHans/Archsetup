@@ -39,7 +39,8 @@ configure_eww() {
         "Please enter the user whose eww shall be configured: "
     commands_to_run=()
     install_pacman_packages mise
-    configure_rust
+    
+    commands_to_run+=("mise use -g rust")
     if [[ -d "/home/$eww_username/eww" ]]; then
         commands_to_run+=("rm -rf /home/$eww_username/eww")
     fi
