@@ -38,7 +38,8 @@ configure_eww() {
         "Chezmoi User to setup" \
         "Please enter the user whose eww shall be configured: "
     commands_to_run=()
-    commands_to_run+=(configure_rust)
+    install_pacman_packages mise
+    configure_rust
     if [[ -d "/home/$eww_username/eww" ]]; then
         commands_to_run+=("rm -rf /home/$eww_username/eww")
     fi
