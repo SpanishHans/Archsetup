@@ -84,7 +84,7 @@ full_default_route() {
         case $install_mode_menu in
             0)  nuke_disk;;
             1)  autopartition_disk;;
-            2)  enforce_btrfs;run_btrfs_setup;;
+            2)  enforce_btrfs;run_btrfs_setup;break;;
             b)  exit;;
             *)  continue_script 2 "Option not valid" "That is not an option, returning to start menu.";exit;;
         esac
@@ -130,7 +130,7 @@ custom_default_route() {
             3)  set_filesystem_for_partitions;;
             4)  select_efi_partition;;
             5)  select_root_partition;;
-            6)  enforce_btrfs;run_btrfs_setup;;
+            6)  enforce_btrfs;run_btrfs_setup;break;;
             b)  exit;;
             *)  continue_script 2 "Option not valid" "That is not an option, returning to start menu.";exit;;
         esac
@@ -179,9 +179,12 @@ Proceed step-by-step and run install when ready."
                     btrfs)
                         enforce_btrfs
                         run_btrfs_setup "$ROOT_PART"
+                        break
                         ;;
                     ext4)
+                        enforce_ext4
                         run_ext4_setup "$ROOT_PART"
+                        break
                         ;;
                     *)
                         continue_script 2 "Unsupported Filesystem" "The selected root filesystem ($ROOT_FORM) is not supported by this installer."
