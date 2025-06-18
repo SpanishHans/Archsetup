@@ -135,7 +135,7 @@ nuke_disk() {
     commands_to_run+=("sgdisk -n 1:0:+1024M -t 1:ef00 -c 1:'ESP' \"${DISK}\"")
     commands_to_run+=("sgdisk -n 2:0:0 -c 2:'rootfs' \"${DISK}\"")
 
-    6. Sync and reload
+    # 6. Sync and reload
     commands_to_run+=("sync")
     commands_to_run+=("udevadm settle")
     commands_to_run+=("partprobe \"${DISK}\"")
