@@ -45,7 +45,7 @@ configure_eww() {
         commands_to_run+=("rm -rf /home/$eww_username/eww")
     fi
     commands_to_run+=("git clone https://github.com/elkowar/eww /home/$eww_username/eww && cd /home/$eww_username/eww && cargo build --release --no-default-features --features=wayland")
-    live_command_output "sysadmin" "$eww_username" "Installing eww" "${commands_to_run[@]}"
+    live_command_output "sysuser" "$eww_username" "Installing eww" "${commands_to_run[@]}"
     
     continue_script 2 "Eww" "Eww Setup complete!"
 }
