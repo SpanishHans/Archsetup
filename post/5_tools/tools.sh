@@ -52,8 +52,7 @@ configure_eww() {
 }
 
 configure_rofi() {
-    rofi-wayland
-    rofi-calc
+    install_pacman_packages rofi-wayland rofi-calc
     continue_script 2 "Rofi" "Rofi Setup complete!"
 }
 
