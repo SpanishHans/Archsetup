@@ -128,7 +128,10 @@ EOF")
 
 commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
     echo '#### STARTING 3. #### ->> root_password_setup'
+    useradd -c \"Sysadmin\" -m sysadmin || { echo 'useradd failed'; exit 1; }
+    usermod -aG wheel sysadmin
     echo \"root:\$root_password\" | chpasswd || { echo 'root password set failed'; exit 1; }
+    echo \"sysadmin:\$sysadmin_password\" | chpasswd || { echo 'sysadmin password set failed'; exit 1; }
 EOF")
 
 commands_to_run+=("arch-chroot /mnt /bin/bash -e <<EOF
