@@ -77,7 +77,7 @@ full_default_route() {
         "Nuke a disk (delete all data)" \
         "Autopartition to required partitions" \
         "Run Autoinstall" \
-        "Exit"
+        "Back"
     )
     while true; do
         menu_prompt install_mode_menu "$title" "$description" "${options[@]}"
@@ -118,7 +118,7 @@ custom_default_route() {
         "Select EFI partition" \
         "Select root partition" \
         "Run autoinstall with BTRFS subvolumes" \
-        "Exit"
+        "Back"
     )
 
     while true; do
@@ -162,7 +162,7 @@ Proceed step-by-step and run install when ready."
         "Select EFI partition" \
         "Select root partition" \
         "Run custom install (based on selected FS)" \
-        "Exit"
+        "Back"
     )
 
     while true; do
