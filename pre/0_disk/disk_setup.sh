@@ -98,7 +98,7 @@ nuke_disk() {
     local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
     local disks+=("Continue")
     local disks+=("Exit")
-    local title="Starting disk partitioner"
+    local title="Nuking data and partitions on the disk"
     local description="The following menu shall help you select a disk for full wipe and automatic partitioning. ALL DATA ON IT SHALL BE DELETED."
 
     if [ ${#disks[@]} -eq 0 ]; then
@@ -141,7 +141,7 @@ nuke_disk() {
     commands_to_run+=("partprobe \"${DISK}\"")
 
     # 7. Check if partitions created
-    commands_to_run+=("[[ \$(lsblk -no NAME \"${DISK}\" | grep -c '^$(basename ${DISK})[0-9]\+') -ge 2 ]] && echo 'Partitions created successfully' || { echo 'Partitioning failed'; exit 1; }")
+    commands_to_run+=("[[ \$(lsblk -no NAME \"\${DISK}\" | grep -E -c \"^$(basename \${DISK})p?[0-9]+$\") -ge 2 ]] && echo 'Partitions created successfully' || { echo 'Partitioning failed'; exit 1; }")
     live_command_output "" "" "Nuking $DISK" "${commands_to_run[@]}"
 }
 
