@@ -136,8 +136,8 @@ nuke_disk() {
     # commands_to_run+=("sgdisk -n 2:0:0 -c 2:'rootfs' \"${DISK}\"")
 
     # 6. Sync and reload
-    commands_to_run+=("sync")
-    commands_to_run+=("udevadm settle")
+    # commands_to_run+=("sync")
+    # commands_to_run+=("udevadm settle")
     commands_to_run+=("partprobe \"${DISK}\"")
 
     # 7. Check if partitions created
