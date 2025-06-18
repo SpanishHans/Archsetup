@@ -189,7 +189,7 @@ Proceed step-by-step and run install when ready."
                 esac
                 break
                 ;;
-            7|b)  break;;
+            b)  break;;
             *)  continue_script 2 "Option not valid" "That is not an option, returning to menu.";;
         esac
     done
