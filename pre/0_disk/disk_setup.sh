@@ -141,7 +141,7 @@ nuke_disk() {
     commands_to_run+=("partprobe \"${DISK}\"")
 
     # 7. Check if partitions created
-    commands_to_run+=("[[ \$(lsblk -no NAME \"\${DISK}\" | grep -E -c \"^$(basename \${DISK})p?[0-9]+$\") -ge 2 ]] && echo 'Partitions created successfully' || { echo 'Partitioning failed'; exit 1; }")
+    commands_to_run+=("[[ \$(lsblk -nro NAME \"\${DISK}\" | grep -E -c \"^\\\$(basename \\\${DISK})p?[0-9]+$\") -ge 2 ]] && echo 'Partitions created successfully' || { echo 'Partitioning failed'; exit 1; }")
     live_command_output "" "" "Nuking $DISK" "${commands_to_run[@]}"
 }
 
