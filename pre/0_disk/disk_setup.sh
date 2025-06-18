@@ -57,42 +57,144 @@ With this in mind, let's pick between sane defaults or full custom mode."
 }
 
 full_default_route() {
-    nuke_disk
-    autopartition_disk
-    enforce_btrfs
-    run_btrfs_setup
+    local title="Full Auto Install: This Will Erase Your Disk"
+    local description="You are about to perform a fully automated installation using the default BTRFS layout.
+    WARNING: This process will:
+    1. Wipe the entire selected disk — ALL DATA WILL BE LOST.
+    2. Create EFI and root partitions.
+    3. Format them with modern filesystems (vfat + BTRFS).
+    4. Set up a rollback-friendly subvolume layout.
+    5. Install the base system afterward.
+    
+    This layout is optimized for SSDs and assumes UEFI firmware.
+    No swap partition is created — zram will be enabled post-install.
+    
+    If you are unsure, back up your data now or choose 'Exit'.
+    
+    Select an option to proceed."
+
+    local options=(\
+        "Nuke a disk (delete all data)" \
+        "Autopartition to required partitions" \
+        "Run Autoinstall" \
+        "Exit"
+    )
+    while true; do
+        menu_prompt install_mode_menu "$title" "$description" "${options[@]}"
+        case $install_mode_menu in
+            0)  nuke_disk;break;;
+            1)  autopartition_disk;break;;
+            2)  enforce_btrfs;run_btrfs_setup;break;;
+            e)  exit;;
+            *)  continue_script 2 "Option not valid" "That is not an option, returning to start menu.";exit;;
+        esac
+    done
 }
 
 custom_default_route() {
-    nuke_disk
-    autopartition_disk
-    edit_disk
-    set_filesystem_for_partitions
-    select_efi_partition
-    select_root_partition
-    run_btrfs_setup
+    local title="Custom Disk Setup: You Are In Control"
+    local description="You are entering the guided installation mode with sane defaults.
+    
+    This mode still follows the default layout:
+    - EFI partition (vfat)
+    - Root partition (BTRFS with subvolumes)
+    
+    But unlike the automatic installer, this mode allows you to:
+    1. Manually wipe the target disk.
+    2. Create the default partitions step-by-step.
+    3. Review and select the target partitions.
+    4. Choose or override filesystems.
+    5. Run the installation when ready.
+    
+    All data on selected disks or partitions will be erased.
+    This mode is ideal if you want control over each step while still using the recommended layout.
+    
+    Select an option below to proceed."
+    local options=(\
+        "Nuke a disk (delete all data)" \
+        "Autopartition to required partitions" \
+        "Edit disk partitions manually" \
+        "Set filesystem formats for partitions" \
+        "Select EFI partition" \
+        "Select root partition" \
+        "Run autoinstall with BTRFS subvolumes" \
+        "Exit"
+    )
+
+    while true; do
+        menu_prompt install_mode_menu "$title" "$description" "${options[@]}"
+        case $install_mode_menu in
+            0)  nuke_disk;break;;
+            1)  autopartition_disk;break;;
+            2)  edit_disk;break;;
+            3)  set_filesystem_for_partitions;break;;
+            4)  select_efi_partition;break;;
+            5)  select_root_partition;break;;
+            6)  enforce_btrfs;run_btrfs_setup;break;;
+            e)  exit;;
+            *)  continue_script 2 "Option not valid" "That is not an option, returning to start menu.";exit;;
+        esac
+    done
 }
 
 full_custom_route() {
-    nuke_disk
-    autopartition_disk
-    edit_disk
-    set_filesystem_for_partitions
-    select_efi_partition
-    select_root_partition
-    case "$ROOT_FORM" in
-        btrfs)
-            run_btrfs_setup "$ROOT_PART"
-            ;;
-        ext4)
-            run_ext4_setup "$ROOT_PART"
-            ;;
-        *)
-            continue_script 2 "Unsupported Filesystem" "The root filesystem $ROOT_FORM is not currently supported by this installer."
-            exit 1
-            ;;
-    esac
+    local title="Full Custom Install: Total Control"
+    local description="You are entering the full custom install mode.
+    
+In this mode, you define everything:
+  - Partition layout
+  - Filesystem formats
+  - EFI and root selection
+  - Final installation with BTRFS or EXT4
+
+This is the most flexible and dangerous option — no default layout is enforced. Be careful with your choices.
+
+All data on the selected disk or partitions will be lost.
+Ideal for advanced users who want full control over partitioning and layout.
+
+Proceed step-by-step and run install when ready."
+
+    local options=(\
+        "Nuke a disk (delete all data)" \
+        "Autopartition disk (optional helper)" \
+        "Edit disk partitions manually" \
+        "Set filesystem formats for partitions" \
+        "Select EFI partition" \
+        "Select root partition" \
+        "Run custom install (based on selected FS)" \
+        "Exit"
+    )
+
+    while true; do
+        menu_prompt full_custom_menu "$title" "$description" "${options[@]}"
+        case $full_custom_menu in
+            0)  nuke_disk;;
+            1)  autopartition_disk;;
+            2)  edit_disk;;
+            3)  set_filesystem_for_partitions;;
+            4)  select_efi_partition;;
+            5)  select_root_partition;;
+            6)  
+                case "$ROOT_FORM" in
+                    btrfs)
+                        enforce_btrfs
+                        run_btrfs_setup "$ROOT_PART"
+                        ;;
+                    ext4)
+                        run_ext4_setup "$ROOT_PART"
+                        ;;
+                    *)
+                        continue_script 2 "Unsupported Filesystem" "The selected root filesystem ($ROOT_FORM) is not supported by this installer."
+                        ;;
+                esac
+                break
+                ;;
+            7|e)  exit;;
+            *)  continue_script 2 "Option not valid" "That is not an option, returning to menu.";;
+        esac
+    done
 }
+
 
 nuke_disk() {
     local disks=($(lsblk -dpnoNAME | grep -P "/dev/nvme|sd|mmcblk|vd"))
