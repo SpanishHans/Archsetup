@@ -155,15 +155,15 @@ install_xfce() {
 ################################################################################
 
 install_sway() {
-    install_pacman_packages sway kitty brightnessctl swaync
+    install_pacman_packages sway swaync
 }
 
 install_hyprland() {
-    install_pacman_packages hyprland hypridle xdg-desktop-portal-hyprland brightnessctl swww kitty rofi-wayland swaync
+    install_pacman_packages hyprland hypridle xdg-desktop-portal-hyprland brightnessctl blueman swaync
 }
 
 install_enlightenment() {
-    install_pacman_packages enlightenment ecrire ephoto evisum rage terminology connman brightnessctl
+    install_pacman_packages enlightenment ecrire ephoto evisum rage terminology connman
 }
 
 purge_dm() {

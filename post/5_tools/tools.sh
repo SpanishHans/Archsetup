@@ -16,6 +16,8 @@
 
 source ./commons.sh
 source ./post/0_users/users.sh
+source ./post/4_software/pacman_installer.sh
+source ./post/4_software/mise.sh
 source ./post/5_tools/chezmoi.sh
 source ./post/5_tools/git.sh
 
@@ -23,6 +25,33 @@ source ./post/5_tools/git.sh
 configure_clipboard() {
     install_pacman_packages wl-clipboard cliphist grim slurp
     continue_script 2 "Clipboard" "Clipboard Setup complete!"
+}
+
+configure_eww() {
+    configure_rust
+    pick_user \
+        eww_username \
+        "Chezmoi User to setup" \
+        "Please enter the user whose eww shall be configured: "
+    commands_to_run=()
+    if [[ -d "/home/$eww_username/eww" ]]; then
+        commands_to_run+=("rm -rf /home/$eww_username/eww")
+    fi
+    commands_to_run+=("git clone https://github.com/elkowar/eww /home/$eww_username/eww && cd /home/$eww_username/eww && cargo build --release --no-default-features --features=wayland")
+    live_command_output "" "" "Installing eww" "${commands_to_run[@]}"
+    
+    continue_script 2 "Eww" "Eww Setup complete!"
+}
+
+configure_rofi() {
+    rofi-wayland
+    rofi-calc
+    continue_script 2 "Rofi" "Rofi Setup complete!"
+}
+
+configure_swww() {
+    install_pacman_packages swww
+    continue_script 2 "Swww" "Swww Setup complete!"
 }
 
 tools_menu () {
@@ -42,6 +71,9 @@ tools_menu () {
             0)  git_menu;;
             1)  chezmoi_menu;;
             2)  configure_clipboard;;
+            3)  configure_eww;;
+            4)  configure_rofi;;
+            5)  configure_swww;;
             b)  break;;
             *)  continue_script 2 "Not a valid choice!" "Invalid choice, please try again." ;;
         esac
