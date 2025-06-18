@@ -142,6 +142,7 @@ nuke_disk() {
 
     # 7. Check if partitions created
     commands_to_run+=("[[ \$(lsblk -nro NAME \"\${DISK}\" | grep -E -c '^$(basename ${DISK})p?[0-9]+$') -ge 2 ]] && echo 'Partitions created successfully' || { echo 'Partitioning failed'; exit 1; }")
+    export DISK
     live_command_output "" "" "Nuking $DISK" "${commands_to_run[@]}"
 }
 
@@ -185,6 +186,7 @@ Simply select a disk, edit as neccesary and come back. When done, select option 
     while true; do
         menu_prompt format_disk_menu_choice "$title" "$description" "${disks[@]}"
         local DISK="${disks[$((format_disk_menu_choice))]}"
+        export DISK
         case $format_disk_menu_choice in
             c)  break;;
             e)  exit;;
