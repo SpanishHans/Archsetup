@@ -111,7 +111,7 @@ nuke_disk() {
         case $format_disk_menu_choice in
             c)  break;;
             e)  exit;;
-            *)  local DISK="${disks[$((format_disk_menu_choice))]}";break
+            *)  DISK="${disks[$((format_disk_menu_choice))]}";break
                 ;;
         esac
     done
@@ -185,7 +185,7 @@ Simply select a disk, edit as neccesary and come back. When done, select option 
 
     while true; do
         menu_prompt format_disk_menu_choice "$title" "$description" "${disks[@]}"
-        local DISK="${disks[$((format_disk_menu_choice))]}"
+        DISK="${disks[$((format_disk_menu_choice))]}"
         export DISK
         case $format_disk_menu_choice in
             c)  break;;
