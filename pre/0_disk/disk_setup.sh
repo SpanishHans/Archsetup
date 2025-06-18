@@ -82,9 +82,9 @@ full_default_route() {
     while true; do
         menu_prompt install_mode_menu "$title" "$description" "${options[@]}"
         case $install_mode_menu in
-            0)  nuke_disk;break;;
-            1)  autopartition_disk;break;;
-            2)  enforce_btrfs;run_btrfs_setup;break;;
+            0)  nuke_disk;;
+            1)  autopartition_disk;;
+            2)  enforce_btrfs;run_btrfs_setup;;
             b)  exit;;
             *)  continue_script 2 "Option not valid" "That is not an option, returning to start menu.";exit;;
         esac
@@ -124,13 +124,13 @@ custom_default_route() {
     while true; do
         menu_prompt install_mode_menu "$title" "$description" "${options[@]}"
         case $install_mode_menu in
-            0)  nuke_disk;break;;
-            1)  autopartition_disk;break;;
-            2)  edit_disk;break;;
-            3)  set_filesystem_for_partitions;break;;
-            4)  select_efi_partition;break;;
-            5)  select_root_partition;break;;
-            6)  enforce_btrfs;run_btrfs_setup;break;;
+            0)  nuke_disk;;
+            1)  autopartition_disk;;
+            2)  edit_disk;;
+            3)  set_filesystem_for_partitions;;
+            4)  select_efi_partition;;
+            5)  select_root_partition;;
+            6)  enforce_btrfs;run_btrfs_setup;;
             b)  exit;;
             *)  continue_script 2 "Option not valid" "That is not an option, returning to start menu.";exit;;
         esac
