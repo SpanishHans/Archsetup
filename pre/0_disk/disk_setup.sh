@@ -118,26 +118,26 @@ nuke_disk() {
     commands_to_run=()
 
     # 1. Wipe all partition info
-    # commands_to_run+=("wipefs --all --force \"${DISK}\"")
+    commands_to_run+=("wipefs --all --force \"${DISK}\"")
 
-    # # 2. Overwrite beginning of disk
-    # commands_to_run+=("dd if=/dev/zero of=\"${DISK}\" bs=1M count=10 status=progress")
+    # 2. Overwrite beginning of disk
+    commands_to_run+=("dd if=/dev/zero of=\"${DISK}\" bs=1M count=10 status=progress")
 
-    # # 3. Reload partition info
-    # commands_to_run+=("partprobe \"${DISK}\"")
-    # commands_to_run+=("udevadm settle")
+    # 3. Reload partition info
+    commands_to_run+=("partprobe \"${DISK}\"")
+    commands_to_run+=("udevadm settle")
 
-    # # 4. Zap and create fresh GPT
-    # commands_to_run+=("sgdisk --zap-all \"${DISK}\"")
-    # commands_to_run+=("sgdisk -g \"${DISK}\"")
+    # 4. Zap and create fresh GPT
+    commands_to_run+=("sgdisk --zap-all \"${DISK}\"")
+    commands_to_run+=("sgdisk -g \"${DISK}\"")
 
-    # # 5. Create partitions
-    # commands_to_run+=("sgdisk -n 1:0:+1024M -t 1:ef00 -c 1:'ESP' \"${DISK}\"")
-    # commands_to_run+=("sgdisk -n 2:0:0 -c 2:'rootfs' \"${DISK}\"")
+    # 5. Create partitions
+    commands_to_run+=("sgdisk -n 1:0:+1024M -t 1:ef00 -c 1:'ESP' \"${DISK}\"")
+    commands_to_run+=("sgdisk -n 2:0:0 -c 2:'rootfs' \"${DISK}\"")
 
-    # 6. Sync and reload
-    # commands_to_run+=("sync")
-    # commands_to_run+=("udevadm settle")
+    6. Sync and reload
+    commands_to_run+=("sync")
+    commands_to_run+=("udevadm settle")
     commands_to_run+=("partprobe \"${DISK}\"")
 
     # 7. Check if partitions created
