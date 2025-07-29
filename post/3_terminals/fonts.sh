@@ -31,6 +31,7 @@ fonts_menu() {
         ["0xProto"]="ttf-0xproto-nerd|A bold, futuristic font with sharp, geometric shapes, ideal for sci-fi and tech-inspired designs."
         ["FiraCode"]="ttf-firacode-nerd|A monospaced font with ligatures for coding, offering a clean and expressive environment for developers."
         ["FontAwesome"]="ttf-font-awesome|A scalable icon font with thousands of customizable icons, perfect for modern UI/UX design."
+        ["Google Emojis"]="noto-fonts-emoji|The Android emoji font for emoji support on linux"
     )
 
     local options=()
